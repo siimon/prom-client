@@ -1,0 +1,26 @@
+{
+  "name": "prom-client",
+  "version": "1.0.0",
+  "description": "Client for prometheus",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha test/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/simewn/prometheus-client.git"
+  },
+  "keywords": [
+    "Prometheus"
+  ],
+  "author": "Simon Nyberg",
+  "license": "MIT",
+  "homepage": "https://bitbucket.org/simewn/prometheus-client#readme",
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "mocha": "^2.3.4"
+  }
+}
