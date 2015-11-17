@@ -34,6 +34,17 @@ describe('register', function() {
 		expect(actual).to.have.length(7);
 	});
 
+	it('should handle a metric without labels', function() {
+		register.registerMetric({
+			name: 'test_metric',
+			type: 'counter',
+			help: 'A test metric',
+			value: 1
+		});
+		var actual = register.metrics().split('\n');
+		expect(actual).to.have.length(4);
+	});
+
 	function getMetric() {
 		return {
 			name: 'test_metric',
