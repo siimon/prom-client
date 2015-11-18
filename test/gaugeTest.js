@@ -39,6 +39,6 @@ describe('gauge', function() {
 	});
 
 	function expectValue(val) {
-		expect(instance.get().value).to.equal(val);
+		expect(instance.get().values[0].value).to.equal(val);
 	}
 });

@@ -31,7 +31,7 @@ describe('register', function() {
 		register.registerMetric(getMetric());
 
 		var actual = register.metrics().split('\n');
-		expect(actual).to.have.length(7);
+		expect(actual).to.have.length(6);
 	});
 
 	it('should handle a metric without labels', function() {
@@ -39,10 +39,12 @@ describe('register', function() {
 			name: 'test_metric',
 			type: 'counter',
 			help: 'A test metric',
-			value: 1
+			values: [ {
+				value: 1
+			}]
 		});
 		var actual = register.metrics().split('\n');
-		expect(actual).to.have.length(4);
+		expect(actual).to.have.length(3);
 	});
 
 	function getMetric() {
@@ -50,11 +52,13 @@ describe('register', function() {
 			name: 'test_metric',
 			type: 'counter',
 			help: 'A test metric',
-			labels: {
-				label: 'hello',
-				code: '303'
-			},
-			value: 12
+			values: [ {
+				value: 12,
+				labels: {
+					label: 'hello',
+					code: '303'
+				}
+			}] 
 		};
 	}
 });

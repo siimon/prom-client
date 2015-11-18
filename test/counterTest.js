@@ -11,10 +11,10 @@ describe('counter', function() {
 
 	it('should increment counter', function() {
 		instance.inc();
-		expect(instance.get().value).to.equal(1);
+		expect(instance.get().values[0].value).to.equal(1);
 	});
 	it('should increment with a provided value', function() {
 		instance.inc(100);
-		expect(instance.get().value).to.equal(100);
+		expect(instance.get().values[0].value).to.equal(100);
 	});
 });
