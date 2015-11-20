@@ -3,6 +3,7 @@
 describe('gauge', function() {
 	var expect = require('chai').expect;
 	var Gauge = require('../lib/gauge');
+	var sinon = require('sinon');
 	var instance;
 	beforeEach(function() {
 		instance = new Gauge({});
@@ -36,6 +37,15 @@ describe('gauge', function() {
 	it('should decrease with param if provided', function() {
 		instance.dec(5);
 		expectValue(5);
+	});
+
+	it('should start a timer and set a gauge to elapsed in seconds', function() {
+		var clock = sinon.useFakeTimers();
+		var doneFn = instance.startTimer();
+		clock.tick(500);
+		doneFn();
+		expectValue(0.5);
+		clock.restore();
 	});
 
 	function expectValue(val) {
