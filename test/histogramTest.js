@@ -40,6 +40,15 @@ describe('histogram', function() {
 		expect(infValuePair.value).to.equal(countValuePair.value);
 	});
 
+	it('should add buckets in increasing numerical order', function() {
+		var histogram = new Histogram({ buckets: [1, 5] });
+		histogram.observe(1.5);
+		var values = histogram.get().values;
+		expect(values[0].labels.le).to.equal(1);
+		expect(values[1].labels.le).to.equal(5);
+		expect(values[2].labels.le).to.equal('+Inf');
+	});
+
 	function getValueByName(name, values) {
 		return values.reduce(function(acc, val) {
 			if(val.metricName === name) {
