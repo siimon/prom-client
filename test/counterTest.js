@@ -24,4 +24,11 @@ describe('counter', function() {
 		};
 		expect(fn).to.throw(Error);
 	});
+
+	it('should not be possible to decrease a counter', function() {
+		var fn = function() {
+			instance.inc(-100);
+		};
+		expect(fn).to.throw(Error);
+	});
 });
