@@ -2,6 +2,7 @@
 
 describe('histogram', function() {
 	var Histogram = require('../lib/histogram');
+	var sinon = require('sinon');
 	var expect = require('chai').expect;
 	var instance;
 	beforeEach(function() {
@@ -41,12 +42,22 @@ describe('histogram', function() {
 	});
 
 	it('should add buckets in increasing numerical order', function() {
-		var histogram = new Histogram({ buckets: [1, 5] });
+		var histogram = new Histogram({ buckets: [1, 5], name: 'histogram'});
 		histogram.observe(1.5);
 		var values = histogram.get().values;
 		expect(values[0].labels.le).to.equal(1);
 		expect(values[1].labels.le).to.equal(5);
 		expect(values[2].labels.le).to.equal('+Inf');
+	});
+
+	it('should time requests', function() {
+		var clock = sinon.useFakeTimers();
+		var doneFn = instance.startTimer();
+		clock.tick(500);
+		doneFn();
+		var valuePair = getValueByLabel(0.5, instance.get().values);
+		expect(valuePair.value).to.equal(1);
+		clock.restore();
 	});
 
 	function getValueByName(name, values) {
