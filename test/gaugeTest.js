@@ -48,6 +48,12 @@ describe('gauge', function() {
 		clock.restore();
 	});
 
+	it('should set to current time', function() {
+		var clock = sinon.useFakeTimers();
+		instance.setToCurrentTime();
+		expectValue(new Date().getTime());
+	});
+
 	function expectValue(val) {
 		expect(instance.get().values[0].value).to.equal(val);
 	}
