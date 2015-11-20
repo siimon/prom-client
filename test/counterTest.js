@@ -17,4 +17,11 @@ describe('counter', function() {
 		instance.inc(100);
 		expect(instance.get().values[0].value).to.equal(100);
 	});
+
+	it('should not allow non numbers', function() {
+		var fn = function() {
+			instance.inc('asd');
+		};
+		expect(fn).to.throw(Error);
+	});
 });

@@ -54,6 +54,13 @@ describe('gauge', function() {
 		expectValue(new Date().getTime());
 	});
 
+	it('should not allow non numbers', function() {
+		var fn = function() {
+			instance.set('asd');
+		};
+		expect(fn).to.throw(Error);
+	});
+
 	function expectValue(val) {
 		expect(instance.get().values[0].value).to.equal(val);
 	}

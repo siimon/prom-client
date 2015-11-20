@@ -64,6 +64,13 @@ describe('histogram', function() {
 		clock.restore();
 	});
 
+	it('should not allow non numbers', function() {
+		var fn = function() {
+			instance.observe('asd');
+		};
+		expect(fn).to.throw(Error);
+	});
+
 	function getValueByName(name, values) {
 		return values.reduce(function(acc, val) {
 			if(val.metricName === name) {
