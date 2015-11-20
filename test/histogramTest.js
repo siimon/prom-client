@@ -8,6 +8,9 @@ describe('histogram', function() {
 	beforeEach(function() {
 		instance = new Histogram({ name: 'test_histogram'});
 	});
+	afterEach(function() {
+		instance = null;
+	});
 
 	it('should increase count', function() {
 		instance.observe(0.5);
@@ -26,10 +29,11 @@ describe('histogram', function() {
 	});
 
 	it('should be able to monitor more than one item', function() {
-		instance.observe(0.05);
-		instance.observe(5);
-		var firstValuePair = getValueByLabel(0.05, instance.get().values); 
-		var secondValuePair = getValueByLabel(5, instance.get().values); 
+		var i = new Histogram({});
+		i.observe(0.05);
+		i.observe(5);
+		var firstValuePair = getValueByLabel(0.05, i.get().values); 
+		var secondValuePair = getValueByLabel(5, i.get().values); 
 		expect(firstValuePair.value).to.equal(1);
 		expect(secondValuePair.value).to.equal(1);
 	});
