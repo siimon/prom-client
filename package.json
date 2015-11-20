@@ -14,7 +14,9 @@
     "url": "git+ssh://git@bitbucket.org/simewn/prometheus-client.git"
   },
   "keywords": [
-    "Prometheus"
+    "Prometheus",
+		"Metrics",
+		"Client"
   ],
   "author": "Simon Nyberg",
   "license": "MIT",
