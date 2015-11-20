@@ -1,7 +1,7 @@
 'use strict';
 
 describe('register', function() {
-	var register = require('../lib/register');
+	var register = require('../index').register;
 	var expect = require('chai').expect;
 
 	beforeEach(function() {

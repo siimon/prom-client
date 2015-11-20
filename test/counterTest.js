@@ -1,7 +1,7 @@
 'use strict';
 
 describe('counter', function() {
-	var Counter = require('../lib/counter');
+	var Counter = require('../index').counter;
 	var expect = require('chai').expect;
 	var instance;
 

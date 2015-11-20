@@ -2,7 +2,7 @@
 
 describe('gauge', function() {
 	var expect = require('chai').expect;
-	var Gauge = require('../lib/gauge');
+	var Gauge = require('../index').gauge;
 	var sinon = require('sinon');
 	var instance;
 	beforeEach(function() {
