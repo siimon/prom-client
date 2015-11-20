@@ -77,6 +77,13 @@ describe('histogram', function() {
 		expect(pair).to.exist;
 	});
 
+	it('should not allow le as a custom label', function() {
+		var fn = function() {
+		 	new Histogram({ help: 'help', name: 'histo', labels: { le: 'test' }});
+		};
+		expect(fn).to.throw(Error);
+	});
+
 	function getValueByName(name, values) {
 		return values.reduce(function(acc, val) {
 			if(val.metricName === name) {
