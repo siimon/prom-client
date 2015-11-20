@@ -45,7 +45,7 @@ describe('histogram', function() {
 	});
 
 	it('should add buckets in increasing numerical order', function() {
-		var histogram = new Histogram({ help: 'test', buckets: [1, 5], name: 'histogram'});
+		var histogram = new Histogram({ help: 'help', buckets: [1, 5], name: 'histogram'});
 		histogram.observe(1.5);
 		var values = histogram.get().values;
 		expect(values[0].labels.le).to.equal(1);
@@ -68,6 +68,13 @@ describe('histogram', function() {
 			instance.observe('asd');
 		};
 		expect(fn).to.throw(Error);
+	});
+
+	it('should allow custom labels', function() {
+		var i = new Histogram({ help: 'help', name: 'histo', labels: { code: 'test' }});
+		i.observe(1);
+		var pair = getValueByLabel('test', instance.get().values);
+		expect(pair).to.exist;
 	});
 
 	function getValueByName(name, values) {
