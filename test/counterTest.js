@@ -6,7 +6,7 @@ describe('counter', function() {
 	var instance;
 
 	beforeEach(function() {
-		instance = new Counter({});
+		instance = new Counter({ name: 'gauge_test', help: 'test'});
 	});
 
 	it('should increment counter', function() {

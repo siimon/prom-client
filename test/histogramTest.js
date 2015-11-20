@@ -6,7 +6,7 @@ describe('histogram', function() {
 	var expect = require('chai').expect;
 	var instance;
 	beforeEach(function() {
-		instance = new Histogram({ name: 'test_histogram'});
+		instance = new Histogram({ help: 'test', name: 'test_histogram'});
 	});
 	afterEach(function() {
 		instance = null;
@@ -29,11 +29,10 @@ describe('histogram', function() {
 	});
 
 	it('should be able to monitor more than one item', function() {
-		var i = new Histogram({});
-		i.observe(0.05);
-		i.observe(5);
-		var firstValuePair = getValueByLabel(0.05, i.get().values); 
-		var secondValuePair = getValueByLabel(5, i.get().values); 
+		instance.observe(0.05);
+		instance.observe(5);
+		var firstValuePair = getValueByLabel(0.05, instance.get().values); 
+		var secondValuePair = getValueByLabel(5, instance.get().values); 
 		expect(firstValuePair.value).to.equal(1);
 		expect(secondValuePair.value).to.equal(1);
 	});
@@ -46,7 +45,7 @@ describe('histogram', function() {
 	});
 
 	it('should add buckets in increasing numerical order', function() {
-		var histogram = new Histogram({ buckets: [1, 5], name: 'histogram'});
+		var histogram = new Histogram({ help: 'test', buckets: [1, 5], name: 'histogram'});
 		histogram.observe(1.5);
 		var values = histogram.get().values;
 		expect(values[0].labels.le).to.equal(1);

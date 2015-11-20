@@ -6,7 +6,7 @@ describe('gauge', function() {
 	var sinon = require('sinon');
 	var instance;
 	beforeEach(function() {
-		instance = new Gauge({});
+		instance = new Gauge({ name: 'gauge_test', help: 'help'});
 		instance.set(10);
 	});
 
