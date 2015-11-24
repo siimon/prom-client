@@ -2,6 +2,7 @@
  * Prometheus client
  * @module Prometheus client
  */
+
 'use strict';
 
 exports.counter = require('./lib/counter');
