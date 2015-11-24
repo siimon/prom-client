@@ -37,7 +37,7 @@ describe('register', function() {
 	it('should handle a metric without labels', function() {
 		register.registerMetric({
 			get: function() {
-				return { 
+				return {
 					name: 'test_metric',
 					type: 'counter',
 					help: 'A test metric',
@@ -64,7 +64,7 @@ describe('register', function() {
 							label: 'hello',
 							code: '303'
 						}
-					}] 
+					}]
 				};
 			}
 		};

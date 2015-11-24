@@ -31,8 +31,8 @@ describe('histogram', function() {
 	it('should be able to monitor more than one item', function() {
 		instance.observe(0.05);
 		instance.observe(5);
-		var firstValuePair = getValueByLabel(0.05, instance.get().values); 
-		var secondValuePair = getValueByLabel(5, instance.get().values); 
+		var firstValuePair = getValueByLabel(0.05, instance.get().values);
+		var secondValuePair = getValueByLabel(5, instance.get().values);
 		expect(firstValuePair.value).to.equal(1);
 		expect(secondValuePair.value).to.equal(1);
 	});
@@ -79,7 +79,7 @@ describe('histogram', function() {
 
 	it('should not allow le as a custom label', function() {
 		var fn = function() {
-		 	new Histogram({ help: 'help', name: 'histo', labels: { le: 'test' }});
+			new Histogram({ help: 'help', name: 'histo', labels: { le: 'test' }});
 		};
 		expect(fn).to.throw(Error);
 	});
