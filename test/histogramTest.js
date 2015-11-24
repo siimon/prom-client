@@ -6,7 +6,7 @@ describe('histogram', function() {
 	var expect = require('chai').expect;
 	var instance;
 	beforeEach(function() {
-		instance = new Histogram({ help: 'test', name: 'test_histogram'});
+		instance = new Histogram('test_histogram', 'test');
 	});
 	afterEach(function() {
 		instance = null;
@@ -45,7 +45,7 @@ describe('histogram', function() {
 	});
 
 	it('should add buckets in increasing numerical order', function() {
-		var histogram = new Histogram({ help: 'help', buckets: [1, 5], name: 'histogram'});
+		var histogram = new Histogram('test_histogram', 'test', { buckets: [1, 5] });
 		histogram.observe(1.5);
 		var values = histogram.get().values;
 		expect(values[0].labels.le).to.equal(1);
@@ -71,7 +71,7 @@ describe('histogram', function() {
 	});
 
 	it('should allow custom labels', function() {
-		var i = new Histogram({ help: 'help', name: 'histo', labels: { code: 'test' }});
+		var i = new Histogram('histo', 'help', { labels: { code: 'test' }});
 		i.observe(1);
 		var pair = getValueByLabel('test', instance.get().values);
 		expect(pair).to.exist;
@@ -79,7 +79,7 @@ describe('histogram', function() {
 
 	it('should not allow le as a custom label', function() {
 		var fn = function() {
-			new Histogram({ help: 'help', name: 'histo', labels: { le: 'test' }});
+			new Histogram('name', 'help', { labels: { le: 'test' }});
 		};
 		expect(fn).to.throw(Error);
 	});
