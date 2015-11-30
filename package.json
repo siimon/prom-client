@@ -30,7 +30,6 @@
     "sinon": "^1.17.2"
   },
   "dependencies": {
-    "util-extend": "^1.0.1",
-    "express": "^4.13.3"
+    "util-extend": "^1.0.1"
   }
 }
