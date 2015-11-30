@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org/simewn/prometheus-client.git"
+    "url": "git@github.com:siimon/prom-client.git"
   },
   "keywords": [
     "Prometheus",
@@ -20,7 +20,7 @@
   ],
   "author": "Simon Nyberg",
   "license": "MIT",
-  "homepage": "https://bitbucket.org/simewn/prometheus-client#readme",
+  "homepage": "https://github.com/siimon/prom-client",
   "devDependencies": {
     "chai": "^3.4.1",
     "eslint": "^1.10.1",
