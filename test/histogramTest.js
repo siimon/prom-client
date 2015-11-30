@@ -84,6 +84,16 @@ describe('histogram', function() {
 		expect(fn).to.throw(Error);
 	});
 
+	it('should not observe value if outside most upper bound', function() {
+		instance.observe(100000);
+		var values = instance.get().values;
+		var valuesAboveZero = values.reduce(function(acc, v) {
+			acc += v.value;
+			return acc;
+		}, 0);
+		expect(valuesAboveZero).to.equal(0);
+	});
+
 	function getValueByName(name, values) {
 		return values.reduce(function(acc, val) {
 			if(val.metricName === name) {
