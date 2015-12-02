@@ -31,4 +31,31 @@ describe('counter', function() {
 		};
 		expect(fn).to.throw(Error);
 	});
+
+	describe('labels', function() {
+		beforeEach(function() {
+			instance = new Counter('gauge_test', 'help', [ 'method', 'endpoint']);
+		});
+
+		it('should 1 value per label', function() {
+			instance.labels('GET', '/test').inc();
+			instance.labels('POST', '/test').inc();
+
+			var values = instance.get().values;
+			expect(values).to.have.length(2);
+		});
+
+		it('should throw error if label lengths does not match', function() {
+			var fn = function() {
+				instance.labels('GET').inc();
+			};
+			expect(fn).to.throw(Error);
+		});
+
+		it('should increment label value with provided value', function() {
+			instance.labels('GET', '/test').inc(100);
+			var values = instance.get().values;
+			expect(values[0].value).to.equal(100);
+		});
+	});
 });
