@@ -14,11 +14,6 @@ describe('gauge', function() {
 		expectValue(10);
 	});
 
-	it('should reset a gauge', function() {
-		instance.reset();
-		expectValue(0);
-	});
-
 	it('should increase with 1 if no param provided', function() {
 		instance.inc();
 		expectValue(11);
@@ -59,6 +54,39 @@ describe('gauge', function() {
 			instance.set('asd');
 		};
 		expect(fn).to.throw(Error);
+	});
+
+	describe('with labels', function() {
+		beforeEach(function() {
+			instance = new Gauge('name', 'help', ['code']);
+			instance.set({ code: '200' }, 20);
+		});
+		it('should be able to increment', function() {
+			instance.labels('200').inc();
+			expectValue(21);
+		});
+		it('should be able to decrement', function() {
+			instance.labels('200').dec();
+			expectValue(19);
+		});
+		it('should be able to set value', function() {
+			instance.labels('200').set(500);
+			expectValue(500);
+		});
+		it('should be able to set value to current time', function() {
+			var clock = sinon.useFakeTimers();
+			instance.labels('200').setToCurrentTime();
+			expectValue(new Date().getTime());
+			clock.restore();
+		});
+		it('should be able to start a timer', function(){
+			var clock = sinon.useFakeTimers();
+			var end = instance.labels('200').startTimer();
+			clock.tick(1000);
+			end();
+			expectValue(1);
+			clock.restore();
+		});
 	});
 
 	function expectValue(val) {
