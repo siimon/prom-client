@@ -71,15 +71,15 @@ describe('histogram', function() {
 	});
 
 	it('should allow custom labels', function() {
-		var i = new Histogram('histo', 'help', { labels: { code: 'test' }});
-		i.observe(1);
-		var pair = getValueByLabel('test', instance.get().values);
-		expect(pair).to.exist;
+		var i = new Histogram('histo', 'help', [ 'code' ]);
+		i.observe({ code: 'test'}, 1);
+		var pair = getValueByLeAndLabel(1, 'code', 'test', i.get().values);
+		expect(pair.value).to.equal(1);
 	});
 
 	it('should not allow le as a custom label', function() {
 		var fn = function() {
-			new Histogram('name', 'help', { labels: { le: 'test' }});
+			new Histogram('name', 'help', [ 'le' ]);
 		};
 		expect(fn).to.throw(Error);
 	});
@@ -94,6 +94,35 @@ describe('histogram', function() {
 		expect(valuesAboveZero).to.equal(0);
 	});
 
+	describe('labels', function() {
+		beforeEach(function() {
+			instance = new Histogram('histogram_labels', 'Histogram with labels fn', [ 'method' ]);
+		});
+
+		it('should observe', function() {
+			instance.labels('get').observe(4);
+			var res = getValueByLeAndLabel(5, 'method', 'get', instance.get().values);
+			expect(res.value).to.equal(1);
+		});
+
+		it('should not allow different number of labels', function() {
+			var fn = function() {
+				instance.labels('get', '500').observe(4);
+			};
+			expect(fn).to.throw(Error);
+		});
+
+		it('should start a timer', function() {
+			var clock = sinon.useFakeTimers();
+			var end = instance.labels('get').startTimer();
+			clock.tick(500);
+			end();
+			var res = getValueByLeAndLabel(0.5, 'method', 'get', instance.get().values);
+			expect(res.value).to.equal(1);
+			clock.restore();
+		});
+	});
+
 	function getValueByName(name, values) {
 		return values.reduce(function(acc, val) {
 			if(val.metricName === name) {
@@ -102,9 +131,17 @@ describe('histogram', function() {
 			return acc;
 		});
 	}
-	function getValueByLabel(label, values) {
+	function getValueByLeAndLabel(le, key, label, values) {
 		return values.reduce(function(acc, val) {
-			if(val.labels && val.labels.le === label) {
+			if(val.labels && val.labels.le === le && val.labels[key] === label) {
+				acc = val;
+			}
+			return acc;
+		}, {});
+	}
+	function getValueByLabel(label, values, key) {
+		return values.reduce(function(acc, val) {
+			if(val.labels && val.labels[key || 'le'] === label) {
 				acc = val;
 			}
 			return acc;
