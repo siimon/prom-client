@@ -10,17 +10,7 @@ See example folder for a sample usage. The library does not bundle any web frame
 
 #### Configuration
 
-All metric types has 2 mandatory parameters, name and help. Other than that, it always takes a configuration object as 3rd parameter. For all types, you can these properties:
-
-**labels**
-```
-new Client.counter('name', 'help', 
-	{
-		labels: {
-			type: 'request'
-		}
-	});
-```
+All metric types has 2 mandatory parameters, name and help. 
 
 #### Counter
 
@@ -88,3 +78,13 @@ xhrRequest(function(err, res) {
 });
 ```
 
+#### Labels 
+
+All metrics take an array as 3rd parameter that should include all supported label keys. There are 2 ways to add values to the labels
+```
+var Client = require('prom-client');
+var gauge = new Client.gauge('metric_name', 'metric_help', [ 'method', 'statusCode' ]);
+
+gauge.set({ method: 'GET', statusCode: '200' }, 100); // 1st version, Set value 100 with method set to GET and statusCode to 200
+gauge.labels('GET', '200').set(100); // 2nd version, Same as above
+```
