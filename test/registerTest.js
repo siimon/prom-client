@@ -51,6 +51,31 @@ describe('register', function() {
 		expect(actual).to.have.length(4);
 	});
 
+	describe('should escape', function() {
+		var escapedResult;
+		beforeEach(function() {
+			register.registerMetric({
+				get: function() {
+					return {
+						name: 'test_"_\_\n_metric',
+						help: 'help_help',
+						type: 'counter'
+					};
+				}
+			});
+			escapedResult = register.metrics();
+		});
+		it('double quote to /"', function() {
+			expect(escapedResult).to.match(/\\"/);
+		});
+		it('backslash to \\\\', function() {
+			expect(escapedResult).to.match(/\\\\/);
+		});
+		it('newline to \\\\n', function() {
+			// expect(escapedResult).to.match(/\/);
+		});
+	});
+
 	function getMetric() {
 		return {
 			get: function() {
