@@ -84,14 +84,11 @@ describe('histogram', function() {
 		expect(fn).to.throw(Error);
 	});
 
-	it('should not observe value if outside most upper bound', function() {
+	it('should observe value if outside most upper bound', function() {
 		instance.observe(100000);
 		var values = instance.get().values;
-		var valuesAboveZero = values.reduce(function(acc, v) {
-			acc += v.value;
-			return acc;
-		}, 0);
-		expect(valuesAboveZero).to.equal(0);
+		var count = getValueByLabel('+Inf', values, 'le');
+		expect(count.value).to.equal(1);
 	});
 
 	describe('labels', function() {
@@ -141,6 +138,7 @@ describe('histogram', function() {
 	}
 	function getValueByLabel(label, values, key) {
 		return values.reduce(function(acc, val) {
+				console.log('val', val.labels[key]);
 			if(val.labels && val.labels[key || 'le'] === label) {
 				acc = val;
 			}
