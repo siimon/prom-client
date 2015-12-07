@@ -59,7 +59,7 @@ describe('gauge', function() {
 	describe('with labels', function() {
 		beforeEach(function() {
 			instance = new Gauge('name', 'help', ['code']);
-			instance.set({ code: '200' }, 20);
+			instance.set({ 'code': '200' }, 20);
 		});
 		it('should be able to increment', function() {
 			instance.labels('200').inc();
