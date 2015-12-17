@@ -34,7 +34,7 @@ describe('histogram', function() {
 		var firstValuePair = getValueByLabel(0.05, instance.get().values);
 		var secondValuePair = getValueByLabel(5, instance.get().values);
 		expect(firstValuePair.value).to.equal(1);
-		expect(secondValuePair.value).to.equal(1);
+		expect(secondValuePair.value).to.equal(2);
 	});
 
 	it('should add a +Inf bucket with the same value as count', function() {
@@ -138,7 +138,6 @@ describe('histogram', function() {
 	}
 	function getValueByLabel(label, values, key) {
 		return values.reduce(function(acc, val) {
-				console.log('val', val.labels[key]);
 			if(val.labels && val.labels[key || 'le'] === label) {
 				acc = val;
 			}
