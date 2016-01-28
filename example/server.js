@@ -13,9 +13,10 @@ var c = new Counter('test_counter', 'Example of a counter', [ 'code' ]);
 var Gauge = require('../lib/gauge');
 var g = new Gauge('test_gauge', 'Example of a gauge', [ 'method', 'code' ]);
 
-setInterval(function() {
+setTimeout(function() {
 	h.labels('200').observe(Math.random());
-}, 1000);
+	h.labels('300').observe(Math.random());
+}, 10);
 
 setInterval(function() {
 	c.inc({ code: 200 });

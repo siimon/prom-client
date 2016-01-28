@@ -52,6 +52,14 @@ describe('histogram', function() {
 		expect(values[1].labels.le).to.equal(5);
 		expect(values[2].labels.le).to.equal('+Inf');
 	});
+	it('should group counts on each label set', function() {
+		var histogram = new Histogram('test_histogram', 'test', [ 'code' ]);
+		histogram.observe({ code: '200' }, 1);
+		histogram.observe({ code: '300' }, 1);
+		var values = getValuesByLabel(1, histogram.get().values);
+		expect(values[0].value).to.equal(1);
+		expect(values[1].value).to.equal(1);
+	});
 
 	it('should time requests', function() {
 		var clock = sinon.useFakeTimers();
@@ -143,5 +151,13 @@ describe('histogram', function() {
 			}
 			return acc;
 		}, {});
+	}
+	function getValuesByLabel(label, values, key) {
+		return values.reduce(function(acc, val) {
+			if(val.labels && val.labels[key || 'le'] === label) {
+				acc.push(val);
+			}
+			return acc;
+		}, []);
 	}
 });
