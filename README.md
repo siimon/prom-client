@@ -1,4 +1,4 @@
-# Prometheus client for node.js
+# Prometheus client for node.js [![Build Status](https://travis-ci.org/siimon/prom-client.svg?branch=master)](https://travis-ci.org/siimon/prom-client)
 
 A prometheus client for node.js that supports histogram, gauges and counters.
 
