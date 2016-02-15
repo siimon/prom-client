@@ -19,7 +19,7 @@
     "Client"
   ],
   "author": "Simon Nyberg",
-  "license": "MIT",
+  "license": "Apache 2.0",
   "homepage": "https://github.com/siimon/prom-client",
   "devDependencies": {
     "chai": "^3.4.1",
