@@ -101,6 +101,13 @@ var summary = new Client.summary('metric_name', 'metric_help');
 summary.observe(10);
 ```
 
+Utility to observe request durations
+```
+var end = summary.startTimer();
+xhrRequest(function(err, res) {
+	end(); // Observes the value to xhrRequests duration in seconds
+});
+```
 
 #### Labels
 
