@@ -10,7 +10,7 @@ See example folder for a sample usage. The library does not bundle any web frame
 
 #### Configuration
 
-All metric types has 2 mandatory parameters, name and help. 
+All metric types has 2 mandatory parameters, name and help.
 
 #### Counter
 
@@ -52,12 +52,12 @@ xhrRequest(function(err, res) {
 
 Histograms track sizes and frequency of events.  
 
-**Configuration**  
+**Configuration**
 
 The defaults buckets are intended to cover usual web/rpc requests, this can however be overriden.
 ```
 var Client = require('prom-client');
-new Client.histogram('metric_name', 'metric_help', { 
+new Client.histogram('metric_name', 'metric_help', {
 	buckets: [ 0.10, 5, 15, 50, 100, 500 ]
 });
 ```
@@ -78,7 +78,38 @@ xhrRequest(function(err, res) {
 });
 ```
 
-#### Labels 
+#### Summary
+
+Summaries calculate percentiles of observed values.
+
+**Configuration**
+
+The default percentiles are: 0.01, 0.05, 0.5, 0.9, 0.95, 0.99, 0.999. But they can be overriden like this:
+
+```
+var Client = require('prom-client');
+new Client.summary('metric_name', 'metric_help', {
+	percentiles: [ 0.01, 0.1, 0.9, 0.99 ]
+});
+```
+
+Usage example
+
+```
+var Client = require('prom-client');
+var summary = new Client.summary('metric_name', 'metric_help');
+summary.observe(10);
+```
+
+Utility to observe request durations
+```
+var end = summary.startTimer();
+xhrRequest(function(err, res) {
+	end(); // Observes the value to xhrRequests duration in seconds
+});
+```
+
+#### Labels
 
 All metrics take an array as 3rd parameter that should include all supported label keys. There are 2 ways to add values to the labels
 ```
