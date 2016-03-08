@@ -1,6 +1,6 @@
 # Prometheus client for node.js [![Build Status](https://travis-ci.org/siimon/prom-client.svg?branch=master)](https://travis-ci.org/siimon/prom-client)
 
-A prometheus client for node.js that supports histogram, gauges and counters.
+A prometheus client for node.js that supports histogram, summaries, gauges and counters.
 
 ### Usage
 
@@ -17,8 +17,8 @@ All metric types has 2 mandatory parameters, name and help.
 Counters go up, and reset when the process restarts.
 
 ```
-var Client = require('prom-client');
-var counter = new Client.counter('metric_name', 'metric_help');
+var client = require('prom-client');
+var counter = new client.Counter('metric_name', 'metric_help');
 counter.inc(); // Inc with 1
 counter.inc(10); // Inc with 10
 ```
@@ -28,8 +28,8 @@ counter.inc(10); // Inc with 10
 Gauges are similar to Counters but Gauges value can be decreased.
 
 ```
-var Client = require('prom-client');
-var gauge = new Client.gauge('metric_name', 'metric_help');
+var client = require('prom-client');
+var gauge = new client.Gauge('metric_name', 'metric_help');
 gauge.set(10); // Set to 10
 gauge.inc(); // Inc with 1
 gauge.inc(10); // Inc with 10
@@ -56,8 +56,8 @@ Histograms track sizes and frequency of events.
 
 The defaults buckets are intended to cover usual web/rpc requests, this can however be overriden.
 ```
-var Client = require('prom-client');
-new Client.histogram('metric_name', 'metric_help', {
+var client = require('prom-client');
+new client.Histogram('metric_name', 'metric_help', {
 	buckets: [ 0.10, 5, 15, 50, 100, 500 ]
 });
 ```
@@ -65,8 +65,8 @@ new Client.histogram('metric_name', 'metric_help', {
 Examples
 
 ```
-var Client = require('prom-client');
-var histogram = new Client.histogram('metric_name', 'metric_help');
+var client = require('prom-client');
+var histogram = new client.Histogram('metric_name', 'metric_help');
 histogram.observe(10); // Observe value in histogram
 ```
 
@@ -87,8 +87,8 @@ Summaries calculate percentiles of observed values.
 The default percentiles are: 0.01, 0.05, 0.5, 0.9, 0.95, 0.99, 0.999. But they can be overriden like this:
 
 ```
-var Client = require('prom-client');
-new Client.summary('metric_name', 'metric_help', {
+var client = require('prom-client');
+new client.Summary('metric_name', 'metric_help', {
 	percentiles: [ 0.01, 0.1, 0.9, 0.99 ]
 });
 ```
@@ -96,8 +96,8 @@ new Client.summary('metric_name', 'metric_help', {
 Usage example
 
 ```
-var Client = require('prom-client');
-var summary = new Client.summary('metric_name', 'metric_help');
+var client = require('prom-client');
+var summary = new client.Summary('metric_name', 'metric_help');
 summary.observe(10);
 ```
 
@@ -113,8 +113,8 @@ xhrRequest(function(err, res) {
 
 All metrics take an array as 3rd parameter that should include all supported label keys. There are 2 ways to add values to the labels
 ```
-var Client = require('prom-client');
-var gauge = new Client.gauge('metric_name', 'metric_help', [ 'method', 'statusCode' ]);
+var client = require('prom-client');
+var gauge = new client.Gauge('metric_name', 'metric_help', [ 'method', 'statusCode' ]);
 
 gauge.set({ method: 'GET', statusCode: '200' }, 100); // 1st version, Set value 100 with method set to GET and statusCode to 200
 gauge.labels('GET', '200').set(100); // 2nd version, Same as above
