@@ -15,3 +15,6 @@ exports.Counter = require('./lib/counter');
 exports.Gauge = require('./lib/gauge');
 exports.Histogram = require('./lib/histogram');
 exports.Summary = require('./lib/summary');
+
+exports.linearBuckets = require('./lib/bucketGenerators').linearBuckets;
+exports.exponentialBuckets = require('./lib/bucketGenerators').exponentialBuckets;

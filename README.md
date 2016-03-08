@@ -119,3 +119,19 @@ var gauge = new client.Gauge('metric_name', 'metric_help', [ 'method', 'statusCo
 gauge.set({ method: 'GET', statusCode: '200' }, 100); // 1st version, Set value 100 with method set to GET and statusCode to 200
 gauge.labels('GET', '200').set(100); // 2nd version, Same as above
 ```
+
+
+#### Utilites
+
+For convenience, there are 2 bucket generator functions - linear and exponential. 
+
+```
+var client = require('prom-client');
+new client.Histogram('metric_name', 'metric_help', {
+	buckets: client.linearBuckets(0, 10, 20) //Create 20 buckets, starting on 0 and a width of 10
+});
+
+new client.Histogram('metric_name', 'metric_help', {
+	buckets: client.exponentialBuckets(1, 2, 5) //Create 5 buckets, starting on 1 and with a factor of 2
+});
+```
