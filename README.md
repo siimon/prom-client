@@ -120,6 +120,22 @@ gauge.set({ method: 'GET', statusCode: '200' }, 100); // 1st version, Set value 
 gauge.labels('GET', '200').set(100); // 2nd version, Same as above
 ```
 
+#### Pushgateway
+
+It is possible to push metrics via a [Pushgateway](https://github.com/prometheus/pushgateway). 
+
+```
+var client = require('prom-client');
+var gateway = new client.Pushgateway('127.0.0.1:9091');
+
+gateway.pushAdd({ jobName: 'test' }, function(err, resp, body) { }); //Add metric and overwrite old ones
+gateway.push({ jobName: 'test' }, function(err, resp, body) { }); //Overwrite all metrics (use PUT)
+gateway.delete({ jobName: 'test' }, function(err, resp, body) { }); //Delete all metrics for jobName
+
+//All gateway requests can have groupings on it
+gateway.pushAdd({ jobName: 'test', groupings: { key: 'value' } }, function(err, resp, body) { });
+```
+
 
 #### Utilites
 
