@@ -1,6 +1,6 @@
 'use strict';
 
-describe.only('pushgateway', function() {
+describe('pushgateway', function() {
 	var Pushgateway = require('../index').Pushgateway;
 	var nock = require('nock');
 	var expect = require('chai').expect;
@@ -86,5 +86,3 @@ describe.only('pushgateway', function() {
 			connection: 'close' });
 	}
 });
-
-
