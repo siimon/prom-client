@@ -79,6 +79,30 @@ describe('summary', function() {
 		expect(instance.get().values[3].value).to.equal(5);
 	});
 
+	it('should allow to reset itself', function() {
+		instance = new Summary('summary_test', 'test', { percentiles: [ 0.5 ] });
+		instance.observe(100);
+		expect(instance.get().values[0].labels.quantile).to.equal(0.5);
+		expect(instance.get().values[0].value).to.equal(100);
+
+		expect(instance.get().values[1].metricName).to.equal('summary_test_sum');
+		expect(instance.get().values[1].value).to.equal(100);
+
+		expect(instance.get().values[2].metricName).to.equal('summary_test_count');
+		expect(instance.get().values[2].value).to.equal(1);
+
+		instance.reset();
+
+		expect(instance.get().values[0].labels.quantile).to.equal(0.5);
+		expect(instance.get().values[0].value).to.equal(undefined);
+
+		expect(instance.get().values[1].metricName).to.equal('summary_test_sum');
+		expect(instance.get().values[1].value).to.equal(0);
+
+		expect(instance.get().values[2].metricName).to.equal('summary_test_count');
+		expect(instance.get().values[2].value).to.equal(0);
+	});
+
 	describe('labels', function() {
 		beforeEach(function() {
 			instance = new Summary('summary_test', 'help', [ 'method', 'endpoint'], { percentiles: [ 0.9 ] });
