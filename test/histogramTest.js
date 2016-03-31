@@ -99,6 +99,15 @@ describe('histogram', function() {
 		expect(count.value).to.equal(1);
 	});
 
+	it('should allow to be reset itself', function() {
+		instance.observe(0.5);
+		var valuePair = getValueByName('test_histogram_count', instance.get().values);
+		expect(valuePair.value).to.equal(1);
+		instance.reset();
+		var valuePair = getValueByName('test_histogram_count', instance.get().values);
+		expect(valuePair.value).to.equal(undefined);
+	});
+
 	describe('labels', function() {
 		beforeEach(function() {
 			instance = new Histogram('histogram_labels', 'Histogram with labels fn', [ 'method' ]);
@@ -129,7 +138,7 @@ describe('histogram', function() {
 	});
 
 	function getValueByName(name, values) {
-		return values.reduce(function(acc, val) {
+		return values.length > 0 && values.reduce(function(acc, val) {
 			if(val.metricName === name) {
 				acc = val;
 			}
