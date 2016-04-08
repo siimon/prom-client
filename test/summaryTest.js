@@ -94,7 +94,7 @@ describe('summary', function() {
 		instance.reset();
 
 		expect(instance.get().values[0].labels.quantile).to.equal(0.5);
-		expect(instance.get().values[0].value).to.equal(undefined);
+		expect(instance.get().values[0].value).to.equal(0);
 
 		expect(instance.get().values[1].metricName).to.equal('summary_test_sum');
 		expect(instance.get().values[1].value).to.equal(0);
