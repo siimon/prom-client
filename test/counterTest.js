@@ -18,13 +18,6 @@ describe('counter', function() {
 		expect(instance.get().values[0].value).to.equal(100);
 	});
 
-	it('should not allow non numbers', function() {
-		var fn = function() {
-			instance.inc('asd');
-		};
-		expect(fn).to.throw(Error);
-	});
-
 	it('should not be possible to decrease a counter', function() {
 		var fn = function() {
 			instance.inc(-100);
@@ -32,7 +25,7 @@ describe('counter', function() {
 		expect(fn).to.throw(Error);
 	});
 
-	describe.only('labels', function() {
+	describe('labels', function() {
 		beforeEach(function() {
 			instance = new Counter('gauge_test', 'help', [ 'method', 'endpoint']);
 		});
@@ -40,7 +33,7 @@ describe('counter', function() {
 		it('should 1 value per label', function() {
 			instance.labels('GET', '/test').inc();
 			instance.labels('POST', '/test').inc();
-			
+
 			var values = instance.get().values;
 			expect(values).to.have.length(2);
 		});
