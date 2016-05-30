@@ -32,7 +32,7 @@ describe('counter', function() {
 		expect(fn).to.throw(Error);
 	});
 
-	describe('labels', function() {
+	describe.only('labels', function() {
 		beforeEach(function() {
 			instance = new Counter('gauge_test', 'help', [ 'method', 'endpoint']);
 		});
@@ -40,7 +40,7 @@ describe('counter', function() {
 		it('should 1 value per label', function() {
 			instance.labels('GET', '/test').inc();
 			instance.labels('POST', '/test').inc();
-
+			
 			var values = instance.get().values;
 			expect(values).to.have.length(2);
 		});
