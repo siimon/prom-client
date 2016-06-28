@@ -38,6 +38,14 @@ describe('counter', function() {
 			expect(values).to.have.length(2);
 		});
 
+		it('should handle labels which are provided as arguments to inc()', function() {
+			instance.inc({method: 'GET', endpoint: '/test'});
+			instance.inc({method: 'POST', endpoint: '/test'});
+
+			var values = instance.get().values;
+			expect(values).to.have.length(2);
+		});
+
 		it('should throw error if label lengths does not match', function() {
 			var fn = function() {
 				instance.labels('GET').inc();
