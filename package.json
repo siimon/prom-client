@@ -23,11 +23,10 @@
   "homepage": "https://github.com/siimon/prom-client",
   "devDependencies": {
     "chai": "^3.4.1",
-    "eslint": "^1.10.1",
+    "eslint": "^2.13.1",
     "express": "^4.13.3",
-    "minami": "^1.1.1",
     "mocha": "^2.3.4",
-    "nock": "^7.2.2",
+    "nock": "^8.0.0",
     "sinon": "^1.17.2"
   },
   "dependencies": {
