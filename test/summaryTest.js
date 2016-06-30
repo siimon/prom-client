@@ -19,6 +19,11 @@ describe('summary', function() {
 		expect(instance.get().values[8].value).to.equal(1);
 	});
 
+	it('should be able to observe 0s', function() {
+		instance.observe(0);
+		expect(instance.get().values[8].value).to.equal(1);
+	});
+
 	it('should correctly calculate percentiles when more values are added to the summary', function() {
 		instance.observe(100);
 		instance.observe(100);

@@ -17,6 +17,11 @@ describe('histogram', function() {
 		var valuePair = getValueByName('test_histogram_count', instance.get().values);
 		expect(valuePair.value).to.equal(1);
 	});
+	it('should be able to observe 0s', function() {
+		instance.observe(0);
+		var valuePair = getValueByLabel(0.005, instance.get().values);
+		expect(valuePair.value).to.equal(1);
+	});
 	it('should increase sum', function() {
 		instance.observe(0.5);
 		var valuePair = getValueByName('test_histogram_sum', instance.get().values);
