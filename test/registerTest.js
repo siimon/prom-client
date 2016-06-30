@@ -57,7 +57,7 @@ describe('register', function() {
 			register.registerMetric({
 				get: function() {
 					return {
-						name: 'test_"_\_\n_metric',
+						name: 'test_"_\\_\n_metric',
 						help: 'help_help',
 						type: 'counter'
 					};
@@ -65,15 +65,33 @@ describe('register', function() {
 			});
 			escapedResult = register.metrics();
 		});
-		it('double quote to /"', function() {
-			expect(escapedResult).to.match(/\\"/);
-		});
 		it('backslash to \\\\', function() {
 			expect(escapedResult).to.match(/\\\\/);
 		});
 		it('newline to \\\\n', function() {
-			// expect(escapedResult).to.match(/\/);
+			expect(escapedResult).to.match(/\n/);
 		});
+	});
+
+	it('should escape " in label values', function() {
+		register.registerMetric({
+			get: function() {
+				return {
+					name: 'test_metric',
+					type: 'counter',
+					help: 'A test metric',
+					values: [ {
+						value: 12,
+						labels: {
+							label: 'hello',
+							code: '3"03'
+						}
+					}]
+				};
+			}
+		});
+		var escapedResult = register.metrics();
+		expect(escapedResult).to.match(/\\"/);
 	});
 
 	function getMetric() {
