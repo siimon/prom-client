@@ -94,6 +94,38 @@ describe('register', function() {
 		expect(escapedResult).to.match(/\\"/);
 	});
 
+	describe('should output metrics as JSON', function() {
+		it('with one metric', function() {
+			register.registerMetric(getMetric());
+			var output = register.getMetricsAsJSON();
+
+			expect(output.length).to.equal(1);
+			expect(output[0].name).to.equal('test_metric');
+			expect(output[0].type).to.equal('counter');
+			expect(output[0].help).to.equal('A test metric');
+			expect(output[0].values.length).to.equal(1);
+		});
+
+		it('with multiple metrics', function() {
+			register.registerMetric(getMetric());
+			register.registerMetric(getMetric());
+			register.registerMetric(getMetric());
+
+			var output = register.getMetricsAsJSON();
+
+			expect(output.length).to.equal(3);
+
+			expect(output[0].name).to.equal('test_metric');
+			expect(output[1].name).to.equal('test_metric');
+			expect(output[2].name).to.equal('test_metric');
+
+			expect(output[0].values.length).to.equal(1);
+			expect(output[1].values.length).to.equal(1);
+			expect(output[2].values.length).to.equal(1);
+		});
+
+	});
+
 	function getMetric() {
 		return {
 			get: function() {
