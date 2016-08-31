@@ -19,3 +19,9 @@ exports.Pushgateway = require('./lib/pushgateway');
 
 exports.linearBuckets = require('./lib/bucketGenerators').linearBuckets;
 exports.exponentialBuckets = require('./lib/bucketGenerators').exponentialBuckets;
+
+var defaultMetrics = require('./lib/defaultMetrics');
+
+defaultMetrics();
+
+exports.defaultMetrics = defaultMetrics;
