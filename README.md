@@ -16,7 +16,7 @@ All metric types has 2 mandatory parameters, name and help.
 
 Counters go up, and reset when the process restarts.
 
-```
+```js
 var client = require('prom-client');
 var counter = new client.Counter('metric_name', 'metric_help');
 counter.inc(); // Inc with 1
@@ -27,7 +27,7 @@ counter.inc(10); // Inc with 10
 
 Gauges are similar to Counters but Gauges value can be decreased.
 
-```
+```js
 var client = require('prom-client');
 var gauge = new client.Gauge('metric_name', 'metric_help');
 gauge.set(10); // Set to 10
@@ -39,7 +39,7 @@ gauge.dec(10); // Dec with 10
 
 There are some utilities for common use cases:
 
-```
+```js
 gauge.setToCurrentTime(); // Sets value to current time
 
 var end = gauge.startTimer();
@@ -55,7 +55,7 @@ Histograms track sizes and frequency of events.
 **Configuration**
 
 The defaults buckets are intended to cover usual web/rpc requests, this can however be overriden.
-```
+```js
 var client = require('prom-client');
 new client.Histogram('metric_name', 'metric_help', {
 	buckets: [ 0.10, 5, 15, 50, 100, 500 ]
@@ -64,14 +64,14 @@ new client.Histogram('metric_name', 'metric_help', {
 
 Examples
 
-```
+```js
 var client = require('prom-client');
 var histogram = new client.Histogram('metric_name', 'metric_help');
 histogram.observe(10); // Observe value in histogram
 ```
 
 Utility to observe request durations
-```
+```js
 var end = histogram.startTimer();
 xhrRequest(function(err, res) {
 	end(); // Observes the value to xhrRequests duration in seconds
@@ -86,7 +86,7 @@ Summaries calculate percentiles of observed values.
 
 The default percentiles are: 0.01, 0.05, 0.5, 0.9, 0.95, 0.99, 0.999. But they can be overriden like this:
 
-```
+```js
 var client = require('prom-client');
 new client.Summary('metric_name', 'metric_help', {
 	percentiles: [ 0.01, 0.1, 0.9, 0.99 ]
@@ -95,14 +95,14 @@ new client.Summary('metric_name', 'metric_help', {
 
 Usage example
 
-```
+```js
 var client = require('prom-client');
 var summary = new client.Summary('metric_name', 'metric_help');
 summary.observe(10);
 ```
 
 Utility to observe request durations
-```
+```js
 var end = summary.startTimer();
 xhrRequest(function(err, res) {
 	end(); // Observes the value to xhrRequests duration in seconds
@@ -112,7 +112,7 @@ xhrRequest(function(err, res) {
 #### Labels
 
 All metrics take an array as 3rd parameter that should include all supported label keys. There are 2 ways to add values to the labels
-```
+```js
 var client = require('prom-client');
 var gauge = new client.Gauge('metric_name', 'metric_help', [ 'method', 'statusCode' ]);
 
@@ -124,7 +124,7 @@ gauge.labels('GET', '200').set(100); // 2nd version, Same as above
 
 It is possible to push metrics via a [Pushgateway](https://github.com/prometheus/pushgateway). 
 
-```
+```js
 var client = require('prom-client');
 var gateway = new client.Pushgateway('127.0.0.1:9091');
 
@@ -141,7 +141,7 @@ gateway.pushAdd({ jobName: 'test', groupings: { key: 'value' } }, function(err, 
 
 For convenience, there are 2 bucket generator functions - linear and exponential. 
 
-```
+```js
 var client = require('prom-client');
 new client.Histogram('metric_name', 'metric_help', {
 	buckets: client.linearBuckets(0, 10, 20) //Create 20 buckets, starting on 0 and a width of 10
