@@ -3,6 +3,10 @@
   "version": "3.4.7",
   "description": "Client for prometheus",
   "main": "index.js",
+  "files": [
+    "lib/",
+    "index.js"
+  ],
   "directories": {
     "test": "test"
   },
