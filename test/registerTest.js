@@ -26,13 +26,23 @@ describe('register', function() {
 		});
 	});
 
-	it('should handle more than one metric', function() {
-		register.registerMetric(getMetric());
-		register.registerMetric(getMetric());
+  describe('should handle more than one metric', function() {
+    it('should handle more than one metric with different names', function() {
+      register.registerMetric(getMetric('one'));
+      register.registerMetric(getMetric('two'));
 
-		var actual = register.metrics().split('\n');
-		expect(actual).to.have.length(7);
-	});
+      var actual = register.metrics().split('\n');
+      expect(actual).to.have.length(7);
+    });
+
+    it('should not register a metric with the same name twice', function() {
+      register.registerMetric(getMetric('one'));
+      register.registerMetric(getMetric('one'));
+
+      var actual = register.metrics().split('\n');
+      expect(actual).to.have.length(4);
+    });
+  });
 
 	it('should handle a metric without labels', function() {
 		register.registerMetric({
@@ -126,11 +136,11 @@ describe('register', function() {
 
 	});
 
-	function getMetric() {
+	function getMetric(appendName) {
 		return {
 			get: function() {
 				return {
-					name: 'test_metric',
+					name: 'test_metric' + (appendName || ''),
 					type: 'counter',
 					help: 'A test metric',
 					values: [ {
