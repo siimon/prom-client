@@ -3,6 +3,7 @@
 describe('summary', function() {
 	var Summary = require('../index').summary;
 	var expect = require('chai').expect;
+	var sinon = require('sinon');
 	var instance;
 
 	beforeEach(function() {
@@ -156,5 +157,80 @@ describe('summary', function() {
 			};
 			expect(fn).to.throw(Error);
 		});
+
+		it('should start a timer', function() {
+			var clock = sinon.useFakeTimers();
+			var end = instance.labels('GET', '/test').startTimer();
+			clock.tick(1000);
+			end();
+			var values = instance.get().values;
+			expect(values).to.have.length(3);
+			expect(values[0].labels.method).to.equal('GET');
+			expect(values[0].labels.endpoint).to.equal('/test');
+			expect(values[0].labels.quantile).to.equal(0.9);
+			expect(values[0].value).to.equal(1);
+
+			expect(values[1].metricName).to.equal('summary_test_sum');
+			expect(values[1].labels.method).to.equal('GET');
+			expect(values[1].labels.endpoint).to.equal('/test');
+			expect(values[1].value).to.equal(1);
+
+			expect(values[2].metricName).to.equal('summary_test_count');
+			expect(values[2].labels.method).to.equal('GET');
+			expect(values[2].labels.endpoint).to.equal('/test');
+			expect(values[2].value).to.equal(1);
+
+			clock.restore();
+		});
+
+		it('should start a timer and set labels afterwards', function(){
+			var clock = sinon.useFakeTimers();
+			var end = instance.startTimer();
+			clock.tick(1000);
+			end({ 'method': 'GET', 'endpoint': '/test' });
+			var values = instance.get().values;
+			expect(values).to.have.length(3);
+			expect(values[0].labels.method).to.equal('GET');
+			expect(values[0].labels.endpoint).to.equal('/test');
+			expect(values[0].labels.quantile).to.equal(0.9);
+			expect(values[0].value).to.equal(1);
+
+			expect(values[1].metricName).to.equal('summary_test_sum');
+			expect(values[1].labels.method).to.equal('GET');
+			expect(values[1].labels.endpoint).to.equal('/test');
+			expect(values[1].value).to.equal(1);
+
+			expect(values[2].metricName).to.equal('summary_test_count');
+			expect(values[2].labels.method).to.equal('GET');
+			expect(values[2].labels.endpoint).to.equal('/test');
+			expect(values[2].value).to.equal(1);
+
+			clock.restore();
+		});
+
+		it('should allow labels before and after timers', function(){
+			var clock = sinon.useFakeTimers();
+			var end = instance.startTimer({ 'method': 'GET' });
+			clock.tick(1000);
+			end({ 'endpoint': '/test' });
+			var values = instance.get().values;
+			expect(values).to.have.length(3);
+			expect(values[0].labels.method).to.equal('GET');
+			expect(values[0].labels.endpoint).to.equal('/test');
+			expect(values[0].labels.quantile).to.equal(0.9);
+			expect(values[0].value).to.equal(1);
+
+			expect(values[1].metricName).to.equal('summary_test_sum');
+			expect(values[1].labels.method).to.equal('GET');
+			expect(values[1].labels.endpoint).to.equal('/test');
+			expect(values[1].value).to.equal(1);
+
+			expect(values[2].metricName).to.equal('summary_test_count');
+			expect(values[2].labels.method).to.equal('GET');
+			expect(values[2].labels.endpoint).to.equal('/test');
+			expect(values[2].value).to.equal(1);
+
+			clock.restore();
+		})
 	});
 });
