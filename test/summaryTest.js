@@ -231,6 +231,6 @@ describe('summary', function() {
 			expect(values[2].value).to.equal(1);
 
 			clock.restore();
-		})
+		});
 	});
 });

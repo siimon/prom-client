@@ -103,7 +103,7 @@ describe('gauge', function() {
 			end({ 'success': 'SUCCESS' });
 			expectValue(1);
 			clock.restore();
-		})
+		});
 	});
 
 	function expectValue(val) {

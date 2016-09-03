@@ -162,7 +162,7 @@ describe('histogram', function() {
 			expect(res1.value).to.equal(1);
 			expect(res2.value).to.equal(1);
 			clock.restore();
-		})
+		});
 	});
 
 	function getValueByName(name, values) {
