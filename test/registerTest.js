@@ -116,18 +116,30 @@ describe('register', function() {
 			expect(output[0].values.length).to.equal(1);
 		});
 
+    it('with one metric added twice', function() {
+      register.registerMetric(getMetric());
+      register.registerMetric(getMetric());
+      var output = register.getMetricsAsJSON();
+
+      expect(output.length).to.equal(1);
+      expect(output[0].name).to.equal('test_metric');
+      expect(output[0].type).to.equal('counter');
+      expect(output[0].help).to.equal('A test metric');
+      expect(output[0].values.length).to.equal(1);
+    });
+
 		it('with multiple metrics', function() {
-			register.registerMetric(getMetric());
-			register.registerMetric(getMetric());
-			register.registerMetric(getMetric());
+			register.registerMetric(getMetric('one'));
+			register.registerMetric(getMetric('two'));
+			register.registerMetric(getMetric('three'));
 
 			var output = register.getMetricsAsJSON();
 
 			expect(output.length).to.equal(3);
 
-			expect(output[0].name).to.equal('test_metric');
-			expect(output[1].name).to.equal('test_metric');
-			expect(output[2].name).to.equal('test_metric');
+			expect(output[0].name).to.equal('test_metric_one');
+			expect(output[1].name).to.equal('test_metric_two');
+			expect(output[2].name).to.equal('test_metric_three');
 
 			expect(output[0].values.length).to.equal(1);
 			expect(output[1].values.length).to.equal(1);
@@ -140,7 +152,7 @@ describe('register', function() {
 		return {
 			get: function() {
 				return {
-					name: 'test_metric' + (appendName || ''),
+					name: 'test_metric' + (appendName ? '_' + appendName : ''),
 					type: 'counter',
 					help: 'A test metric',
 					values: [ {
