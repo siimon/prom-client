@@ -87,6 +87,23 @@ describe('gauge', function() {
 			expectValue(1);
 			clock.restore();
 		});
+		it('should be able to start a timer and set labels afterwards', function(){
+			var clock = sinon.useFakeTimers();
+			var end = instance.startTimer();
+			clock.tick(1000);
+			end({ 'code': 200 });
+			expectValue(1);
+			clock.restore();
+		});
+		it('should allow labels before and after timers', function(){
+			instance = new Gauge('name', 'help', ['code', 'success']);
+			var clock = sinon.useFakeTimers();
+			var end = instance.startTimer({ 'code': 200 });
+			clock.tick(1000);
+			end({ 'success': 'SUCCESS' });
+			expectValue(1);
+			clock.restore();
+		});
 	});
 
 	function expectValue(val) {

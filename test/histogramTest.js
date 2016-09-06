@@ -140,6 +140,29 @@ describe('histogram', function() {
 			expect(res.value).to.equal(1);
 			clock.restore();
 		});
+
+		it('should start a timer and set labels afterwards', function(){
+			var clock = sinon.useFakeTimers();
+			var end = instance.startTimer();
+			clock.tick(500);
+			end({ 'method': 'get' });
+			var res = getValueByLeAndLabel(0.5, 'method', 'get', instance.get().values);
+			expect(res.value).to.equal(1);
+			clock.restore();
+		});
+
+		it('should allow labels before and after timers', function(){
+			instance = new Histogram('histogram_labels', 'Histogram with labels fn', [ 'method', 'success' ]);
+			var clock = sinon.useFakeTimers();
+			var end = instance.startTimer({ 'method': 'get' });
+			clock.tick(500);
+			end({ 'success': 'SUCCESS' });
+			var res1 = getValueByLeAndLabel(0.5, 'method', 'get', instance.get().values);
+			var res2 = getValueByLeAndLabel(0.5, 'success', 'SUCCESS', instance.get().values);
+			expect(res1.value).to.equal(1);
+			expect(res2.value).to.equal(1);
+			clock.restore();
+		});
 	});
 
 	function getValueByName(name, values) {
