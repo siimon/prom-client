@@ -47,6 +47,7 @@ describe('gauge', function() {
 		var clock = sinon.useFakeTimers();
 		instance.setToCurrentTime();
 		expectValue(new Date().getTime());
+		clock.restore();
 	});
 
 	it('should not allow non numbers', function() {
