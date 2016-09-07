@@ -1,7 +1,7 @@
 'use strict';
 
 describe('histogram', function() {
-	var Histogram = require('../index').histogram;
+	var Histogram = require('../index').Histogram;
 	var sinon = require('sinon');
 	var expect = require('chai').expect;
 	var instance;

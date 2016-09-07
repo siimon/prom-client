@@ -1,7 +1,7 @@
 'use strict';
 
 describe('summary', function() {
-	var Summary = require('../index').summary;
+	var Summary = require('../index').Summary;
 	var expect = require('chai').expect;
 	var sinon = require('sinon');
 	var instance;
