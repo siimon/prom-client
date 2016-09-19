@@ -53,12 +53,19 @@ describe('defaultMetrics', function() {
 	it('should add metrics to the registry', function() {
 		expect(register.getMetricsAsJSON()).to.have.length(0);
 		interval = defaultMetrics();
-		expect(register.getMetricsAsJSON()).to.have.length(6);
+		expect(register.getMetricsAsJSON()).to.have.length(7);
 	});
 
 	it('should allow blacklisting unwanted metrics', function() {
 		expect(register.getMetricsAsJSON()).to.have.length(0);
 		interval = defaultMetrics(['osMemoryHeap']);
-		expect(register.getMetricsAsJSON()).to.have.length(5);
+		expect(register.getMetricsAsJSON()).to.have.length(6);
+	});
+
+	it('should allow blacklisting all metrics', function() {
+		expect(register.getMetricsAsJSON()).to.have.length(0);
+		clearInterval(defaultMetrics());
+		register.clear();
+		expect(register.getMetricsAsJSON()).to.have.length(0);
 	});
 });
