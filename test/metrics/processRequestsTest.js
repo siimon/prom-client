@@ -23,6 +23,6 @@ describe('processRequests', function() {
 		expect(metrics).to.have.length(1);
 		expect(metrics[0].help).to.equal('Number of active requests.');
 		expect(metrics[0].type).to.equal('gauge');
-		expect(metrics[0].name).to.equal('node_active_requests_total');
+		expect(metrics[0].name).to.equal('nodejs_active_requests_total');
 	});
 });

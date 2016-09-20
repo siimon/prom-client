@@ -23,7 +23,7 @@ describe('eventLoopLag', function() {
 
 			expect(metrics[0].help).to.equal('Lag of event loop in milliseconds.');
 			expect(metrics[0].type).to.equal('gauge');
-			expect(metrics[0].name).to.equal('node_eventloop_lag_milliseconds');
+			expect(metrics[0].name).to.equal('nodejs_eventloop_lag_milliseconds');
 
 			done();
 		}, 5);
