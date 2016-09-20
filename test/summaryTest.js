@@ -2,12 +2,17 @@
 
 describe('summary', function() {
 	var Summary = require('../index').Summary;
+	var register = require('../index').register;
 	var expect = require('chai').expect;
 	var sinon = require('sinon');
 	var instance;
 
 	beforeEach(function() {
 		instance = new Summary('summary_test', 'test');
+	});
+
+	afterEach(function() {
+		register.clear();
 	});
 
 	it('should add a value to the summary', function() {
@@ -63,6 +68,7 @@ describe('summary', function() {
 	});
 
 	it('should correctly use calculate other percentiles when configured', function() {
+		register.clear();
 		instance = new Summary('summary_test', 'test', { percentiles: [ 0.5, 0.9 ] });
 		instance.observe(100);
 		instance.observe(100);
@@ -86,6 +92,7 @@ describe('summary', function() {
 	});
 
 	it('should allow to reset itself', function() {
+		register.clear();
 		instance = new Summary('summary_test', 'test', { percentiles: [ 0.5 ] });
 		instance.observe(100);
 		expect(instance.get().values[0].labels.quantile).to.equal(0.5);
@@ -111,6 +118,7 @@ describe('summary', function() {
 
 	describe('labels', function() {
 		beforeEach(function() {
+			register.clear();
 			instance = new Summary('summary_test', 'help', [ 'method', 'endpoint'], { percentiles: [ 0.9 ] });
 		});
 
