@@ -190,6 +190,15 @@ xhrRequest(function(err, res) {
 });
 ```
 
+#### Register
+
+You can get all metrics by running `register.metrics()`, which will output a string for prometheus to consume.
+
+##### Removing metrics
+
+You can remove all metrics by calling `register.clearMetrics()`. You can also remove a single metric by calling
+`register.removeSingleMetric(*name of metric*)`.
+
 #### Pushgateway
 
 It is possible to push metrics via a [Pushgateway](https://github.com/prometheus/pushgateway). 
