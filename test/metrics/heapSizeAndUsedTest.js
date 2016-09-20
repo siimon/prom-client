@@ -15,13 +15,17 @@ describe('heapSizeAndUsed', function() {
 	});
 
 	it('should set total heap size gauge with total from memoryUsage', function() {
-		process.memoryUsage = function() { return { heapTotal: 1000, heapUsed: 500 }; };
+		process.memoryUsage = function() {
+			return { heapTotal: 1000, heapUsed: 500 };
+		};
 		var totalGauge = heapSizeAndUsed()().total.get();
 		expect(totalGauge.values[0].value).to.equal(1000);
 	});
 
 	it('should set used gauge with used from memoryUsage', function() {
-		process.memoryUsage = function() { return { heapTotal: 1000, heapUsed: 500 }; };
+		process.memoryUsage = function() {
+			return { heapTotal: 1000, heapUsed: 500 };
+		};
 		var gauge = heapSizeAndUsed()().used.get();
 		expect(gauge.values[0].value).to.equal(500);
 	});
