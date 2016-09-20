@@ -107,12 +107,28 @@ describe('register', function() {
 		});
 	});
 
-	function getMetric() {
+	it('should allow removing single metrics', function() {
+		register.registerMetric(getMetric());
+		register.registerMetric(getMetric('some other name'));
+
+		var output = register.getMetricsAsJSON();
+		expect(output.length).to.equal(2);
+
+		register.removeSingleMetric('test_metric');
+
+		output = register.getMetricsAsJSON();
+
+		expect(output.length).to.equal(1);
+		expect(output[0].name).to.equal('some other name');
+	});
+
+	function getMetric(name) {
+		name = name || 'test_metric';
 		return {
-			name: 'test_metric',
+			name: name,
 			get: function() {
 				return {
-					name: 'test_metric',
+					name: name,
 					type: 'counter',
 					help: 'A test metric',
 					values: [ {
