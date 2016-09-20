@@ -2,6 +2,7 @@
 
 describe('histogram', function() {
 	var Histogram = require('../index').Histogram;
+	var register = require('../index').register;
 	var sinon = require('sinon');
 	var expect = require('chai').expect;
 	var instance;
@@ -10,6 +11,7 @@ describe('histogram', function() {
 	});
 	afterEach(function() {
 		instance = null;
+		register.clear();
 	});
 
 	it('should increase count', function() {
@@ -50,7 +52,7 @@ describe('histogram', function() {
 	});
 
 	it('should add buckets in increasing numerical order', function() {
-		var histogram = new Histogram('test_histogram', 'test', { buckets: [1, 5] });
+		var histogram = new Histogram('test_histogram_2', 'test', { buckets: [1, 5] });
 		histogram.observe(1.5);
 		var values = histogram.get().values;
 		expect(values[0].labels.le).to.equal(1);
@@ -58,7 +60,7 @@ describe('histogram', function() {
 		expect(values[2].labels.le).to.equal('+Inf');
 	});
 	it('should group counts on each label set', function() {
-		var histogram = new Histogram('test_histogram', 'test', [ 'code' ]);
+		var histogram = new Histogram('test_histogram_2', 'test', [ 'code' ]);
 		histogram.observe({ code: '200' }, 1);
 		histogram.observe({ code: '300' }, 1);
 		var values = getValuesByLabel(1, histogram.get().values);
@@ -109,7 +111,7 @@ describe('histogram', function() {
 		var valuePair = getValueByName('test_histogram_count', instance.get().values);
 		expect(valuePair.value).to.equal(1);
 		instance.reset();
-		var valuePair = getValueByName('test_histogram_count', instance.get().values);
+		valuePair = getValueByName('test_histogram_count', instance.get().values);
 		expect(valuePair.value).to.equal(undefined);
 	});
 
@@ -152,7 +154,7 @@ describe('histogram', function() {
 		});
 
 		it('should allow labels before and after timers', function(){
-			instance = new Histogram('histogram_labels', 'Histogram with labels fn', [ 'method', 'success' ]);
+			instance = new Histogram('histogram_labels_2', 'Histogram with labels fn', [ 'method', 'success' ]);
 			var clock = sinon.useFakeTimers();
 			var end = instance.startTimer({ 'method': 'get' });
 			clock.tick(500);

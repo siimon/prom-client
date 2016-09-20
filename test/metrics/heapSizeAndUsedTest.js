@@ -2,11 +2,13 @@
 
 describe('heapSizeAndUsed', function() {
 	var heapSizeAndUsed = require('../../lib/metrics/heapSizeAndUsed');
+	var register = require('../../lib/register');
 	var memoryUsedFn = process.memoryUsage;
 	var expect = require('chai').expect;
 
 	afterEach(function() {
 		process.memoryUsage = memoryUsedFn;
+		register.clear();
 	});
 
 	it('should return an empty function if memoryUsed does not exist', function() {

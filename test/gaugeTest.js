@@ -3,11 +3,16 @@
 describe('gauge', function() {
 	var expect = require('chai').expect;
 	var Gauge = require('../index').Gauge;
+	var register = require('../index').register;
 	var sinon = require('sinon');
 	var instance;
 	beforeEach(function() {
 		instance = new Gauge('gauge_test', 'help');
 		instance.set(10);
+	});
+
+	afterEach(function() {
+		register.clear();
 	});
 
 	it('should set a gauge to provided value', function() {
@@ -97,7 +102,7 @@ describe('gauge', function() {
 			clock.restore();
 		});
 		it('should allow labels before and after timers', function(){
-			instance = new Gauge('name', 'help', ['code', 'success']);
+			instance = new Gauge('name_2', 'help', ['code', 'success']);
 			var clock = sinon.useFakeTimers();
 			var end = instance.startTimer({ 'code': 200 });
 			clock.tick(1000);

@@ -2,11 +2,16 @@
 
 describe('counter', function() {
 	var Counter = require('../index').Counter;
+	var register = require('../index').register;
 	var expect = require('chai').expect;
 	var instance;
 
 	beforeEach(function() {
 		instance = new Counter('gauge_test', 'test');
+	});
+
+	afterEach(function() {
+		register.clear();
 	});
 
 	it('should increment counter', function() {
@@ -27,7 +32,7 @@ describe('counter', function() {
 
 	describe('labels', function() {
 		beforeEach(function() {
-			instance = new Counter('gauge_test', 'help', [ 'method', 'endpoint']);
+			instance = new Counter('gauge_test_2', 'help', [ 'method', 'endpoint']);
 		});
 
 		it('should 1 value per label', function() {
