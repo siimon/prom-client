@@ -1,0 +1,30 @@
+'use strict';
+
+describe('heapSizeAndUsed', function() {
+	var heapSizeAndUsed = require('../../lib/metrics/heapSizeAndUsed');
+	var memoryUsedFn = process.memoryUsage;
+	var expect = require('chai').expect;
+
+	afterEach(function() {
+		process.memoryUsage = memoryUsedFn;
+	});
+
+	it('should return an empty function if memoryUsed does not exist', function() {
+		process.memoryUsage = null;
+		expect(heapSizeAndUsed()()).to.be.undefined;
+	});
+
+	it('should set total heap size gauge with total from memoryUsage', function() {
+		process.memoryUsage = function() { return { heapTotal: 1000, heapUsed: 500 }; };
+		var totalGauge = heapSizeAndUsed()().total.get();
+		expect(totalGauge.values[0].value).to.equal(1000);
+	});
+
+	it('should set used gauge with used from memoryUsage', function() {
+		process.memoryUsage = function() { return { heapTotal: 1000, heapUsed: 500 }; };
+		var gauge = heapSizeAndUsed()().used.get();
+		expect(gauge.values[0].value).to.equal(500);
+	});
+
+
+});
