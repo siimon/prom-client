@@ -8,7 +8,7 @@ describe('defaultMetrics', function() {
 	var cpuUsage;
 	var interval;
 
-	before(function () {
+	before(function() {
 		platform = process.platform;
 		cpuUsage = process.cpuUsage;
 
@@ -18,12 +18,12 @@ describe('defaultMetrics', function() {
 
 		if(cpuUsage) {
 			Object.defineProperty(process, 'cpuUsage', {
-				value: function () {
+				value: function() {
 					return { user: 1000, system: 10 };
 				}
 			});
 		} else {
-			process.cpuUsage = function () {
+			process.cpuUsage = function() {
 				return { user: 1000, system: 10 };
 			};
 		}
@@ -31,7 +31,7 @@ describe('defaultMetrics', function() {
 		register.clear();
 	});
 
-	after(function () {
+	after(function() {
 		Object.defineProperty(process, 'platform', {
 			value: platform
 		});
