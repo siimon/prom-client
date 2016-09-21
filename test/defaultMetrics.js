@@ -68,4 +68,19 @@ describe('defaultMetrics', function() {
 		register.clear();
 		expect(register.getMetricsAsJSON()).to.have.length(0);
 	});
+
+
+	describe('disabling', function() {
+		it('should not throw error', function() {
+			var fn = function() {
+				delete require.cache[require.resolve('../index')];
+				var client = require('../index');
+				clearInterval(client.defaultMetrics());
+				register.clear();
+			};
+
+			expect(fn).to.not.throw(Error);
+		});
+	});
+
 });
