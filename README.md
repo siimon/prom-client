@@ -196,7 +196,7 @@ You can get all metrics by running `register.metrics()`, which will output a str
 
 ##### Removing metrics
 
-You can remove all metrics by calling `register.clearMetrics()`. You can also remove a single metric by calling
+You can remove all metrics by calling `register.clear()`. You can also remove a single metric by calling
 `register.removeSingleMetric(*name of metric*)`.
 
 #### Pushgateway
