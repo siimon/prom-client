@@ -30,6 +30,11 @@ describe('counter', function() {
 		expect(fn).to.throw(Error);
 	});
 
+	it('should not increment counter if you inc with 0', function() {
+		instance.inc(0);
+		expect(instance.get().values).to.have.lengthOf(0);
+	});
+
 	describe('labels', function() {
 		beforeEach(function() {
 			instance = new Counter('gauge_test_2', 'help', [ 'method', 'endpoint']);
