@@ -21,9 +21,9 @@ describe('eventLoopLag', function() {
 			var metrics = register.getMetricsAsJSON();
 			expect(metrics).to.have.length(1);
 
-			expect(metrics[0].help).to.equal('Lag of event loop in seconds.');
+			expect(metrics[0].help).to.equal('Lag of event loop in milliseconds.');
 			expect(metrics[0].type).to.equal('gauge');
-			expect(metrics[0].name).to.equal('nodejs_eventloop_lag_seconds');
+			expect(metrics[0].name).to.equal('nodejs_eventloop_lag_milliseconds');
 
 			done();
 		}, 5);
