@@ -1,6 +1,6 @@
 {
   "name": "prom-client",
-  "version": "5.0.4",
+  "version": "6.0.0",
   "description": "Client for prometheus",
   "main": "index.js",
   "files": [
