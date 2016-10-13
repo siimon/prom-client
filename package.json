@@ -1,6 +1,6 @@
 {
   "name": "prom-client",
-  "version": "6.0.0",
+  "version": "6.1.0",
   "description": "Client for prometheus",
   "main": "index.js",
   "files": [
@@ -14,7 +14,7 @@
     "test": "npm run lint && npm run compile-typescript && npm run test-unit",
     "lint": "node-version-gte-4 && eslint . || node-version-lt-4",
     "test-unit": "mocha --recursive test/",
-		"compile-typescript": "tsc index.d.ts"
+    "compile-typescript": "tsc index.d.ts"
   },
   "repository": {
     "type": "git",
