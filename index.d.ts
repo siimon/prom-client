@@ -294,7 +294,7 @@ export namespace Histogram {
 		/**
 		 * Buckets used in the histogram
 		 */
-		buckets?: [number]
+		buckets?: number[]
 	}
 }
 
@@ -371,7 +371,7 @@ export namespace Summary {
 		/**
 		 * Configurable percentiles, values should never be greater than 1
 		 */
-		percentiles?: [number]
+		percentiles?: number[]
 	}
 }
 
@@ -426,7 +426,7 @@ export namespace Pushgateway {
  * @param count The number of items in array
  * @return An array with the requested number of elements
  */
-export function linearBuckets(start: number, width: number, count: number): [number]
+export function linearBuckets(start: number, width: number, count: number): number[]
 /**
  * Create an array that grows exponentially
  * @param start The first value in the array
@@ -434,7 +434,7 @@ export function linearBuckets(start: number, width: number, count: number): [num
  * @param count The number of items in array
  * @return An array with the requested number of elements
  */
-export function exponentialBuckets(start: number, factor: number, count: number): [number]
+export function exponentialBuckets(start: number, factor: number, count: number): number[]
 /**
  * Configure default metrics
  * @param blacklist Metrics to blacklist, i.e. dont collect
