@@ -389,19 +389,19 @@ export class Pushgateway {
 	 * @param params Push parameters
 	 * @param callback Callback when request is complete
 	 */
-	pushAdd(params: Pushgateway.Parameters, callback: (error?: Error, httpResponse?: any, body?: any) => void)
+	pushAdd(params: Pushgateway.Parameters, callback: (error?: Error, httpResponse?: any, body?: any) => void): void;
 	/**
 	 * Overwrite all metric (using PUT to Pushgateway)
 	 * @param params Push parameters
 	 * @param callback Callback when request is complete
 	 */
-	push(params: Pushgateway.Parameters, callback: (error?: Error, httpResponse?: any, body?: any) => void)
+	push(params: Pushgateway.Parameters, callback: (error?: Error, httpResponse?: any, body?: any) => void): void;
 	/**
 	 * Delete all metrics for jobName
 	 * @param params Push parameters
 	 * @param callback Callback when request is complete
 	 */
-	delete(params: Pushgateway.Parameters, callback: (error?: Error, httpResponse?: any, body?: any) => void)
+	delete(params: Pushgateway.Parameters, callback: (error?: Error, httpResponse?: any, body?: any) => void): void;
 }
 
 export namespace Pushgateway {
