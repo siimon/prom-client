@@ -16,7 +16,7 @@ export interface register {
 	/**
 	 * Get all metrics as objects
 	 */
-	getMetricsAsJSON(): [metric]
+	getMetricsAsJSON(): metric[]
 	/**
 	 * Remove a single metric
 	 * @param name The name of the metric to remove
@@ -54,7 +54,7 @@ export class Counter {
 	 * @param help Help description
 	 * @param labels Label keys
 	 */
-	constructor(name: string, help: string, labels?: [string])
+	constructor(name: string, help: string, labels?: string[])
 
 	/**
 	 * Increment with one
@@ -79,7 +79,7 @@ export class Counter {
 	 * @param values Label values
 	 * @return Configured counter with given labels
 	 */
-	labels(values: [string]): Counter.Internal
+	labels(values: string[]): Counter.Internal
 }
 
 
@@ -107,7 +107,7 @@ export class Gauge {
 	 * @param help Help description
 	 * @param labels Label keys
 	 */
-	constructor(name: string, help: string, labels?: [string])
+	constructor(name: string, help: string, labels?: string[])
 
 	/**
 	 * Increment gauge with one
@@ -176,7 +176,7 @@ export class Gauge {
 	 * @param values Label values
 	 * @return Configured gauge with given labels
 	 */
-	labels(values: [string]): Gauge.Internal
+	labels(values: string[]): Gauge.Internal
 }
 
 export namespace Gauge {
@@ -231,7 +231,7 @@ export class Histogram {
 	 * @param help Help description
 	 * @param labels Label keys
 	 */
-	constructor(name: string, help: string, labels: [string])
+	constructor(name: string, help: string, labels: string[])
 	/**
 	 * @param name The name of metric
 	 * @param help Help description
@@ -244,7 +244,7 @@ export class Histogram {
 	 * @param labels Label keys
 	 * @param config Configuration object for Histograms
 	 */
-	constructor(name: string, help: string, labels?: [string], config?: Histogram.Config)
+	constructor(name: string, help: string, labels?: string[], config?: Histogram.Config)
 
 	/**
 	 * Observe value
@@ -272,7 +272,7 @@ export class Histogram {
 	 * @param values Label values
 	 * @return Configured histogram with given labels
 	 */
-	labels(values: [string]): Histogram.Internal
+	labels(values: string[]): Histogram.Internal
 }
 
 export namespace Histogram {
@@ -307,7 +307,7 @@ export class Summary {
 	 * @param help Help description
 	 * @param labels Label keys
 	 */
-	constructor(name: string, help: string, labels: [string])
+	constructor(name: string, help: string, labels: string[])
 	/**
 	 * @param name The name of the metric
 	 * @param help Help description
@@ -320,7 +320,7 @@ export class Summary {
 	 * @param labels Label keys
 	 * @param config Configuration object
 	 */
-	constructor(name: string, help: string, labels?: [string], config?: Summary.Config)
+	constructor(name: string, help: string, labels?: string[], config?: Summary.Config)
 
 	/**
 	 * Observe value in summary
@@ -349,7 +349,7 @@ export class Summary {
 	 * @param values Label values
 	 * @return Configured summary with given labels
 	 */
-	labels(values: [string]): Summary.Internal
+	labels(values: string[]): Summary.Internal
 }
 
 export namespace Summary {
@@ -441,11 +441,11 @@ export function exponentialBuckets(start: number, factor: number, count: number)
  * @param interval The interval how often the default metrics should be probed
  * @return The setInterval number
  */
-export function defaultMetrics(blacklist: [string], interval: number): number
+export function defaultMetrics(blacklist: string[], interval: number): number
 
 export interface defaultMetrics {
 	/**
 	 * All enabled default metrics
 	 */
-	metricsList: [string]
+	metricsList: string[]
 }
