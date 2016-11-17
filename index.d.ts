@@ -36,13 +36,13 @@ export enum MetricType {
 	Summary
 }
 
-interface metric{
+interface metric {
 	name: string,
 	help: string,
 	type: MetricType
 }
 interface labelValues {
-	[key: string]: string
+	[key: string]: string|number
 }
 
 /**
@@ -57,22 +57,17 @@ export class Counter {
 	constructor(name: string, help: string, labels?: string[])
 
 	/**
-	 * Increment with one
+	 * Increment for given labels
+	 * @param labels Object with label keys and values
+	 * @param value The number to increment with
 	 */
-	inc(): void
+	inc(labels: labelValues, value?: number): void
 
 	/**
 	 * Increment with value
 	 * @param value The value to increment with
 	 */
-	inc(value: number): void
-
-	/**
-	 * Increment for given labels
-	 * @param labels Object with label keys and values
-	 * @param value The number to increment with
-	 */
-	inc(labels: labelValues, value: number): void
+	inc(value?: number): void
 
 	/**
 	 * Return the child for given labels
@@ -86,14 +81,10 @@ export class Counter {
 export namespace Counter {
 	interface Internal {
 		/**
-		 * Increment with one
-		 */
-		inc(): void
-		/**
 		 * Increment with value
 		 * @param value The value to increment with
 		 */
-		inc(value: number): void
+		inc(value?: number): void
 	}
 
 }
@@ -110,17 +101,6 @@ export class Gauge {
 	constructor(name: string, help: string, labels?: string[])
 
 	/**
-	 * Increment gauge with one
-	 */
-	inc(): void
-
-	/**
-	 * Increment gauge
-	 * @param value The value to increment with
-	 */
-	inc(value: number): void
-
-	/**
 	 * Increment gauge for given labels
 	 * @param labels Object with label keys and values
 	 * @param value The value to increment with
@@ -128,28 +108,24 @@ export class Gauge {
 	inc(labels: labelValues, value?: number): void
 
 	/**
-	 * Decrement gauge with one
+	 * Increment gauge
+	 * @param value The value to increment with
 	 */
-	dec(): void
-
-	/**
-	 * Decrement gauge
-	 * @param value The value to decrement with
-	 */
-	dec(value: number): void
+	inc(value?: number): void
 
 	/**
 	 * Decrement gauge
 	 * @param labels Object with label keys and values
 	 * @param value Value to decrement with
 	 */
-	dec(labels: labelValues, value: number): void
+	dec(labels: labelValues, value?: number): void
 
 	/**
-	 * Set gauge value
-	 * @param value The value to set
+	 * Decrement gauge
+	 * @param value The value to decrement with
 	 */
-	set(value: number): void
+	dec(value?: number): void
+
 
 	/**
 	 * Set gauge value for labels
@@ -157,6 +133,12 @@ export class Gauge {
 	 * @param value The value to set
 	 */
 	set(labels: labelValues, value: number): void
+
+	/**
+	 * Set gauge value
+	 * @param value The value to set
+	 */
+	set(value: number): void
 
 	/**
 	 * Set gauge value to current epoch time in ms
@@ -182,26 +164,16 @@ export class Gauge {
 export namespace Gauge {
 	interface Internal {
 		/**
-		 * Increment with one
-		 */
-		inc(): void
-
-		/**
 		 * Increment gauge with value
 		 * @param value The value to increment with
 		 */
-		inc(value: number): void
-
-		/**
-		 * Decrement gauge with one
-		 */
-		dec(): void
+		inc(value?: number): void
 
 		/**
 		 * Decrement with value
 		 * @param value The value to decrement with
 		 */
-		dec(value: number): void
+		dec(value?: number): void
 
 		/**
 		 * Set gauges value
@@ -230,21 +202,15 @@ export class Histogram {
 	 * @param name The name of metric
 	 * @param help Help description
 	 * @param labels Label keys
+	 * @param config Configuration object for Histograms
 	 */
-	constructor(name: string, help: string, labels: string[])
+	constructor(name: string, help: string, labels?: string[], config?: Histogram.Config)
 	/**
 	 * @param name The name of metric
 	 * @param help Help description
 	 * @param config Configuration object for Histograms
 	 */
 	constructor(name: string, help: string, config: Histogram.Config)
-	/**
-	 * @param name The name of metric
-	 * @param help Help description
-	 * @param labels Label keys
-	 * @param config Configuration object for Histograms
-	 */
-	constructor(name: string, help: string, labels?: string[], config?: Histogram.Config)
 
 	/**
 	 * Observe value
@@ -306,21 +272,15 @@ export class Summary {
 	 * @param name The name of the metric
 	 * @param help Help description
 	 * @param labels Label keys
+	 * @param config Configuration object
 	 */
-	constructor(name: string, help: string, labels: string[])
+	constructor(name: string, help: string, labels?: string[], config?: Summary.Config)
 	/**
 	 * @param name The name of the metric
 	 * @param help Help description
 	 * @param config Configuration object
 	 */
 	constructor(name: string, help: string, config: Summary.Config)
-	/**
-	 * @param name The name of the metric
-	 * @param help Help description
-	 * @param labels Label keys
-	 * @param config Configuration object
-	 */
-	constructor(name: string, help: string, labels?: string[], config?: Summary.Config)
 
 	/**
 	 * Observe value in summary
