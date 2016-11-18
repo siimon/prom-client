@@ -16,7 +16,7 @@ export interface register {
 	/**
 	 * Get all metrics as objects
 	 */
-	getMetricsAsJSON(): [metric]
+	getMetricsAsJSON(): metric[]
 	/**
 	 * Remove a single metric
 	 * @param name The name of the metric to remove
@@ -36,13 +36,13 @@ export enum MetricType {
 	Summary
 }
 
-interface metric{
+interface metric {
 	name: string,
 	help: string,
 	type: MetricType
 }
 interface labelValues {
-	[key: string]: string
+	[key: string]: string|number
 }
 
 /**
@@ -54,46 +54,37 @@ export class Counter {
 	 * @param help Help description
 	 * @param labels Label keys
 	 */
-	constructor(name: string, help: string, labels?: [string])
-
-	/**
-	 * Increment with one
-	 */
-	inc(): void
-
-	/**
-	 * Increment with value
-	 * @param value The value to increment with
-	 */
-	inc(value: number): void
+	constructor(name: string, help: string, labels?: string[])
 
 	/**
 	 * Increment for given labels
 	 * @param labels Object with label keys and values
 	 * @param value The number to increment with
 	 */
-	inc(labels: labelValues, value: number): void
+	inc(labels: labelValues, value?: number): void
+
+	/**
+	 * Increment with value
+	 * @param value The value to increment with
+	 */
+	inc(value?: number): void
 
 	/**
 	 * Return the child for given labels
 	 * @param values Label values
 	 * @return Configured counter with given labels
 	 */
-	labels(values: [string]): Counter.Internal
+	labels(...values: string[]): Counter.Internal
 }
 
 
 export namespace Counter {
 	interface Internal {
 		/**
-		 * Increment with one
-		 */
-		inc(): void
-		/**
 		 * Increment with value
 		 * @param value The value to increment with
 		 */
-		inc(value: number): void
+		inc(value?: number): void
 	}
 
 }
@@ -107,18 +98,7 @@ export class Gauge {
 	 * @param help Help description
 	 * @param labels Label keys
 	 */
-	constructor(name: string, help: string, labels?: [string])
-
-	/**
-	 * Increment gauge with one
-	 */
-	inc(): void
-
-	/**
-	 * Increment gauge
-	 * @param value The value to increment with
-	 */
-	inc(value: number): void
+	constructor(name: string, help: string, labels?: string[])
 
 	/**
 	 * Increment gauge for given labels
@@ -128,28 +108,24 @@ export class Gauge {
 	inc(labels: labelValues, value?: number): void
 
 	/**
-	 * Decrement gauge with one
+	 * Increment gauge
+	 * @param value The value to increment with
 	 */
-	dec(): void
-
-	/**
-	 * Decrement gauge
-	 * @param value The value to decrement with
-	 */
-	dec(value: number): void
+	inc(value?: number): void
 
 	/**
 	 * Decrement gauge
 	 * @param labels Object with label keys and values
 	 * @param value Value to decrement with
 	 */
-	dec(labels: labelValues, value: number): void
+	dec(labels: labelValues, value?: number): void
 
 	/**
-	 * Set gauge value
-	 * @param value The value to set
+	 * Decrement gauge
+	 * @param value The value to decrement with
 	 */
-	set(value: number): void
+	dec(value?: number): void
+
 
 	/**
 	 * Set gauge value for labels
@@ -157,6 +133,12 @@ export class Gauge {
 	 * @param value The value to set
 	 */
 	set(labels: labelValues, value: number): void
+
+	/**
+	 * Set gauge value
+	 * @param value The value to set
+	 */
+	set(value: number): void
 
 	/**
 	 * Set gauge value to current epoch time in ms
@@ -176,32 +158,22 @@ export class Gauge {
 	 * @param values Label values
 	 * @return Configured gauge with given labels
 	 */
-	labels(values: [string]): Gauge.Internal
+	labels(...values: string[]): Gauge.Internal
 }
 
 export namespace Gauge {
 	interface Internal {
 		/**
-		 * Increment with one
-		 */
-		inc(): void
-
-		/**
 		 * Increment gauge with value
 		 * @param value The value to increment with
 		 */
-		inc(value: number): void
-
-		/**
-		 * Decrement gauge with one
-		 */
-		dec(): void
+		inc(value?: number): void
 
 		/**
 		 * Decrement with value
 		 * @param value The value to decrement with
 		 */
-		dec(value: number): void
+		dec(value?: number): void
 
 		/**
 		 * Set gauges value
@@ -230,21 +202,15 @@ export class Histogram {
 	 * @param name The name of metric
 	 * @param help Help description
 	 * @param labels Label keys
+	 * @param config Configuration object for Histograms
 	 */
-	constructor(name: string, help: string, labels: [string])
+	constructor(name: string, help: string, labels?: string[], config?: Histogram.Config)
 	/**
 	 * @param name The name of metric
 	 * @param help Help description
 	 * @param config Configuration object for Histograms
 	 */
 	constructor(name: string, help: string, config: Histogram.Config)
-	/**
-	 * @param name The name of metric
-	 * @param help Help description
-	 * @param labels Label keys
-	 * @param config Configuration object for Histograms
-	 */
-	constructor(name: string, help: string, labels?: [string], config?: Histogram.Config)
 
 	/**
 	 * Observe value
@@ -272,7 +238,7 @@ export class Histogram {
 	 * @param values Label values
 	 * @return Configured histogram with given labels
 	 */
-	labels(values: [string]): Histogram.Internal
+	labels(...values: string[]): Histogram.Internal
 }
 
 export namespace Histogram {
@@ -294,7 +260,7 @@ export namespace Histogram {
 		/**
 		 * Buckets used in the histogram
 		 */
-		buckets?: [number]
+		buckets?: number[]
 	}
 }
 
@@ -306,21 +272,15 @@ export class Summary {
 	 * @param name The name of the metric
 	 * @param help Help description
 	 * @param labels Label keys
+	 * @param config Configuration object
 	 */
-	constructor(name: string, help: string, labels: [string])
+	constructor(name: string, help: string, labels?: string[], config?: Summary.Config)
 	/**
 	 * @param name The name of the metric
 	 * @param help Help description
 	 * @param config Configuration object
 	 */
 	constructor(name: string, help: string, config: Summary.Config)
-	/**
-	 * @param name The name of the metric
-	 * @param help Help description
-	 * @param labels Label keys
-	 * @param config Configuration object
-	 */
-	constructor(name: string, help: string, labels?: [string], config?: Summary.Config)
 
 	/**
 	 * Observe value in summary
@@ -349,7 +309,7 @@ export class Summary {
 	 * @param values Label values
 	 * @return Configured summary with given labels
 	 */
-	labels(values: [string]): Summary.Internal
+	labels(...values: string[]): Summary.Internal
 }
 
 export namespace Summary {
@@ -371,7 +331,7 @@ export namespace Summary {
 		/**
 		 * Configurable percentiles, values should never be greater than 1
 		 */
-		percentiles?: [number]
+		percentiles?: number[]
 	}
 }
 
@@ -389,19 +349,19 @@ export class Pushgateway {
 	 * @param params Push parameters
 	 * @param callback Callback when request is complete
 	 */
-	pushAdd(params: Pushgateway.Parameters, callback: (error?: Error, httpResponse?: any, body?: any) => void)
+	pushAdd(params: Pushgateway.Parameters, callback: (error?: Error, httpResponse?: any, body?: any) => void): void;
 	/**
 	 * Overwrite all metric (using PUT to Pushgateway)
 	 * @param params Push parameters
 	 * @param callback Callback when request is complete
 	 */
-	push(params: Pushgateway.Parameters, callback: (error?: Error, httpResponse?: any, body?: any) => void)
+	push(params: Pushgateway.Parameters, callback: (error?: Error, httpResponse?: any, body?: any) => void): void;
 	/**
 	 * Delete all metrics for jobName
 	 * @param params Push parameters
 	 * @param callback Callback when request is complete
 	 */
-	delete(params: Pushgateway.Parameters, callback: (error?: Error, httpResponse?: any, body?: any) => void)
+	delete(params: Pushgateway.Parameters, callback: (error?: Error, httpResponse?: any, body?: any) => void): void;
 }
 
 export namespace Pushgateway {
@@ -426,7 +386,7 @@ export namespace Pushgateway {
  * @param count The number of items in array
  * @return An array with the requested number of elements
  */
-export function linearBuckets(start: number, width: number, count: number): [number]
+export function linearBuckets(start: number, width: number, count: number): number[]
 /**
  * Create an array that grows exponentially
  * @param start The first value in the array
@@ -434,18 +394,18 @@ export function linearBuckets(start: number, width: number, count: number): [num
  * @param count The number of items in array
  * @return An array with the requested number of elements
  */
-export function exponentialBuckets(start: number, factor: number, count: number): [number]
+export function exponentialBuckets(start: number, factor: number, count: number): number[]
 /**
  * Configure default metrics
  * @param blacklist Metrics to blacklist, i.e. dont collect
  * @param interval The interval how often the default metrics should be probed
  * @return The setInterval number
  */
-export function defaultMetrics(blacklist: [string], interval: number): number
+export function defaultMetrics(blacklist: string[], interval: number): number
 
 export interface defaultMetrics {
 	/**
 	 * All enabled default metrics
 	 */
-	metricsList: [string]
+	metricsList: string[]
 }
