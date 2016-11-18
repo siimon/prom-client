@@ -74,7 +74,7 @@ export class Counter {
 	 * @param values Label values
 	 * @return Configured counter with given labels
 	 */
-	labels(values: string[]): Counter.Internal
+	labels(...values: string[]): Counter.Internal
 }
 
 
@@ -158,7 +158,7 @@ export class Gauge {
 	 * @param values Label values
 	 * @return Configured gauge with given labels
 	 */
-	labels(values: string[]): Gauge.Internal
+	labels(...values: string[]): Gauge.Internal
 }
 
 export namespace Gauge {
@@ -238,7 +238,7 @@ export class Histogram {
 	 * @param values Label values
 	 * @return Configured histogram with given labels
 	 */
-	labels(values: string[]): Histogram.Internal
+	labels(...values: string[]): Histogram.Internal
 }
 
 export namespace Histogram {
@@ -309,7 +309,7 @@ export class Summary {
 	 * @param values Label values
 	 * @return Configured summary with given labels
 	 */
-	labels(values: string[]): Summary.Internal
+	labels(...values: string[]): Summary.Internal
 }
 
 export namespace Summary {
