@@ -122,6 +122,14 @@ describe('register', function() {
 		expect(output[0].name).to.equal('some other name');
 	});
 
+	it('should allow getting single metrics', function() {
+		var metric = getMetric();
+		register.registerMetric(metric);
+
+		var output = register.getSingleMetric('test_metric');
+		expect(output).to.equal(metric);
+	});
+
 	function getMetric(name) {
 		name = name || 'test_metric';
 		return {
