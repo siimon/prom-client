@@ -209,7 +209,7 @@ It is possible to push metrics via a [Pushgateway](https://github.com/prometheus
 
 ```js
 var client = require('prom-client');
-var gateway = new client.Pushgateway('127.0.0.1:9091');
+var gateway = new client.Pushgateway('http://127.0.0.1:9091');
 
 gateway.pushAdd({ jobName: 'test' }, function(err, resp, body) { }); //Add metric and overwrite old ones
 gateway.push({ jobName: 'test' }, function(err, resp, body) { }); //Overwrite all metrics (use PUT)
