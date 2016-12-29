@@ -34,6 +34,7 @@
     "eslint": "^3.5.0",
     "express": "^4.13.3",
     "mocha": "^2.3.4",
+    "mockery": "^2.0.0",
     "nock": "^8.0.0",
     "node-version-check": "^2.1.1",
     "sinon": "^1.17.2",
