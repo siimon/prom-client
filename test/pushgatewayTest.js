@@ -112,11 +112,11 @@ describe('pushgateway', function() {
 	});
 
 	function setupNock(responseCode, method, path) {
-		return nock('http://192.168.99.100:9091', {'encodedQueryParams':true})
-			[method](path)
-			.reply(202, '', {
-				'content-length': '0',
-				'content-type': 'text/plain; charset=utf-8',
-				connection: 'close' });
+		nock('http://192.168.99.100:9091', {'encodedQueryParams':true})
+		[method](path)
+		.reply(202, '', {
+			'content-length': '0',
+			'content-type': 'text/plain; charset=utf-8',
+			connection: 'close' });
 	}
 });
