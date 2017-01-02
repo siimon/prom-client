@@ -77,6 +77,40 @@ describe('pushgateway', function() {
 		});
 	});
 
+	describe('when using basic authentication', function() {
+		var USERNAME = 'unittest';
+		var PASSWORD = 'unittest';
+
+		beforeEach(function() {
+			instance = new Pushgateway('http://' + USERNAME + ':' + PASSWORD + '@192.168.99.100:9091');
+		});
+
+		function verifyResult(done, err, response) {
+			expect(err).not.to.exist;
+			expect(response.req.headers.authorization).to.match(/^Basic/);
+
+			done();
+		}
+
+		it('pushAdd should send POST request with basic auth data', function(done) {
+			setupNock(202, 'post', '/metrics/job/testJob');
+
+			instance.pushAdd({ jobName: 'testJob' }, verifyResult.bind({}, done));
+		});
+
+		it('push should send PUT request with basic auth data', function(done) {
+			setupNock(202, 'put', '/metrics/job/testJob');
+
+			instance.push({ jobName: 'testJob' }, verifyResult.bind({}, done));
+		});
+
+		it('delete should send DELETE request with basic auth data', function(done) {
+			setupNock(202, 'delete', '/metrics/job/testJob');
+
+			instance.delete({ jobName: 'testJob' }, verifyResult.bind({}, done));
+		});
+	});
+
 	function setupNock(responseCode, method, path) {
 		nock('http://192.168.99.100:9091', {'encodedQueryParams':true})
 		[method](path)
