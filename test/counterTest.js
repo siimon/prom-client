@@ -30,9 +30,9 @@ describe('counter', function() {
 		expect(fn).to.throw(Error);
 	});
 
-	it('should not increment counter if you inc with 0', function() {
+	it('should handle incrementing with 0', function() {
 		instance.inc(0);
-		expect(instance.get().values).to.have.lengthOf(0);
+		expect(instance.get().values[0].value).to.equal(0);
 	});
 
 	describe('labels', function() {
@@ -40,7 +40,7 @@ describe('counter', function() {
 			instance = new Counter('gauge_test_2', 'help', [ 'method', 'endpoint']);
 		});
 
-		it('should 1 value per label', function() {
+		it('should handle 1 value per label', function() {
 			instance.labels('GET', '/test').inc();
 			instance.labels('POST', '/test').inc();
 
