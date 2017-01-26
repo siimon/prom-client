@@ -17,19 +17,36 @@ describe('counter', function() {
 	it('should increment counter', function() {
 		instance.inc();
 		expect(instance.get().values[0].value).to.equal(1);
+		expect(instance.get().values[0].timestamp).to.equal(undefined);
 	});
 	it('should increment with a provided value', function() {
 		instance.inc(100);
 		expect(instance.get().values[0].value).to.equal(100);
+		expect(instance.get().values[0].timestamp).to.equal(undefined);
 	});
-
+	it('should increment with a provided value and timestamp', function() {
+		instance.inc(100, 1485392700000);
+		expect(instance.get().values[0].value).to.equal(100);
+		expect(instance.get().values[0].timestamp).to.equal(1485392700000);
+	});
+	it('should not allow non number as timestamp', function() {
+		var fn = function() {
+			instance.inc(1, 'blah');
+		};
+		expect(fn).to.throw(Error);
+	});
+	it('should not allow invalid date as timestamp', function() {
+		var fn = function() {
+			instance.inc(1, new Date('blah'));
+		};
+		expect(fn).to.throw(Error);
+	});
 	it('should not be possible to decrease a counter', function() {
 		var fn = function() {
 			instance.inc(-100);
 		};
 		expect(fn).to.throw(Error);
 	});
-
 	it('should handle incrementing with 0', function() {
 		instance.inc(0);
 		expect(instance.get().values[0].value).to.equal(0);

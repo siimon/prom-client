@@ -21,8 +21,11 @@ describe('register', function() {
 		it('with type as second item', function() {
 			expect(output[1]).to.equal('# TYPE test_metric counter');
 		});
-		it('with value of the metric as third item', function() {
+		it('with first value of the metric as third item', function() {
 			expect(output[2]).to.equal('test_metric{label="hello",code="303"} 12');
+		});
+		it('with second value of the metric as fourth item', function() {
+			expect(output[3]).to.equal('test_metric{label="bye",code="404"} 34 1485392700000');
 		});
 	});
 
@@ -103,7 +106,7 @@ describe('register', function() {
 			expect(output[0].name).to.equal('test_metric');
 			expect(output[0].type).to.equal('counter');
 			expect(output[0].help).to.equal('A test metric');
-			expect(output[0].values.length).to.equal(1);
+			expect(output[0].values.length).to.equal(2);
 		});
 	});
 
@@ -144,6 +147,13 @@ describe('register', function() {
 						labels: {
 							label: 'hello',
 							code: '303'
+						}
+					}, {
+						value: 34,
+						timestamp: 1485392700000,
+						labels: {
+							label: 'bye',
+							code: '404'
 						}
 					}]
 				};
