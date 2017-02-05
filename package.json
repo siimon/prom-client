@@ -37,7 +37,7 @@
     "mockery": "^2.0.0",
     "nock": "^8.0.0",
     "node-version-check": "^2.1.1",
-    "sinon": "^1.17.2",
+    "sinon": "^2.0.0-pre.5",
     "typescript": "^2.0.3"
   },
   "dependencies": {
