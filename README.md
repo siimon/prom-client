@@ -217,6 +217,9 @@ gateway.delete({ jobName: 'test' }, function(err, resp, body) { }); //Delete all
 
 //All gateway requests can have groupings on it
 gateway.pushAdd({ jobName: 'test', groupings: { key: 'value' } }, function(err, resp, body) { });
+
+//It's possible to extend the Pushgateway with request options from nodes core http/https library
+gateway = new client.Pushgateway('http://127.0.0.1:9091', { timeout: 5000 }); //Set the request timeout to 5000ms
 ```
 
 
