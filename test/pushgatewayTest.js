@@ -111,7 +111,7 @@ describe('pushgateway', function() {
 		});
 	});
 
-	it.only('should be possible to extend http/s requests with options', function(done) {
+	it('should be possible to extend http/s requests with options', function(done) {
 
 		nock('http://192.168.99.100:9091', {'encodedQueryParams':true})
 		.matchHeader('unit-test', '1')
