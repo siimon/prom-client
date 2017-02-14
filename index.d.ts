@@ -403,6 +403,12 @@ export function exponentialBuckets(start: number, factor: number, count: number)
  */
 export function defaultMetrics(blacklist: string[], interval: number): number
 
+/**
+ * Configure default metrics
+ * @return The setInterval number
+ */
+export function defaultMetrics(): number
+
 export interface defaultMetrics {
 	/**
 	 * All enabled default metrics
