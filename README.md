@@ -119,6 +119,13 @@ new client.Histogram('metric_name', 'metric_help', {
 	buckets: [ 0.10, 5, 15, 50, 100, 500 ]
 });
 ```
+If you need to include labels as well as configuration, you can also include those as the third parameter.
+```js
+var client = require('prom-client');
+new client.Histogram('metric_name', 'metric_help', [ 'status_code' ], {
+	buckets: [ 0.10, 5, 15, 50, 100, 500 ]
+});
+```
 
 Examples
 
