@@ -20,7 +20,7 @@ automatically for you when you do `require('prom-client')`.
 
 NOTE: Some of the metrics, concerning File Descriptors and Memory, are only available on Linux.
 
-In addition, some Node-specific metrics are included, such as event loop lag, and active handles. See what metrics there are in
+In addition, some Node-specific metrics are included, such as event loop lag, active handles and Node.js version. See what metrics there are in
 [lib/metrics](lib/metrics).
 
 The function returned from `defaultMetrics` takes 2 options, a blacklist of metrics to skip, and a timeout for how often the probe should
