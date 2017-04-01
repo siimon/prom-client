@@ -26,13 +26,18 @@ export interface register {
 	 * Get a single metric
 	 * @param name The name of the metric to remove
 	 */
-	getSingleMetric(name:string): metric
+	getSingleMetric(name:string): Metric
 }
 
 /**
  * The register that contains all metrics
  */
 export const register: register
+
+/**
+* General metric type
+*/
+export type Metric = Counter | Gauge | Summary | Histogram
 
 export enum MetricType {
 	Counter,
