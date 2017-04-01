@@ -33,11 +33,11 @@
     "chai": "^3.4.1",
     "eslint": "^3.5.0",
     "express": "^4.13.3",
-    "mocha": "^2.3.4",
+    "mocha": "^3.2.0",
     "mockery": "^2.0.0",
-    "nock": "^8.0.0",
+    "nock": "^9.0.11",
     "node-version-check": "^2.1.1",
-    "sinon": "^2.0.0-pre.5",
+    "sinon": "^2.0.0",
     "typescript": "^2.0.3"
   },
   "dependencies": {
