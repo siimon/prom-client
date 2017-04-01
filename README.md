@@ -245,6 +245,8 @@ new client.Histogram('metric_name', 'metric_help', {
 });
 ```
 
+The content-type prometheus expects is also exported as a constant, both on the `register` and from the main file of this project, called `contentType`.
+
 ### Garbage Collection
 
 To avoid dependencies in this module, GC stats are kept outside of it. If you want GC stats, you can use https://github.com/SimenB/node-prometheus-gc-stats

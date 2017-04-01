@@ -38,6 +38,7 @@ setInterval(function() {
 
 
 server.get('/metrics', function(req, res) {
+	res.set('Content-Type', register.contentType);
 	res.end(register.metrics());
 });
 
