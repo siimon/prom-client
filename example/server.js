@@ -42,4 +42,9 @@ server.get('/metrics', function(req, res) {
 	res.end(register.metrics());
 });
 
+server.get('/metrics/counter', function(req, res) {
+	res.set('Content-Type', register.contentType);
+	res.end(register.getSingleMetric('test_counter'));
+});
+
 server.listen(3000);
