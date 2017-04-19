@@ -201,9 +201,13 @@ xhrRequest(function(err, res) {
 
 You can get all metrics by running `register.metrics()`, which will output a string for prometheus to consume.
 
-##### Getting a single metric
+##### Geting a single metric for Prometheus displaying
 
-If you need to get a reference to a previously registered metric, you can use `register.getSingleMetric(*name of metric*)`.
+If you need to output a single metric for Prometheus, you can use `register.getSingleMetric(*name of metric*)`, it will output a string for Prometheus to consume.
+
+##### Getting a single metric object
+
+If you need to get a reference to a previously registered metric, you can use `register.getSingleMetricObject(*name of metric*)`.
 
 ##### Removing metrics
 
