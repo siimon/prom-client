@@ -126,7 +126,7 @@ describe('register', function() {
 		var metric = getMetric();
 		register.registerMetric(metric);
 
-		var output = register.getSingleMetric('test_metric');
+		var output = register.getSingleMetricObject('test_metric');
 		expect(output).to.equal(metric);
 	});
 
