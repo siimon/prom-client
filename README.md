@@ -203,11 +203,11 @@ You can get all metrics by running `register.metrics()`, which will output a str
 
 ##### Geting a single metric for Prometheus displaying
 
-If you need to output a single metric for Prometheus, you can use `register.getSingleMetric(*name of metric*)`, it will output a string for Prometheus to consume.
+If you need to output a single metric for Prometheus, you can use `register.getSingleMetricAsString(*name of metric*)`, it will output a string for Prometheus to consume.
 
-##### Getting a single metric object
+##### Getting a single metric
 
-If you need to get a reference to a previously registered metric, you can use `register.getSingleMetricObject(*name of metric*)`.
+If you need to get a reference to a previously registered metric, you can use `register.getSingleMetric(*name of metric*)`.
 
 ##### Removing metrics
 
@@ -216,7 +216,7 @@ You can remove all metrics by calling `register.clear()`. You can also remove a 
 
 #### Pushgateway
 
-It is possible to push metrics via a [Pushgateway](https://github.com/prometheus/pushgateway). 
+It is possible to push metrics via a [Pushgateway](https://github.com/prometheus/pushgateway).
 
 ```js
 var client = require('prom-client');
@@ -236,7 +236,7 @@ gateway = new client.Pushgateway('http://127.0.0.1:9091', { timeout: 5000 }); //
 
 #### Utilites
 
-For convenience, there are 2 bucket generator functions - linear and exponential. 
+For convenience, there are 2 bucket generator functions - linear and exponential.
 
 ```js
 var client = require('prom-client');
