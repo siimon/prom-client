@@ -24,9 +24,14 @@ export interface register {
 	removeSingleMetric(name: string): void
 	/**
 	 * Get a single metric
-	 * @param name The name of the metric to remove
+	 * @param name The name of the metric
 	 */
 	getSingleMetric(name:string): Metric
+	/**
+	 * Get a string representation of a single metric by name
+	 * @param name The name of the metric
+	 */
+	getSingleMetricAsString(name:string): string
 }
 
 /**
