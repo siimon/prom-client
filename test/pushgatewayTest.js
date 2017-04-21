@@ -111,6 +111,29 @@ describe('pushgateway', function() {
 		});
 	});
 
+	it('should be possible to extend http/s requests with options', function(done) {
+
+		nock('http://192.168.99.100:9091', {'encodedQueryParams':true})
+		.matchHeader('unit-test', '1')
+		.put('/metrics/job/testJob')
+		.reply(202, '', {
+			'content-length': '0',
+			'content-type': 'text/plain; charset=utf-8',
+			connection: 'close' });
+
+		instance = new Pushgateway('http://192.168.99.100:9091', {
+			headers: {
+				'unit-test': '1'
+			}
+		});
+
+		instance.push({ jobName: 'testJob' }, function(err, res, body) {
+			expect(err).to.not.exist;
+			expect(nock.isDone()).to.be.true;
+			done();
+		});
+	});
+
 	function setupNock(responseCode, method, path) {
 		nock('http://192.168.99.100:9091', {'encodedQueryParams':true})
 		[method](path)

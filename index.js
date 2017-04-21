@@ -6,6 +6,7 @@
 'use strict';
 
 exports.register = require('./lib/register');
+exports.contentType = require('./lib/register').contentType;
 
 exports.Counter = require('./lib/counter');
 exports.Gauge = require('./lib/gauge');

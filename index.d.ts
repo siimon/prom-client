@@ -22,12 +22,27 @@ export interface register {
 	 * @param name The name of the metric to remove
 	 */
 	removeSingleMetric(name: string): void
+	/**
+	 * Get a single metric
+	 * @param name The name of the metric
+	 */
+	getSingleMetric(name:string): Metric
+	/**
+	 * Get a string representation of a single metric by name
+	 * @param name The name of the metric
+	 */
+	getSingleMetricAsString(name:string): string
 }
 
 /**
  * The register that contains all metrics
  */
 export const register: register
+
+/**
+* General metric type
+*/
+export type Metric = Counter | Gauge | Summary | Histogram
 
 export enum MetricType {
 	Counter,
@@ -402,6 +417,12 @@ export function exponentialBuckets(start: number, factor: number, count: number)
  * @return The setInterval number
  */
 export function defaultMetrics(blacklist: string[], interval: number): number
+
+/**
+ * Configure default metrics
+ * @return The setInterval number
+ */
+export function defaultMetrics(): number
 
 export interface defaultMetrics {
 	/**

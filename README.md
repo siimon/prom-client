@@ -20,7 +20,7 @@ automatically for you when you do `require('prom-client')`.
 
 NOTE: Some of the metrics, concerning File Descriptors and Memory, are only available on Linux.
 
-In addition, some Node-specific metrics are included, such as event loop lag, and active handles. See what metrics there are in
+In addition, some Node-specific metrics are included, such as event loop lag, active handles and Node.js version. See what metrics there are in
 [lib/metrics](lib/metrics).
 
 The function returned from `defaultMetrics` takes 2 options, a blacklist of metrics to skip, and a timeout for how often the probe should
@@ -119,6 +119,13 @@ new client.Histogram('metric_name', 'metric_help', {
 	buckets: [ 0.10, 5, 15, 50, 100, 500 ]
 });
 ```
+If you need to include labels as well as configuration, you can also include those as the third parameter.
+```js
+var client = require('prom-client');
+new client.Histogram('metric_name', 'metric_help', [ 'status_code' ], {
+	buckets: [ 0.10, 5, 15, 50, 100, 500 ]
+});
+```
 
 Examples
 
@@ -209,6 +216,10 @@ counter.inc(1, new Date()); // Increment counter with timestamp
 
 You can get all metrics by running `register.metrics()`, which will output a string for prometheus to consume.
 
+##### Geting a single metric for Prometheus displaying
+
+If you need to output a single metric for Prometheus, you can use `register.getSingleMetricAsString(*name of metric*)`, it will output a string for Prometheus to consume.
+
 ##### Getting a single metric
 
 If you need to get a reference to a previously registered metric, you can use `register.getSingleMetric(*name of metric*)`.
@@ -220,7 +231,7 @@ You can remove all metrics by calling `register.clear()`. You can also remove a 
 
 #### Pushgateway
 
-It is possible to push metrics via a [Pushgateway](https://github.com/prometheus/pushgateway). 
+It is possible to push metrics via a [Pushgateway](https://github.com/prometheus/pushgateway).
 
 ```js
 var client = require('prom-client');
@@ -232,12 +243,15 @@ gateway.delete({ jobName: 'test' }, function(err, resp, body) { }); //Delete all
 
 //All gateway requests can have groupings on it
 gateway.pushAdd({ jobName: 'test', groupings: { key: 'value' } }, function(err, resp, body) { });
+
+//It's possible to extend the Pushgateway with request options from nodes core http/https library
+gateway = new client.Pushgateway('http://127.0.0.1:9091', { timeout: 5000 }); //Set the request timeout to 5000ms
 ```
 
 
 #### Utilites
 
-For convenience, there are 2 bucket generator functions - linear and exponential. 
+For convenience, there are 2 bucket generator functions - linear and exponential.
 
 ```js
 var client = require('prom-client');
@@ -249,6 +263,8 @@ new client.Histogram('metric_name', 'metric_help', {
 	buckets: client.exponentialBuckets(1, 2, 5) //Create 5 buckets, starting on 1 and with a factor of 2
 });
 ```
+
+The content-type prometheus expects is also exported as a constant, both on the `register` and from the main file of this project, called `contentType`.
 
 ### Garbage Collection
 
