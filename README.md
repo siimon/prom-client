@@ -197,6 +197,21 @@ xhrRequest(function(err, res) {
 });
 ```
 
+#### Timestamps
+
+Counter and gauge metrics can take a timestamp argument after the value argument. 
+This argument must be a Date or a number (milliseconds since Unix epoch, i.e. 1970-01-01 00:00:00 UTC, excluding leap seconds).
+
+```js
+gauge.set(100, 1485531442231); // Set gauge value and timestamp as milliseconds since Unix epoch
+gauge.set(100, new Date()); // Set gauge value and timestamp as Date
+gauge.set({ method: 'GET', statusCode: '200' }, 100, new Date()); // Set gauge value and timestamp with labels
+gauge.labels('GET', '200').set(100, new Date()); // Same as above
+
+counter.inc(1, new Date()); // Increment counter with timestamp
+
+```
+
 #### Register
 
 You can get all metrics by running `register.metrics()`, which will output a string for prometheus to consume.

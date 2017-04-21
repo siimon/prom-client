@@ -112,7 +112,43 @@ describe('gauge', function() {
 		});
 	});
 
-	function expectValue(val) {
+	describe('with timestamp', function() {
+		beforeEach(function() {
+			instance = new Gauge('name', 'help', ['code']);
+			instance.set({ 'code': '200' }, 20);
+		});
+		it('should be able to set value and timestamp as Date', function() {
+			instance.labels('200').set(500, new Date('2017-01-26T01:05Z'));
+			expectValue(500, 1485392700000);
+		});
+		it('should be able to set value and timestamp as number', function() {
+			instance.labels('200').set(500, 1485392700000);
+			expectValue(500, 1485392700000);
+		});
+		it('should not allow non numbers', function() {
+			var fn = function() {
+				instance.labels('200').set(500, 'blah');
+			};
+			expect(fn).to.throw(Error);
+		});
+		it('should not allow invalid dates', function() {
+			var fn = function() {
+				instance.labels('200').set(500, new Date('blah'));
+			};
+			expect(fn).to.throw(Error);
+		});
+		it('should be able to increment', function() {
+			instance.labels('200').inc(1, 1485392700000);
+			expectValue(21, 1485392700000);
+		});
+		it('should be able to decrement', function() {
+			instance.labels('200').dec(1, 1485392700000);
+			expectValue(19, 1485392700000);
+		});
+	});
+
+	function expectValue(val, timestamp) {
 		expect(instance.get().values[0].value).to.equal(val);
+		expect(instance.get().values[0].timestamp).to.equal(timestamp);
 	}
 });
