@@ -108,7 +108,7 @@ xhrRequest(function(err, res) {
 
 #### Histogram
 
-Histograms track sizes and frequency of events.  
+Histograms track sizes and frequency of events.
 
 **Configuration**
 
@@ -199,7 +199,7 @@ xhrRequest(function(err, res) {
 
 #### Timestamps
 
-Counter and gauge metrics can take a timestamp argument after the value argument. 
+Counter and gauge metrics can take a timestamp argument after the value argument.
 This argument must be a Date or a number (milliseconds since Unix epoch, i.e. 1970-01-01 00:00:00 UTC, excluding leap seconds).
 
 ```js
@@ -210,6 +210,25 @@ gauge.labels('GET', '200').set(100, new Date()); // Same as above
 
 counter.inc(1, new Date()); // Increment counter with timestamp
 
+```
+
+#### Multiple registries
+
+By default, metrics are automatically registered to the global registry (located at `require('prom-client').register`).
+You can prevent this by setting last parameter when creating the metric to `false` (depending on metric, this might be 4th or 5th parameter).
+
+Using non-global registries requires creating Registry instance and calling `registry.registerMetric(metricInstance)`.
+
+```js
+var client = require('prom-client');
+var registry = new client.Registry();
+var counter = new client.Counter('metric_name', 'metric_help');
+var histogram = new client.Histogram('metric_name', 'metric_help', [ 'status_code' ], {
+	buckets: [ 0.10, 5, 15, 50, 100, 500 ]
+}, false);
+registry.registerMetric(counter);
+registry.registerMetric(histogram);
+counter.inc();
 ```
 
 #### Register
