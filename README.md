@@ -76,7 +76,7 @@ Counters go up, and reset when the process restarts.
 
 ```js
 var client = require('prom-client');
-var counter = new client.Counter('metric_name', 'metric_help');
+var counter = new client.Counter({ name: 'metric_name', help: 'metric_help' });
 counter.inc(); // Inc with 1
 counter.inc(10); // Inc with 10
 ```
@@ -87,7 +87,7 @@ Gauges are similar to Counters but Gauges value can be decreased.
 
 ```js
 var client = require('prom-client');
-var gauge = new client.Gauge('metric_name', 'metric_help');
+var gauge = new client.Gauge({ name: 'metric_name', help: 'metric_help' });
 gauge.set(10); // Set to 10
 gauge.inc(); // Inc with 1
 gauge.inc(10); // Inc with 10
@@ -115,23 +115,19 @@ Histograms track sizes and frequency of events.
 The defaults buckets are intended to cover usual web/rpc requests, this can however be overriden.
 ```js
 var client = require('prom-client');
-new client.Histogram('metric_name', 'metric_help', {
-	buckets: [ 0.10, 5, 15, 50, 100, 500 ]
-});
+new client.Histogram({ name: 'metric_name', help: 'metric_help', buckets: [ 0.10, 5, 15, 50, 100, 500 ] });
 ```
 If you need to include labels as well as configuration, you can also include those as the third parameter.
 ```js
 var client = require('prom-client');
-new client.Histogram('metric_name', 'metric_help', [ 'status_code' ], {
-	buckets: [ 0.10, 5, 15, 50, 100, 500 ]
-});
+new client.Histogram({ name: 'metric_name', help: 'metric_help', labels: [ 'status_code' ], buckets: [ 0.10, 5, 15, 50, 100, 500 ] });
 ```
 
 Examples
 
 ```js
 var client = require('prom-client');
-var histogram = new client.Histogram('metric_name', 'metric_help');
+var histogram = new client.Histogram({ name: 'metric_name', help: 'metric_help' });
 histogram.observe(10); // Observe value in histogram
 ```
 
@@ -153,16 +149,14 @@ The default percentiles are: 0.01, 0.05, 0.5, 0.9, 0.95, 0.99, 0.999. But they c
 
 ```js
 var client = require('prom-client');
-new client.Summary('metric_name', 'metric_help', {
-	percentiles: [ 0.01, 0.1, 0.9, 0.99 ]
-});
+new client.Summary({ name: 'metric_name', help: 'metric_help', percentiles: [ 0.01, 0.1, 0.9, 0.99 ] });
 ```
 
 Usage example
 
 ```js
 var client = require('prom-client');
-var summary = new client.Summary('metric_name', 'metric_help');
+var summary = new client.Summary({ name: 'metric_name', help: 'metric_help' });
 summary.observe(10);
 ```
 
@@ -179,7 +173,7 @@ xhrRequest(function(err, res) {
 All metrics take an array as 3rd parameter that should include all supported label keys. There are 2 ways to add values to the labels
 ```js
 var client = require('prom-client');
-var gauge = new client.Gauge('metric_name', 'metric_help', [ 'method', 'statusCode' ]);
+var gauge = new client.Gauge({ name: 'metric_name', help: 'metric_help', labels: [ 'method', 'statusCode' ] });
 
 gauge.set({ method: 'GET', statusCode: '200' }, 100); // 1st version, Set value 100 with method set to GET and statusCode to 200
 gauge.labels('GET', '200').set(100); // 2nd version, Same as above
@@ -255,11 +249,15 @@ For convenience, there are 2 bucket generator functions - linear and exponential
 
 ```js
 var client = require('prom-client');
-new client.Histogram('metric_name', 'metric_help', {
+new client.Histogram({ 
+	name: 'metric_name', 
+	help: 'metric_help',
 	buckets: client.linearBuckets(0, 10, 20) //Create 20 buckets, starting on 0 and a width of 10
 });
 
-new client.Histogram('metric_name', 'metric_help', {
+new client.Histogram({ 
+	name: 'metric_name',
+	help: 'metric_help', 
 	buckets: client.exponentialBuckets(1, 2, 5) //Create 5 buckets, starting on 1 and with a factor of 2
 });
 ```
