@@ -60,10 +60,22 @@ interface labelValues {
 	[key: string]: string|number
 }
 
+export interface CounterConfiguration {
+	name: string,
+	help: string,
+	labels: string []
+}
+
 /**
  * A counter is a cumulative metric that represents a single numerical value that only ever goes up
  */
 export class Counter {
+
+	/**
+	 * @param configuration Configuration when creating a Counter metric. Name and Help is required.
+	 */
+	constructor(configuration: CounterConfiguration)
+
 	/**
 	 * @param name The name of the metric
 	 * @param help Help description
@@ -104,10 +116,22 @@ export namespace Counter {
 
 }
 
+export interface GaugeConfiguration{
+	name: string,
+	help: string,
+	labels: string[]
+}
+
 /**
 	A gauge is a metric that represents a single numerical value that can arbitrarily go up and down.
 */
 export class Gauge {
+
+	/**
+	 * @param configuration Configuration when creating a Gauge metric. Name and Help is mandatory
+	 */
+	constructor(configuration: GaugeConfiguration)
+
 	/**
 	 * @param name The name of the metric
 	 * @param help Help description
@@ -209,10 +233,23 @@ export namespace Gauge {
 	}
 }
 
+export interface HistogramConfiguration {
+	name: string,
+	help: string,
+	labels: string[],
+	buckets: number[]
+}
+
 /**
  * A histogram samples observations (usually things like request durations or response sizes) and counts them in configurable buckets
  */
 export class Histogram {
+
+	/**
+	 * @param configuration Configuration when creating the Histogram. Name and Help is mandatory
+	 */
+	constructor(configuration: HistogramConfiguration)
+
 	/**
 	 * @param name The name of metric
 	 * @param help Help description
@@ -279,10 +316,23 @@ export namespace Histogram {
 	}
 }
 
+export interface SummaryConfiguration{
+	name: string,
+	help: string,
+	labels: string[]
+	percentiles: number[]
+}
+
 /**
  * A summary samples observations
  */
 export class Summary {
+
+	/**
+	 * @param configuration Configuration when creating Summary metric. Name and Help is mandatory
+	 */
+	constructor(configuration: SummaryConfiguration)
+
 	/**
 	 * @param name The name of the metric
 	 * @param help Help description
