@@ -15,39 +15,39 @@ All metric types has 2 mandatory parameters, name and help.
 #### Default metrics
 
 There are some default metrics recommended by Prometheus
-[itself](https://prometheus.io/docs/instrumenting/writing_clientlibs/#standard-and-runtime-collectors). These metrics are collected
-automatically for you when you do `require('prom-client')`.
+[itself](https://prometheus.io/docs/instrumenting/writing_clientlibs/#standard-and-runtime-collectors).
+To collect these, call `collectDefaultMetrics`
 
 NOTE: Some of the metrics, concerning File Descriptors and Memory, are only available on Linux.
 
 In addition, some Node-specific metrics are included, such as event loop lag, active handles and Node.js version. See what metrics there are in
 [lib/metrics](lib/metrics).
 
-The function returned from `defaultMetrics` takes 2 options, a blacklist of metrics to skip, and a timeout for how often the probe should
+The function returned from `collectDefaultMetrics` takes 2 options, a blacklist of metrics to skip, and a timeout for how often the probe should
 be fired. By default all probes are launched every 10 seconds, but this can be modified like this:
 
 ```js
 var client = require('prom-client');
 
-var defaultMetrics = client.defaultMetrics;
+var collectDefaultMetrics = client.collectDefaultMetrics;
 
 // Skip `osMemoryHeap` probe, and probe every 5th second.
-defaultMetrics(['osMemoryHeap'], 5000);
+collectDefaultMetrics(['osMemoryHeap'], 5000);
 ````
 
-You can get the full list of metrics by inspecting `client.defaultMetrics.metricsList`.
+You can get the full list of metrics by inspecting `client.collectDefaultMetrics.metricsList`.
 
-`defaultMetrics` returns an identification when invoked, which is a reference to the `Timer` used to keep the probes going. This can be
+`collectDefaultMetrics` returns an identification when invoked, which is a reference to the `Timer` used to keep the probes going. This can be
 passed to `clearInterval` in order to stop all probes.
 
-NOTE: Existing intervals are automatically cleared when calling `defaultMetrics`.
+NOTE: Existing intervals are automatically cleared when calling `collectDefaultMetrics`.
 
 ```js
 var client = require('prom-client');
 
-var defaultMetrics = client.defaultMetrics;
+var collectDefaultMetrics = client.collectDefaultMetrics;
 
-var interval = defaultMetrics();
+var interval = collectDefaultMetrics();
 
 // ... some time later
 
@@ -57,14 +57,14 @@ clearInterval(interval);
 NOTE: `unref` is called on the `interval` internally, so it will not keep your node process going indefinitely if it's the only thing
 keeping it from shutting down.
 
-##### Disabling default metrics
+##### Stop polling default metrics
 
-To disable collecting the default metrics, you have to call the function and pass it to `clearInterval`.
+To stop collecting the default metrics, you have to call the function and pass it to `clearInterval`.
 
 ```js
 var client = require('prom-client');
 
-clearInterval(client.defaultMetrics());
+clearInterval(client.collectDefaultMetrics());
 
 // Clear the register
 client.register.clear();

@@ -1,9 +1,9 @@
 'use strict';
 
-describe('defaultMetrics', function() {
+describe('collectDefaultMetrics', function() {
 	var expect = require('chai').expect;
 	var register = require('../index').register;
-	var defaultMetrics = require('../index').defaultMetrics;
+	var collectDefaultMetrics = require('../index').collectDefaultMetrics;
 	var platform;
 	var cpuUsage;
 	var interval;
@@ -52,24 +52,24 @@ describe('defaultMetrics', function() {
 
 	it('should add metrics to the registry', function() {
 		expect(register.getMetricsAsJSON()).to.have.length(0);
-		interval = defaultMetrics();
+		interval = collectDefaultMetrics();
 		expect(register.getMetricsAsJSON()).to.not.have.length(0);
 	});
 
 	it('should allow blacklisting unwanted metrics', function() {
 		expect(register.getMetricsAsJSON()).to.have.length(0);
 
-		defaultMetrics();
+		collectDefaultMetrics();
 		var allMetrics = register.getMetricsAsJSON();
 		register.clear();
 
-		defaultMetrics(['osMemoryHeap']);
+		collectDefaultMetrics(['osMemoryHeap']);
 		expect(register.getMetricsAsJSON()).to.have.length(allMetrics.length - 1);
 	});
 
 	it('should allow blacklisting all metrics', function() {
 		expect(register.getMetricsAsJSON()).to.have.length(0);
-		clearInterval(defaultMetrics());
+		clearInterval(collectDefaultMetrics());
 		register.clear();
 		expect(register.getMetricsAsJSON()).to.have.length(0);
 	});
@@ -80,7 +80,7 @@ describe('defaultMetrics', function() {
 			var fn = function() {
 				delete require.cache[require.resolve('../index')];
 				var client = require('../index');
-				clearInterval(client.defaultMetrics());
+				clearInterval(client.collectDefaultMetrics());
 				register.clear();
 			};
 

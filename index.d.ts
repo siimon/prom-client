@@ -466,17 +466,17 @@ export function exponentialBuckets(start: number, factor: number, count: number)
  * @param interval The interval how often the default metrics should be probed
  * @return The setInterval number
  */
-export function defaultMetrics(blacklist: string[], interval: number): number
+export function collectDefaultMetrics(blacklist: string[], interval: number): number
 
 /**
  * Configure default metrics
  * @return The setInterval number
  */
-export function defaultMetrics(): number
+export function collectDefaultMetrics(): number
 
 export interface defaultMetrics {
 	/**
-	 * All enabled default metrics
+	 * All available default metrics
 	 */
 	metricsList: string[]
 }
