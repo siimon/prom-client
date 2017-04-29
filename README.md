@@ -198,6 +198,7 @@ This argument must be a Date or a number (milliseconds since Unix epoch, i.e. 19
 
 ```js
 gauge.set(100, 1485531442231); // Set gauge value and timestamp as milliseconds since Unix epoch
+gauge.set(100, Date.now()); // Set gauge value and timestamp as milliseconds since Unix epoch
 gauge.set(100, new Date()); // Set gauge value and timestamp as Date
 gauge.set({ method: 'GET', statusCode: '200' }, 100, new Date()); // Set gauge value and timestamp with labels
 gauge.labels('GET', '200').set(100, new Date()); // Same as above
