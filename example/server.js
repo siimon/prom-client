@@ -5,13 +5,13 @@ var server = express();
 var register = require('../lib/register');
 
 var Histogram = require('../').Histogram;
-var h = new Histogram('test_histogram', 'Example of a histogram', [ 'code' ]);
+var h = new Histogram({ name: 'test_histogram', help: 'Example of a histogram', labels: [ 'code' ] });
 
 var Counter = require('../').Counter;
-var c = new Counter('test_counter', 'Example of a counter', [ 'code' ]);
+var c = new Counter({ name: 'test_counter', help: 'Example of a counter', labels: [ 'code' ] });
 
 var Gauge = require('../').Gauge;
-var g = new Gauge('test_gauge', 'Example of a gauge', [ 'method', 'code' ]);
+var g = new Gauge({ name: 'test_gauge', help: 'Example of a gauge', labels: [ 'method', 'code' ] });
 
 setTimeout(function() {
 	h.labels('200').observe(Math.random());
@@ -47,4 +47,5 @@ server.get('/metrics/counter', function(req, res) {
 	res.end(register.getSingleMetricAsString('test_counter'));
 });
 
+console.log('Server listening to 3000, metrics exposed on /metrics endpoint'); //eslint-disable-line no-console
 server.listen(3000);
