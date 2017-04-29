@@ -170,7 +170,7 @@ xhrRequest(function(err, res) {
 
 #### Labels
 
-All metrics take an array as 3rd parameter that should include all supported label keys. There are 2 ways to add values to the labels
+All metrics can take a labelNames property in the configuration object. All labelNames that the metric support needs to be declared here. There are 2 ways to add values to the labels
 ```js
 var client = require('prom-client');
 var gauge = new client.Gauge({ name: 'metric_name', help: 'metric_help', labelNames: [ 'method', 'statusCode' ] });
