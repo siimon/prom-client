@@ -56,17 +56,6 @@ describe('collectDefaultMetrics', function() {
 		expect(register.getMetricsAsJSON()).to.not.have.length(0);
 	});
 
-	it('should allow blacklisting unwanted metrics', function() {
-		expect(register.getMetricsAsJSON()).to.have.length(0);
-
-		collectDefaultMetrics();
-		var allMetrics = register.getMetricsAsJSON();
-		register.clear();
-
-		collectDefaultMetrics(['osMemoryHeap']);
-		expect(register.getMetricsAsJSON()).to.have.length(allMetrics.length - 1);
-	});
-
 	it('should allow blacklisting all metrics', function() {
 		expect(register.getMetricsAsJSON()).to.have.length(0);
 		clearInterval(collectDefaultMetrics());

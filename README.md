@@ -23,16 +23,16 @@ NOTE: Some of the metrics, concerning File Descriptors and Memory, are only avai
 In addition, some Node-specific metrics are included, such as event loop lag, active handles and Node.js version. See what metrics there are in
 [lib/metrics](lib/metrics).
 
-The function returned from `collectDefaultMetrics` takes 2 options, a blacklist of metrics to skip, and a timeout for how often the probe should
-be fired. By default all probes are launched every 10 seconds, but this can be modified like this:
+The function returned from `collectDefaultMetrics` takes 1 option, a timeout for how often the probe should
+be fired. By default probes are launched every 10 seconds, but this can be modified like this:
 
 ```js
 var client = require('prom-client');
 
 var collectDefaultMetrics = client.collectDefaultMetrics;
 
-// Skip `osMemoryHeap` probe, and probe every 5th second.
-collectDefaultMetrics(['osMemoryHeap'], 5000);
+// Probe every 5th second.
+collectDefaultMetrics(5000);
 ````
 
 You can get the full list of metrics by inspecting `client.collectDefaultMetrics.metricsList`.
