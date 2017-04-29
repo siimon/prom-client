@@ -221,7 +221,7 @@ describe('histogram', function() {
 			expect(values[2].labels.le).to.equal('+Inf');
 		});
 		it('should group counts on each label set', function() {
-			var histogram = new Histogram({ name: 'test_histogram_2', help: 'test', labels: [ 'code' ] });
+			var histogram = new Histogram({ name: 'test_histogram_2', help: 'test', labelNames: [ 'code' ] });
 			histogram.observe({ code: '200' }, 1);
 			histogram.observe({ code: '300' }, 1);
 			var values = getValuesByLabel(1, histogram.get().values);
@@ -247,7 +247,7 @@ describe('histogram', function() {
 		});
 
 		it('should allow custom labels', function() {
-			var i = new Histogram({ name: 'histo', help: 'help', labels: [ 'code' ] });
+			var i = new Histogram({ name: 'histo', help: 'help', labelNames: [ 'code' ] });
 			i.observe({ code: 'test'}, 1);
 			var pair = getValueByLeAndLabel(1, 'code', 'test', i.get().values);
 			expect(pair.value).to.equal(1);
@@ -255,7 +255,7 @@ describe('histogram', function() {
 
 		it('should not allow le as a custom label', function() {
 			var fn = function() {
-				new Histogram({ name: 'name', help: 'help', labels: [ 'le' ] });
+				new Histogram({ name: 'name', help: 'help', labelNames: [ 'le' ] });
 			};
 			expect(fn).to.throw(Error);
 		});
@@ -278,7 +278,7 @@ describe('histogram', function() {
 
 		describe('labels', function() {
 			beforeEach(function() {
-				instance = new Histogram({ name: 'histogram_labels', help: 'Histogram with labels fn', labels: [ 'method' ] } );
+				instance = new Histogram({ name: 'histogram_labels', help: 'Histogram with labels fn', labelNames: [ 'method' ] } );
 			});
 
 			it('should observe', function() {
@@ -315,7 +315,7 @@ describe('histogram', function() {
 			});
 
 			it('should allow labels before and after timers', function(){
-				instance = new Histogram({ name: 'histogram_labels_2', help: 'Histogram with labels fn', labels: [ 'method', 'success' ] });
+				instance = new Histogram({ name: 'histogram_labels_2', help: 'Histogram with labels fn', labelNames: [ 'method', 'success' ] });
 				var clock = sinon.useFakeTimers();
 				var end = instance.startTimer({ 'method': 'get' });
 				clock.tick(500);

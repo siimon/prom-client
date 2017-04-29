@@ -135,7 +135,7 @@ describe('counter', function() {
 
 		describe('labels', function() {
 			beforeEach(function() {
-				instance = new Counter({ name: 'gauge_test_2', help: 'help', labels: [ 'method', 'endpoint'] });
+				instance = new Counter({ name: 'gauge_test_2', help: 'help', labelNames: [ 'method', 'endpoint'] });
 			});
 
 			it('should handle 1 value per label', function() {

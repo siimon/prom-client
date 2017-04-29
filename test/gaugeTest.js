@@ -206,7 +206,7 @@ describe('gauge', function() {
 
 		describe('with labels', function() {
 			beforeEach(function() {
-				instance = new Gauge( { name: 'name', help: 'help', labels: ['code'] });
+				instance = new Gauge( { name: 'name', help: 'help', labelNames: ['code'] });
 				instance.set({ 'code': '200' }, 20);
 			});
 			it('should be able to increment', function() {
@@ -244,7 +244,7 @@ describe('gauge', function() {
 				clock.restore();
 			});
 			it('should allow labels before and after timers', function(){
-				instance = new Gauge({ name: 'name_2', help: 'help', labels: ['code', 'success'] });
+				instance = new Gauge({ name: 'name_2', help: 'help', labelNames: ['code', 'success'] });
 				var clock = sinon.useFakeTimers();
 				var end = instance.startTimer({ 'code': 200 });
 				clock.tick(1000);
@@ -256,7 +256,7 @@ describe('gauge', function() {
 
 		describe('with timestamp', function() {
 			beforeEach(function() {
-				instance = new Gauge( { name: 'name', help: 'help', labels: ['code'] });
+				instance = new Gauge( { name: 'name', help: 'help', labelNames: ['code'] });
 				instance.set({ 'code': '200' }, 20);
 			});
 			it('should be able to set value and timestamp as Date', function() {

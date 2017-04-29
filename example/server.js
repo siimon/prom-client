@@ -5,13 +5,13 @@ var server = express();
 var register = require('../lib/register');
 
 var Histogram = require('../').Histogram;
-var h = new Histogram({ name: 'test_histogram', help: 'Example of a histogram', labels: [ 'code' ] });
+var h = new Histogram({ name: 'test_histogram', help: 'Example of a histogram', labelNames: [ 'code' ] });
 
 var Counter = require('../').Counter;
-var c = new Counter({ name: 'test_counter', help: 'Example of a counter', labels: [ 'code' ] });
+var c = new Counter({ name: 'test_counter', help: 'Example of a counter', labelNames: [ 'code' ] });
 
 var Gauge = require('../').Gauge;
-var g = new Gauge({ name: 'test_gauge', help: 'Example of a gauge', labels: [ 'method', 'code' ] });
+var g = new Gauge({ name: 'test_gauge', help: 'Example of a gauge', labelNames: [ 'method', 'code' ] });
 
 setTimeout(function() {
 	h.labels('200').observe(Math.random());

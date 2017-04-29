@@ -117,10 +117,10 @@ The defaults buckets are intended to cover usual web/rpc requests, this can howe
 var client = require('prom-client');
 new client.Histogram({ name: 'metric_name', help: 'metric_help', buckets: [ 0.10, 5, 15, 50, 100, 500 ] });
 ```
-If you need to include labels as well as configuration, you can also include those as the third parameter.
+You can include all label names as a property as well.
 ```js
 var client = require('prom-client');
-new client.Histogram({ name: 'metric_name', help: 'metric_help', labels: [ 'status_code' ], buckets: [ 0.10, 5, 15, 50, 100, 500 ] });
+new client.Histogram({ name: 'metric_name', help: 'metric_help', labelNames: [ 'status_code' ], buckets: [ 0.10, 5, 15, 50, 100, 500 ] });
 ```
 
 Examples
@@ -173,7 +173,7 @@ xhrRequest(function(err, res) {
 All metrics take an array as 3rd parameter that should include all supported label keys. There are 2 ways to add values to the labels
 ```js
 var client = require('prom-client');
-var gauge = new client.Gauge({ name: 'metric_name', help: 'metric_help', labels: [ 'method', 'statusCode' ] });
+var gauge = new client.Gauge({ name: 'metric_name', help: 'metric_help', labelNames: [ 'method', 'statusCode' ] });
 
 gauge.set({ method: 'GET', statusCode: '200' }, 100); // 1st version, Set value 100 with method set to GET and statusCode to 200
 gauge.labels('GET', '200').set(100); // 2nd version, Same as above

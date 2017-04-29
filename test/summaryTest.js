@@ -353,7 +353,7 @@ describe('summary', function() {
 		describe('labels', function() {
 			beforeEach(function() {
 				register.clear();
-				instance = new Summary({ name: 'summary_test', help: 'help', labels: [ 'method', 'endpoint'], percentiles: [ 0.9 ] });
+				instance = new Summary({ name: 'summary_test', help: 'help', labelNames: [ 'method', 'endpoint'], percentiles: [ 0.9 ] });
 			});
 
 			it('should record and calculate the correct values per label', function() {
