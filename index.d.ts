@@ -87,14 +87,16 @@ export class Counter {
 	 * Increment for given labels
 	 * @param labels Object with label keys and values
 	 * @param value The number to increment with
+	 * @param timestamp Timestamp to associate the time series with
 	 */
-	inc(labels: labelValues, value?: number): void
+	inc(labels: labelValues, value?: number, timestamp?: number|Date): void
 
 	/**
 	 * Increment with value
 	 * @param value The value to increment with
+	 * @param timestamp Timestamp to associate the time series with
 	 */
-	inc(value?: number): void
+	inc(value?: number, timestamp?: number|Date): void
 
 	/**
 	 * Return the child for given labels
@@ -110,8 +112,9 @@ export namespace Counter {
 		/**
 		 * Increment with value
 		 * @param value The value to increment with
+		 * @param timestamp Timestamp to associate the time series with
 		 */
-		inc(value?: number): void
+		inc(value?: number, timestamp?: number|Date): void
 	}
 
 }
@@ -143,41 +146,47 @@ export class Gauge {
 	 * Increment gauge for given labels
 	 * @param labels Object with label keys and values
 	 * @param value The value to increment with
+	 * @param timestamp Timestamp to associate the time series with
 	 */
-	inc(labels: labelValues, value?: number): void
+	inc(labels: labelValues, value?: number, timestamp?: number|Date): void
 
 	/**
 	 * Increment gauge
 	 * @param value The value to increment with
+	 * @param timestamp Timestamp to associate the time series with
 	 */
-	inc(value?: number): void
+	inc(value?: number, timestamp?: number|Date): void
 
 	/**
 	 * Decrement gauge
 	 * @param labels Object with label keys and values
 	 * @param value Value to decrement with
+	 * @param timestamp Timestamp to associate the time series with
 	 */
-	dec(labels: labelValues, value?: number): void
+	dec(labels: labelValues, value?: number, timestamp?: number|Date): void
 
 	/**
 	 * Decrement gauge
 	 * @param value The value to decrement with
+	 * @param timestamp Timestamp to associate the time series with
 	 */
-	dec(value?: number): void
+	dec(value?: number, timestamp?: number|Date): void
 
 
 	/**
 	 * Set gauge value for labels
 	 * @param lables Object with label keys and values
 	 * @param value The value to set
+	 * @param timestamp Timestamp to associate the time series with
 	 */
-	set(labels: labelValues, value: number): void
+	set(labels: labelValues, value: number, timestamp?: number|Date): void
 
 	/**
 	 * Set gauge value
 	 * @param value The value to set
+	 * @param timestamp Timestamp to associate the time series with
 	 */
-	set(value: number): void
+	set(value: number, timestamp?: number|Date): void
 
 	/**
 	 * Set gauge value to current epoch time in ms
@@ -205,20 +214,22 @@ export namespace Gauge {
 		/**
 		 * Increment gauge with value
 		 * @param value The value to increment with
+		 * @param timestamp Timestamp to associate the time series with
 		 */
-		inc(value?: number): void
+		inc(value?: number, timestamp?: number|Date): void
 
 		/**
 		 * Decrement with value
 		 * @param value The value to decrement with
+		 * @param timestamp Timestamp to associate the time series with
 		 */
-		dec(value?: number): void
+		dec(value?: number, timestamp?: number|Date): void
 
 		/**
 		 * Set gauges value
 		 * @param value The value to set
 		 */
-		set(value: number): void
+		set(value: number, timestamp?: number|Date): void
 
 		/**
 	 	 * Set gauge value to current epoch time in ms
