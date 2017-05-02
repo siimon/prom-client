@@ -145,8 +145,7 @@ describe('pushgateway', function() {
 			registry = new Registry();
 			instance = new Pushgateway('http://192.168.99.100:9091', null, registry);
 			var Counter = new require('../index').Counter;
-			var cnt = new Counter('test', 'test', null, false);
-			registry.registerMetric(cnt);
+			var cnt = new Counter({name: 'test', help: 'test', registers: [ registry ]});
 			cnt.inc(100);
 		});
 		tests();

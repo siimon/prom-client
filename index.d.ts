@@ -60,10 +60,22 @@ interface labelValues {
 	[key: string]: string|number
 }
 
+export interface CounterConfiguration {
+	name: string,
+	help: string,
+	labels: string []
+}
+
 /**
  * A counter is a cumulative metric that represents a single numerical value that only ever goes up
  */
 export class Counter {
+
+	/**
+	 * @param configuration Configuration when creating a Counter metric. Name and Help is required.
+	 */
+	constructor(configuration: CounterConfiguration)
+
 	/**
 	 * @param name The name of the metric
 	 * @param help Help description
@@ -76,14 +88,16 @@ export class Counter {
 	 * Increment for given labels
 	 * @param labels Object with label keys and values
 	 * @param value The number to increment with
+	 * @param timestamp Timestamp to associate the time series with
 	 */
-	inc(labels: labelValues, value?: number): void
+	inc(labels: labelValues, value?: number, timestamp?: number|Date): void
 
 	/**
 	 * Increment with value
 	 * @param value The value to increment with
+	 * @param timestamp Timestamp to associate the time series with
 	 */
-	inc(value?: number): void
+	inc(value?: number, timestamp?: number|Date): void
 
 	/**
 	 * Return the child for given labels
@@ -99,16 +113,29 @@ export namespace Counter {
 		/**
 		 * Increment with value
 		 * @param value The value to increment with
+		 * @param timestamp Timestamp to associate the time series with
 		 */
-		inc(value?: number): void
+		inc(value?: number, timestamp?: number|Date): void
 	}
 
+}
+
+export interface GaugeConfiguration{
+	name: string,
+	help: string,
+	labels: string[]
 }
 
 /**
 	A gauge is a metric that represents a single numerical value that can arbitrarily go up and down.
 */
 export class Gauge {
+
+	/**
+	 * @param configuration Configuration when creating a Gauge metric. Name and Help is mandatory
+	 */
+	constructor(configuration: GaugeConfiguration)
+
 	/**
 	 * @param name The name of the metric
 	 * @param help Help description
@@ -121,41 +148,47 @@ export class Gauge {
 	 * Increment gauge for given labels
 	 * @param labels Object with label keys and values
 	 * @param value The value to increment with
+	 * @param timestamp Timestamp to associate the time series with
 	 */
-	inc(labels: labelValues, value?: number): void
+	inc(labels: labelValues, value?: number, timestamp?: number|Date): void
 
 	/**
 	 * Increment gauge
 	 * @param value The value to increment with
+	 * @param timestamp Timestamp to associate the time series with
 	 */
-	inc(value?: number): void
+	inc(value?: number, timestamp?: number|Date): void
 
 	/**
 	 * Decrement gauge
 	 * @param labels Object with label keys and values
 	 * @param value Value to decrement with
+	 * @param timestamp Timestamp to associate the time series with
 	 */
-	dec(labels: labelValues, value?: number): void
+	dec(labels: labelValues, value?: number, timestamp?: number|Date): void
 
 	/**
 	 * Decrement gauge
 	 * @param value The value to decrement with
+	 * @param timestamp Timestamp to associate the time series with
 	 */
-	dec(value?: number): void
+	dec(value?: number, timestamp?: number|Date): void
 
 
 	/**
 	 * Set gauge value for labels
 	 * @param lables Object with label keys and values
 	 * @param value The value to set
+	 * @param timestamp Timestamp to associate the time series with
 	 */
-	set(labels: labelValues, value: number): void
+	set(labels: labelValues, value: number, timestamp?: number|Date): void
 
 	/**
 	 * Set gauge value
 	 * @param value The value to set
+	 * @param timestamp Timestamp to associate the time series with
 	 */
-	set(value: number): void
+	set(value: number, timestamp?: number|Date): void
 
 	/**
 	 * Set gauge value to current epoch time in ms
@@ -183,20 +216,22 @@ export namespace Gauge {
 		/**
 		 * Increment gauge with value
 		 * @param value The value to increment with
+		 * @param timestamp Timestamp to associate the time series with
 		 */
-		inc(value?: number): void
+		inc(value?: number, timestamp?: number|Date): void
 
 		/**
 		 * Decrement with value
 		 * @param value The value to decrement with
+		 * @param timestamp Timestamp to associate the time series with
 		 */
-		dec(value?: number): void
+		dec(value?: number, timestamp?: number|Date): void
 
 		/**
 		 * Set gauges value
 		 * @param value The value to set
 		 */
-		set(value: number): void
+		set(value: number, timestamp?: number|Date): void
 
 		/**
 	 	 * Set gauge value to current epoch time in ms
@@ -211,10 +246,23 @@ export namespace Gauge {
 	}
 }
 
+export interface HistogramConfiguration {
+	name: string,
+	help: string,
+	labels: string[],
+	buckets: number[]
+}
+
 /**
  * A histogram samples observations (usually things like request durations or response sizes) and counts them in configurable buckets
  */
 export class Histogram {
+
+	/**
+	 * @param configuration Configuration when creating the Histogram. Name and Help is mandatory
+	 */
+	constructor(configuration: HistogramConfiguration)
+
 	/**
 	 * @param name The name of metric
 	 * @param help Help description
@@ -282,10 +330,23 @@ export namespace Histogram {
 	}
 }
 
+export interface SummaryConfiguration{
+	name: string,
+	help: string,
+	labels: string[]
+	percentiles: number[]
+}
+
 /**
  * A summary samples observations
  */
 export class Summary {
+
+	/**
+	 * @param configuration Configuration when creating Summary metric. Name and Help is mandatory
+	 */
+	constructor(configuration: SummaryConfiguration)
+
 	/**
 	 * @param name The name of the metric
 	 * @param help Help description
@@ -417,21 +478,20 @@ export function linearBuckets(start: number, width: number, count: number): numb
 export function exponentialBuckets(start: number, factor: number, count: number): number[]
 /**
  * Configure default metrics
- * @param blacklist Metrics to blacklist, i.e. dont collect
  * @param interval The interval how often the default metrics should be probed
  * @return The setInterval number
  */
-export function defaultMetrics(blacklist: string[], interval: number): number
+export function collectDefaultMetrics(interval: number): number
 
 /**
  * Configure default metrics
  * @return The setInterval number
  */
-export function defaultMetrics(): number
+export function collectDefaultMetrics(): number
 
 export interface defaultMetrics {
 	/**
-	 * All enabled default metrics
+	 * All available default metrics
 	 */
 	metricsList: string[]
 }

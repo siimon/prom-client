@@ -15,39 +15,39 @@ All metric types has 2 mandatory parameters, name and help.
 #### Default metrics
 
 There are some default metrics recommended by Prometheus
-[itself](https://prometheus.io/docs/instrumenting/writing_clientlibs/#standard-and-runtime-collectors). These metrics are collected
-automatically for you when you do `require('prom-client')`.
+[itself](https://prometheus.io/docs/instrumenting/writing_clientlibs/#standard-and-runtime-collectors).
+To collect these, call `collectDefaultMetrics`
 
 NOTE: Some of the metrics, concerning File Descriptors and Memory, are only available on Linux.
 
 In addition, some Node-specific metrics are included, such as event loop lag, active handles and Node.js version. See what metrics there are in
 [lib/metrics](lib/metrics).
 
-The function returned from `defaultMetrics` takes 2 options, a blacklist of metrics to skip, and a timeout for how often the probe should
-be fired. By default all probes are launched every 10 seconds, but this can be modified like this:
+The function returned from `collectDefaultMetrics` takes 1 option, a timeout for how often the probe should
+be fired. By default probes are launched every 10 seconds, but this can be modified like this:
 
 ```js
 var client = require('prom-client');
 
-var defaultMetrics = client.defaultMetrics;
+var collectDefaultMetrics = client.collectDefaultMetrics;
 
-// Skip `osMemoryHeap` probe, and probe every 5th second.
-defaultMetrics(['osMemoryHeap'], 5000);
+// Probe every 5th second.
+collectDefaultMetrics(5000);
 ````
 
-You can get the full list of metrics by inspecting `client.defaultMetrics.metricsList`.
+You can get the full list of metrics by inspecting `client.collectDefaultMetrics.metricsList`.
 
-`defaultMetrics` returns an identification when invoked, which is a reference to the `Timer` used to keep the probes going. This can be
+`collectDefaultMetrics` returns an identification when invoked, which is a reference to the `Timer` used to keep the probes going. This can be
 passed to `clearInterval` in order to stop all probes.
 
-NOTE: Existing intervals are automatically cleared when calling `defaultMetrics`.
+NOTE: Existing intervals are automatically cleared when calling `collectDefaultMetrics`.
 
 ```js
 var client = require('prom-client');
 
-var defaultMetrics = client.defaultMetrics;
+var collectDefaultMetrics = client.collectDefaultMetrics;
 
-var interval = defaultMetrics();
+var interval = collectDefaultMetrics();
 
 // ... some time later
 
@@ -57,14 +57,14 @@ clearInterval(interval);
 NOTE: `unref` is called on the `interval` internally, so it will not keep your node process going indefinitely if it's the only thing
 keeping it from shutting down.
 
-##### Disabling default metrics
+##### Stop polling default metrics
 
-To disable collecting the default metrics, you have to call the function and pass it to `clearInterval`.
+To stop collecting the default metrics, you have to call the function and pass it to `clearInterval`.
 
 ```js
 var client = require('prom-client');
 
-clearInterval(client.defaultMetrics());
+clearInterval(client.collectDefaultMetrics());
 
 // Clear the register
 client.register.clear();
@@ -76,7 +76,7 @@ Counters go up, and reset when the process restarts.
 
 ```js
 var client = require('prom-client');
-var counter = new client.Counter('metric_name', 'metric_help');
+var counter = new client.Counter({ name: 'metric_name', help: 'metric_help' });
 counter.inc(); // Inc with 1
 counter.inc(10); // Inc with 10
 ```
@@ -87,7 +87,7 @@ Gauges are similar to Counters but Gauges value can be decreased.
 
 ```js
 var client = require('prom-client');
-var gauge = new client.Gauge('metric_name', 'metric_help');
+var gauge = new client.Gauge({ name: 'metric_name', help: 'metric_help' });
 gauge.set(10); // Set to 10
 gauge.inc(); // Inc with 1
 gauge.inc(10); // Inc with 10
@@ -115,23 +115,19 @@ Histograms track sizes and frequency of events.
 The defaults buckets are intended to cover usual web/rpc requests, this can however be overriden.
 ```js
 var client = require('prom-client');
-new client.Histogram('metric_name', 'metric_help', {
-	buckets: [ 0.10, 5, 15, 50, 100, 500 ]
-});
+new client.Histogram({ name: 'metric_name', help: 'metric_help', buckets: [ 0.10, 5, 15, 50, 100, 500 ] });
 ```
-If you need to include labels as well as configuration, you can also include those as the third parameter.
+You can include all label names as a property as well.
 ```js
 var client = require('prom-client');
-new client.Histogram('metric_name', 'metric_help', [ 'status_code' ], {
-	buckets: [ 0.10, 5, 15, 50, 100, 500 ]
-});
+new client.Histogram({ name: 'metric_name', help: 'metric_help', labelNames: [ 'status_code' ], buckets: [ 0.10, 5, 15, 50, 100, 500 ] });
 ```
 
 Examples
 
 ```js
 var client = require('prom-client');
-var histogram = new client.Histogram('metric_name', 'metric_help');
+var histogram = new client.Histogram({ name: 'metric_name', help: 'metric_help' });
 histogram.observe(10); // Observe value in histogram
 ```
 
@@ -153,16 +149,14 @@ The default percentiles are: 0.01, 0.05, 0.5, 0.9, 0.95, 0.99, 0.999. But they c
 
 ```js
 var client = require('prom-client');
-new client.Summary('metric_name', 'metric_help', {
-	percentiles: [ 0.01, 0.1, 0.9, 0.99 ]
-});
+new client.Summary({ name: 'metric_name', help: 'metric_help', percentiles: [ 0.01, 0.1, 0.9, 0.99 ] });
 ```
 
 Usage example
 
 ```js
 var client = require('prom-client');
-var summary = new client.Summary('metric_name', 'metric_help');
+var summary = new client.Summary({ name: 'metric_name', help: 'metric_help' });
 summary.observe(10);
 ```
 
@@ -176,10 +170,10 @@ xhrRequest(function(err, res) {
 
 #### Labels
 
-All metrics take an array as 3rd parameter that should include all supported label keys. There are 2 ways to add values to the labels
+All metrics can take a labelNames property in the configuration object. All labelNames that the metric support needs to be declared here. There are 2 ways to add values to the labels
 ```js
 var client = require('prom-client');
-var gauge = new client.Gauge('metric_name', 'metric_help', [ 'method', 'statusCode' ]);
+var gauge = new client.Gauge({ name: 'metric_name', help: 'metric_help', labelNames: [ 'method', 'statusCode' ] });
 
 gauge.set({ method: 'GET', statusCode: '200' }, 100); // 1st version, Set value 100 with method set to GET and statusCode to 200
 gauge.labels('GET', '200').set(100); // 2nd version, Same as above
@@ -204,6 +198,7 @@ This argument must be a Date or a number (milliseconds since Unix epoch, i.e. 19
 
 ```js
 gauge.set(100, 1485531442231); // Set gauge value and timestamp as milliseconds since Unix epoch
+gauge.set(100, Date.now()); // Set gauge value and timestamp as milliseconds since Unix epoch
 gauge.set(100, new Date()); // Set gauge value and timestamp as Date
 gauge.set({ method: 'GET', statusCode: '200' }, 100, new Date()); // Set gauge value and timestamp with labels
 gauge.labels('GET', '200').set(100, new Date()); // Same as above
@@ -274,11 +269,15 @@ For convenience, there are 2 bucket generator functions - linear and exponential
 
 ```js
 var client = require('prom-client');
-new client.Histogram('metric_name', 'metric_help', {
+new client.Histogram({ 
+	name: 'metric_name', 
+	help: 'metric_help',
 	buckets: client.linearBuckets(0, 10, 20) //Create 20 buckets, starting on 0 and a width of 10
 });
 
-new client.Histogram('metric_name', 'metric_help', {
+new client.Histogram({ 
+	name: 'metric_name',
+	help: 'metric_help', 
 	buckets: client.exponentialBuckets(1, 2, 5) //Create 5 buckets, starting on 1 and with a factor of 2
 });
 ```
