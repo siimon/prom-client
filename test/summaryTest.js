@@ -3,7 +3,7 @@
 describe('summary', function() {
 	var Summary = require('../index').Summary;
 	var Registry = require('../index').Registry;
-	var register = require('../index').register;
+	var globalRegistry = require('../index').register;
 	var expect = require('chai').expect;
 	var sinon = require('sinon');
 	var instance;
@@ -11,7 +11,7 @@ describe('summary', function() {
 	describe('global registry', function() {
 
 		afterEach(function() {
-			register.clear();
+			globalRegistry.clear();
 		});
 
 		describe('with a parameter for each variable', function() {
@@ -72,7 +72,7 @@ describe('summary', function() {
 			});
 
 			it('should correctly use calculate other percentiles when configured', function() {
-				register.clear();
+				globalRegistry.clear();
 				instance = new Summary('summary_test', 'test', { percentiles: [ 0.5, 0.9 ] });
 				instance.observe(100);
 				instance.observe(100);
@@ -96,7 +96,7 @@ describe('summary', function() {
 			});
 
 			it('should allow to reset itself', function() {
-				register.clear();
+				globalRegistry.clear();
 				instance = new Summary('summary_test', 'test', { percentiles: [ 0.5 ] });
 				instance.observe(100);
 				expect(instance.get().values[0].labels.quantile).to.equal(0.5);
@@ -122,7 +122,7 @@ describe('summary', function() {
 
 			describe('labels', function() {
 				beforeEach(function() {
-					register.clear();
+					globalRegistry.clear();
 					instance = new Summary('summary_test', 'help', [ 'method', 'endpoint'], { percentiles: [ 0.9 ] });
 				});
 
@@ -305,7 +305,7 @@ describe('summary', function() {
 			});
 
 			it('should correctly use calculate other percentiles when configured', function() {
-				register.clear();
+				globalRegistry.clear();
 				instance = new Summary({ name: 'summary_test', help: 'test', percentiles: [ 0.5, 0.9 ] });
 				instance.observe(100);
 				instance.observe(100);
@@ -329,7 +329,7 @@ describe('summary', function() {
 			});
 
 			it('should allow to reset itself', function() {
-				register.clear();
+				globalRegistry.clear();
 				instance = new Summary({ name: 'summary_test', help: 'test', percentiles: [ 0.5 ] });
 				instance.observe(100);
 				expect(instance.get().values[0].labels.quantile).to.equal(0.5);
@@ -355,7 +355,7 @@ describe('summary', function() {
 
 			describe('labels', function() {
 				beforeEach(function() {
-					register.clear();
+					globalRegistry.clear();
 					instance = new Summary({ name: 'summary_test', help: 'help', labelNames: [ 'method', 'endpoint'], percentiles: [ 0.9 ] });
 				});
 
@@ -492,14 +492,14 @@ describe('summary', function() {
 			expect(instance.get().values[7].value).to.equal(100);
 			expect(instance.get().values[8].metricName).to.equal('summary_test_count');
 			expect(instance.get().values[8].value).to.equal(1);
-			expect(register.getMetricsAsJSON().length).to.equal(0);
+			expect(globalRegistry.getMetricsAsJSON().length).to.equal(0);
 		});
 	});
 	describe('registry instance', function() {
-		var registry;
+		var registryInstance;
 		beforeEach(function() {
-			registry = new Registry();
-			instance = new Summary({ name: 'summary_test', help: 'test', registers: [ registry ] });
+			registryInstance = new Registry();
+			instance = new Summary({ name: 'summary_test', help: 'test', registers: [ registryInstance ] });
 		});
 		it('should increment counter', function() {
 			instance.observe(100);
@@ -509,8 +509,8 @@ describe('summary', function() {
 			expect(instance.get().values[7].value).to.equal(100);
 			expect(instance.get().values[8].metricName).to.equal('summary_test_count');
 			expect(instance.get().values[8].value).to.equal(1);
-			expect(register.getMetricsAsJSON().length).to.equal(0);
-			expect(registry.getMetricsAsJSON().length).to.equal(1);
+			expect(globalRegistry.getMetricsAsJSON().length).to.equal(0);
+			expect(registryInstance.getMetricsAsJSON().length).to.equal(1);
 		});
 	});
 });

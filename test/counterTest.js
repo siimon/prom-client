@@ -3,7 +3,7 @@
 describe('counter', function() {
 	var Counter = require('../index').Counter;
 	var Registry = require('../index').Registry;
-	var register = require('../index').register;
+	var globalRegistry = require('../index').register;
 	var expect = require('chai').expect;
 	var instance;
 
@@ -15,7 +15,7 @@ describe('counter', function() {
 			});
 
 			afterEach(function() {
-				register.clear();
+				globalRegistry.clear();
 			});
 			it('should increment counter', function() {
 				instance.inc();
@@ -102,7 +102,7 @@ describe('counter', function() {
 			instance = new Counter({ name: 'gauge_test', help: 'test' });
 		});
 		afterEach(function() {
-			register.clear();
+			globalRegistry.clear();
 		});
 
 		it('should increment counter', function() {
@@ -191,21 +191,21 @@ describe('counter', function() {
 		});
 		it('should increment counter', function() {
 			instance.inc();
-			expect(register.getMetricsAsJSON().length).to.equal(0);
+			expect(globalRegistry.getMetricsAsJSON().length).to.equal(0);
 			expect(instance.get().values[0].value).to.equal(1);
 			expect(instance.get().values[0].timestamp).to.equal(undefined);
 		});
 	});
 	describe('registry instance', function() {
-		var registry;
+		var registryInstance;
 		beforeEach(function() {
-			registry = new Registry();
-			instance = new Counter({ name: 'gauge_test', help: 'test', registers: [ registry ] });
+			registryInstance = new Registry();
+			instance = new Counter({ name: 'gauge_test', help: 'test', registers: [ registryInstance ] });
 		});
 		it('should increment counter', function() {
 			instance.inc();
-			expect(register.getMetricsAsJSON().length).to.equal(0);
-			expect(registry.getMetricsAsJSON().length).to.equal(1);
+			expect(globalRegistry.getMetricsAsJSON().length).to.equal(0);
+			expect(registryInstance.getMetricsAsJSON().length).to.equal(1);
 			expect(instance.get().values[0].value).to.equal(1);
 			expect(instance.get().values[0].timestamp).to.equal(undefined);
 		});

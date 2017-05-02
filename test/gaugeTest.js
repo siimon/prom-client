@@ -4,13 +4,13 @@ describe('gauge', function() {
 	var expect = require('chai').expect;
 	var Gauge = require('../index').Gauge;
 	var Registry = require('../index').Registry;
-	var register = require('../index').register;
+	var globalRegistry = require('../index').register;
 	var sinon = require('sinon');
 	var instance;
 
 	describe('global registry', function() {
 		afterEach(function() {
-			register.clear();
+			globalRegistry.clear();
 		});
 		describe('with a parameter for each variable', function() {
 			beforeEach(function() {
@@ -293,7 +293,7 @@ describe('gauge', function() {
 	});
 	describe('without registry', function() {
 		afterEach(function() {
-			register.clear();
+			globalRegistry.clear();
 		});
 		beforeEach(function() {
 			instance = new Gauge({ name: 'gauge_test', help: 'help', registers: [] });
@@ -301,25 +301,25 @@ describe('gauge', function() {
 		});
 		it('should set a gauge to provided value', function() {
 			expectValue(10);
-			expect(register.getMetricsAsJSON().length).to.equal(0);
+			expect(globalRegistry.getMetricsAsJSON().length).to.equal(0);
 		});
 	});
 	describe('registry instance', function() {
-		var registry;
+		var registryInstance;
 		beforeEach(function() {
-			registry = new Registry();
-			instance = new Gauge({ name: 'gauge_test', help: 'help', registers: [ registry ] });
+			registryInstance = new Registry();
+			instance = new Gauge({ name: 'gauge_test', help: 'help', registers: [ registryInstance ] });
 			instance.set(10);
 		});
 		it('should set a gauge to provided value', function() {
-			expect(register.getMetricsAsJSON().length).to.equal(0);
-			expect(registry.getMetricsAsJSON().length).to.equal(1);
+			expect(globalRegistry.getMetricsAsJSON().length).to.equal(0);
+			expect(registryInstance.getMetricsAsJSON().length).to.equal(1);
 			expectValue(10);
 		});
 
 		describe('with timestamp', function() {
 			beforeEach(function() {
-				instance = new Gauge( { name: 'name', help: 'help', labelNames: ['code'], registers: [ registry ] });
+				instance = new Gauge( { name: 'name', help: 'help', labelNames: ['code'], registers: [ registryInstance ] });
 				instance.set({ 'code': '200' }, 20);
 			});
 			it('should be able to set value and timestamp as Date', function() {

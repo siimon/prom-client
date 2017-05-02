@@ -3,14 +3,14 @@
 describe('histogram', function() {
 	var Histogram = require('../index').Histogram;
 	var Registry = require('../index').Registry;
-	var register = require('../index').register;
+	var globalRegistry = require('../index').register;
 	var sinon = require('sinon');
 	var expect = require('chai').expect;
 	var instance;
 
 	afterEach(function() {
 		instance = null;
-		register.clear();
+		globalRegistry.clear();
 	});
 
 	describe('with a parameter for each variable', function() {
@@ -339,21 +339,21 @@ describe('histogram', function() {
 				instance.observe(0.5);
 				var valuePair = getValueByName('test_histogram_count', instance.get().values);
 				expect(valuePair.value).to.equal(1);
-				expect(register.getMetricsAsJSON().length).to.equal(0);
+				expect(globalRegistry.getMetricsAsJSON().length).to.equal(0);
 			});
 		});
 		describe('registry instance', function() {
-			var registry;
+			var registryInstance;
 			beforeEach(function() {
-				registry = new Registry();
-				instance = new Histogram({ name: 'test_histogram', help: 'test', registers: [ registry ] });
+				registryInstance = new Registry();
+				instance = new Histogram({ name: 'test_histogram', help: 'test', registers: [ registryInstance ] });
 			});
 			it('should increment counter', function() {
 				instance.observe(0.5);
 				var valuePair = getValueByName('test_histogram_count', instance.get().values);
 				expect(valuePair.value).to.equal(1);
-				expect(register.getMetricsAsJSON().length).to.equal(0);
-				expect(registry.getMetricsAsJSON().length).to.equal(1);
+				expect(globalRegistry.getMetricsAsJSON().length).to.equal(0);
+				expect(registryInstance.getMetricsAsJSON().length).to.equal(1);
 			});
 		});
 	});
