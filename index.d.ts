@@ -4,7 +4,7 @@
 /**
  * Container for all registered metrics
  */
-export interface Registry {
+export class Registry {
 	/**
 	 * Get string representation for all metrics
 	 */
@@ -63,7 +63,8 @@ interface labelValues {
 export interface CounterConfiguration {
 	name: string,
 	help: string,
-	labels: string []
+	labels: string [],
+	register: Registry[]
 }
 
 /**
@@ -80,9 +81,8 @@ export class Counter {
 	 * @param name The name of the metric
 	 * @param help Help description
 	 * @param labels Label keys
-	 * @param register Register to default registry
 	 */
-	constructor(name: string, help: string, labels?: string[], register?: boolean)
+	constructor(name: string, help: string, labels?: string[])
 
 	/**
 	 * Increment for given labels
@@ -123,7 +123,8 @@ export namespace Counter {
 export interface GaugeConfiguration{
 	name: string,
 	help: string,
-	labels: string[]
+	labels: string[],
+	register: Registry[]
 }
 
 /**
@@ -140,9 +141,8 @@ export class Gauge {
 	 * @param name The name of the metric
 	 * @param help Help description
 	 * @param labels Label keys
-	 * @param register Register to default registry
 	 */
-	constructor(name: string, help: string, labels?: string[], register?: boolean)
+	constructor(name: string, help: string, labels?: string[])
 
 	/**
 	 * Increment gauge for given labels
@@ -250,7 +250,8 @@ export interface HistogramConfiguration {
 	name: string,
 	help: string,
 	labels: string[],
-	buckets: number[]
+	buckets: number[],
+	register: Registry[]
 }
 
 /**
@@ -268,9 +269,8 @@ export class Histogram {
 	 * @param help Help description
 	 * @param labels Label keys
 	 * @param config Configuration object for Histograms
-	 * @param register Register to default registry
 	 */
-	constructor(name: string, help: string, labels?: string[], config?: Histogram.Config, register?: boolean)
+	constructor(name: string, help: string, labels?: string[], config?: Histogram.Config)
 	/**
 	 * @param name The name of metric
 	 * @param help Help description
@@ -334,7 +334,8 @@ export interface SummaryConfiguration{
 	name: string,
 	help: string,
 	labels: string[]
-	percentiles: number[]
+	percentiles: number[],
+	register: Registry[]
 }
 
 /**
@@ -352,9 +353,8 @@ export class Summary {
 	 * @param help Help description
 	 * @param labels Label keys
 	 * @param config Configuration object
-	 * @param register Register to default registry
 	 */
-	constructor(name: string, help: string, labels?: string[], config?: Summary.Config, register?: boolean)
+	constructor(name: string, help: string, labels?: string[], config?: Summary.Config)
 	/**
 	 * @param name The name of the metric
 	 * @param help Help description
