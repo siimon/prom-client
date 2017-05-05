@@ -64,7 +64,7 @@ export interface CounterConfiguration {
 	name: string,
 	help: string,
 	labels: string [],
-	register: Registry[]
+	registers: Registry[]
 }
 
 /**
@@ -124,7 +124,7 @@ export interface GaugeConfiguration{
 	name: string,
 	help: string,
 	labels: string[],
-	register: Registry[]
+	registers: Registry[]
 }
 
 /**
@@ -251,7 +251,7 @@ export interface HistogramConfiguration {
 	help: string,
 	labels: string[],
 	buckets: number[],
-	register: Registry[]
+	registers: Registry[]
 }
 
 /**
@@ -335,7 +335,7 @@ export interface SummaryConfiguration{
 	help: string,
 	labels: string[]
 	percentiles: number[],
-	register: Registry[]
+	registers: Registry[]
 }
 
 /**
