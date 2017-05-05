@@ -4,7 +4,7 @@
 /**
  * Container for all registered metrics
  */
-export interface register {
+export class Registry {
 	/**
 	 * Get string representation for all metrics
 	 */
@@ -37,7 +37,7 @@ export interface register {
 /**
  * The register that contains all metrics
  */
-export const register: register
+export const register: Registry
 
 /**
 * General metric type
@@ -63,7 +63,8 @@ interface labelValues {
 export interface CounterConfiguration {
 	name: string,
 	help: string,
-	labels: string []
+	labels: string [],
+	registers: Registry[]
 }
 
 /**
@@ -122,7 +123,8 @@ export namespace Counter {
 export interface GaugeConfiguration{
 	name: string,
 	help: string,
-	labels: string[]
+	labels: string[],
+	registers: Registry[]
 }
 
 /**
@@ -248,7 +250,8 @@ export interface HistogramConfiguration {
 	name: string,
 	help: string,
 	labels: string[],
-	buckets: number[]
+	buckets: number[],
+	registers: Registry[]
 }
 
 /**
@@ -331,7 +334,8 @@ export interface SummaryConfiguration{
 	name: string,
 	help: string,
 	labels: string[]
-	percentiles: number[]
+	percentiles: number[],
+	registers: Registry[]
 }
 
 /**
@@ -417,8 +421,9 @@ export namespace Summary {
 export class Pushgateway {
 	/**
 	 * @param url Complete url to the Pushgateway. If port is needed append url with :port
+	 * @param registry Registry
 	 */
-	constructor(url: string)
+	constructor(url: string, registry?: Registry)
 
 	/**
 	 * Add metric and overwrite old ones

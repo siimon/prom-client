@@ -108,7 +108,7 @@ xhrRequest(function(err, res) {
 
 #### Histogram
 
-Histograms track sizes and frequency of events.  
+Histograms track sizes and frequency of events.
 
 **Configuration**
 
@@ -193,7 +193,7 @@ xhrRequest(function(err, res) {
 
 #### Timestamps
 
-Counter and gauge metrics can take a timestamp argument after the value argument. 
+Counter and gauge metrics can take a timestamp argument after the value argument.
 This argument must be a Date or a number (milliseconds since Unix epoch, i.e. 1970-01-01 00:00:00 UTC, excluding leap seconds).
 
 ```js
@@ -205,6 +205,23 @@ gauge.labels('GET', '200').set(100, new Date()); // Same as above
 
 counter.inc(1, new Date()); // Increment counter with timestamp
 
+```
+
+#### Multiple registries
+
+By default, metrics are automatically registered to the global registry (located at `require('prom-client').register`).
+You can prevent this by setting last parameter when creating the metric to `false` (depending on metric, this might be 4th or 5th parameter).
+
+Using non-global registries requires creating Registry instance and adding it inside `registers` inside the configuration object. Alternatively
+you can pass an empty `registers` array and register it manually.
+
+```js
+var client = require('prom-client');
+var registry = new client.Registry();
+var counter = new client.Counter({name: 'metric_name', help: 'metric_help', registers: [ registry ]});
+var histogram = new client.Histogram({name: 'metric_name', help: 'metric_help', registers: [ ]});
+registry.registerMetric(histogram);
+counter.inc();
 ```
 
 #### Register
@@ -250,15 +267,15 @@ For convenience, there are 2 bucket generator functions - linear and exponential
 
 ```js
 var client = require('prom-client');
-new client.Histogram({ 
-	name: 'metric_name', 
+new client.Histogram({
+	name: 'metric_name',
 	help: 'metric_help',
 	buckets: client.linearBuckets(0, 10, 20) //Create 20 buckets, starting on 0 and a width of 10
 });
 
-new client.Histogram({ 
+new client.Histogram({
 	name: 'metric_name',
-	help: 'metric_help', 
+	help: 'metric_help',
 	buckets: client.exponentialBuckets(1, 2, 5) //Create 5 buckets, starting on 1 and with a factor of 2
 });
 ```
