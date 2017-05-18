@@ -1,0 +1,83 @@
+// FROM https://github.com/prometheus/client_model/blob/proto3/metrics.proto
+// Copyright 2013 Prometheus Team
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package io.prometheus.client;
+option java_package = "io.prometheus.client";
+
+message LabelPair {
+  string name  = 1;
+  string value = 2;
+}
+
+enum MetricType {
+  COUNTER    = 0;
+  GAUGE      = 1;
+  SUMMARY    = 2;
+  UNTYPED    = 3;
+  HISTOGRAM  = 4;
+}
+
+message Gauge {
+  double value = 1;
+}
+
+message Counter {
+  double value = 1;
+}
+
+message Quantile {
+  double quantile = 1;
+  double value    = 2;
+}
+
+message Summary {
+  uint64 sample_count         = 1;
+  double sample_sum           = 2;
+  repeated Quantile quantile  = 3;
+}
+
+message Untyped {
+  double value = 1;
+}
+
+message Histogram {
+  uint64 sample_count    = 1;
+  double sample_sum      = 2;
+  repeated Bucket bucket = 3; // Ordered in increasing order of upper_bound, +Inf bucket is optional.
+}
+
+message Bucket {
+  uint64 cumulative_count = 1; // Cumulative in increasing order.
+  double upper_bound      = 2;      // Inclusive.
+}
+
+message Metric {
+  repeated LabelPair label = 1;
+  Gauge     gauge          = 2;
+  Counter   counter        = 3;
+  Summary   summary        = 4;
+  Untyped   untyped        = 5;
+  Histogram histogram      = 7;
+  int64     timestamp_ms   = 6;
+}
+
+message MetricFamily {
+  string     name        = 1;
+  string     help        = 2;
+  MetricType type        = 3;
+  repeated Metric metric = 4;
+}
+

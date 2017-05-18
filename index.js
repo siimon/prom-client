@@ -8,6 +8,7 @@
 exports.register = require('./lib/register');
 exports.Registry = require('./lib/registry');
 exports.contentType = require('./lib/register').contentType;
+exports.contentTypeProto = require('./lib/register').contentTypeProto;
 
 exports.Counter = require('./lib/counter');
 exports.Gauge = require('./lib/gauge');

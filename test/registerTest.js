@@ -1,5 +1,15 @@
 'use strict';
 
+var protobuf = require('protobufjs');
+var MetricFamily;
+protobuf.load('metrics.proto', function(err, root) {
+	if(err !== null) {
+		throw err;
+	}
+	MetricFamily = root.lookupType('io.prometheus.client.MetricFamily');
+});
+
+
 describe('register', function() {
 	var register = require('../index').register;
 	var expect = require('chai').expect;
@@ -110,6 +120,30 @@ describe('register', function() {
 		});
 	});
 
+	describe('should output metrics as Protobuf', function() {
+		// If length delimiting is incorrect, it could work for one metric and
+		// 	 not multiple, or vise versa - Test both
+		var metric;
+		beforeEach(function() {
+			metric = getMetricProto();
+			register.registerMetric(metric);
+		});
+		it('32-bit varint encoding and length delimiting a single metric', function() {
+			var output = register.metricsProtobuf();
+
+			var decoded = MetricFamily.toObject(MetricFamily.decodeDelimited(output), { longs: Number });
+			expect(decoded).to.deep.equal(metric.getProtoCompliant());
+		});
+		it('32-bit varint encoding and length delimiting multiple metrics', function() {
+			var otherMetric = getMetricProto('other_metric');
+			register.registerMetric(otherMetric);
+			var output = register.metricsProtobuf();
+
+			var decoded = MetricFamily.toObject(MetricFamily.decodeDelimited(output), { longs: Number });
+			expect(decoded).to.deep.equal(metric.getProtoCompliant());
+		});
+	});
+
 	it('should allow removing single metrics', function() {
 		register.registerMetric(getMetric());
 		register.registerMetric(getMetric('some other name'));
@@ -155,6 +189,34 @@ describe('register', function() {
 							label: 'bye',
 							code: '404'
 						}
+					}]
+				};
+			}
+		};
+	}
+
+	function getMetricProto(name) {
+		name = name || 'test_metric';
+		return {
+			name: name,
+			getProtoCompliant: function() {
+				return {
+					name: name,
+					help: 'test',
+					type: 0,
+					metric: [{
+						label: [
+							{
+								name: 'method',
+								value: 'GET'
+							},
+							{
+								name: 'endpoint',
+								value: '/test'
+							}
+						],
+						counter: { value: 1234 },
+						timestampMs: 1485392700000
 					}]
 				};
 			}
