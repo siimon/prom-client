@@ -215,7 +215,7 @@ You can prevent this by setting last parameter when creating the metric to `fals
 Using non-global registries requires creating Registry instance and adding it inside `registers` inside the configuration object. Alternatively
 you can pass an empty `registers` array and register it manually.
 
-Each registry has a merge function that enables you to expose multiple registries on the same endpoint.
+Each registry has a merge function that enables you to expose multiple registries on the same endpoint. If the same metric name exists in both registries, an error will be thrown.
 
 ```js
 var client = require('prom-client');
