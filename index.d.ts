@@ -68,8 +68,8 @@ interface labelValues {
 export interface CounterConfiguration {
 	name: string,
 	help: string,
-	labels: string [],
-	registers: Registry[]
+	labelNames?: string [],
+	registers?: Registry[]
 }
 
 /**
@@ -128,8 +128,8 @@ export namespace Counter {
 export interface GaugeConfiguration{
 	name: string,
 	help: string,
-	labels: string[],
-	registers: Registry[]
+	labelNames?: string[],
+	registers?: Registry[]
 }
 
 /**
@@ -254,9 +254,9 @@ export namespace Gauge {
 export interface HistogramConfiguration {
 	name: string,
 	help: string,
-	labels: string[],
-	buckets: number[],
-	registers: Registry[]
+	labelNames?: string[],
+	buckets?: number[],
+	registers?: Registry[]
 }
 
 /**
@@ -338,9 +338,9 @@ export namespace Histogram {
 export interface SummaryConfiguration{
 	name: string,
 	help: string,
-	labels: string[]
-	percentiles: number[],
-	registers: Registry[]
+	labelNames?: string[]
+	percentiles?: number[],
+	registers?: Registry[]
 }
 
 /**
