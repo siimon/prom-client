@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## Unreleased
 ### Added
+- Ability to merge registries
+
 ### Changed
 
 ## [9.0.0] - 2017-05-06
