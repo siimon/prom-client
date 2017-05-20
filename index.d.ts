@@ -63,8 +63,8 @@ interface labelValues {
 export interface CounterConfiguration {
 	name: string,
 	help: string,
-	labels: string [],
-	registers: Registry[]
+	labelNames?: string [],
+	registers?: Registry[]
 }
 
 /**
@@ -123,8 +123,8 @@ export namespace Counter {
 export interface GaugeConfiguration{
 	name: string,
 	help: string,
-	labels: string[],
-	registers: Registry[]
+	labelNames?: string[],
+	registers?: Registry[]
 }
 
 /**
@@ -177,7 +177,7 @@ export class Gauge {
 
 	/**
 	 * Set gauge value for labels
-	 * @param lables Object with label keys and values
+	 * @param labels Object with label keys and values
 	 * @param value The value to set
 	 * @param timestamp Timestamp to associate the time series with
 	 */
@@ -230,6 +230,7 @@ export namespace Gauge {
 		/**
 		 * Set gauges value
 		 * @param value The value to set
+		 * @param timestamp Timestamp to associate the time series with
 		 */
 		set(value: number, timestamp?: number|Date): void
 
@@ -249,9 +250,9 @@ export namespace Gauge {
 export interface HistogramConfiguration {
 	name: string,
 	help: string,
-	labels: string[],
-	buckets: number[],
-	registers: Registry[]
+	labelNames?: string[],
+	buckets?: number[],
+	registers?: Registry[]
 }
 
 /**
@@ -333,9 +334,9 @@ export namespace Histogram {
 export interface SummaryConfiguration{
 	name: string,
 	help: string,
-	labels: string[]
-	percentiles: number[],
-	registers: Registry[]
+	labelNames?: string[],
+	percentiles?: number[],
+	registers?: Registry[]
 }
 
 /**
