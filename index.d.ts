@@ -182,7 +182,7 @@ export class Gauge {
 
 	/**
 	 * Set gauge value for labels
-	 * @param lables Object with label keys and values
+	 * @param labels Object with label keys and values
 	 * @param value The value to set
 	 * @param timestamp Timestamp to associate the time series with
 	 */
@@ -235,6 +235,7 @@ export namespace Gauge {
 		/**
 		 * Set gauges value
 		 * @param value The value to set
+		 * @param timestamp Timestamp to associate the time series with
 		 */
 		set(value: number, timestamp?: number|Date): void
 
@@ -426,9 +427,10 @@ export namespace Summary {
 export class Pushgateway {
 	/**
 	 * @param url Complete url to the Pushgateway. If port is needed append url with :port
+	 * @param options Options
 	 * @param registry Registry
 	 */
-	constructor(url: string, registry?: Registry)
+	constructor(url: string, options?: any, registry?: Registry)
 
 	/**
 	 * Add metric and overwrite old ones
