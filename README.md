@@ -70,6 +70,12 @@ clearInterval(client.collectDefaultMetrics());
 client.register.clear();
 ```
 
+Also you can require file `noDefaultMetrics` instead. It doesn't contain default metrics:
+
+```js
+var client = require('prom-client/noDefaultMetrics');
+```
+
 #### Counter
 
 Counters go up, and reset when the process restarts.
