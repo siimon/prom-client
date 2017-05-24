@@ -422,9 +422,10 @@ export namespace Summary {
 export class Pushgateway {
 	/**
 	 * @param url Complete url to the Pushgateway. If port is needed append url with :port
+	 * @param options Options
 	 * @param registry Registry
 	 */
-	constructor(url: string, registry?: Registry)
+	constructor(url: string, options?: any, registry?: Registry)
 
 	/**
 	 * Add metric and overwrite old ones
