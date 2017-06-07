@@ -147,7 +147,7 @@ describe('register', function() {
 			registryOne.registerMetric(getMetric('one'));
 			registryTwo.registerMetric(getMetric('two'));
 
-			var merged = register.merge([registryOne, registryTwo]).getMetricsAsJSON();
+			var merged = Registry.merge([registryOne, registryTwo]).getMetricsAsJSON();
 			expect(merged).to.have.length(2);
 		});
 
@@ -156,7 +156,7 @@ describe('register', function() {
 			registryTwo.registerMetric(getMetric());
 
 			var fn = function() {
-				register.merge([registryOne, registryTwo]);
+				Registry.merge([registryOne, registryTwo]);
 			};
 
 			expect(fn).to.throw(Error);
