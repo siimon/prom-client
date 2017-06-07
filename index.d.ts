@@ -32,6 +32,11 @@ export class Registry {
 	 * @param name The name of the metric
 	 */
 	getSingleMetricAsString(name:string): string
+	/**
+	* Merge registers
+	* @param registers The registers you want to merge together
+	*/
+	merge(registers: Registry[]): Registry
 }
 
 /**
@@ -334,7 +339,7 @@ export namespace Histogram {
 export interface SummaryConfiguration{
 	name: string,
 	help: string,
-	labelNames?: string[],
+	labelNames?: string[]
 	percentiles?: number[],
 	registers?: Registry[]
 }

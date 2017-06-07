@@ -133,6 +133,36 @@ describe('register', function() {
 		expect(output).to.equal(metric);
 	});
 
+	describe('merging', function() {
+		var Registry = require('../lib/registry');
+		var registryOne;
+		var registryTwo;
+
+		beforeEach(function() {
+			registryOne = new Registry();
+			registryTwo = new Registry();
+		});
+
+		it('should merge all provided registers', function() {
+			registryOne.registerMetric(getMetric('one'));
+			registryTwo.registerMetric(getMetric('two'));
+
+			var merged = Registry.merge([registryOne, registryTwo]).getMetricsAsJSON();
+			expect(merged).to.have.length(2);
+		});
+
+		it('should throw if same name exists on both registers', function() {
+			registryOne.registerMetric(getMetric());
+			registryTwo.registerMetric(getMetric());
+
+			var fn = function() {
+				Registry.merge([registryOne, registryTwo]);
+			};
+
+			expect(fn).to.throw(Error);
+		});
+	});
+
 	function getMetric(name) {
 		name = name || 'test_metric';
 		return {
