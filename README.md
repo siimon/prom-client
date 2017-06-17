@@ -27,9 +27,9 @@ The function returned from `collectDefaultMetrics` takes 1 option, a timeout for
 be fired. By default probes are launched every 10 seconds, but this can be modified like this:
 
 ```js
-var client = require('prom-client');
+const client = require('prom-client');
 
-var collectDefaultMetrics = client.collectDefaultMetrics;
+const collectDefaultMetrics = client.collectDefaultMetrics;
 
 // Probe every 5th second.
 collectDefaultMetrics(5000);
@@ -43,11 +43,11 @@ passed to `clearInterval` in order to stop all probes.
 NOTE: Existing intervals are automatically cleared when calling `collectDefaultMetrics`.
 
 ```js
-var client = require('prom-client');
+const client = require('prom-client');
 
-var collectDefaultMetrics = client.collectDefaultMetrics;
+const collectDefaultMetrics = client.collectDefaultMetrics;
 
-var interval = collectDefaultMetrics();
+const interval = collectDefaultMetrics();
 
 // ... some time later
 
@@ -62,7 +62,7 @@ keeping it from shutting down.
 To stop collecting the default metrics, you have to call the function and pass it to `clearInterval`.
 
 ```js
-var client = require('prom-client');
+const client = require('prom-client');
 
 clearInterval(client.collectDefaultMetrics());
 
@@ -75,8 +75,8 @@ client.register.clear();
 Counters go up, and reset when the process restarts.
 
 ```js
-var client = require('prom-client');
-var counter = new client.Counter({ name: 'metric_name', help: 'metric_help' });
+const client = require('prom-client');
+const counter = new client.Counter({ name: 'metric_name', help: 'metric_help' });
 counter.inc(); // Inc with 1
 counter.inc(10); // Inc with 10
 ```
@@ -86,8 +86,8 @@ counter.inc(10); // Inc with 10
 Gauges are similar to Counters but Gauges value can be decreased.
 
 ```js
-var client = require('prom-client');
-var gauge = new client.Gauge({ name: 'metric_name', help: 'metric_help' });
+const client = require('prom-client');
+const gauge = new client.Gauge({ name: 'metric_name', help: 'metric_help' });
 gauge.set(10); // Set to 10
 gauge.inc(); // Inc with 1
 gauge.inc(10); // Inc with 10
@@ -100,7 +100,7 @@ There are some utilities for common use cases:
 ```js
 gauge.setToCurrentTime(); // Sets value to current time
 
-var end = gauge.startTimer();
+const end = gauge.startTimer();
 xhrRequest(function(err, res) {
 	end(); // Sets value to xhrRequests duration in seconds
 });
@@ -114,26 +114,26 @@ Histograms track sizes and frequency of events.
 
 The defaults buckets are intended to cover usual web/rpc requests, this can however be overriden.
 ```js
-var client = require('prom-client');
+const client = require('prom-client');
 new client.Histogram({ name: 'metric_name', help: 'metric_help', buckets: [ 0.10, 5, 15, 50, 100, 500 ] });
 ```
 You can include all label names as a property as well.
 ```js
-var client = require('prom-client');
+const client = require('prom-client');
 new client.Histogram({ name: 'metric_name', help: 'metric_help', labelNames: [ 'status_code' ], buckets: [ 0.10, 5, 15, 50, 100, 500 ] });
 ```
 
 Examples
 
 ```js
-var client = require('prom-client');
-var histogram = new client.Histogram({ name: 'metric_name', help: 'metric_help' });
+const client = require('prom-client');
+const histogram = new client.Histogram({ name: 'metric_name', help: 'metric_help' });
 histogram.observe(10); // Observe value in histogram
 ```
 
 Utility to observe request durations
 ```js
-var end = histogram.startTimer();
+const end = histogram.startTimer();
 xhrRequest(function(err, res) {
 	end(); // Observes the value to xhrRequests duration in seconds
 });
@@ -148,21 +148,21 @@ Summaries calculate percentiles of observed values.
 The default percentiles are: 0.01, 0.05, 0.5, 0.9, 0.95, 0.99, 0.999. But they can be overriden like this:
 
 ```js
-var client = require('prom-client');
+const client = require('prom-client');
 new client.Summary({ name: 'metric_name', help: 'metric_help', percentiles: [ 0.01, 0.1, 0.9, 0.99 ] });
 ```
 
 Usage example
 
 ```js
-var client = require('prom-client');
-var summary = new client.Summary({ name: 'metric_name', help: 'metric_help' });
+const client = require('prom-client');
+const summary = new client.Summary({ name: 'metric_name', help: 'metric_help' });
 summary.observe(10);
 ```
 
 Utility to observe request durations
 ```js
-var end = summary.startTimer();
+const end = summary.startTimer();
 xhrRequest(function(err, res) {
 	end(); // Observes the value to xhrRequests duration in seconds
 });
@@ -172,8 +172,8 @@ xhrRequest(function(err, res) {
 
 All metrics can take a labelNames property in the configuration object. All labelNames that the metric support needs to be declared here. There are 2 ways to add values to the labels
 ```js
-var client = require('prom-client');
-var gauge = new client.Gauge({ name: 'metric_name', help: 'metric_help', labelNames: [ 'method', 'statusCode' ] });
+const client = require('prom-client');
+const gauge = new client.Gauge({ name: 'metric_name', help: 'metric_help', labelNames: [ 'method', 'statusCode' ] });
 
 gauge.set({ method: 'GET', statusCode: '200' }, 100); // 1st version, Set value 100 with method set to GET and statusCode to 200
 gauge.labels('GET', '200').set(100); // 2nd version, Same as above
@@ -181,7 +181,7 @@ gauge.labels('GET', '200').set(100); // 2nd version, Same as above
 
 It is also possible to use timers with labels, both before and after the timer is created:
 ```js
-var end = startTimer({ method: 'GET' }); // Set method to GET, we don't know statusCode yet
+const end = startTimer({ method: 'GET' }); // Set method to GET, we don't know statusCode yet
 xhrRequest(function(err, res) {
 	if (err) {
 		end({ statusCode: '500' }); // Sets value to xhrRequest duration in seconds with statusCode 500
@@ -218,14 +218,14 @@ you can pass an empty `registers` array and register it manually.
 Registry has a merge function that enables you to expose multiple registries on the same endpoint. If the same metric name exists in both registries, an error will be thrown.
 
 ```js
-var client = require('prom-client');
-var registry = new client.Registry();
-var counter = new client.Counter({name: 'metric_name', help: 'metric_help', registers: [ registry ]});
-var histogram = new client.Histogram({name: 'metric_name', help: 'metric_help', registers: [ ]});
+const client = require('prom-client');
+const registry = new client.Registry();
+const counter = new client.Counter({name: 'metric_name', help: 'metric_help', registers: [ registry ]});
+const histogram = new client.Histogram({name: 'metric_name', help: 'metric_help', registers: [ ]});
 registry.registerMetric(histogram);
 counter.inc();
 
-var mergedRegistries = client.Registry.merge([registry, client.register]);
+const mergedRegistries = client.Registry.merge([registry, client.register]);
 ```
 
 #### Register
@@ -250,8 +250,8 @@ You can remove all metrics by calling `register.clear()`. You can also remove a 
 It is possible to push metrics via a [Pushgateway](https://github.com/prometheus/pushgateway).
 
 ```js
-var client = require('prom-client');
-var gateway = new client.Pushgateway('http://127.0.0.1:9091');
+const client = require('prom-client');
+const gateway = new client.Pushgateway('http://127.0.0.1:9091');
 
 gateway.pushAdd({ jobName: 'test' }, function(err, resp, body) { }); //Add metric and overwrite old ones
 gateway.push({ jobName: 'test' }, function(err, resp, body) { }); //Overwrite all metrics (use PUT)
@@ -270,7 +270,7 @@ gateway = new client.Pushgateway('http://127.0.0.1:9091', { timeout: 5000 }); //
 For convenience, there are 2 bucket generator functions - linear and exponential.
 
 ```js
-var client = require('prom-client');
+const client = require('prom-client');
 new client.Histogram({
 	name: 'metric_name',
 	help: 'metric_help',

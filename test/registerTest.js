@@ -1,64 +1,70 @@
 'use strict';
 
-describe('register', function() {
-	var register = require('../index').register;
-	var expect = require('chai').expect;
+describe('register', () => {
+	const register = require('../index').register;
+	const expect = require('chai').expect;
 
-	beforeEach(function() {
+	beforeEach(() => {
 		register.clear();
 	});
 
-	describe('should output a counter metric', function() {
-		var output;
-		beforeEach(function() {
+	describe('should output a counter metric', () => {
+		let output;
+		beforeEach(() => {
 			register.registerMetric(getMetric());
 			output = register.metrics().split('\n');
 		});
 
-		it('with help as first item', function() {
+		it('with help as first item', () => {
 			expect(output[0]).to.equal('# HELP test_metric A test metric');
 		});
-		it('with type as second item', function() {
+		it('with type as second item', () => {
 			expect(output[1]).to.equal('# TYPE test_metric counter');
 		});
-		it('with first value of the metric as third item', function() {
+		it('with first value of the metric as third item', () => {
 			expect(output[2]).to.equal('test_metric{label="hello",code="303"} 12');
 		});
-		it('with second value of the metric as fourth item', function() {
-			expect(output[3]).to.equal('test_metric{label="bye",code="404"} 34 1485392700000');
+		it('with second value of the metric as fourth item', () => {
+			expect(output[3]).to.equal(
+				'test_metric{label="bye",code="404"} 34 1485392700000'
+			);
 		});
 	});
 
-	it('should throw on more than one metric', function() {
+	it('should throw on more than one metric', () => {
 		register.registerMetric(getMetric());
 
-		expect(function() {
+		expect(() => {
 			register.registerMetric(getMetric());
-		}).to.throw('A metric with the name test_metric has already been registered.');
+		}).to.throw(
+			'A metric with the name test_metric has already been registered.'
+		);
 	});
 
-	it('should handle a metric without labels', function() {
+	it('should handle a metric without labels', () => {
 		register.registerMetric({
-			get: function() {
+			get() {
 				return {
 					name: 'test_metric',
 					type: 'counter',
 					help: 'A test metric',
-					values: [ {
-						value: 1
-					}]
+					values: [
+						{
+							value: 1
+						}
+					]
 				};
 			}
 		});
-		var actual = register.metrics().split('\n');
+		const actual = register.metrics().split('\n');
 		expect(actual).to.have.length(4);
 	});
 
-	describe('should escape', function() {
-		var escapedResult;
-		beforeEach(function() {
+	describe('should escape', () => {
+		let escapedResult;
+		beforeEach(() => {
 			register.registerMetric({
-				get: function() {
+				get() {
 					return {
 						name: 'test_"_\\_\n_metric',
 						help: 'help_help',
@@ -68,39 +74,41 @@ describe('register', function() {
 			});
 			escapedResult = register.metrics();
 		});
-		it('backslash to \\\\', function() {
+		it('backslash to \\\\', () => {
 			expect(escapedResult).to.match(/\\\\/);
 		});
-		it('newline to \\\\n', function() {
+		it('newline to \\\\n', () => {
 			expect(escapedResult).to.match(/\n/);
 		});
 	});
 
-	it('should escape " in label values', function() {
+	it('should escape " in label values', () => {
 		register.registerMetric({
-			get: function() {
+			get() {
 				return {
 					name: 'test_metric',
 					type: 'counter',
 					help: 'A test metric',
-					values: [ {
-						value: 12,
-						labels: {
-							label: 'hello',
-							code: '3"03'
+					values: [
+						{
+							value: 12,
+							labels: {
+								label: 'hello',
+								code: '3"03'
+							}
 						}
-					}]
+					]
 				};
 			}
 		});
-		var escapedResult = register.metrics();
+		const escapedResult = register.metrics();
 		expect(escapedResult).to.match(/\\"/);
 	});
 
-	describe('should output metrics as JSON', function() {
-		it('should output metrics as JSON', function() {
+	describe('should output metrics as JSON', () => {
+		it('should output metrics as JSON', () => {
 			register.registerMetric(getMetric());
-			var output = register.getMetricsAsJSON();
+			const output = register.getMetricsAsJSON();
 
 			expect(output.length).to.equal(1);
 			expect(output[0].name).to.equal('test_metric');
@@ -110,11 +118,11 @@ describe('register', function() {
 		});
 	});
 
-	it('should allow removing single metrics', function() {
+	it('should allow removing single metrics', () => {
 		register.registerMetric(getMetric());
 		register.registerMetric(getMetric('some other name'));
 
-		var output = register.getMetricsAsJSON();
+		let output = register.getMetricsAsJSON();
 		expect(output.length).to.equal(2);
 
 		register.removeSingleMetric('test_metric');
@@ -125,37 +133,40 @@ describe('register', function() {
 		expect(output[0].name).to.equal('some other name');
 	});
 
-	it('should allow getting single metrics', function() {
-		var metric = getMetric();
+	it('should allow getting single metrics', () => {
+		const metric = getMetric();
 		register.registerMetric(metric);
 
-		var output = register.getSingleMetric('test_metric');
+		const output = register.getSingleMetric('test_metric');
 		expect(output).to.equal(metric);
 	});
 
-	describe('merging', function() {
-		var Registry = require('../lib/registry');
-		var registryOne;
-		var registryTwo;
+	describe('merging', () => {
+		const Registry = require('../lib/registry');
+		let registryOne;
+		let registryTwo;
 
-		beforeEach(function() {
+		beforeEach(() => {
 			registryOne = new Registry();
 			registryTwo = new Registry();
 		});
 
-		it('should merge all provided registers', function() {
+		it('should merge all provided registers', () => {
 			registryOne.registerMetric(getMetric('one'));
 			registryTwo.registerMetric(getMetric('two'));
 
-			var merged = Registry.merge([registryOne, registryTwo]).getMetricsAsJSON();
+			const merged = Registry.merge([
+				registryOne,
+				registryTwo
+			]).getMetricsAsJSON();
 			expect(merged).to.have.length(2);
 		});
 
-		it('should throw if same name exists on both registers', function() {
+		it('should throw if same name exists on both registers', () => {
 			registryOne.registerMetric(getMetric());
 			registryTwo.registerMetric(getMetric());
 
-			var fn = function() {
+			const fn = function() {
 				Registry.merge([registryOne, registryTwo]);
 			};
 
@@ -166,26 +177,29 @@ describe('register', function() {
 	function getMetric(name) {
 		name = name || 'test_metric';
 		return {
-			name: name,
-			get: function() {
+			name,
+			get() {
 				return {
-					name: name,
+					name,
 					type: 'counter',
 					help: 'A test metric',
-					values: [ {
-						value: 12,
-						labels: {
-							label: 'hello',
-							code: '303'
+					values: [
+						{
+							value: 12,
+							labels: {
+								label: 'hello',
+								code: '303'
+							}
+						},
+						{
+							value: 34,
+							timestamp: 1485392700000,
+							labels: {
+								label: 'bye',
+								code: '404'
+							}
 						}
-					}, {
-						value: 34,
-						timestamp: 1485392700000,
-						labels: {
-							label: 'bye',
-							code: '404'
-						}
-					}]
+					]
 				};
 			}
 		};

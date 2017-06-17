@@ -1,21 +1,23 @@
 'use strict';
 
-describe('validation', function() {
-	var expect = require('chai').expect;
+describe('validation', () => {
+	const expect = require('chai').expect;
 
-	describe('validateLabel', function() {
-		var validateLabel = require('../lib/validation').validateLabel;
+	describe('validateLabel', () => {
+		const validateLabel = require('../lib/validation').validateLabel;
 
-		it('should not throw on known label', function() {
-			expect(function() {
-				validateLabel(['exists'], {exists: null});
+		it('should not throw on known label', () => {
+			expect(() => {
+				validateLabel(['exists'], { exists: null });
 			}).not.to.throw();
 		});
 
-		it('should throw on unknown label', function() {
-			expect(function() {
-				validateLabel(['exists'], {somethingElse: null});
-			}).to.throw('Added label "somethingElse" is not included in initial labelset: [ \'exists\' ]');
+		it('should throw on unknown label', () => {
+			expect(() => {
+				validateLabel(['exists'], { somethingElse: null });
+			}).to.throw(
+				'Added label "somethingElse" is not included in initial labelset: [ \'exists\' ]'
+			);
 		});
 	});
 });

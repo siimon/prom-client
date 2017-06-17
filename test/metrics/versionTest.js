@@ -1,22 +1,22 @@
 'use strict';
 
-var nodeVersion = process.version;
-var versionSegments = nodeVersion.slice(1).split('.').map(Number);
+const nodeVersion = process.version;
+const versionSegments = nodeVersion.slice(1).split('.').map(Number);
 
-describe('version', function() {
-	var expect = require('chai').expect;
-	var register = require('../../index').register;
-	var version = require('../../lib/metrics/version');
+describe('version', () => {
+	const expect = require('chai').expect;
+	const register = require('../../index').register;
+	const version = require('../../lib/metrics/version');
 
-	before(function() {
+	before(() => {
 		register.clear();
 	});
 
-	afterEach(function() {
+	afterEach(() => {
 		register.clear();
 	});
 
-	it('should add metric to the registry', function(done) {
+	it('should add metric to the registry', done => {
 		expect(register.getMetricsAsJSON()).to.have.length(0);
 		expect(versionSegments[0]).to.be.a('number');
 		expect(versionSegments[1]).to.be.a('number');
@@ -24,8 +24,8 @@ describe('version', function() {
 
 		version()();
 
-		setTimeout(function() {
-			var metrics = register.getMetricsAsJSON();
+		setTimeout(() => {
+			const metrics = register.getMetricsAsJSON();
 			expect(metrics).to.have.length(1);
 
 			expect(metrics[0].help).to.equal('Node.js version info.');
