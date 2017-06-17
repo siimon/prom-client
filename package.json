@@ -38,8 +38,7 @@
     "typescript": "^2.0.3"
   },
   "dependencies": {
-    "tdigest": "^0.1.1",
-    "util-extend": "^1.0.1"
+    "tdigest": "^0.1.1"
   },
   "types": "./index.d.ts",
   "jest": {
