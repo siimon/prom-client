@@ -107,12 +107,12 @@ describe('pushgateway', function() {
 		it('should be possible to extend http/s requests with options', function(done) {
 
 			nock('http://192.168.99.100:9091', {'encodedQueryParams':true})
-			.matchHeader('unit-test', '1')
-			.put('/metrics/job/testJob')
-			.reply(202, '', {
-				'content-length': '0',
-				'content-type': 'text/plain; charset=utf-8',
-				connection: 'close' });
+				.matchHeader('unit-test', '1')
+				.put('/metrics/job/testJob')
+				.reply(202, '', {
+					'content-length': '0',
+					'content-type': 'text/plain; charset=utf-8',
+					connection: 'close' });
 
 			instance = new Pushgateway('http://192.168.99.100:9091', {
 				headers: {
@@ -153,10 +153,10 @@ describe('pushgateway', function() {
 
 	function setupNock(responseCode, method, path) {
 		nock('http://192.168.99.100:9091', {'encodedQueryParams':true})
-		[method](path)
-		.reply(202, '', {
-			'content-length': '0',
-			'content-type': 'text/plain; charset=utf-8',
-			connection: 'close' });
+			[method](path)
+			.reply(202, '', {
+				'content-length': '0',
+				'content-type': 'text/plain; charset=utf-8',
+				connection: 'close' });
 	}
 });

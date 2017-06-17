@@ -30,8 +30,8 @@
   "license": "Apache-2.0",
   "homepage": "https://github.com/siimon/prom-client",
   "devDependencies": {
-    "chai": "^3.4.1",
-    "eslint": "^3.5.0",
+    "chai": "^4.0.2",
+    "eslint": "^4.0.0",
     "express": "^4.13.3",
     "mocha": "^3.2.0",
     "mockery": "^2.0.0",
