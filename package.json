@@ -8,8 +8,8 @@
     "index.js",
     "index.d.ts"
   ],
-  "directories": {
-    "test": "test"
+  "engines": {
+    "node": ">=4"
   },
   "scripts": {
     "test": "npm run lint && npm run compile-typescript && npm run test-unit",
