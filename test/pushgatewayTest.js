@@ -1,15 +1,15 @@
 'use strict';
 
 describe('pushgateway', function() {
-	var Pushgateway = require('../index').Pushgateway;
-	var nock = require('nock');
-	var expect = require('chai').expect;
-	var register = require('../index').register;
-	var Registry = require('../index').Registry;
-	var instance;
-	var registry = undefined;
+	const Pushgateway = require('../index').Pushgateway;
+	const nock = require('nock');
+	const expect = require('chai').expect;
+	const register = require('../index').register;
+	const Registry = require('../index').Registry;
+	let instance;
+	let registry = undefined;
 
-	var tests = function() {
+	const tests = function() {
 		describe('pushAdd', function() {
 			it('should push metrics', function(done) {
 				setupNock(202, 'post', '/metrics/job/testJob');
@@ -71,8 +71,8 @@ describe('pushgateway', function() {
 		});
 
 		describe('when using basic authentication', function() {
-			var USERNAME = 'unittest';
-			var PASSWORD = 'unittest';
+			const USERNAME = 'unittest';
+			const PASSWORD = 'unittest';
 
 			beforeEach(function() {
 				instance = new Pushgateway('http://' + USERNAME + ':' + PASSWORD + '@192.168.99.100:9091', null, registry);
@@ -134,8 +134,8 @@ describe('pushgateway', function() {
 		beforeEach(function() {
 			registry = undefined;
 			instance = new Pushgateway('http://192.168.99.100:9091');
-			var Counter = new require('../index').Counter;
-			var cnt = new Counter('test', 'test');
+			const Counter = new require('../index').Counter;
+			const cnt = new Counter('test', 'test');
 			cnt.inc(100);
 		});
 		tests();
@@ -144,8 +144,8 @@ describe('pushgateway', function() {
 		beforeEach(function() {
 			registry = new Registry();
 			instance = new Pushgateway('http://192.168.99.100:9091', null, registry);
-			var Counter = new require('../index').Counter;
-			var cnt = new Counter({name: 'test', help: 'test', registers: [ registry ]});
+			const Counter = new require('../index').Counter;
+			const cnt = new Counter({name: 'test', help: 'test', registers: [ registry ]});
 			cnt.inc(100);
 		});
 		tests();

@@ -1,9 +1,9 @@
 'use strict';
 
 describe('eventLoopLag', function() {
-	var expect = require('chai').expect;
-	var register = require('../../index').register;
-	var eventLoopLag = require('../../lib/metrics/eventLoopLag');
+	const expect = require('chai').expect;
+	const register = require('../../index').register;
+	const eventLoopLag = require('../../lib/metrics/eventLoopLag');
 
 	before(function() {
 		register.clear();
@@ -18,7 +18,7 @@ describe('eventLoopLag', function() {
 		eventLoopLag()();
 
 		setTimeout(function() {
-			var metrics = register.getMetricsAsJSON();
+			const metrics = register.getMetricsAsJSON();
 			expect(metrics).to.have.length(1);
 
 			expect(metrics[0].help).to.equal('Lag of event loop in seconds.');

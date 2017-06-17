@@ -1,10 +1,10 @@
 'use strict';
 
 describe('validation', function() {
-	var expect = require('chai').expect;
+	const expect = require('chai').expect;
 
 	describe('validateLabel', function() {
-		var validateLabel = require('../lib/validation').validateLabel;
+		const validateLabel = require('../lib/validation').validateLabel;
 
 		it('should not throw on known label', function() {
 			expect(function() {

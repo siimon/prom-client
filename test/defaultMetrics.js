@@ -1,12 +1,12 @@
 'use strict';
 
 describe('collectDefaultMetrics', function() {
-	var expect = require('chai').expect;
-	var register = require('../index').register;
-	var collectDefaultMetrics = require('../index').collectDefaultMetrics;
-	var platform;
-	var cpuUsage;
-	var interval;
+	const expect = require('chai').expect;
+	const register = require('../index').register;
+	const collectDefaultMetrics = require('../index').collectDefaultMetrics;
+	let platform;
+	let cpuUsage;
+	let interval;
 
 	before(function() {
 		platform = process.platform;
@@ -66,9 +66,9 @@ describe('collectDefaultMetrics', function() {
 
 	describe('disabling', function() {
 		it('should not throw error', function() {
-			var fn = function() {
+			const fn = function() {
 				delete require.cache[require.resolve('../index')];
-				var client = require('../index');
+				const client = require('../index');
 				clearInterval(client.collectDefaultMetrics());
 				register.clear();
 			};

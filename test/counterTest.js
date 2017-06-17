@@ -1,11 +1,11 @@
 'use strict';
 
 describe('counter', function() {
-	var Counter = require('../index').Counter;
-	var Registry = require('../index').Registry;
-	var globalRegistry = require('../index').register;
-	var expect = require('chai').expect;
-	var instance;
+	const Counter = require('../index').Counter;
+	const Registry = require('../index').Registry;
+	const globalRegistry = require('../index').register;
+	const expect = require('chai').expect;
+	let instance;
 
 	describe('global registry', function() {
 		describe('with a parameter for each variable', function() {
@@ -33,19 +33,19 @@ describe('counter', function() {
 				expect(instance.get().values[0].timestamp).to.equal(1485392700000);
 			});
 			it('should not allow non number as timestamp', function() {
-				var fn = function() {
+				const fn = function() {
 					instance.inc(1, 'blah');
 				};
 				expect(fn).to.throw(Error);
 			});
 			it('should not allow invalid date as timestamp', function() {
-				var fn = function() {
+				const fn = function() {
 					instance.inc(1, new Date('blah'));
 				};
 				expect(fn).to.throw(Error);
 			});
 			it('should not be possible to decrease a counter', function() {
-				var fn = function() {
+				const fn = function() {
 					instance.inc(-100);
 				};
 				expect(fn).to.throw(Error);
@@ -69,7 +69,7 @@ describe('counter', function() {
 					instance.labels('GET', '/test').inc();
 					instance.labels('POST', '/test').inc();
 
-					var values = instance.get().values;
+					const values = instance.get().values;
 					expect(values).to.have.length(2);
 				});
 
@@ -77,12 +77,12 @@ describe('counter', function() {
 					instance.inc({method: 'GET', endpoint: '/test'});
 					instance.inc({method: 'POST', endpoint: '/test'});
 
-					var values = instance.get().values;
+					const values = instance.get().values;
 					expect(values).to.have.length(2);
 				});
 
 				it('should throw error if label lengths does not match', function() {
-					var fn = function() {
+					const fn = function() {
 						instance.labels('GET').inc();
 					};
 					expect(fn).to.throw(Error);
@@ -90,7 +90,7 @@ describe('counter', function() {
 
 				it('should increment label value with provided value', function() {
 					instance.labels('GET', '/test').inc(100);
-					var values = instance.get().values;
+					const values = instance.get().values;
 					expect(values[0].value).to.equal(100);
 				});
 			});
@@ -121,19 +121,19 @@ describe('counter', function() {
 			expect(instance.get().values[0].timestamp).to.equal(1485392700000);
 		});
 		it('should not allow non number as timestamp', function() {
-			var fn = function() {
+			const fn = function() {
 				instance.inc(1, 'blah');
 			};
 			expect(fn).to.throw(Error);
 		});
 		it('should not allow invalid date as timestamp', function() {
-			var fn = function() {
+			const fn = function() {
 				instance.inc(1, new Date('blah'));
 			};
 			expect(fn).to.throw(Error);
 		});
 		it('should not be possible to decrease a counter', function() {
-			var fn = function() {
+			const fn = function() {
 				instance.inc(-100);
 			};
 			expect(fn).to.throw(Error);
@@ -152,7 +152,7 @@ describe('counter', function() {
 				instance.labels('GET', '/test').inc();
 				instance.labels('POST', '/test').inc();
 
-				var values = instance.get().values;
+				const values = instance.get().values;
 				expect(values).to.have.length(2);
 			});
 
@@ -160,19 +160,19 @@ describe('counter', function() {
 				instance.inc({method: 'GET', endpoint: '/test'});
 				instance.inc({method: 'POST', endpoint: '/test'});
 
-				var values = instance.get().values;
+				const values = instance.get().values;
 				expect(values).to.have.length(2);
 			});
 
 			it('should throw error if label lengths does not match', function() {
-				var fn = function() {
+				const fn = function() {
 					instance.labels('GET').inc();
 				};
 				expect(fn).to.throw(Error);
 			});
 
 			it('should throw error if label lengths does not match', function() {
-				var fn = function() {
+				const fn = function() {
 					instance.labels('GET').inc();
 				};
 				expect(fn).to.throw(Error);
@@ -180,7 +180,7 @@ describe('counter', function() {
 
 			it('should increment label value with provided value', function() {
 				instance.labels('GET', '/test').inc(100);
-				var values = instance.get().values;
+				const values = instance.get().values;
 				expect(values[0].value).to.equal(100);
 			});
 		});
@@ -197,7 +197,7 @@ describe('counter', function() {
 		});
 	});
 	describe('registry instance', function() {
-		var registryInstance;
+		let registryInstance;
 		beforeEach(function() {
 			registryInstance = new Registry();
 			instance = new Counter({ name: 'gauge_test', help: 'test', registers: [ registryInstance ] });

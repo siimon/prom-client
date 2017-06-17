@@ -1,9 +1,9 @@
 'use strict';
 
 describe('processHandles', function() {
-	var expect = require('chai').expect;
-	var register = require('../../index').register;
-	var processHandles = require('../../lib/metrics/processHandles');
+	const expect = require('chai').expect;
+	const register = require('../../index').register;
+	const processHandles = require('../../lib/metrics/processHandles');
 
 	before(function() {
 		register.clear();
@@ -18,7 +18,7 @@ describe('processHandles', function() {
 
 		processHandles()();
 
-		var metrics = register.getMetricsAsJSON();
+		const metrics = register.getMetricsAsJSON();
 
 		expect(metrics).to.have.length(1);
 		expect(metrics[0].help).to.equal('Number of active handles.');
