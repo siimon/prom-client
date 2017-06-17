@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   - `prototype` -> `class`
   - Arrow functions over binding or putting `this` in a variable
   - Remove `util-extend` in favor of `Object.assign`
+  - Use object shorthand
 
 ## [9.1.1] - 2017-06-17
 ### Changed
