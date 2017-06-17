@@ -25,7 +25,9 @@ describe('register', () => {
 			expect(output[2]).to.equal('test_metric{label="hello",code="303"} 12');
 		});
 		it('with second value of the metric as fourth item', () => {
-			expect(output[3]).to.equal('test_metric{label="bye",code="404"} 34 1485392700000');
+			expect(output[3]).to.equal(
+				'test_metric{label="bye",code="404"} 34 1485392700000'
+			);
 		});
 	});
 
@@ -34,7 +36,9 @@ describe('register', () => {
 
 		expect(() => {
 			register.registerMetric(getMetric());
-		}).to.throw('A metric with the name test_metric has already been registered.');
+		}).to.throw(
+			'A metric with the name test_metric has already been registered.'
+		);
 	});
 
 	it('should handle a metric without labels', () => {
@@ -44,9 +48,11 @@ describe('register', () => {
 					name: 'test_metric',
 					type: 'counter',
 					help: 'A test metric',
-					values: [ {
-						value: 1
-					}]
+					values: [
+						{
+							value: 1
+						}
+					]
 				};
 			}
 		});
@@ -83,13 +89,15 @@ describe('register', () => {
 					name: 'test_metric',
 					type: 'counter',
 					help: 'A test metric',
-					values: [ {
-						value: 12,
-						labels: {
-							label: 'hello',
-							code: '3"03'
+					values: [
+						{
+							value: 12,
+							labels: {
+								label: 'hello',
+								code: '3"03'
+							}
 						}
-					}]
+					]
 				};
 			}
 		});
@@ -147,7 +155,10 @@ describe('register', () => {
 			registryOne.registerMetric(getMetric('one'));
 			registryTwo.registerMetric(getMetric('two'));
 
-			const merged = Registry.merge([registryOne, registryTwo]).getMetricsAsJSON();
+			const merged = Registry.merge([
+				registryOne,
+				registryTwo
+			]).getMetricsAsJSON();
 			expect(merged).to.have.length(2);
 		});
 
@@ -172,20 +183,23 @@ describe('register', () => {
 					name: name,
 					type: 'counter',
 					help: 'A test metric',
-					values: [ {
-						value: 12,
-						labels: {
-							label: 'hello',
-							code: '303'
+					values: [
+						{
+							value: 12,
+							labels: {
+								label: 'hello',
+								code: '303'
+							}
+						},
+						{
+							value: 34,
+							timestamp: 1485392700000,
+							labels: {
+								label: 'bye',
+								code: '404'
+							}
 						}
-					}, {
-						value: 34,
-						timestamp: 1485392700000,
-						labels: {
-							label: 'bye',
-							code: '404'
-						}
-					}]
+					]
 				};
 			}
 		};

@@ -8,14 +8,16 @@ describe('validation', () => {
 
 		it('should not throw on known label', () => {
 			expect(() => {
-				validateLabel(['exists'], {exists: null});
+				validateLabel(['exists'], { exists: null });
 			}).not.to.throw();
 		});
 
 		it('should throw on unknown label', () => {
 			expect(() => {
-				validateLabel(['exists'], {somethingElse: null});
-			}).to.throw('Added label "somethingElse" is not included in initial labelset: [ \'exists\' ]');
+				validateLabel(['exists'], { somethingElse: null });
+			}).to.throw(
+				'Added label "somethingElse" is not included in initial labelset: [ \'exists\' ]'
+			);
 		});
 	});
 });

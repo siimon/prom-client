@@ -68,7 +68,7 @@ describe('gauge', () => {
 			describe('with labels', () => {
 				beforeEach(() => {
 					instance = new Gauge('name', 'help', ['code']);
-					instance.set({ 'code': '200' }, 20);
+					instance.set({ code: '200' }, 20);
 				});
 				it('should be able to increment', () => {
 					instance.labels('200').inc();
@@ -100,16 +100,16 @@ describe('gauge', () => {
 					const clock = sinon.useFakeTimers();
 					const end = instance.startTimer();
 					clock.tick(1000);
-					end({ 'code': 200 });
+					end({ code: 200 });
 					expectValue(1);
 					clock.restore();
 				});
 				it('should allow labels before and after timers', () => {
 					instance = new Gauge('name_2', 'help', ['code', 'success']);
 					const clock = sinon.useFakeTimers();
-					const end = instance.startTimer({ 'code': 200 });
+					const end = instance.startTimer({ code: 200 });
 					clock.tick(1000);
-					end({ 'success': 'SUCCESS' });
+					end({ success: 'SUCCESS' });
 					expectValue(1);
 					clock.restore();
 				});
@@ -118,7 +118,7 @@ describe('gauge', () => {
 			describe('with timestamp', () => {
 				beforeEach(() => {
 					instance = new Gauge('name', 'help', ['code']);
-					instance.set({ 'code': '200' }, 20);
+					instance.set({ code: '200' }, 20);
 				});
 				it('should be able to set value and timestamp as Date', () => {
 					instance.labels('200').set(500, new Date('2017-01-26T01:05Z'));
@@ -149,7 +149,6 @@ describe('gauge', () => {
 					expectValue(19, 1485392700000);
 				});
 			});
-
 		});
 
 		describe('with parameters as object', () => {
@@ -207,8 +206,12 @@ describe('gauge', () => {
 
 			describe('with labels', () => {
 				beforeEach(() => {
-					instance = new Gauge( { name: 'name', help: 'help', labelNames: ['code'] });
-					instance.set({ 'code': '200' }, 20);
+					instance = new Gauge({
+						name: 'name',
+						help: 'help',
+						labelNames: ['code']
+					});
+					instance.set({ code: '200' }, 20);
 				});
 				it('should be able to increment', () => {
 					instance.labels('200').inc();
@@ -240,16 +243,20 @@ describe('gauge', () => {
 					const clock = sinon.useFakeTimers();
 					const end = instance.startTimer();
 					clock.tick(1000);
-					end({ 'code': 200 });
+					end({ code: 200 });
 					expectValue(1);
 					clock.restore();
 				});
 				it('should allow labels before and after timers', () => {
-					instance = new Gauge({ name: 'name_2', help: 'help', labelNames: ['code', 'success'] });
+					instance = new Gauge({
+						name: 'name_2',
+						help: 'help',
+						labelNames: ['code', 'success']
+					});
 					const clock = sinon.useFakeTimers();
-					const end = instance.startTimer({ 'code': 200 });
+					const end = instance.startTimer({ code: 200 });
 					clock.tick(1000);
-					end({ 'success': 'SUCCESS' });
+					end({ success: 'SUCCESS' });
 					expectValue(1);
 					clock.restore();
 				});
@@ -258,7 +265,7 @@ describe('gauge', () => {
 			describe('with timestamp', () => {
 				beforeEach(() => {
 					instance = new Gauge('name', 'help', ['code']);
-					instance.set({ 'code': '200' }, 20);
+					instance.set({ code: '200' }, 20);
 				});
 				it('should be able to set value and timestamp as Date', () => {
 					instance.labels('200').set(500, new Date('2017-01-26T01:05Z'));
@@ -308,7 +315,11 @@ describe('gauge', () => {
 		let registryInstance;
 		beforeEach(() => {
 			registryInstance = new Registry();
-			instance = new Gauge({ name: 'gauge_test', help: 'help', registers: [ registryInstance ] });
+			instance = new Gauge({
+				name: 'gauge_test',
+				help: 'help',
+				registers: [registryInstance]
+			});
 			instance.set(10);
 		});
 		it('should set a gauge to provided value', () => {
@@ -319,8 +330,13 @@ describe('gauge', () => {
 
 		describe('with timestamp', () => {
 			beforeEach(() => {
-				instance = new Gauge( { name: 'name', help: 'help', labelNames: ['code'], registers: [ registryInstance ] });
-				instance.set({ 'code': '200' }, 20);
+				instance = new Gauge({
+					name: 'name',
+					help: 'help',
+					labelNames: ['code'],
+					registers: [registryInstance]
+				});
+				instance.set({ code: '200' }, 20);
 			});
 			it('should be able to set value and timestamp as Date', () => {
 				instance.labels('200').set(500, new Date('2017-01-26T01:05Z'));
@@ -351,7 +367,6 @@ describe('gauge', () => {
 				expectValue(19, 1485392700000);
 			});
 		});
-
 	});
 
 	function expectValue(val, timestamp) {

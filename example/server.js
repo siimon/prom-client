@@ -5,13 +5,25 @@ const server = express();
 const register = require('../lib/register');
 
 const Histogram = require('../').Histogram;
-const h = new Histogram({ name: 'test_histogram', help: 'Example of a histogram', labelNames: [ 'code' ] });
+const h = new Histogram({
+	name: 'test_histogram',
+	help: 'Example of a histogram',
+	labelNames: ['code']
+});
 
 const Counter = require('../').Counter;
-const c = new Counter({ name: 'test_counter', help: 'Example of a counter', labelNames: [ 'code' ] });
+const c = new Counter({
+	name: 'test_counter',
+	help: 'Example of a counter',
+	labelNames: ['code']
+});
 
 const Gauge = require('../').Gauge;
-const g = new Gauge({ name: 'test_gauge', help: 'Example of a gauge', labelNames: [ 'method', 'code' ] });
+const g = new Gauge({
+	name: 'test_gauge',
+	help: 'Example of a gauge',
+	labelNames: ['method', 'code']
+});
 
 setTimeout(() => {
 	h.labels('200').observe(Math.random());
@@ -35,7 +47,6 @@ setInterval(() => {
 	g.set(Math.random());
 	g.labels('post', '300').inc();
 }, 100);
-
 
 server.get('/metrics', (req, res) => {
 	res.set('Content-Type', register.contentType);

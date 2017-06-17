@@ -13,7 +13,7 @@ describe('eventLoopLag', () => {
 		register.clear();
 	});
 
-	it('should add metric to the registry', (done) => {
+	it('should add metric to the registry', done => {
 		expect(register.getMetricsAsJSON()).to.have.length(0);
 		eventLoopLag()();
 

@@ -39,5 +39,4 @@ describe('heapSizeAndUsed', () => {
 		const gauge = heapSizeAndUsed()().external.get();
 		expect(gauge.values[0].value).to.equal(100);
 	});
-
 });

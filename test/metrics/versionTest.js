@@ -16,7 +16,7 @@ describe('version', () => {
 		register.clear();
 	});
 
-	it('should add metric to the registry', (done) => {
+	it('should add metric to the registry', done => {
 		expect(register.getMetricsAsJSON()).to.have.length(0);
 		expect(versionSegments[0]).to.be.a('number');
 		expect(versionSegments[1]).to.be.a('number');

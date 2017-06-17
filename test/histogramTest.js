@@ -20,7 +20,10 @@ describe('histogram', () => {
 
 		it('should increase count', () => {
 			instance.observe(0.5);
-			const valuePair = getValueByName('test_histogram_count', instance.get().values);
+			const valuePair = getValueByName(
+				'test_histogram_count',
+				instance.get().values
+			);
 			expect(valuePair.value).to.equal(1);
 		});
 		it('should be able to observe 0s', () => {
@@ -30,7 +33,10 @@ describe('histogram', () => {
 		});
 		it('should increase sum', () => {
 			instance.observe(0.5);
-			const valuePair = getValueByName('test_histogram_sum', instance.get().values);
+			const valuePair = getValueByName(
+				'test_histogram_sum',
+				instance.get().values
+			);
 			expect(valuePair.value).to.equal(0.5);
 		});
 		it('should add item in upper bound bucket', () => {
@@ -50,13 +56,18 @@ describe('histogram', () => {
 
 		it('should add a +Inf bucket with the same value as count', () => {
 			instance.observe(10);
-			const countValuePair = getValueByName('test_histogram_count', instance.get().values);
+			const countValuePair = getValueByName(
+				'test_histogram_count',
+				instance.get().values
+			);
 			const infValuePair = getValueByLabel('+Inf', instance.get().values);
 			expect(infValuePair.value).to.equal(countValuePair.value);
 		});
 
 		it('should add buckets in increasing numerical order', () => {
-			const histogram = new Histogram('test_histogram_2', 'test', { buckets: [1, 5] });
+			const histogram = new Histogram('test_histogram_2', 'test', {
+				buckets: [1, 5]
+			});
 			histogram.observe(1.5);
 			const values = histogram.get().values;
 			expect(values[0].labels.le).to.equal(1);
@@ -64,7 +75,7 @@ describe('histogram', () => {
 			expect(values[2].labels.le).to.equal('+Inf');
 		});
 		it('should group counts on each label set', () => {
-			const histogram = new Histogram('test_histogram_2', 'test', [ 'code' ]);
+			const histogram = new Histogram('test_histogram_2', 'test', ['code']);
 			histogram.observe({ code: '200' }, 1);
 			histogram.observe({ code: '300' }, 1);
 			const values = getValuesByLabel(1, histogram.get().values);
@@ -90,15 +101,15 @@ describe('histogram', () => {
 		});
 
 		it('should allow custom labels', () => {
-			const i = new Histogram('histo', 'help', [ 'code' ]);
-			i.observe({ code: 'test'}, 1);
+			const i = new Histogram('histo', 'help', ['code']);
+			i.observe({ code: 'test' }, 1);
 			const pair = getValueByLeAndLabel(1, 'code', 'test', i.get().values);
 			expect(pair.value).to.equal(1);
 		});
 
 		it('should not allow le as a custom label', () => {
 			const fn = function() {
-				new Histogram('name', 'help', [ 'le' ]);
+				new Histogram('name', 'help', ['le']);
 			};
 			expect(fn).to.throw(Error);
 		});
@@ -112,7 +123,10 @@ describe('histogram', () => {
 
 		it('should allow to be reset itself', () => {
 			instance.observe(0.5);
-			let valuePair = getValueByName('test_histogram_count', instance.get().values);
+			let valuePair = getValueByName(
+				'test_histogram_count',
+				instance.get().values
+			);
 			expect(valuePair.value).to.equal(1);
 			instance.reset();
 			valuePair = getValueByName('test_histogram_count', instance.get().values);
@@ -121,12 +135,21 @@ describe('histogram', () => {
 
 		describe('labels', () => {
 			beforeEach(() => {
-				instance = new Histogram('histogram_labels', 'Histogram with labels fn', [ 'method' ]);
+				instance = new Histogram(
+					'histogram_labels',
+					'Histogram with labels fn',
+					['method']
+				);
 			});
 
 			it('should observe', () => {
 				instance.labels('get').observe(4);
-				const res = getValueByLeAndLabel(5, 'method', 'get', instance.get().values);
+				const res = getValueByLeAndLabel(
+					5,
+					'method',
+					'get',
+					instance.get().values
+				);
 				expect(res.value).to.equal(1);
 			});
 
@@ -142,7 +165,12 @@ describe('histogram', () => {
 				const end = instance.labels('get').startTimer();
 				clock.tick(500);
 				end();
-				const res = getValueByLeAndLabel(0.5, 'method', 'get', instance.get().values);
+				const res = getValueByLeAndLabel(
+					0.5,
+					'method',
+					'get',
+					instance.get().values
+				);
 				expect(res.value).to.equal(1);
 				clock.restore();
 			});
@@ -151,20 +179,39 @@ describe('histogram', () => {
 				const clock = sinon.useFakeTimers();
 				const end = instance.startTimer();
 				clock.tick(500);
-				end({ 'method': 'get' });
-				const res = getValueByLeAndLabel(0.5, 'method', 'get', instance.get().values);
+				end({ method: 'get' });
+				const res = getValueByLeAndLabel(
+					0.5,
+					'method',
+					'get',
+					instance.get().values
+				);
 				expect(res.value).to.equal(1);
 				clock.restore();
 			});
 
 			it('should allow labels before and after timers', () => {
-				instance = new Histogram('histogram_labels_2', 'Histogram with labels fn', [ 'method', 'success' ]);
+				instance = new Histogram(
+					'histogram_labels_2',
+					'Histogram with labels fn',
+					['method', 'success']
+				);
 				const clock = sinon.useFakeTimers();
-				const end = instance.startTimer({ 'method': 'get' });
+				const end = instance.startTimer({ method: 'get' });
 				clock.tick(500);
-				end({ 'success': 'SUCCESS' });
-				const res1 = getValueByLeAndLabel(0.5, 'method', 'get', instance.get().values);
-				const res2 = getValueByLeAndLabel(0.5, 'success', 'SUCCESS', instance.get().values);
+				end({ success: 'SUCCESS' });
+				const res1 = getValueByLeAndLabel(
+					0.5,
+					'method',
+					'get',
+					instance.get().values
+				);
+				const res2 = getValueByLeAndLabel(
+					0.5,
+					'success',
+					'SUCCESS',
+					instance.get().values
+				);
 				expect(res1.value).to.equal(1);
 				expect(res2.value).to.equal(1);
 				clock.restore();
@@ -180,7 +227,10 @@ describe('histogram', () => {
 
 			it('should increase count', () => {
 				instance.observe(0.5);
-				const valuePair = getValueByName('test_histogram_count', instance.get().values);
+				const valuePair = getValueByName(
+					'test_histogram_count',
+					instance.get().values
+				);
 				expect(valuePair.value).to.equal(1);
 			});
 			it('should be able to observe 0s', () => {
@@ -190,7 +240,10 @@ describe('histogram', () => {
 			});
 			it('should increase sum', () => {
 				instance.observe(0.5);
-				const valuePair = getValueByName('test_histogram_sum', instance.get().values);
+				const valuePair = getValueByName(
+					'test_histogram_sum',
+					instance.get().values
+				);
 				expect(valuePair.value).to.equal(0.5);
 			});
 			it('should add item in upper bound bucket', () => {
@@ -210,13 +263,20 @@ describe('histogram', () => {
 
 			it('should add a +Inf bucket with the same value as count', () => {
 				instance.observe(10);
-				const countValuePair = getValueByName('test_histogram_count', instance.get().values);
+				const countValuePair = getValueByName(
+					'test_histogram_count',
+					instance.get().values
+				);
 				const infValuePair = getValueByLabel('+Inf', instance.get().values);
 				expect(infValuePair.value).to.equal(countValuePair.value);
 			});
 
 			it('should add buckets in increasing numerical order', () => {
-				const histogram = new Histogram( { name :'test_histogram_2', help: 'test', buckets: [1, 5] });
+				const histogram = new Histogram({
+					name: 'test_histogram_2',
+					help: 'test',
+					buckets: [1, 5]
+				});
 				histogram.observe(1.5);
 				const values = histogram.get().values;
 				expect(values[0].labels.le).to.equal(1);
@@ -224,7 +284,11 @@ describe('histogram', () => {
 				expect(values[2].labels.le).to.equal('+Inf');
 			});
 			it('should group counts on each label set', () => {
-				const histogram = new Histogram({ name: 'test_histogram_2', help: 'test', labelNames: [ 'code' ] });
+				const histogram = new Histogram({
+					name: 'test_histogram_2',
+					help: 'test',
+					labelNames: ['code']
+				});
 				histogram.observe({ code: '200' }, 1);
 				histogram.observe({ code: '300' }, 1);
 				const values = getValuesByLabel(1, histogram.get().values);
@@ -250,15 +314,19 @@ describe('histogram', () => {
 			});
 
 			it('should allow custom labels', () => {
-				const i = new Histogram({ name: 'histo', help: 'help', labelNames: [ 'code' ] });
-				i.observe({ code: 'test'}, 1);
+				const i = new Histogram({
+					name: 'histo',
+					help: 'help',
+					labelNames: ['code']
+				});
+				i.observe({ code: 'test' }, 1);
 				const pair = getValueByLeAndLabel(1, 'code', 'test', i.get().values);
 				expect(pair.value).to.equal(1);
 			});
 
 			it('should not allow le as a custom label', () => {
 				const fn = function() {
-					new Histogram({ name: 'name', help: 'help', labelNames: [ 'le' ] });
+					new Histogram({ name: 'name', help: 'help', labelNames: ['le'] });
 				};
 				expect(fn).to.throw(Error);
 			});
@@ -272,21 +340,36 @@ describe('histogram', () => {
 
 			it('should allow to be reset itself', () => {
 				instance.observe(0.5);
-				let valuePair = getValueByName('test_histogram_count', instance.get().values);
+				let valuePair = getValueByName(
+					'test_histogram_count',
+					instance.get().values
+				);
 				expect(valuePair.value).to.equal(1);
 				instance.reset();
-				valuePair = getValueByName('test_histogram_count', instance.get().values);
+				valuePair = getValueByName(
+					'test_histogram_count',
+					instance.get().values
+				);
 				expect(valuePair.value).to.equal(undefined);
 			});
 
 			describe('labels', () => {
 				beforeEach(() => {
-					instance = new Histogram({ name: 'histogram_labels', help: 'Histogram with labels fn', labelNames: [ 'method' ] } );
+					instance = new Histogram({
+						name: 'histogram_labels',
+						help: 'Histogram with labels fn',
+						labelNames: ['method']
+					});
 				});
 
 				it('should observe', () => {
 					instance.labels('get').observe(4);
-					const res = getValueByLeAndLabel(5, 'method', 'get', instance.get().values);
+					const res = getValueByLeAndLabel(
+						5,
+						'method',
+						'get',
+						instance.get().values
+					);
 					expect(res.value).to.equal(1);
 				});
 
@@ -302,7 +385,12 @@ describe('histogram', () => {
 					const end = instance.labels('get').startTimer();
 					clock.tick(500);
 					end();
-					const res = getValueByLeAndLabel(0.5, 'method', 'get', instance.get().values);
+					const res = getValueByLeAndLabel(
+						0.5,
+						'method',
+						'get',
+						instance.get().values
+					);
 					expect(res.value).to.equal(1);
 					clock.restore();
 				});
@@ -311,20 +399,39 @@ describe('histogram', () => {
 					const clock = sinon.useFakeTimers();
 					const end = instance.startTimer();
 					clock.tick(500);
-					end({ 'method': 'get' });
-					const res = getValueByLeAndLabel(0.5, 'method', 'get', instance.get().values);
+					end({ method: 'get' });
+					const res = getValueByLeAndLabel(
+						0.5,
+						'method',
+						'get',
+						instance.get().values
+					);
 					expect(res.value).to.equal(1);
 					clock.restore();
 				});
 
 				it('should allow labels before and after timers', () => {
-					instance = new Histogram({ name: 'histogram_labels_2', help: 'Histogram with labels fn', labelNames: [ 'method', 'success' ] });
+					instance = new Histogram({
+						name: 'histogram_labels_2',
+						help: 'Histogram with labels fn',
+						labelNames: ['method', 'success']
+					});
 					const clock = sinon.useFakeTimers();
-					const end = instance.startTimer({ 'method': 'get' });
+					const end = instance.startTimer({ method: 'get' });
 					clock.tick(500);
-					end({ 'success': 'SUCCESS' });
-					const res1 = getValueByLeAndLabel(0.5, 'method', 'get', instance.get().values);
-					const res2 = getValueByLeAndLabel(0.5, 'success', 'SUCCESS', instance.get().values);
+					end({ success: 'SUCCESS' });
+					const res1 = getValueByLeAndLabel(
+						0.5,
+						'method',
+						'get',
+						instance.get().values
+					);
+					const res2 = getValueByLeAndLabel(
+						0.5,
+						'success',
+						'SUCCESS',
+						instance.get().values
+					);
 					expect(res1.value).to.equal(1);
 					expect(res2.value).to.equal(1);
 					clock.restore();
@@ -333,11 +440,18 @@ describe('histogram', () => {
 		});
 		describe('without registry', () => {
 			beforeEach(() => {
-				instance = new Histogram({ name: 'test_histogram', help: 'test', registers: [ ] });
+				instance = new Histogram({
+					name: 'test_histogram',
+					help: 'test',
+					registers: []
+				});
 			});
 			it('should increase count', () => {
 				instance.observe(0.5);
-				const valuePair = getValueByName('test_histogram_count', instance.get().values);
+				const valuePair = getValueByName(
+					'test_histogram_count',
+					instance.get().values
+				);
 				expect(valuePair.value).to.equal(1);
 				expect(globalRegistry.getMetricsAsJSON().length).to.equal(0);
 			});
@@ -346,11 +460,18 @@ describe('histogram', () => {
 			let registryInstance;
 			beforeEach(() => {
 				registryInstance = new Registry();
-				instance = new Histogram({ name: 'test_histogram', help: 'test', registers: [ registryInstance ] });
+				instance = new Histogram({
+					name: 'test_histogram',
+					help: 'test',
+					registers: [registryInstance]
+				});
 			});
 			it('should increment counter', () => {
 				instance.observe(0.5);
-				const valuePair = getValueByName('test_histogram_count', instance.get().values);
+				const valuePair = getValueByName(
+					'test_histogram_count',
+					instance.get().values
+				);
 				expect(valuePair.value).to.equal(1);
 				expect(globalRegistry.getMetricsAsJSON().length).to.equal(0);
 				expect(registryInstance.getMetricsAsJSON().length).to.equal(1);
@@ -358,16 +479,19 @@ describe('histogram', () => {
 		});
 	});
 	function getValueByName(name, values) {
-		return values.length > 0 && values.reduce((acc, val) => {
-			if(val.metricName === name) {
-				acc = val;
-			}
-			return acc;
-		});
+		return (
+			values.length > 0 &&
+			values.reduce((acc, val) => {
+				if (val.metricName === name) {
+					acc = val;
+				}
+				return acc;
+			})
+		);
 	}
 	function getValueByLeAndLabel(le, key, label, values) {
 		return values.reduce((acc, val) => {
-			if(val.labels && val.labels.le === le && val.labels[key] === label) {
+			if (val.labels && val.labels.le === le && val.labels[key] === label) {
 				acc = val;
 			}
 			return acc;
@@ -375,7 +499,7 @@ describe('histogram', () => {
 	}
 	function getValueByLabel(label, values, key) {
 		return values.reduce((acc, val) => {
-			if(val.labels && val.labels[key || 'le'] === label) {
+			if (val.labels && val.labels[key || 'le'] === label) {
 				acc = val;
 			}
 			return acc;
@@ -383,7 +507,7 @@ describe('histogram', () => {
 	}
 	function getValuesByLabel(label, values, key) {
 		return values.reduce((acc, val) => {
-			if(val.labels && val.labels[key || 'le'] === label) {
+			if (val.labels && val.labels[key || 'le'] === label) {
 				acc.push(val);
 			}
 			return acc;

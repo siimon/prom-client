@@ -24,7 +24,9 @@ describe('bucketGenerators', () => {
 			expect(result[4] - result[3]).to.equal(50);
 		});
 		it('should not allow negative count', () => {
-			const fn = function() { linearBuckets(2, 1, 0); };
+			const fn = function() {
+				linearBuckets(2, 1, 0);
+			};
 			expect(fn).to.throw(Error);
 		});
 	});
@@ -46,15 +48,21 @@ describe('bucketGenerators', () => {
 		});
 
 		it('should not allow factor of equal or less than 1', () => {
-			const fn = function() { exponentialBuckets(1, 1, 5); };
+			const fn = function() {
+				exponentialBuckets(1, 1, 5);
+			};
 			expect(fn).to.throw(Error);
 		});
 		it('should not allow negative start', () => {
-			const fn = function() { exponentialBuckets(0, 1, 5); };
+			const fn = function() {
+				exponentialBuckets(0, 1, 5);
+			};
 			expect(fn).to.throw(Error);
 		});
 		it('should not allow negative count', () => {
-			const fn = function() { exponentialBuckets(2, 10, 0); };
+			const fn = function() {
+				exponentialBuckets(2, 10, 0);
+			};
 			expect(fn).to.throw(Error);
 		});
 	});

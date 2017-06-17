@@ -9,7 +9,6 @@ describe('summary', () => {
 	let instance;
 
 	describe('global registry', () => {
-
 		afterEach(() => {
 			globalRegistry.clear();
 		});
@@ -23,9 +22,13 @@ describe('summary', () => {
 				instance.observe(100);
 				expect(instance.get().values[0].labels.quantile).to.equal(0.01);
 				expect(instance.get().values[0].value).to.equal(100);
-				expect(instance.get().values[7].metricName).to.equal('summary_test_sum');
+				expect(instance.get().values[7].metricName).to.equal(
+					'summary_test_sum'
+				);
 				expect(instance.get().values[7].value).to.equal(100);
-				expect(instance.get().values[8].metricName).to.equal('summary_test_count');
+				expect(instance.get().values[8].metricName).to.equal(
+					'summary_test_count'
+				);
 				expect(instance.get().values[8].value).to.equal(1);
 			});
 
@@ -64,16 +67,22 @@ describe('summary', () => {
 				expect(instance.get().values[6].labels.quantile).to.equal(0.999);
 				expect(instance.get().values[6].value).to.equal(100);
 
-				expect(instance.get().values[7].metricName).to.equal('summary_test_sum');
+				expect(instance.get().values[7].metricName).to.equal(
+					'summary_test_sum'
+				);
 				expect(instance.get().values[7].value).to.equal(400);
 
-				expect(instance.get().values[8].metricName).to.equal('summary_test_count');
+				expect(instance.get().values[8].metricName).to.equal(
+					'summary_test_count'
+				);
 				expect(instance.get().values[8].value).to.equal(5);
 			});
 
 			it('should correctly use calculate other percentiles when configured', () => {
 				globalRegistry.clear();
-				instance = new Summary('summary_test', 'test', { percentiles: [ 0.5, 0.9 ] });
+				instance = new Summary('summary_test', 'test', {
+					percentiles: [0.5, 0.9]
+				});
 				instance.observe(100);
 				instance.observe(100);
 				instance.observe(100);
@@ -88,24 +97,32 @@ describe('summary', () => {
 				expect(instance.get().values[1].labels.quantile).to.equal(0.9);
 				expect(instance.get().values[1].value).to.equal(100);
 
-				expect(instance.get().values[2].metricName).to.equal('summary_test_sum');
+				expect(instance.get().values[2].metricName).to.equal(
+					'summary_test_sum'
+				);
 				expect(instance.get().values[2].value).to.equal(400);
 
-				expect(instance.get().values[3].metricName).to.equal('summary_test_count');
+				expect(instance.get().values[3].metricName).to.equal(
+					'summary_test_count'
+				);
 				expect(instance.get().values[3].value).to.equal(5);
 			});
 
 			it('should allow to reset itself', () => {
 				globalRegistry.clear();
-				instance = new Summary('summary_test', 'test', { percentiles: [ 0.5 ] });
+				instance = new Summary('summary_test', 'test', { percentiles: [0.5] });
 				instance.observe(100);
 				expect(instance.get().values[0].labels.quantile).to.equal(0.5);
 				expect(instance.get().values[0].value).to.equal(100);
 
-				expect(instance.get().values[1].metricName).to.equal('summary_test_sum');
+				expect(instance.get().values[1].metricName).to.equal(
+					'summary_test_sum'
+				);
 				expect(instance.get().values[1].value).to.equal(100);
 
-				expect(instance.get().values[2].metricName).to.equal('summary_test_count');
+				expect(instance.get().values[2].metricName).to.equal(
+					'summary_test_count'
+				);
 				expect(instance.get().values[2].value).to.equal(1);
 
 				instance.reset();
@@ -113,17 +130,26 @@ describe('summary', () => {
 				expect(instance.get().values[0].labels.quantile).to.equal(0.5);
 				expect(instance.get().values[0].value).to.equal(0);
 
-				expect(instance.get().values[1].metricName).to.equal('summary_test_sum');
+				expect(instance.get().values[1].metricName).to.equal(
+					'summary_test_sum'
+				);
 				expect(instance.get().values[1].value).to.equal(0);
 
-				expect(instance.get().values[2].metricName).to.equal('summary_test_count');
+				expect(instance.get().values[2].metricName).to.equal(
+					'summary_test_count'
+				);
 				expect(instance.get().values[2].value).to.equal(0);
 			});
 
 			describe('labels', () => {
 				beforeEach(() => {
 					globalRegistry.clear();
-					instance = new Summary('summary_test', 'help', [ 'method', 'endpoint'], { percentiles: [ 0.9 ] });
+					instance = new Summary(
+						'summary_test',
+						'help',
+						['method', 'endpoint'],
+						{ percentiles: [0.9] }
+					);
 				});
 
 				it('should record and calculate the correct values per label', () => {
@@ -199,7 +225,7 @@ describe('summary', () => {
 					const clock = sinon.useFakeTimers();
 					const end = instance.startTimer();
 					clock.tick(1000);
-					end({ 'method': 'GET', 'endpoint': '/test' });
+					end({ method: 'GET', endpoint: '/test' });
 					const values = instance.get().values;
 					expect(values).to.have.length(3);
 					expect(values[0].labels.method).to.equal('GET');
@@ -222,9 +248,9 @@ describe('summary', () => {
 
 				it('should allow labels before and after timers', () => {
 					const clock = sinon.useFakeTimers();
-					const end = instance.startTimer({ 'method': 'GET' });
+					const end = instance.startTimer({ method: 'GET' });
 					clock.tick(1000);
-					end({ 'endpoint': '/test' });
+					end({ endpoint: '/test' });
 					const values = instance.get().values;
 					expect(values).to.have.length(3);
 					expect(values[0].labels.method).to.equal('GET');
@@ -256,9 +282,13 @@ describe('summary', () => {
 				instance.observe(100);
 				expect(instance.get().values[0].labels.quantile).to.equal(0.01);
 				expect(instance.get().values[0].value).to.equal(100);
-				expect(instance.get().values[7].metricName).to.equal('summary_test_sum');
+				expect(instance.get().values[7].metricName).to.equal(
+					'summary_test_sum'
+				);
 				expect(instance.get().values[7].value).to.equal(100);
-				expect(instance.get().values[8].metricName).to.equal('summary_test_count');
+				expect(instance.get().values[8].metricName).to.equal(
+					'summary_test_count'
+				);
 				expect(instance.get().values[8].value).to.equal(1);
 			});
 
@@ -297,16 +327,24 @@ describe('summary', () => {
 				expect(instance.get().values[6].labels.quantile).to.equal(0.999);
 				expect(instance.get().values[6].value).to.equal(100);
 
-				expect(instance.get().values[7].metricName).to.equal('summary_test_sum');
+				expect(instance.get().values[7].metricName).to.equal(
+					'summary_test_sum'
+				);
 				expect(instance.get().values[7].value).to.equal(400);
 
-				expect(instance.get().values[8].metricName).to.equal('summary_test_count');
+				expect(instance.get().values[8].metricName).to.equal(
+					'summary_test_count'
+				);
 				expect(instance.get().values[8].value).to.equal(5);
 			});
 
 			it('should correctly use calculate other percentiles when configured', () => {
 				globalRegistry.clear();
-				instance = new Summary({ name: 'summary_test', help: 'test', percentiles: [ 0.5, 0.9 ] });
+				instance = new Summary({
+					name: 'summary_test',
+					help: 'test',
+					percentiles: [0.5, 0.9]
+				});
 				instance.observe(100);
 				instance.observe(100);
 				instance.observe(100);
@@ -321,24 +359,36 @@ describe('summary', () => {
 				expect(instance.get().values[1].labels.quantile).to.equal(0.9);
 				expect(instance.get().values[1].value).to.equal(100);
 
-				expect(instance.get().values[2].metricName).to.equal('summary_test_sum');
+				expect(instance.get().values[2].metricName).to.equal(
+					'summary_test_sum'
+				);
 				expect(instance.get().values[2].value).to.equal(400);
 
-				expect(instance.get().values[3].metricName).to.equal('summary_test_count');
+				expect(instance.get().values[3].metricName).to.equal(
+					'summary_test_count'
+				);
 				expect(instance.get().values[3].value).to.equal(5);
 			});
 
 			it('should allow to reset itself', () => {
 				globalRegistry.clear();
-				instance = new Summary({ name: 'summary_test', help: 'test', percentiles: [ 0.5 ] });
+				instance = new Summary({
+					name: 'summary_test',
+					help: 'test',
+					percentiles: [0.5]
+				});
 				instance.observe(100);
 				expect(instance.get().values[0].labels.quantile).to.equal(0.5);
 				expect(instance.get().values[0].value).to.equal(100);
 
-				expect(instance.get().values[1].metricName).to.equal('summary_test_sum');
+				expect(instance.get().values[1].metricName).to.equal(
+					'summary_test_sum'
+				);
 				expect(instance.get().values[1].value).to.equal(100);
 
-				expect(instance.get().values[2].metricName).to.equal('summary_test_count');
+				expect(instance.get().values[2].metricName).to.equal(
+					'summary_test_count'
+				);
 				expect(instance.get().values[2].value).to.equal(1);
 
 				instance.reset();
@@ -346,17 +396,26 @@ describe('summary', () => {
 				expect(instance.get().values[0].labels.quantile).to.equal(0.5);
 				expect(instance.get().values[0].value).to.equal(0);
 
-				expect(instance.get().values[1].metricName).to.equal('summary_test_sum');
+				expect(instance.get().values[1].metricName).to.equal(
+					'summary_test_sum'
+				);
 				expect(instance.get().values[1].value).to.equal(0);
 
-				expect(instance.get().values[2].metricName).to.equal('summary_test_count');
+				expect(instance.get().values[2].metricName).to.equal(
+					'summary_test_count'
+				);
 				expect(instance.get().values[2].value).to.equal(0);
 			});
 
 			describe('labels', () => {
 				beforeEach(() => {
 					globalRegistry.clear();
-					instance = new Summary({ name: 'summary_test', help: 'help', labelNames: [ 'method', 'endpoint'], percentiles: [ 0.9 ] });
+					instance = new Summary({
+						name: 'summary_test',
+						help: 'help',
+						labelNames: ['method', 'endpoint'],
+						percentiles: [0.9]
+					});
 				});
 
 				it('should record and calculate the correct values per label', () => {
@@ -432,7 +491,7 @@ describe('summary', () => {
 					const clock = sinon.useFakeTimers();
 					const end = instance.startTimer();
 					clock.tick(1000);
-					end({ 'method': 'GET', 'endpoint': '/test' });
+					end({ method: 'GET', endpoint: '/test' });
 					const values = instance.get().values;
 					expect(values).to.have.length(3);
 					expect(values[0].labels.method).to.equal('GET');
@@ -455,9 +514,9 @@ describe('summary', () => {
 
 				it('should allow labels before and after timers', () => {
 					const clock = sinon.useFakeTimers();
-					const end = instance.startTimer({ 'method': 'GET' });
+					const end = instance.startTimer({ method: 'GET' });
 					clock.tick(1000);
-					end({ 'endpoint': '/test' });
+					end({ endpoint: '/test' });
 					const values = instance.get().values;
 					expect(values).to.have.length(3);
 					expect(values[0].labels.method).to.equal('GET');
@@ -482,7 +541,11 @@ describe('summary', () => {
 	});
 	describe('without registry', () => {
 		beforeEach(() => {
-			instance = new Summary({ name: 'summary_test', help: 'test', registers: [ ] });
+			instance = new Summary({
+				name: 'summary_test',
+				help: 'test',
+				registers: []
+			});
 		});
 		it('should increase count', () => {
 			instance.observe(100);
@@ -490,7 +553,9 @@ describe('summary', () => {
 			expect(instance.get().values[0].value).to.equal(100);
 			expect(instance.get().values[7].metricName).to.equal('summary_test_sum');
 			expect(instance.get().values[7].value).to.equal(100);
-			expect(instance.get().values[8].metricName).to.equal('summary_test_count');
+			expect(instance.get().values[8].metricName).to.equal(
+				'summary_test_count'
+			);
 			expect(instance.get().values[8].value).to.equal(1);
 			expect(globalRegistry.getMetricsAsJSON().length).to.equal(0);
 		});
@@ -499,7 +564,11 @@ describe('summary', () => {
 		let registryInstance;
 		beforeEach(() => {
 			registryInstance = new Registry();
-			instance = new Summary({ name: 'summary_test', help: 'test', registers: [ registryInstance ] });
+			instance = new Summary({
+				name: 'summary_test',
+				help: 'test',
+				registers: [registryInstance]
+			});
 		});
 		it('should increment counter', () => {
 			instance.observe(100);
@@ -507,7 +576,9 @@ describe('summary', () => {
 			expect(instance.get().values[0].value).to.equal(100);
 			expect(instance.get().values[7].metricName).to.equal('summary_test_sum');
 			expect(instance.get().values[7].value).to.equal(100);
-			expect(instance.get().values[8].metricName).to.equal('summary_test_count');
+			expect(instance.get().values[8].metricName).to.equal(
+				'summary_test_count'
+			);
 			expect(instance.get().values[8].value).to.equal(1);
 			expect(globalRegistry.getMetricsAsJSON().length).to.equal(0);
 			expect(registryInstance.getMetricsAsJSON().length).to.equal(1);
