@@ -3,19 +3,19 @@
 const nodeVersion = process.version;
 const versionSegments = nodeVersion.slice(1).split('.').map(Number);
 
-describe('version', function() {
+describe('version', () => {
 	const register = require('../../index').register;
 	const version = require('../../lib/metrics/version');
 
-	beforeAll(function() {
+	beforeAll(() => {
 		register.clear();
 	});
 
-	afterEach(function() {
+	afterEach(() => {
 		register.clear();
 	});
 
-	it('should add metric to the registry', function(done) {
+	it('should add metric to the registry', done => {
 		expect(register.getMetricsAsJSON()).toHaveLength(0);
 		expect(typeof versionSegments[0]).toEqual('number');
 		expect(typeof versionSegments[1]).toEqual('number');
@@ -23,7 +23,7 @@ describe('version', function() {
 
 		version()();
 
-		setTimeout(function() {
+		setTimeout(() => {
 			const metrics = register.getMetricsAsJSON();
 			expect(metrics).toHaveLength(1);
 

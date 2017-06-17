@@ -1,17 +1,17 @@
 'use strict';
 
-describe('validation', function() {
-	describe('validateLabel', function() {
+describe('validation', () => {
+	describe('validateLabel', () => {
 		const validateLabel = require('../lib/validation').validateLabel;
 
-		it('should not throw on known label', function() {
-			expect(function() {
+		it('should not throw on known label', () => {
+			expect(() => {
 				validateLabel(['exists'], { exists: null });
 			}).not.toThrowError();
 		});
 
-		it('should throw on unknown label', function() {
-			expect(function() {
+		it('should throw on unknown label', () => {
+			expect(() => {
 				validateLabel(['exists'], { somethingElse: null });
 			}).toThrowError(
 				'Added label "somethingElse" is not included in initial labelset: [ \'exists\' ]'
