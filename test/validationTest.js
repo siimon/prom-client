@@ -14,8 +14,8 @@ describe('validation', function() {
 			expect(function() {
 				validateLabel(['exists'], {somethingElse: null});
 			}).toThrowError(
-                'Added label "somethingElse" is not included in initial labelset: [ \'exists\' ]'
-            );
+				'Added label "somethingElse" is not included in initial labelset: [ \'exists\' ]'
+			);
 		});
 	});
 });
