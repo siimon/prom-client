@@ -1,6 +1,6 @@
 'use strict';
 
-describe('pushgateway', function() {
+describe('pushgateway', () => {
 	const Pushgateway = require('../index').Pushgateway;
 	const nock = require('nock');
 	const expect = require('chai').expect;
@@ -10,28 +10,28 @@ describe('pushgateway', function() {
 	let registry = undefined;
 
 	const tests = function() {
-		describe('pushAdd', function() {
-			it('should push metrics', function(done) {
+		describe('pushAdd', () => {
+			it('should push metrics', (done) => {
 				setupNock(202, 'post', '/metrics/job/testJob');
 
-				instance.pushAdd({ jobName: 'testJob' }, function(err) {
+				instance.pushAdd({ jobName: 'testJob' }, (err) => {
 					expect(err).to.not.exist;
 					done();
 				});
 			});
 
-			it('should use groupings', function(done) {
+			it('should use groupings', (done) => {
 				setupNock(202, 'post', '/metrics/job/testJob/key/value');
 
-				instance.pushAdd({ jobName: 'testJob', groupings: { key: 'value' } }, function(err) {
+				instance.pushAdd({ jobName: 'testJob', groupings: { key: 'value' } }, (err) => {
 					expect(err).to.not.exist;
 					done();
 				});
 			});
 
-			it('should escape groupings', function(done) {
+			it('should escape groupings', (done) => {
 				setupNock(202, 'post', '/metrics/job/testJob/key/va%26lue');
-				instance.pushAdd({ jobName: 'testJob', groupings: { key: 'va&lue' } }, function(err) {
+				instance.pushAdd({ jobName: 'testJob', groupings: { key: 'va&lue' } }, (err) => {
 					expect(err).to.not.exist;
 					done();
 				});
@@ -39,42 +39,42 @@ describe('pushgateway', function() {
 
 		});
 
-		describe('push', function() {
-			it('should push with PUT', function(done) {
+		describe('push', () => {
+			it('should push with PUT', (done) => {
 				setupNock(202, 'put', '/metrics/job/testJob');
 
-				instance.push({ jobName: 'testJob' }, function(err) {
+				instance.push({ jobName: 'testJob' }, (err) => {
 					expect(err).to.not.exist;
 					done();
 				});
 			});
 
-			it('should uri encode url', function(done) {
+			it('should uri encode url', (done) => {
 				setupNock(202, 'put', '/metrics/job/test%26Job');
 
-				instance.push({ jobName: 'test&Job' }, function(err) {
+				instance.push({ jobName: 'test&Job' }, (err) => {
 					expect(err).to.not.exist;
 					done();
 				});
 			});
 		});
 
-		describe('delete', function() {
-			it('should push delete with no body', function(done) {
+		describe('delete', () => {
+			it('should push delete with no body', (done) => {
 				setupNock(202, 'delete', '/metrics/job/testJob');
 
-				instance.delete({ jobName: 'testJob' }, function(err) {
+				instance.delete({ jobName: 'testJob' }, (err) => {
 					expect(err).to.not.exist;
 					done();
 				});
 			});
 		});
 
-		describe('when using basic authentication', function() {
+		describe('when using basic authentication', () => {
 			const USERNAME = 'unittest';
 			const PASSWORD = 'unittest';
 
-			beforeEach(function() {
+			beforeEach(() => {
 				instance = new Pushgateway('http://' + USERNAME + ':' + PASSWORD + '@192.168.99.100:9091', null, registry);
 			});
 
@@ -85,26 +85,26 @@ describe('pushgateway', function() {
 				done();
 			}
 
-			it('pushAdd should send POST request with basic auth data', function(done) {
+			it('pushAdd should send POST request with basic auth data', (done) => {
 				setupNock(202, 'post', '/metrics/job/testJob');
 
 				instance.pushAdd({ jobName: 'testJob' }, verifyResult.bind({}, done));
 			});
 
-			it('push should send PUT request with basic auth data', function(done) {
+			it('push should send PUT request with basic auth data', (done) => {
 				setupNock(202, 'put', '/metrics/job/testJob');
 
 				instance.push({ jobName: 'testJob' }, verifyResult.bind({}, done));
 			});
 
-			it('delete should send DELETE request with basic auth data', function(done) {
+			it('delete should send DELETE request with basic auth data', (done) => {
 				setupNock(202, 'delete', '/metrics/job/testJob');
 
 				instance.delete({ jobName: 'testJob' }, verifyResult.bind({}, done));
 			});
 		});
 
-		it('should be possible to extend http/s requests with options', function(done) {
+		it('should be possible to extend http/s requests with options', (done) => {
 
 			nock('http://192.168.99.100:9091', {'encodedQueryParams':true})
 				.matchHeader('unit-test', '1')
@@ -120,18 +120,18 @@ describe('pushgateway', function() {
 				}
 			}, registry);
 
-			instance.push({ jobName: 'testJob' }, function(err, res, body) {
+			instance.push({ jobName: 'testJob' }, (err, res, body) => {
 				expect(err).to.not.exist;
 				expect(nock.isDone()).to.be.true;
 				done();
 			});
 		});
 	};
-	describe('global registry', function() {
-		afterEach(function() {
+	describe('global registry', () => {
+		afterEach(() => {
 			register.clear();
 		});
-		beforeEach(function() {
+		beforeEach(() => {
 			registry = undefined;
 			instance = new Pushgateway('http://192.168.99.100:9091');
 			const Counter = new require('../index').Counter;
@@ -140,8 +140,8 @@ describe('pushgateway', function() {
 		});
 		tests();
 	});
-	describe('registry instance', function() {
-		beforeEach(function() {
+	describe('registry instance', () => {
+		beforeEach(() => {
 			registry = new Registry();
 			instance = new Pushgateway('http://192.168.99.100:9091', null, registry);
 			const Counter = new require('../index').Counter;

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('collectDefaultMetrics', function() {
+describe('collectDefaultMetrics', () => {
 	const expect = require('chai').expect;
 	const register = require('../index').register;
 	const collectDefaultMetrics = require('../index').collectDefaultMetrics;
@@ -8,7 +8,7 @@ describe('collectDefaultMetrics', function() {
 	let cpuUsage;
 	let interval;
 
-	before(function() {
+	before(() => {
 		platform = process.platform;
 		cpuUsage = process.cpuUsage;
 
@@ -31,7 +31,7 @@ describe('collectDefaultMetrics', function() {
 		register.clear();
 	});
 
-	after(function() {
+	after(() => {
 		Object.defineProperty(process, 'platform', {
 			value: platform
 		});
@@ -45,18 +45,18 @@ describe('collectDefaultMetrics', function() {
 		}
 	});
 
-	afterEach(function() {
+	afterEach(() => {
 		register.clear();
 		clearInterval(interval);
 	});
 
-	it('should add metrics to the registry', function() {
+	it('should add metrics to the registry', () => {
 		expect(register.getMetricsAsJSON()).to.have.length(0);
 		interval = collectDefaultMetrics();
 		expect(register.getMetricsAsJSON()).to.not.have.length(0);
 	});
 
-	it('should allow blacklisting all metrics', function() {
+	it('should allow blacklisting all metrics', () => {
 		expect(register.getMetricsAsJSON()).to.have.length(0);
 		clearInterval(collectDefaultMetrics());
 		register.clear();
@@ -64,8 +64,8 @@ describe('collectDefaultMetrics', function() {
 	});
 
 
-	describe('disabling', function() {
-		it('should not throw error', function() {
+	describe('disabling', () => {
+		it('should not throw error', () => {
 			const fn = function() {
 				delete require.cache[require.resolve('../index')];
 				const client = require('../index');

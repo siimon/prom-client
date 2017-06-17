@@ -1,6 +1,6 @@
 'use strict';
 
-describe('summary', function() {
+describe('summary', () => {
 	const Summary = require('../index').Summary;
 	const Registry = require('../index').Registry;
 	const globalRegistry = require('../index').register;
@@ -8,18 +8,18 @@ describe('summary', function() {
 	const sinon = require('sinon');
 	let instance;
 
-	describe('global registry', function() {
+	describe('global registry', () => {
 
-		afterEach(function() {
+		afterEach(() => {
 			globalRegistry.clear();
 		});
 
-		describe('with a parameter for each variable', function() {
-			beforeEach(function() {
+		describe('with a parameter for each variable', () => {
+			beforeEach(() => {
 				instance = new Summary('summary_test', 'test');
 			});
 
-			it('should add a value to the summary', function() {
+			it('should add a value to the summary', () => {
 				instance.observe(100);
 				expect(instance.get().values[0].labels.quantile).to.equal(0.01);
 				expect(instance.get().values[0].value).to.equal(100);
@@ -29,12 +29,12 @@ describe('summary', function() {
 				expect(instance.get().values[8].value).to.equal(1);
 			});
 
-			it('should be able to observe 0s', function() {
+			it('should be able to observe 0s', () => {
 				instance.observe(0);
 				expect(instance.get().values[8].value).to.equal(1);
 			});
 
-			it('should correctly calculate percentiles when more values are added to the summary', function() {
+			it('should correctly calculate percentiles when more values are added to the summary', () => {
 				instance.observe(100);
 				instance.observe(100);
 				instance.observe(100);
@@ -71,7 +71,7 @@ describe('summary', function() {
 				expect(instance.get().values[8].value).to.equal(5);
 			});
 
-			it('should correctly use calculate other percentiles when configured', function() {
+			it('should correctly use calculate other percentiles when configured', () => {
 				globalRegistry.clear();
 				instance = new Summary('summary_test', 'test', { percentiles: [ 0.5, 0.9 ] });
 				instance.observe(100);
@@ -95,7 +95,7 @@ describe('summary', function() {
 				expect(instance.get().values[3].value).to.equal(5);
 			});
 
-			it('should allow to reset itself', function() {
+			it('should allow to reset itself', () => {
 				globalRegistry.clear();
 				instance = new Summary('summary_test', 'test', { percentiles: [ 0.5 ] });
 				instance.observe(100);
@@ -120,13 +120,13 @@ describe('summary', function() {
 				expect(instance.get().values[2].value).to.equal(0);
 			});
 
-			describe('labels', function() {
-				beforeEach(function() {
+			describe('labels', () => {
+				beforeEach(() => {
 					globalRegistry.clear();
 					instance = new Summary('summary_test', 'help', [ 'method', 'endpoint'], { percentiles: [ 0.9 ] });
 				});
 
-				it('should record and calculate the correct values per label', function() {
+				it('should record and calculate the correct values per label', () => {
 					instance.labels('GET', '/test').observe(50);
 					instance.labels('POST', '/test').observe(100);
 
@@ -163,14 +163,14 @@ describe('summary', function() {
 					expect(values[5].value).to.equal(1);
 				});
 
-				it('should throw error if label lengths does not match', function() {
+				it('should throw error if label lengths does not match', () => {
 					const fn = function() {
 						instance.labels('GET').observe();
 					};
 					expect(fn).to.throw(Error);
 				});
 
-				it('should start a timer', function() {
+				it('should start a timer', () => {
 					const clock = sinon.useFakeTimers();
 					const end = instance.labels('GET', '/test').startTimer();
 					clock.tick(1000);
@@ -195,7 +195,7 @@ describe('summary', function() {
 					clock.restore();
 				});
 
-				it('should start a timer and set labels afterwards', function(){
+				it('should start a timer and set labels afterwards', () => {
 					const clock = sinon.useFakeTimers();
 					const end = instance.startTimer();
 					clock.tick(1000);
@@ -220,7 +220,7 @@ describe('summary', function() {
 					clock.restore();
 				});
 
-				it('should allow labels before and after timers', function(){
+				it('should allow labels before and after timers', () => {
 					const clock = sinon.useFakeTimers();
 					const end = instance.startTimer({ 'method': 'GET' });
 					clock.tick(1000);
@@ -247,12 +247,12 @@ describe('summary', function() {
 			});
 		});
 
-		describe('with param as object', function() {
-			beforeEach(function() {
+		describe('with param as object', () => {
+			beforeEach(() => {
 				instance = new Summary({ name: 'summary_test', help: 'test' });
 			});
 
-			it('should add a value to the summary', function() {
+			it('should add a value to the summary', () => {
 				instance.observe(100);
 				expect(instance.get().values[0].labels.quantile).to.equal(0.01);
 				expect(instance.get().values[0].value).to.equal(100);
@@ -262,12 +262,12 @@ describe('summary', function() {
 				expect(instance.get().values[8].value).to.equal(1);
 			});
 
-			it('should be able to observe 0s', function() {
+			it('should be able to observe 0s', () => {
 				instance.observe(0);
 				expect(instance.get().values[8].value).to.equal(1);
 			});
 
-			it('should correctly calculate percentiles when more values are added to the summary', function() {
+			it('should correctly calculate percentiles when more values are added to the summary', () => {
 				instance.observe(100);
 				instance.observe(100);
 				instance.observe(100);
@@ -304,7 +304,7 @@ describe('summary', function() {
 				expect(instance.get().values[8].value).to.equal(5);
 			});
 
-			it('should correctly use calculate other percentiles when configured', function() {
+			it('should correctly use calculate other percentiles when configured', () => {
 				globalRegistry.clear();
 				instance = new Summary({ name: 'summary_test', help: 'test', percentiles: [ 0.5, 0.9 ] });
 				instance.observe(100);
@@ -328,7 +328,7 @@ describe('summary', function() {
 				expect(instance.get().values[3].value).to.equal(5);
 			});
 
-			it('should allow to reset itself', function() {
+			it('should allow to reset itself', () => {
 				globalRegistry.clear();
 				instance = new Summary({ name: 'summary_test', help: 'test', percentiles: [ 0.5 ] });
 				instance.observe(100);
@@ -353,13 +353,13 @@ describe('summary', function() {
 				expect(instance.get().values[2].value).to.equal(0);
 			});
 
-			describe('labels', function() {
-				beforeEach(function() {
+			describe('labels', () => {
+				beforeEach(() => {
 					globalRegistry.clear();
 					instance = new Summary({ name: 'summary_test', help: 'help', labelNames: [ 'method', 'endpoint'], percentiles: [ 0.9 ] });
 				});
 
-				it('should record and calculate the correct values per label', function() {
+				it('should record and calculate the correct values per label', () => {
 					instance.labels('GET', '/test').observe(50);
 					instance.labels('POST', '/test').observe(100);
 
@@ -396,14 +396,14 @@ describe('summary', function() {
 					expect(values[5].value).to.equal(1);
 				});
 
-				it('should throw error if label lengths does not match', function() {
+				it('should throw error if label lengths does not match', () => {
 					const fn = function() {
 						instance.labels('GET').observe();
 					};
 					expect(fn).to.throw(Error);
 				});
 
-				it('should start a timer', function() {
+				it('should start a timer', () => {
 					const clock = sinon.useFakeTimers();
 					const end = instance.labels('GET', '/test').startTimer();
 					clock.tick(1000);
@@ -428,7 +428,7 @@ describe('summary', function() {
 					clock.restore();
 				});
 
-				it('should start a timer and set labels afterwards', function(){
+				it('should start a timer and set labels afterwards', () => {
 					const clock = sinon.useFakeTimers();
 					const end = instance.startTimer();
 					clock.tick(1000);
@@ -453,7 +453,7 @@ describe('summary', function() {
 					clock.restore();
 				});
 
-				it('should allow labels before and after timers', function(){
+				it('should allow labels before and after timers', () => {
 					const clock = sinon.useFakeTimers();
 					const end = instance.startTimer({ 'method': 'GET' });
 					clock.tick(1000);
@@ -480,11 +480,11 @@ describe('summary', function() {
 			});
 		});
 	});
-	describe('without registry', function() {
-		beforeEach(function() {
+	describe('without registry', () => {
+		beforeEach(() => {
 			instance = new Summary({ name: 'summary_test', help: 'test', registers: [ ] });
 		});
-		it('should increase count', function() {
+		it('should increase count', () => {
 			instance.observe(100);
 			expect(instance.get().values[0].labels.quantile).to.equal(0.01);
 			expect(instance.get().values[0].value).to.equal(100);
@@ -495,13 +495,13 @@ describe('summary', function() {
 			expect(globalRegistry.getMetricsAsJSON().length).to.equal(0);
 		});
 	});
-	describe('registry instance', function() {
+	describe('registry instance', () => {
 		let registryInstance;
-		beforeEach(function() {
+		beforeEach(() => {
 			registryInstance = new Registry();
 			instance = new Summary({ name: 'summary_test', help: 'test', registers: [ registryInstance ] });
 		});
-		it('should increment counter', function() {
+		it('should increment counter', () => {
 			instance.observe(100);
 			expect(instance.get().values[0].labels.quantile).to.equal(0.01);
 			expect(instance.get().values[0].value).to.equal(100);

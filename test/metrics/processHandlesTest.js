@@ -1,19 +1,19 @@
 'use strict';
 
-describe('processHandles', function() {
+describe('processHandles', () => {
 	const expect = require('chai').expect;
 	const register = require('../../index').register;
 	const processHandles = require('../../lib/metrics/processHandles');
 
-	before(function() {
+	before(() => {
 		register.clear();
 	});
 
-	afterEach(function() {
+	afterEach(() => {
 		register.clear();
 	});
 
-	it('should add metric to the registry', function() {
+	it('should add metric to the registry', () => {
 		expect(register.getMetricsAsJSON()).to.have.length(0);
 
 		processHandles()();
