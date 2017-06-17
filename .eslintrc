@@ -61,6 +61,7 @@
 	"prefer-const": 2,
 	"prefer-arrow-callback": 2,
 	"object-shorthand": 2,
+	"arrow-body-style": [2, "as-needed", { "requireReturnForObjectLiteral": true }],
 	"prettier/prettier": [2, {"useTabs": true, "singleQuote": true}]
   }
 }
