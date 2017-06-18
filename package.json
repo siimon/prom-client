@@ -14,7 +14,7 @@
   "scripts": {
     "test": "npm run lint && npm run compile-typescript && npm run test-unit",
     "lint": "node-version-gte-4 && eslint . || node-version-lt-4",
-    "test-unit": "mocha --recursive test/",
+    "test-unit": "jest",
     "compile-typescript": "tsc index.d.ts --noImplicitAny"
   },
   "repository": {
@@ -30,11 +30,9 @@
   "license": "Apache-2.0",
   "homepage": "https://github.com/siimon/prom-client",
   "devDependencies": {
-    "chai": "^3.4.1",
     "eslint": "^3.5.0",
     "express": "^4.13.3",
-    "mocha": "^3.2.0",
-    "mockery": "^2.0.0",
+    "jest": "^20.0.4",
     "nock": "^9.0.11",
     "node-version-check": "^2.1.1",
     "sinon": "^2.0.0",
@@ -44,5 +42,9 @@
     "tdigest": "^0.1.1",
     "util-extend": "^1.0.1"
   },
-  "types": "./index.d.ts"
+  "types": "./index.d.ts",
+  "jest": {
+    "testEnvironment": "node",
+    "testRegex": ".*Test\\.js$"
+  }
 }

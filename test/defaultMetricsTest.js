@@ -1,14 +1,13 @@
 'use strict';
 
 describe('collectDefaultMetrics', function() {
-	var expect = require('chai').expect;
 	var register = require('../index').register;
 	var collectDefaultMetrics = require('../index').collectDefaultMetrics;
 	var platform;
 	var cpuUsage;
 	var interval;
 
-	before(function() {
+	beforeAll(function() {
 		platform = process.platform;
 		cpuUsage = process.cpuUsage;
 
@@ -31,7 +30,7 @@ describe('collectDefaultMetrics', function() {
 		register.clear();
 	});
 
-	after(function() {
+	afterAll(function() {
 		Object.defineProperty(process, 'platform', {
 			value: platform
 		});
@@ -51,16 +50,16 @@ describe('collectDefaultMetrics', function() {
 	});
 
 	it('should add metrics to the registry', function() {
-		expect(register.getMetricsAsJSON()).to.have.length(0);
+		expect(register.getMetricsAsJSON()).toHaveLength(0);
 		interval = collectDefaultMetrics();
-		expect(register.getMetricsAsJSON()).to.not.have.length(0);
+		expect(register.getMetricsAsJSON()).not.toHaveLength(0);
 	});
 
 	it('should allow blacklisting all metrics', function() {
-		expect(register.getMetricsAsJSON()).to.have.length(0);
+		expect(register.getMetricsAsJSON()).toHaveLength(0);
 		clearInterval(collectDefaultMetrics());
 		register.clear();
-		expect(register.getMetricsAsJSON()).to.have.length(0);
+		expect(register.getMetricsAsJSON()).toHaveLength(0);
 	});
 
 
@@ -73,8 +72,7 @@ describe('collectDefaultMetrics', function() {
 				register.clear();
 			};
 
-			expect(fn).to.not.throw(Error);
+			expect(fn).not.toThrowError(Error);
 		});
 	});
-
 });
