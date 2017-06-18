@@ -53,7 +53,7 @@ describe('gauge', function() {
 			it('should set to current time', function() {
 				var clock = sinon.useFakeTimers();
 				instance.setToCurrentTime();
-				expectValue(new Date().getTime());
+				expectValue(Date.now());
 				clock.restore();
 			});
 
@@ -84,7 +84,7 @@ describe('gauge', function() {
 				it('should be able to set value to current time', function() {
 					var clock = sinon.useFakeTimers();
 					instance.labels('200').setToCurrentTime();
-					expectValue(new Date().getTime());
+					expectValue(Date.now());
 					clock.restore();
 				});
 				it('should be able to start a timer', function(){
@@ -193,7 +193,7 @@ describe('gauge', function() {
 			it('should set to current time', function() {
 				var clock = sinon.useFakeTimers();
 				instance.setToCurrentTime();
-				expectValue(new Date().getTime());
+				expectValue(Date.now());
 				clock.restore();
 			});
 
@@ -224,7 +224,7 @@ describe('gauge', function() {
 				it('should be able to set value to current time', function() {
 					var clock = sinon.useFakeTimers();
 					instance.labels('200').setToCurrentTime();
-					expectValue(new Date().getTime());
+					expectValue(Date.now());
 					clock.restore();
 				});
 				it('should be able to start a timer', function(){
