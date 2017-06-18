@@ -1,25 +1,25 @@
 'use strict';
 
-var express = require('express');
-var server = express();
-var register = require('../lib/register');
+const express = require('express');
+const server = express();
+const register = require('../lib/register');
 
-var Histogram = require('../').Histogram;
-var h = new Histogram({
+const Histogram = require('../').Histogram;
+const h = new Histogram({
 	name: 'test_histogram',
 	help: 'Example of a histogram',
 	labelNames: ['code']
 });
 
-var Counter = require('../').Counter;
-var c = new Counter({
+const Counter = require('../').Counter;
+const c = new Counter({
 	name: 'test_counter',
 	help: 'Example of a counter',
 	labelNames: ['code']
 });
 
-var Gauge = require('../').Gauge;
-var g = new Gauge({
+const Gauge = require('../').Gauge;
+const g = new Gauge({
 	name: 'test_gauge',
 	help: 'Example of a gauge',
 	labelNames: ['method', 'code']

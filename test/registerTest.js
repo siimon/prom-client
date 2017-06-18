@@ -1,14 +1,14 @@
 'use strict';
 
 describe('register', function() {
-	var register = require('../index').register;
+	const register = require('../index').register;
 
 	beforeEach(function() {
 		register.clear();
 	});
 
 	describe('should output a counter metric', function() {
-		var output;
+		let output;
 		beforeEach(function() {
 			register.registerMetric(getMetric());
 			output = register.metrics().split('\n');
@@ -55,12 +55,12 @@ describe('register', function() {
 				};
 			}
 		});
-		var actual = register.metrics().split('\n');
+		const actual = register.metrics().split('\n');
 		expect(actual).toHaveLength(4);
 	});
 
 	describe('should escape', function() {
-		var escapedResult;
+		let escapedResult;
 		beforeEach(function() {
 			register.registerMetric({
 				get() {
@@ -100,14 +100,14 @@ describe('register', function() {
 				};
 			}
 		});
-		var escapedResult = register.metrics();
+		const escapedResult = register.metrics();
 		expect(escapedResult).toMatch(/\\"/);
 	});
 
 	describe('should output metrics as JSON', function() {
 		it('should output metrics as JSON', function() {
 			register.registerMetric(getMetric());
-			var output = register.getMetricsAsJSON();
+			const output = register.getMetricsAsJSON();
 
 			expect(output.length).toEqual(1);
 			expect(output[0].name).toEqual('test_metric');
@@ -121,7 +121,7 @@ describe('register', function() {
 		register.registerMetric(getMetric());
 		register.registerMetric(getMetric('some other name'));
 
-		var output = register.getMetricsAsJSON();
+		let output = register.getMetricsAsJSON();
 		expect(output.length).toEqual(2);
 
 		register.removeSingleMetric('test_metric');
@@ -133,17 +133,17 @@ describe('register', function() {
 	});
 
 	it('should allow getting single metrics', function() {
-		var metric = getMetric();
+		const metric = getMetric();
 		register.registerMetric(metric);
 
-		var output = register.getSingleMetric('test_metric');
+		const output = register.getSingleMetric('test_metric');
 		expect(output).toEqual(metric);
 	});
 
 	describe('merging', function() {
-		var Registry = require('../lib/registry');
-		var registryOne;
-		var registryTwo;
+		const Registry = require('../lib/registry');
+		let registryOne;
+		let registryTwo;
 
 		beforeEach(function() {
 			registryOne = new Registry();
@@ -154,7 +154,7 @@ describe('register', function() {
 			registryOne.registerMetric(getMetric('one'));
 			registryTwo.registerMetric(getMetric('two'));
 
-			var merged = Registry.merge([
+			const merged = Registry.merge([
 				registryOne,
 				registryTwo
 			]).getMetricsAsJSON();
@@ -165,7 +165,7 @@ describe('register', function() {
 			registryOne.registerMetric(getMetric());
 			registryTwo.registerMetric(getMetric());
 
-			var fn = function() {
+			const fn = function() {
 				Registry.merge([registryOne, registryTwo]);
 			};
 

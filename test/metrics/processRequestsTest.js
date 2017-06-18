@@ -1,8 +1,8 @@
 'use strict';
 
 describe('processRequests', function() {
-	var register = require('../../index').register;
-	var processRequests = require('../../lib/metrics/processRequests');
+	const register = require('../../index').register;
+	const processRequests = require('../../lib/metrics/processRequests');
 
 	beforeAll(function() {
 		register.clear();
@@ -17,7 +17,7 @@ describe('processRequests', function() {
 
 		processRequests()();
 
-		var metrics = register.getMetricsAsJSON();
+		const metrics = register.getMetricsAsJSON();
 
 		expect(metrics).toHaveLength(1);
 		expect(metrics[0].help).toEqual('Number of active requests.');

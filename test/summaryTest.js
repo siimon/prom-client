@@ -1,11 +1,11 @@
 'use strict';
 
 describe('summary', function() {
-	var Summary = require('../index').Summary;
-	var Registry = require('../index').Registry;
-	var globalRegistry = require('../index').register;
-	var sinon = require('sinon');
-	var instance;
+	const Summary = require('../index').Summary;
+	const Registry = require('../index').Registry;
+	const globalRegistry = require('../index').register;
+	const sinon = require('sinon');
+	let instance;
 
 	describe('global registry', function() {
 		afterEach(function() {
@@ -145,7 +145,7 @@ describe('summary', function() {
 					instance.labels('GET', '/test').observe(50);
 					instance.labels('POST', '/test').observe(100);
 
-					var values = instance.get().values;
+					const values = instance.get().values;
 					expect(values).toHaveLength(6);
 					expect(values[0].labels.method).toEqual('GET');
 					expect(values[0].labels.endpoint).toEqual('/test');
@@ -179,18 +179,18 @@ describe('summary', function() {
 				});
 
 				it('should throw error if label lengths does not match', function() {
-					var fn = function() {
+					const fn = function() {
 						instance.labels('GET').observe();
 					};
 					expect(fn).toThrowError(Error);
 				});
 
 				it('should start a timer', function() {
-					var clock = sinon.useFakeTimers();
-					var end = instance.labels('GET', '/test').startTimer();
+					const clock = sinon.useFakeTimers();
+					const end = instance.labels('GET', '/test').startTimer();
 					clock.tick(1000);
 					end();
-					var values = instance.get().values;
+					const values = instance.get().values;
 					expect(values).toHaveLength(3);
 					expect(values[0].labels.method).toEqual('GET');
 					expect(values[0].labels.endpoint).toEqual('/test');
@@ -211,11 +211,11 @@ describe('summary', function() {
 				});
 
 				it('should start a timer and set labels afterwards', function() {
-					var clock = sinon.useFakeTimers();
-					var end = instance.startTimer();
+					const clock = sinon.useFakeTimers();
+					const end = instance.startTimer();
 					clock.tick(1000);
 					end({ method: 'GET', endpoint: '/test' });
-					var values = instance.get().values;
+					const values = instance.get().values;
 					expect(values).toHaveLength(3);
 					expect(values[0].labels.method).toEqual('GET');
 					expect(values[0].labels.endpoint).toEqual('/test');
@@ -236,11 +236,11 @@ describe('summary', function() {
 				});
 
 				it('should allow labels before and after timers', function() {
-					var clock = sinon.useFakeTimers();
-					var end = instance.startTimer({ method: 'GET' });
+					const clock = sinon.useFakeTimers();
+					const end = instance.startTimer({ method: 'GET' });
 					clock.tick(1000);
 					end({ endpoint: '/test' });
-					var values = instance.get().values;
+					const values = instance.get().values;
 					expect(values).toHaveLength(3);
 					expect(values[0].labels.method).toEqual('GET');
 					expect(values[0].labels.endpoint).toEqual('/test');
@@ -401,7 +401,7 @@ describe('summary', function() {
 					instance.labels('GET', '/test').observe(50);
 					instance.labels('POST', '/test').observe(100);
 
-					var values = instance.get().values;
+					const values = instance.get().values;
 					expect(values).toHaveLength(6);
 					expect(values[0].labels.method).toEqual('GET');
 					expect(values[0].labels.endpoint).toEqual('/test');
@@ -435,18 +435,18 @@ describe('summary', function() {
 				});
 
 				it('should throw error if label lengths does not match', function() {
-					var fn = function() {
+					const fn = function() {
 						instance.labels('GET').observe();
 					};
 					expect(fn).toThrowError(Error);
 				});
 
 				it('should start a timer', function() {
-					var clock = sinon.useFakeTimers();
-					var end = instance.labels('GET', '/test').startTimer();
+					const clock = sinon.useFakeTimers();
+					const end = instance.labels('GET', '/test').startTimer();
 					clock.tick(1000);
 					end();
-					var values = instance.get().values;
+					const values = instance.get().values;
 					expect(values).toHaveLength(3);
 					expect(values[0].labels.method).toEqual('GET');
 					expect(values[0].labels.endpoint).toEqual('/test');
@@ -467,11 +467,11 @@ describe('summary', function() {
 				});
 
 				it('should start a timer and set labels afterwards', function() {
-					var clock = sinon.useFakeTimers();
-					var end = instance.startTimer();
+					const clock = sinon.useFakeTimers();
+					const end = instance.startTimer();
 					clock.tick(1000);
 					end({ method: 'GET', endpoint: '/test' });
-					var values = instance.get().values;
+					const values = instance.get().values;
 					expect(values).toHaveLength(3);
 					expect(values[0].labels.method).toEqual('GET');
 					expect(values[0].labels.endpoint).toEqual('/test');
@@ -492,11 +492,11 @@ describe('summary', function() {
 				});
 
 				it('should allow labels before and after timers', function() {
-					var clock = sinon.useFakeTimers();
-					var end = instance.startTimer({ method: 'GET' });
+					const clock = sinon.useFakeTimers();
+					const end = instance.startTimer({ method: 'GET' });
 					clock.tick(1000);
 					end({ endpoint: '/test' });
-					var values = instance.get().values;
+					const values = instance.get().values;
 					expect(values).toHaveLength(3);
 					expect(values[0].labels.method).toEqual('GET');
 					expect(values[0].labels.endpoint).toEqual('/test');
@@ -538,7 +538,7 @@ describe('summary', function() {
 		});
 	});
 	describe('registry instance', function() {
-		var registryInstance;
+		let registryInstance;
 		beforeEach(function() {
 			registryInstance = new Registry();
 			instance = new Summary({
