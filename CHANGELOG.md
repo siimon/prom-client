@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Added
 ### Changed
+- Convert code base to ES2015 code (node 4)
+  - add engines field to package.json
 
 ## [9.1.1] - 2017-06-17
 ### Changed

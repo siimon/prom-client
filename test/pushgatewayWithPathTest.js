@@ -110,12 +110,12 @@ describe('pushgateway with path', function() {
 		it('should be possible to extend http/s requests with options', function(done) {
 
 			nock(pushGatewayURL, {'encodedQueryParams':true})
-			.matchHeader('unit-test', '1')
-			.put(pushGatewayPath + '/metrics/job/testJob')
-			.reply(202, '', {
-				'content-length': '0',
-				'content-type': 'text/plain; charset=utf-8',
-				connection: 'close' });
+				.matchHeader('unit-test', '1')
+				.put(pushGatewayPath + '/metrics/job/testJob')
+				.reply(202, '', {
+					'content-length': '0',
+					'content-type': 'text/plain; charset=utf-8',
+					connection: 'close' });
 
 			instance = new Pushgateway(pushGatewayFullURL, {
 				headers: {
@@ -156,10 +156,10 @@ describe('pushgateway with path', function() {
 
 	function setupNock(responseCode, method, path) {
 		nock(pushGatewayURL, {'encodedQueryParams':true})
-		[method](pushGatewayPath + path)
-		.reply(202, '', {
-			'content-length': '0',
-			'content-type': 'text/plain; charset=utf-8',
-			connection: 'close' });
+			[method](pushGatewayPath + path)
+			.reply(202, '', {
+				'content-length': '0',
+				'content-type': 'text/plain; charset=utf-8',
+				connection: 'close' });
 	}
 });
