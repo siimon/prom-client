@@ -2,6 +2,9 @@
   "env": {
 	"node": true
   },
+  "parserOptions": {
+	"ecmaVersion": 2015
+  },
   "rules": {
 	"indent": [
 	  2,
@@ -88,6 +91,7 @@
 	  "global"
 	],
 	"yoda": 2,
-	"valid-jsdoc": 2
+	"valid-jsdoc": 2,
+	"object-shorthand": 2
   }
 }

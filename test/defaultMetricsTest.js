@@ -17,7 +17,7 @@ describe('collectDefaultMetrics', function() {
 
 		if(cpuUsage) {
 			Object.defineProperty(process, 'cpuUsage', {
-				value: function() {
+				value() {
 					return { user: 1000, system: 10 };
 				}
 			});

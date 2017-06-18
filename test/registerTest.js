@@ -38,7 +38,7 @@ describe('register', function() {
 
 	it('should handle a metric without labels', function() {
 		register.registerMetric({
-			get: function() {
+			get() {
 				return {
 					name: 'test_metric',
 					type: 'counter',
@@ -57,7 +57,7 @@ describe('register', function() {
 		var escapedResult;
 		beforeEach(function() {
 			register.registerMetric({
-				get: function() {
+				get() {
 					return {
 						name: 'test_"_\\_\n_metric',
 						help: 'help_help',
@@ -77,7 +77,7 @@ describe('register', function() {
 
 	it('should escape " in label values', function() {
 		register.registerMetric({
-			get: function() {
+			get() {
 				return {
 					name: 'test_metric',
 					type: 'counter',
@@ -165,10 +165,10 @@ describe('register', function() {
 	function getMetric(name) {
 		name = name || 'test_metric';
 		return {
-			name: name,
-			get: function() {
+			name,
+			get() {
 				return {
-					name: name,
+					name,
 					type: 'counter',
 					help: 'A test metric',
 					values: [ {
