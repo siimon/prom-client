@@ -3,7 +3,6 @@
 describe('pushgateway', function() {
 	var Pushgateway = require('../index').Pushgateway;
 	var nock = require('nock');
-	var expect = require('chai').expect;
 	var register = require('../index').register;
 	var Registry = require('../index').Registry;
 	var instance;
@@ -15,7 +14,7 @@ describe('pushgateway', function() {
 				setupNock(202, 'post', '/metrics/job/testJob');
 
 				instance.pushAdd({ jobName: 'testJob' }, function(err) {
-					expect(err).to.not.exist;
+					expect(err).toBeFalsy();
 					done();
 				});
 			});
@@ -24,7 +23,7 @@ describe('pushgateway', function() {
 				setupNock(202, 'post', '/metrics/job/testJob/key/value');
 
 				instance.pushAdd({ jobName: 'testJob', groupings: { key: 'value' } }, function(err) {
-					expect(err).to.not.exist;
+					expect(err).toBeFalsy();
 					done();
 				});
 			});
@@ -32,7 +31,7 @@ describe('pushgateway', function() {
 			it('should escape groupings', function(done) {
 				setupNock(202, 'post', '/metrics/job/testJob/key/va%26lue');
 				instance.pushAdd({ jobName: 'testJob', groupings: { key: 'va&lue' } }, function(err) {
-					expect(err).to.not.exist;
+					expect(err).toBeFalsy();
 					done();
 				});
 			});
@@ -44,7 +43,7 @@ describe('pushgateway', function() {
 				setupNock(202, 'put', '/metrics/job/testJob');
 
 				instance.push({ jobName: 'testJob' }, function(err) {
-					expect(err).to.not.exist;
+					expect(err).toBeFalsy();
 					done();
 				});
 			});
@@ -53,7 +52,7 @@ describe('pushgateway', function() {
 				setupNock(202, 'put', '/metrics/job/test%26Job');
 
 				instance.push({ jobName: 'test&Job' }, function(err) {
-					expect(err).to.not.exist;
+					expect(err).toBeFalsy();
 					done();
 				});
 			});
@@ -64,7 +63,7 @@ describe('pushgateway', function() {
 				setupNock(202, 'delete', '/metrics/job/testJob');
 
 				instance.delete({ jobName: 'testJob' }, function(err) {
-					expect(err).to.not.exist;
+					expect(err).toBeFalsy();
 					done();
 				});
 			});
@@ -79,8 +78,8 @@ describe('pushgateway', function() {
 			});
 
 			function verifyResult(done, err, response) {
-				expect(err).not.to.exist;
-				expect(response.req.headers.authorization).to.match(/^Basic/);
+				expect(err).toBeNull();
+				expect(response.req.headers.authorization).toMatch(/^Basic/);
 
 				done();
 			}
@@ -121,8 +120,8 @@ describe('pushgateway', function() {
 			}, registry);
 
 			instance.push({ jobName: 'testJob' }, function(err, res, body) {
-				expect(err).to.not.exist;
-				expect(nock.isDone()).to.be.true;
+				expect(err).toBeFalsy();
+				expect(nock.isDone()).toEqual(true);
 				done();
 			});
 		});
@@ -134,8 +133,8 @@ describe('pushgateway', function() {
 		beforeEach(function() {
 			registry = undefined;
 			instance = new Pushgateway('http://192.168.99.100:9091');
-			var Counter = new require('../index').Counter;
-			var cnt = new Counter('test', 'test');
+			var promClient = require('../index');
+			var cnt = new promClient.Counter('test', 'test');
 			cnt.inc(100);
 		});
 		tests();
@@ -144,8 +143,8 @@ describe('pushgateway', function() {
 		beforeEach(function() {
 			registry = new Registry();
 			instance = new Pushgateway('http://192.168.99.100:9091', null, registry);
-			var Counter = new require('../index').Counter;
-			var cnt = new Counter({name: 'test', help: 'test', registers: [ registry ]});
+			var promeClient = require('../index');
+			var cnt = new promeClient.Counter({name: 'test', help: 'test', registers: [ registry ]});
 			cnt.inc(100);
 		});
 		tests();

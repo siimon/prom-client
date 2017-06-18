@@ -2,7 +2,6 @@
 
 describe('register', function() {
 	var register = require('../index').register;
-	var expect = require('chai').expect;
 
 	beforeEach(function() {
 		register.clear();
@@ -16,16 +15,16 @@ describe('register', function() {
 		});
 
 		it('with help as first item', function() {
-			expect(output[0]).to.equal('# HELP test_metric A test metric');
+			expect(output[0]).toEqual('# HELP test_metric A test metric');
 		});
 		it('with type as second item', function() {
-			expect(output[1]).to.equal('# TYPE test_metric counter');
+			expect(output[1]).toEqual('# TYPE test_metric counter');
 		});
 		it('with first value of the metric as third item', function() {
-			expect(output[2]).to.equal('test_metric{label="hello",code="303"} 12');
+			expect(output[2]).toEqual('test_metric{label="hello",code="303"} 12');
 		});
 		it('with second value of the metric as fourth item', function() {
-			expect(output[3]).to.equal('test_metric{label="bye",code="404"} 34 1485392700000');
+			expect(output[3]).toEqual('test_metric{label="bye",code="404"} 34 1485392700000');
 		});
 	});
 
@@ -34,7 +33,7 @@ describe('register', function() {
 
 		expect(function() {
 			register.registerMetric(getMetric());
-		}).to.throw('A metric with the name test_metric has already been registered.');
+		}).toThrowError('A metric with the name test_metric has already been registered.');
 	});
 
 	it('should handle a metric without labels', function() {
@@ -51,7 +50,7 @@ describe('register', function() {
 			}
 		});
 		var actual = register.metrics().split('\n');
-		expect(actual).to.have.length(4);
+		expect(actual).toHaveLength(4);
 	});
 
 	describe('should escape', function() {
@@ -69,10 +68,10 @@ describe('register', function() {
 			escapedResult = register.metrics();
 		});
 		it('backslash to \\\\', function() {
-			expect(escapedResult).to.match(/\\\\/);
+			expect(escapedResult).toMatch(/\\\\/);
 		});
 		it('newline to \\\\n', function() {
-			expect(escapedResult).to.match(/\n/);
+			expect(escapedResult).toMatch(/\n/);
 		});
 	});
 
@@ -94,7 +93,7 @@ describe('register', function() {
 			}
 		});
 		var escapedResult = register.metrics();
-		expect(escapedResult).to.match(/\\"/);
+		expect(escapedResult).toMatch(/\\"/);
 	});
 
 	describe('should output metrics as JSON', function() {
@@ -102,11 +101,11 @@ describe('register', function() {
 			register.registerMetric(getMetric());
 			var output = register.getMetricsAsJSON();
 
-			expect(output.length).to.equal(1);
-			expect(output[0].name).to.equal('test_metric');
-			expect(output[0].type).to.equal('counter');
-			expect(output[0].help).to.equal('A test metric');
-			expect(output[0].values.length).to.equal(2);
+			expect(output.length).toEqual(1);
+			expect(output[0].name).toEqual('test_metric');
+			expect(output[0].type).toEqual('counter');
+			expect(output[0].help).toEqual('A test metric');
+			expect(output[0].values.length).toEqual(2);
 		});
 	});
 
@@ -115,14 +114,14 @@ describe('register', function() {
 		register.registerMetric(getMetric('some other name'));
 
 		var output = register.getMetricsAsJSON();
-		expect(output.length).to.equal(2);
+		expect(output.length).toEqual(2);
 
 		register.removeSingleMetric('test_metric');
 
 		output = register.getMetricsAsJSON();
 
-		expect(output.length).to.equal(1);
-		expect(output[0].name).to.equal('some other name');
+		expect(output.length).toEqual(1);
+		expect(output[0].name).toEqual('some other name');
 	});
 
 	it('should allow getting single metrics', function() {
@@ -130,7 +129,7 @@ describe('register', function() {
 		register.registerMetric(metric);
 
 		var output = register.getSingleMetric('test_metric');
-		expect(output).to.equal(metric);
+		expect(output).toEqual(metric);
 	});
 
 	describe('merging', function() {
@@ -148,7 +147,7 @@ describe('register', function() {
 			registryTwo.registerMetric(getMetric('two'));
 
 			var merged = Registry.merge([registryOne, registryTwo]).getMetricsAsJSON();
-			expect(merged).to.have.length(2);
+			expect(merged).toHaveLength(2);
 		});
 
 		it('should throw if same name exists on both registers', function() {
@@ -159,7 +158,7 @@ describe('register', function() {
 				Registry.merge([registryOne, registryTwo]);
 			};
 
-			expect(fn).to.throw(Error);
+			expect(fn).toThrowError(Error);
 		});
 	});
 

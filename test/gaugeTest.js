@@ -1,7 +1,6 @@
 'use strict';
 
 describe('gauge', function() {
-	var expect = require('chai').expect;
 	var Gauge = require('../index').Gauge;
 	var Registry = require('../index').Registry;
 	var globalRegistry = require('../index').register;
@@ -62,7 +61,7 @@ describe('gauge', function() {
 				var fn = function() {
 					instance.set('asd');
 				};
-				expect(fn).to.throw(Error);
+				expect(fn).toThrowError(Error);
 			});
 
 			describe('with labels', function() {
@@ -132,13 +131,13 @@ describe('gauge', function() {
 					var fn = function() {
 						instance.labels('200').set(500, 'blah');
 					};
-					expect(fn).to.throw(Error);
+					expect(fn).toThrowError(Error);
 				});
 				it('should not allow invalid dates', function() {
 					var fn = function() {
 						instance.labels('200').set(500, new Date('blah'));
 					};
-					expect(fn).to.throw(Error);
+					expect(fn).toThrowError(Error);
 				});
 				it('should be able to increment', function() {
 					instance.labels('200').inc(1, 1485392700000);
@@ -202,7 +201,7 @@ describe('gauge', function() {
 				var fn = function() {
 					instance.set('asd');
 				};
-				expect(fn).to.throw(Error);
+				expect(fn).toThrowError(Error);
 			});
 
 			describe('with labels', function() {
@@ -272,13 +271,13 @@ describe('gauge', function() {
 					var fn = function() {
 						instance.labels('200').set(500, 'blah');
 					};
-					expect(fn).to.throw(Error);
+					expect(fn).toThrowError(Error);
 				});
 				it('should not allow invalid dates', function() {
 					var fn = function() {
 						instance.labels('200').set(500, new Date('blah'));
 					};
-					expect(fn).to.throw(Error);
+					expect(fn).toThrowError(Error);
 				});
 				it('should be able to increment', function() {
 					instance.labels('200').inc(1, 1485392700000);
@@ -301,7 +300,7 @@ describe('gauge', function() {
 		});
 		it('should set a gauge to provided value', function() {
 			expectValue(10);
-			expect(globalRegistry.getMetricsAsJSON().length).to.equal(0);
+			expect(globalRegistry.getMetricsAsJSON().length).toEqual(0);
 		});
 	});
 	describe('registry instance', function() {
@@ -312,8 +311,8 @@ describe('gauge', function() {
 			instance.set(10);
 		});
 		it('should set a gauge to provided value', function() {
-			expect(globalRegistry.getMetricsAsJSON().length).to.equal(0);
-			expect(registryInstance.getMetricsAsJSON().length).to.equal(1);
+			expect(globalRegistry.getMetricsAsJSON().length).toEqual(0);
+			expect(registryInstance.getMetricsAsJSON().length).toEqual(1);
 			expectValue(10);
 		});
 
@@ -334,13 +333,13 @@ describe('gauge', function() {
 				var fn = function() {
 					instance.labels('200').set(500, 'blah');
 				};
-				expect(fn).to.throw(Error);
+				expect(fn).toThrowError(Error);
 			});
 			it('should not allow invalid dates', function() {
 				var fn = function() {
 					instance.labels('200').set(500, new Date('blah'));
 				};
-				expect(fn).to.throw(Error);
+				expect(fn).toThrowError(Error);
 			});
 			it('should be able to increment', function() {
 				instance.labels('200').inc(1, 1485392700000);
@@ -355,7 +354,7 @@ describe('gauge', function() {
 	});
 
 	function expectValue(val, timestamp) {
-		expect(instance.get().values[0].value).to.equal(val);
-		expect(instance.get().values[0].timestamp).to.equal(timestamp);
+		expect(instance.get().values[0].value).toEqual(val);
+		expect(instance.get().values[0].timestamp).toEqual(timestamp);
 	}
 });

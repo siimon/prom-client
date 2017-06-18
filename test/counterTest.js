@@ -4,7 +4,6 @@ describe('counter', function() {
 	var Counter = require('../index').Counter;
 	var Registry = require('../index').Registry;
 	var globalRegistry = require('../index').register;
-	var expect = require('chai').expect;
 	var instance;
 
 	describe('global registry', function() {
@@ -19,40 +18,40 @@ describe('counter', function() {
 			});
 			it('should increment counter', function() {
 				instance.inc();
-				expect(instance.get().values[0].value).to.equal(1);
-				expect(instance.get().values[0].timestamp).to.equal(undefined);
+				expect(instance.get().values[0].value).toEqual(1);
+				expect(instance.get().values[0].timestamp).toEqual(undefined);
 			});
 			it('should increment with a provided value', function() {
 				instance.inc(100);
-				expect(instance.get().values[0].value).to.equal(100);
-				expect(instance.get().values[0].timestamp).to.equal(undefined);
+				expect(instance.get().values[0].value).toEqual(100);
+				expect(instance.get().values[0].timestamp).toEqual(undefined);
 			});
 			it('should increment with a provided value and timestamp', function() {
 				instance.inc(100, 1485392700000);
-				expect(instance.get().values[0].value).to.equal(100);
-				expect(instance.get().values[0].timestamp).to.equal(1485392700000);
+				expect(instance.get().values[0].value).toEqual(100);
+				expect(instance.get().values[0].timestamp).toEqual(1485392700000);
 			});
 			it('should not allow non number as timestamp', function() {
 				var fn = function() {
 					instance.inc(1, 'blah');
 				};
-				expect(fn).to.throw(Error);
+				expect(fn).toThrowError(Error);
 			});
 			it('should not allow invalid date as timestamp', function() {
 				var fn = function() {
 					instance.inc(1, new Date('blah'));
 				};
-				expect(fn).to.throw(Error);
+				expect(fn).toThrowError(Error);
 			});
 			it('should not be possible to decrease a counter', function() {
 				var fn = function() {
 					instance.inc(-100);
 				};
-				expect(fn).to.throw(Error);
+				expect(fn).toThrowError(Error);
 			});
 			it('should handle incrementing with 0', function() {
 				instance.inc(0);
-				expect(instance.get().values[0].value).to.equal(0);
+				expect(instance.get().values[0].value).toEqual(0);
 			});
 
 			describe('labels', function() {
@@ -62,15 +61,15 @@ describe('counter', function() {
 
 				it('should increment counter', function() {
 					instance.inc();
-					expect(instance.get().values[0].value).to.equal(1);
-					expect(instance.get().values[0].timestamp).to.equal(undefined);
+					expect(instance.get().values[0].value).toEqual(1);
+					expect(instance.get().values[0].timestamp).toEqual(undefined);
 				});
 				it('should handle 1 value per label', function() {
 					instance.labels('GET', '/test').inc();
 					instance.labels('POST', '/test').inc();
 
 					var values = instance.get().values;
-					expect(values).to.have.length(2);
+					expect(values).toHaveLength(2);
 				});
 
 				it('should handle labels which are provided as arguments to inc()', function() {
@@ -78,20 +77,20 @@ describe('counter', function() {
 					instance.inc({method: 'POST', endpoint: '/test'});
 
 					var values = instance.get().values;
-					expect(values).to.have.length(2);
+					expect(values).toHaveLength(2);
 				});
 
 				it('should throw error if label lengths does not match', function() {
 					var fn = function() {
 						instance.labels('GET').inc();
 					};
-					expect(fn).to.throw(Error);
+					expect(fn).toThrowError(Error);
 				});
 
 				it('should increment label value with provided value', function() {
 					instance.labels('GET', '/test').inc(100);
 					var values = instance.get().values;
-					expect(values[0].value).to.equal(100);
+					expect(values[0].value).toEqual(100);
 				});
 			});
 		});
@@ -107,40 +106,40 @@ describe('counter', function() {
 
 		it('should increment counter', function() {
 			instance.inc();
-			expect(instance.get().values[0].value).to.equal(1);
-			expect(instance.get().values[0].timestamp).to.equal(undefined);
+			expect(instance.get().values[0].value).toEqual(1);
+			expect(instance.get().values[0].timestamp).toEqual(undefined);
 		});
 		it('should increment with a provided value', function() {
 			instance.inc(100);
-			expect(instance.get().values[0].value).to.equal(100);
-			expect(instance.get().values[0].timestamp).to.equal(undefined);
+			expect(instance.get().values[0].value).toEqual(100);
+			expect(instance.get().values[0].timestamp).toEqual(undefined);
 		});
 		it('should increment with a provided value and timestamp', function() {
 			instance.inc(100, 1485392700000);
-			expect(instance.get().values[0].value).to.equal(100);
-			expect(instance.get().values[0].timestamp).to.equal(1485392700000);
+			expect(instance.get().values[0].value).toEqual(100);
+			expect(instance.get().values[0].timestamp).toEqual(1485392700000);
 		});
 		it('should not allow non number as timestamp', function() {
 			var fn = function() {
 				instance.inc(1, 'blah');
 			};
-			expect(fn).to.throw(Error);
+			expect(fn).toThrowError(Error);
 		});
 		it('should not allow invalid date as timestamp', function() {
 			var fn = function() {
 				instance.inc(1, new Date('blah'));
 			};
-			expect(fn).to.throw(Error);
+			expect(fn).toThrowError(Error);
 		});
 		it('should not be possible to decrease a counter', function() {
 			var fn = function() {
 				instance.inc(-100);
 			};
-			expect(fn).to.throw(Error);
+			expect(fn).toThrowError(Error);
 		});
 		it('should handle incrementing with 0', function() {
 			instance.inc(0);
-			expect(instance.get().values[0].value).to.equal(0);
+			expect(instance.get().values[0].value).toEqual(0);
 		});
 
 		describe('labels', function() {
@@ -153,7 +152,7 @@ describe('counter', function() {
 				instance.labels('POST', '/test').inc();
 
 				var values = instance.get().values;
-				expect(values).to.have.length(2);
+				expect(values).toHaveLength(2);
 			});
 
 			it('should handle labels which are provided as arguments to inc()', function() {
@@ -161,27 +160,27 @@ describe('counter', function() {
 				instance.inc({method: 'POST', endpoint: '/test'});
 
 				var values = instance.get().values;
-				expect(values).to.have.length(2);
+				expect(values).toHaveLength(2);
 			});
 
 			it('should throw error if label lengths does not match', function() {
 				var fn = function() {
 					instance.labels('GET').inc();
 				};
-				expect(fn).to.throw(Error);
+				expect(fn).toThrowError(Error);
 			});
 
 			it('should throw error if label lengths does not match', function() {
 				var fn = function() {
 					instance.labels('GET').inc();
 				};
-				expect(fn).to.throw(Error);
+				expect(fn).toThrowError(Error);
 			});
 
 			it('should increment label value with provided value', function() {
 				instance.labels('GET', '/test').inc(100);
 				var values = instance.get().values;
-				expect(values[0].value).to.equal(100);
+				expect(values[0].value).toEqual(100);
 			});
 		});
 	});
@@ -191,9 +190,9 @@ describe('counter', function() {
 		});
 		it('should increment counter', function() {
 			instance.inc();
-			expect(globalRegistry.getMetricsAsJSON().length).to.equal(0);
-			expect(instance.get().values[0].value).to.equal(1);
-			expect(instance.get().values[0].timestamp).to.equal(undefined);
+			expect(globalRegistry.getMetricsAsJSON().length).toEqual(0);
+			expect(instance.get().values[0].value).toEqual(1);
+			expect(instance.get().values[0].timestamp).toEqual(undefined);
 		});
 	});
 	describe('registry instance', function() {
@@ -204,10 +203,10 @@ describe('counter', function() {
 		});
 		it('should increment counter', function() {
 			instance.inc();
-			expect(globalRegistry.getMetricsAsJSON().length).to.equal(0);
-			expect(registryInstance.getMetricsAsJSON().length).to.equal(1);
-			expect(instance.get().values[0].value).to.equal(1);
-			expect(instance.get().values[0].timestamp).to.equal(undefined);
+			expect(globalRegistry.getMetricsAsJSON().length).toEqual(0);
+			expect(registryInstance.getMetricsAsJSON().length).toEqual(1);
+			expect(instance.get().values[0].value).toEqual(1);
+			expect(instance.get().values[0].timestamp).toEqual(undefined);
 		});
 	});
 });
