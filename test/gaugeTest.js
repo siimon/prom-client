@@ -67,7 +67,7 @@ describe('gauge', function() {
 			describe('with labels', function() {
 				beforeEach(function() {
 					instance = new Gauge('name', 'help', ['code']);
-					instance.set({ 'code': '200' }, 20);
+					instance.set({ code: '200' }, 20);
 				});
 				it('should be able to increment', function() {
 					instance.labels('200').inc();
@@ -87,7 +87,7 @@ describe('gauge', function() {
 					expectValue(Date.now());
 					clock.restore();
 				});
-				it('should be able to start a timer', function(){
+				it('should be able to start a timer', function() {
 					var clock = sinon.useFakeTimers();
 					var end = instance.labels('200').startTimer();
 					clock.tick(1000);
@@ -95,20 +95,20 @@ describe('gauge', function() {
 					expectValue(1);
 					clock.restore();
 				});
-				it('should be able to start a timer and set labels afterwards', function(){
+				it('should be able to start a timer and set labels afterwards', function() {
 					var clock = sinon.useFakeTimers();
 					var end = instance.startTimer();
 					clock.tick(1000);
-					end({ 'code': 200 });
+					end({ code: 200 });
 					expectValue(1);
 					clock.restore();
 				});
-				it('should allow labels before and after timers', function(){
+				it('should allow labels before and after timers', function() {
 					instance = new Gauge('name_2', 'help', ['code', 'success']);
 					var clock = sinon.useFakeTimers();
-					var end = instance.startTimer({ 'code': 200 });
+					var end = instance.startTimer({ code: 200 });
 					clock.tick(1000);
-					end({ 'success': 'SUCCESS' });
+					end({ success: 'SUCCESS' });
 					expectValue(1);
 					clock.restore();
 				});
@@ -117,7 +117,7 @@ describe('gauge', function() {
 			describe('with timestamp', function() {
 				beforeEach(function() {
 					instance = new Gauge('name', 'help', ['code']);
-					instance.set({ 'code': '200' }, 20);
+					instance.set({ code: '200' }, 20);
 				});
 				it('should be able to set value and timestamp as Date', function() {
 					instance.labels('200').set(500, new Date('2017-01-26T01:05Z'));
@@ -148,7 +148,6 @@ describe('gauge', function() {
 					expectValue(19, 1485392700000);
 				});
 			});
-
 		});
 
 		describe('with parameters as object', function() {
@@ -206,8 +205,12 @@ describe('gauge', function() {
 
 			describe('with labels', function() {
 				beforeEach(function() {
-					instance = new Gauge( { name: 'name', help: 'help', labelNames: ['code'] });
-					instance.set({ 'code': '200' }, 20);
+					instance = new Gauge({
+						name: 'name',
+						help: 'help',
+						labelNames: ['code']
+					});
+					instance.set({ code: '200' }, 20);
 				});
 				it('should be able to increment', function() {
 					instance.labels('200').inc();
@@ -227,7 +230,7 @@ describe('gauge', function() {
 					expectValue(Date.now());
 					clock.restore();
 				});
-				it('should be able to start a timer', function(){
+				it('should be able to start a timer', function() {
 					var clock = sinon.useFakeTimers();
 					var end = instance.labels('200').startTimer();
 					clock.tick(1000);
@@ -235,20 +238,24 @@ describe('gauge', function() {
 					expectValue(1);
 					clock.restore();
 				});
-				it('should be able to start a timer and set labels afterwards', function(){
+				it('should be able to start a timer and set labels afterwards', function() {
 					var clock = sinon.useFakeTimers();
 					var end = instance.startTimer();
 					clock.tick(1000);
-					end({ 'code': 200 });
+					end({ code: 200 });
 					expectValue(1);
 					clock.restore();
 				});
-				it('should allow labels before and after timers', function(){
-					instance = new Gauge({ name: 'name_2', help: 'help', labelNames: ['code', 'success'] });
+				it('should allow labels before and after timers', function() {
+					instance = new Gauge({
+						name: 'name_2',
+						help: 'help',
+						labelNames: ['code', 'success']
+					});
 					var clock = sinon.useFakeTimers();
-					var end = instance.startTimer({ 'code': 200 });
+					var end = instance.startTimer({ code: 200 });
 					clock.tick(1000);
-					end({ 'success': 'SUCCESS' });
+					end({ success: 'SUCCESS' });
 					expectValue(1);
 					clock.restore();
 				});
@@ -257,7 +264,7 @@ describe('gauge', function() {
 			describe('with timestamp', function() {
 				beforeEach(function() {
 					instance = new Gauge('name', 'help', ['code']);
-					instance.set({ 'code': '200' }, 20);
+					instance.set({ code: '200' }, 20);
 				});
 				it('should be able to set value and timestamp as Date', function() {
 					instance.labels('200').set(500, new Date('2017-01-26T01:05Z'));
@@ -307,7 +314,11 @@ describe('gauge', function() {
 		var registryInstance;
 		beforeEach(function() {
 			registryInstance = new Registry();
-			instance = new Gauge({ name: 'gauge_test', help: 'help', registers: [ registryInstance ] });
+			instance = new Gauge({
+				name: 'gauge_test',
+				help: 'help',
+				registers: [registryInstance]
+			});
 			instance.set(10);
 		});
 		it('should set a gauge to provided value', function() {
@@ -318,8 +329,13 @@ describe('gauge', function() {
 
 		describe('with timestamp', function() {
 			beforeEach(function() {
-				instance = new Gauge( { name: 'name', help: 'help', labelNames: ['code'], registers: [ registryInstance ] });
-				instance.set({ 'code': '200' }, 20);
+				instance = new Gauge({
+					name: 'name',
+					help: 'help',
+					labelNames: ['code'],
+					registers: [registryInstance]
+				});
+				instance.set({ code: '200' }, 20);
 			});
 			it('should be able to set value and timestamp as Date', function() {
 				instance.labels('200').set(500, new Date('2017-01-26T01:05Z'));
@@ -350,7 +366,6 @@ describe('gauge', function() {
 				expectValue(19, 1485392700000);
 			});
 		});
-
 	});
 
 	function expectValue(val, timestamp) {
