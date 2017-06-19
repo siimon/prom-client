@@ -1,4 +1,5 @@
 {
+  "plugins": ["prettier"],
   "env": {
 	"node": true
   },
@@ -6,24 +7,10 @@
 	"ecmaVersion": 2015
   },
   "rules": {
-	"indent": [
-	  2,
-	  "tab"
-	],
-	"quotes": [
-	  2,
-	  "single"
-	],
-	"eol-last": [
-	  0
-	],
 	"no-underscore-dangle": [
 	  0
 	],
 	"no-mixed-requires": [
-	  0
-	],
-	"key-spacing": [
 	  0
 	],
 	"new-cap": [
@@ -33,7 +20,6 @@
 	"no-debugger": 2,
 	"no-path-concat": 0,
 	"no-shadow": 1,
-	"semi": 2,
 	"no-array-constructor": 2,
 	"no-caller": 2,
 	"no-eval": 2,
@@ -47,13 +33,10 @@
 	"no-return-assign": 2,
 	"no-sequences": 2,
 	"no-shadow-restricted-names": 2,
-	"no-spaced-func": 2,
-	"no-trailing-spaces": 2,
 	"no-unused-expressions": 2,
 	"no-unused-vars": 2,
 	"no-use-before-define": 0,
 	"no-new": 0,
-	"curly": 2,
 	"dot-notation": [
 	  2,
 	  {
@@ -62,36 +45,13 @@
 	],
 	"eqeqeq": 2,
 	"new-parens": 2,
-	"semi-spacing": 2,
-	"space-infix-ops": 2,
-	"keyword-spacing": [
-	  "error",
-	  {
-		"overrides": {
-		  "for": {
-			"after": false
-		  },
-		  "if": {
-			"after": false
-		  },
-		  "else": {
-			"after": true,
-			"before": true
-		  }
-		}
-	  }
-	],
-	"space-unary-ops": 2,
-	"space-before-function-paren": [
-	  2,
-	  "never"
-	],
 	"strict": [
 	  2,
 	  "global"
 	],
 	"yoda": 2,
 	"valid-jsdoc": 2,
-	"object-shorthand": 2
+	"object-shorthand": 2,
+	"prettier/prettier": [2, {"useTabs": true, "singleQuote": true}]
   }
 }

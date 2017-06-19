@@ -8,7 +8,6 @@ describe('counter', function() {
 
 	describe('global registry', function() {
 		describe('with a parameter for each variable', function() {
-
 			beforeEach(function() {
 				instance = new Counter('gauge_test', 'test');
 			});
@@ -56,7 +55,10 @@ describe('counter', function() {
 
 			describe('labels', function() {
 				beforeEach(function() {
-					instance = new Counter('gauge_test_2', 'help', [ 'method', 'endpoint']);
+					instance = new Counter('gauge_test_2', 'help', [
+						'method',
+						'endpoint'
+					]);
 				});
 
 				it('should increment counter', function() {
@@ -73,8 +75,8 @@ describe('counter', function() {
 				});
 
 				it('should handle labels which are provided as arguments to inc()', function() {
-					instance.inc({method: 'GET', endpoint: '/test'});
-					instance.inc({method: 'POST', endpoint: '/test'});
+					instance.inc({ method: 'GET', endpoint: '/test' });
+					instance.inc({ method: 'POST', endpoint: '/test' });
 
 					var values = instance.get().values;
 					expect(values).toHaveLength(2);
@@ -144,7 +146,11 @@ describe('counter', function() {
 
 		describe('labels', function() {
 			beforeEach(function() {
-				instance = new Counter({ name: 'gauge_test_2', help: 'help', labelNames: [ 'method', 'endpoint'] });
+				instance = new Counter({
+					name: 'gauge_test_2',
+					help: 'help',
+					labelNames: ['method', 'endpoint']
+				});
 			});
 
 			it('should handle 1 value per label', function() {
@@ -156,8 +162,8 @@ describe('counter', function() {
 			});
 
 			it('should handle labels which are provided as arguments to inc()', function() {
-				instance.inc({method: 'GET', endpoint: '/test'});
-				instance.inc({method: 'POST', endpoint: '/test'});
+				instance.inc({ method: 'GET', endpoint: '/test' });
+				instance.inc({ method: 'POST', endpoint: '/test' });
 
 				var values = instance.get().values;
 				expect(values).toHaveLength(2);
@@ -186,7 +192,11 @@ describe('counter', function() {
 	});
 	describe('without registry', function() {
 		beforeEach(function() {
-			instance = new Counter({ name: 'gauge_test', help: 'test', registers: [] });
+			instance = new Counter({
+				name: 'gauge_test',
+				help: 'test',
+				registers: []
+			});
 		});
 		it('should increment counter', function() {
 			instance.inc();
@@ -199,7 +209,11 @@ describe('counter', function() {
 		var registryInstance;
 		beforeEach(function() {
 			registryInstance = new Registry();
-			instance = new Counter({ name: 'gauge_test', help: 'test', registers: [ registryInstance ] });
+			instance = new Counter({
+				name: 'gauge_test',
+				help: 'test',
+				registers: [registryInstance]
+			});
 		});
 		it('should increment counter', function() {
 			instance.inc();

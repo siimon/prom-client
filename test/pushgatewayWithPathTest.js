@@ -26,20 +26,25 @@ describe('pushgateway with path', function() {
 			it('should use groupings', function(done) {
 				setupNock(202, 'post', '/metrics/job/testJob/key/value');
 
-				instance.pushAdd({ jobName: 'testJob', groupings: { key: 'value' } }, function(err) {
-					expect(err).toBeFalsy();
-					done();
-				});
+				instance.pushAdd(
+					{ jobName: 'testJob', groupings: { key: 'value' } },
+					function(err) {
+						expect(err).toBeFalsy();
+						done();
+					}
+				);
 			});
 
 			it('should escape groupings', function(done) {
 				setupNock(202, 'post', '/metrics/job/testJob/key/va%26lue');
-				instance.pushAdd({ jobName: 'testJob', groupings: { key: 'va&lue' } }, function(err) {
-					expect(err).toBeFalsy();
-					done();
-				});
+				instance.pushAdd(
+					{ jobName: 'testJob', groupings: { key: 'va&lue' } },
+					function(err) {
+						expect(err).toBeFalsy();
+						done();
+					}
+				);
 			});
-
 		});
 
 		describe('push', function() {
@@ -78,7 +83,16 @@ describe('pushgateway with path', function() {
 			var PASSWORD = 'unittest';
 
 			beforeEach(function() {
-				instance = new Pushgateway('http://' + USERNAME + ':' + PASSWORD + '@192.168.99.100:9091' + pushGatewayPath, null, registry);
+				instance = new Pushgateway(
+					'http://' +
+						USERNAME +
+						':' +
+						PASSWORD +
+						'@192.168.99.100:9091' +
+						pushGatewayPath,
+					null,
+					registry
+				);
 			});
 
 			function verifyResult(done, err, response) {
@@ -88,7 +102,9 @@ describe('pushgateway with path', function() {
 				done();
 			}
 
-			it('pushAdd should send POST request with basic auth data', function(done) {
+			it('pushAdd should send POST request with basic auth data', function(
+				done
+			) {
 				setupNock(202, 'post', '/metrics/job/testJob');
 
 				instance.pushAdd({ jobName: 'testJob' }, verifyResult.bind({}, done));
@@ -100,28 +116,36 @@ describe('pushgateway with path', function() {
 				instance.push({ jobName: 'testJob' }, verifyResult.bind({}, done));
 			});
 
-			it('delete should send DELETE request with basic auth data', function(done) {
+			it('delete should send DELETE request with basic auth data', function(
+				done
+			) {
 				setupNock(202, 'delete', '/metrics/job/testJob');
 
 				instance.delete({ jobName: 'testJob' }, verifyResult.bind({}, done));
 			});
 		});
 
-		it('should be possible to extend http/s requests with options', function(done) {
-
-			nock(pushGatewayURL, {'encodedQueryParams':true})
+		it('should be possible to extend http/s requests with options', function(
+			done
+		) {
+			nock(pushGatewayURL, { encodedQueryParams: true })
 				.matchHeader('unit-test', '1')
 				.put(pushGatewayPath + '/metrics/job/testJob')
 				.reply(202, '', {
 					'content-length': '0',
 					'content-type': 'text/plain; charset=utf-8',
-					connection: 'close' });
+					connection: 'close'
+				});
 
-			instance = new Pushgateway(pushGatewayFullURL, {
-				headers: {
-					'unit-test': '1'
-				}
-			}, registry);
+			instance = new Pushgateway(
+				pushGatewayFullURL,
+				{
+					headers: {
+						'unit-test': '1'
+					}
+				},
+				registry
+			);
 
 			instance.push({ jobName: 'testJob' }, function(err, res, body) {
 				expect(err).toBeFalsy();
@@ -148,18 +172,23 @@ describe('pushgateway with path', function() {
 			registry = new Registry();
 			instance = new Pushgateway(pushGatewayFullURL, null, registry);
 			var promClient = require('../index');
-			var cnt = new promClient.Counter({name: 'test', help: 'test', registers: [ registry ]});
+			var cnt = new promClient.Counter({
+				name: 'test',
+				help: 'test',
+				registers: [registry]
+			});
 			cnt.inc(100);
 		});
 		tests();
 	});
 
 	function setupNock(responseCode, method, path) {
-		nock(pushGatewayURL, {'encodedQueryParams':true})
+		nock(pushGatewayURL, { encodedQueryParams: true })
 			[method](pushGatewayPath + path)
 			.reply(202, '', {
 				'content-length': '0',
 				'content-type': 'text/plain; charset=utf-8',
-				connection: 'close' });
+				connection: 'close'
+			});
 	}
 });

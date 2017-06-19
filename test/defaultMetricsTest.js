@@ -15,7 +15,7 @@ describe('collectDefaultMetrics', function() {
 			value: 'my-bogus-platform'
 		});
 
-		if(cpuUsage) {
+		if (cpuUsage) {
 			Object.defineProperty(process, 'cpuUsage', {
 				value() {
 					return { user: 1000, system: 10 };
@@ -35,7 +35,7 @@ describe('collectDefaultMetrics', function() {
 			value: platform
 		});
 
-		if(cpuUsage) {
+		if (cpuUsage) {
 			Object.defineProperty(process, 'cpuUsage', {
 				value: cpuUsage
 			});
@@ -61,7 +61,6 @@ describe('collectDefaultMetrics', function() {
 		register.clear();
 		expect(register.getMetricsAsJSON()).toHaveLength(0);
 	});
-
 
 	describe('disabling', function() {
 		it('should not throw error', function() {
