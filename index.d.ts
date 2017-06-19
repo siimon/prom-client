@@ -36,7 +36,7 @@ export class Registry {
 	* Merge registers
 	* @param registers The registers you want to merge together
 	*/
-	merge(registers: Registry[]): Registry
+	static merge(registers: Registry[]): Registry
 }
 
 /**
