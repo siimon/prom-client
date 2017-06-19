@@ -1,21 +1,21 @@
 'use strict';
 
-describe('heapSizeAndUsed', function() {
+describe('heapSizeAndUsed', () => {
 	const heapSizeAndUsed = require('../../lib/metrics/heapSizeAndUsed');
 	const register = require('../../lib/register');
 	const memoryUsedFn = process.memoryUsage;
 
-	afterEach(function() {
+	afterEach(() => {
 		process.memoryUsage = memoryUsedFn;
 		register.clear();
 	});
 
-	it('should return an empty function if memoryUsed does not exist', function() {
+	it('should return an empty function if memoryUsed does not exist', () => {
 		process.memoryUsage = null;
 		expect(heapSizeAndUsed()()).toBeUndefined();
 	});
 
-	it('should set total heap size gauge with total from memoryUsage', function() {
+	it('should set total heap size gauge with total from memoryUsage', () => {
 		process.memoryUsage = function() {
 			return { heapTotal: 1000, heapUsed: 500, external: 100 };
 		};
@@ -23,7 +23,7 @@ describe('heapSizeAndUsed', function() {
 		expect(totalGauge.values[0].value).toEqual(1000);
 	});
 
-	it('should set used gauge with used from memoryUsage', function() {
+	it('should set used gauge with used from memoryUsage', () => {
 		process.memoryUsage = function() {
 			return { heapTotal: 1000, heapUsed: 500, external: 100 };
 		};
@@ -31,7 +31,7 @@ describe('heapSizeAndUsed', function() {
 		expect(gauge.values[0].value).toEqual(500);
 	});
 
-	it('should set external gauge with external from memoryUsage', function() {
+	it('should set external gauge with external from memoryUsage', () => {
 		process.memoryUsage = function() {
 			return { heapTotal: 1000, heapUsed: 500, external: 100 };
 		};

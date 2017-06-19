@@ -1,22 +1,22 @@
 'use strict';
 
-describe('eventLoopLag', function() {
+describe('eventLoopLag', () => {
 	const register = require('../../index').register;
 	const eventLoopLag = require('../../lib/metrics/eventLoopLag');
 
-	beforeAll(function() {
+	beforeAll(() => {
 		register.clear();
 	});
 
-	afterEach(function() {
+	afterEach(() => {
 		register.clear();
 	});
 
-	it('should add metric to the registry', function(done) {
+	it('should add metric to the registry', done => {
 		expect(register.getMetricsAsJSON()).toHaveLength(0);
 		eventLoopLag()();
 
-		setTimeout(function() {
+		setTimeout(() => {
 			const metrics = register.getMetricsAsJSON();
 			expect(metrics).toHaveLength(1);
 

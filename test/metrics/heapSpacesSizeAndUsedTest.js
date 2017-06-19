@@ -1,6 +1,6 @@
 'use strict';
 
-jest.mock('v8', function() {
+jest.mock('v8', () => {
 	return {
 		getHeapSpaceStatistics: jest.fn().mockReturnValue([
 			{
@@ -42,19 +42,19 @@ jest.mock('v8', function() {
 	};
 });
 
-describe('heapSpacesSizeAndUsed', function() {
+describe('heapSpacesSizeAndUsed', () => {
 	let heapSpacesSizeAndUsed;
 	const register = require('../../lib/register');
 
-	beforeEach(function() {
+	beforeEach(() => {
 		heapSpacesSizeAndUsed = require('../../lib/metrics/heapSpacesSizeAndUsed');
 	});
 
-	afterEach(function() {
+	afterEach(() => {
 		register.clear();
 	});
 
-	it('should set total heap spaces size gauges with from v8', function() {
+	it('should set total heap spaces size gauges with from v8', () => {
 		const expectedObj = {
 			total: { new: 100, old: 100, code: 100, map: 100, large_object: 100 },
 			used: { new: 50, old: 50, code: 50, map: 50, large_object: 50 },
