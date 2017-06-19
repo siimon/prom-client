@@ -4,13 +4,13 @@ A prometheus client for node.js that supports histogram, summaries, gauges and c
 
 ### Usage
 
-See example folder for a sample usage. The library does not bundle any web framework, to expose the metrics just return the metrics() function in the registry.
+See example folder for a sample usage. The library does not bundle any web framework, to expose the metrics just return the metrics() or metricsProtobuf() function in the registry.
 
 ### API
 
 #### Configuration
 
-All metric types has 2 mandatory parameters, name and help.
+All metric types have 2 mandatory parameters, name and help.
 
 #### Default metrics
 
@@ -230,7 +230,8 @@ var mergedRegistries = client.Registry.merge([registry, client.register]);
 
 #### Register
 
-You can get all metrics by running `register.metrics()`, which will output a string for prometheus to consume.
+You can get all metrics in text format by running `register.metrics()`, or in protobuf format by running `register.metricsProtobuf()`. Both are consumable by Prometheus.
+`register.metricsProtobuf()` returns a buffer which can be sent in the body of an HTTP response.
 
 ##### Geting a single metric for Prometheus displaying
 
@@ -289,3 +290,14 @@ The content-type prometheus expects is also exported as a constant, both on the 
 ### Garbage Collection
 
 To avoid dependencies in this module, GC stats are kept outside of it. If you want GC stats, you can use https://github.com/SimenB/node-prometheus-gc-stats
+
+### Run the tests in Docker
+
+This will install the NPM packages to the local `node_modules` directory. Beware these packages will need rebuilt if you plan to use them outside Docker, unless your system is Linux and has the same dependencies.
+```shell
+git clone git@github.com:siimon/prom-client.git
+cd prom-client
+rm -rf node_modules # Only if pre-existing AND your system is not Linux
+docker run -it --rm -v $(pwd):/code --workdir /code --entrypoint npm node:7.9.0 install
+docker run -it --rm -v $(pwd):/code --workdir /code --entrypoint npm node:7.9.0 test
+```

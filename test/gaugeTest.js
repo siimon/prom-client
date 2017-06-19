@@ -289,6 +289,39 @@ describe('gauge', function() {
 				});
 			});
 		});
+
+		describe('get as protobuf', function() {
+			beforeEach(function() {
+				instance = new Gauge({ name: 'gauge_test', help: 'test', labelNames: [ 'method', 'endpoint'] });
+			});
+
+			it('should get as protobuf compliant object', function() {
+				instance.labels('GET', '/test').inc(1234, 1485392700000);
+				var validValue = {
+					name: 'gauge_test',
+					help: 'test',
+					type: 1,
+					metric: [{
+						label: [
+							{
+								name: 'method',
+								value: 'GET'
+							},
+							{
+								name: 'endpoint',
+								value: '/test'
+							}
+						],
+						timestampMs: 1485392700000,
+						gauge: {
+							value: 1234
+						}
+					}]
+				};
+				var value = instance.getProtoCompliant();
+				expect(value).to.deep.equal(validValue);
+			});
+		});
 	});
 	describe('without registry', function() {
 		afterEach(function() {
