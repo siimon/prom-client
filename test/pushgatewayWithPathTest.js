@@ -84,12 +84,7 @@ describe('pushgateway with path', () => {
 
 			beforeEach(() => {
 				instance = new Pushgateway(
-					'http://' +
-						USERNAME +
-						':' +
-						PASSWORD +
-						'@192.168.99.100:9091' +
-						pushGatewayPath,
+					`http://${USERNAME}:${PASSWORD}@192.168.99.100:9091${pushGatewayPath}`,
 					null,
 					registry
 				);
@@ -124,7 +119,7 @@ describe('pushgateway with path', () => {
 		it('should be possible to extend http/s requests with options', done => {
 			nock(pushGatewayURL, { encodedQueryParams: true })
 				.matchHeader('unit-test', '1')
-				.put(pushGatewayPath + '/metrics/job/testJob')
+				.put(`${pushGatewayPath}/metrics/job/testJob`)
 				.reply(202, '', {
 					'content-length': '0',
 					'content-type': 'text/plain; charset=utf-8',
