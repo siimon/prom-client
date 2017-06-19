@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   - Use object shorthand
   - Remove `util-extend` in favor of `Object.assign`
   - Arrow functions over binding or putting `this` in a variable
+  - Use template strings
 
 ## [9.1.1] - 2017-06-17
 ### Changed

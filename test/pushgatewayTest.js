@@ -80,7 +80,7 @@ describe('pushgateway', () => {
 
 			beforeEach(() => {
 				instance = new Pushgateway(
-					'http://' + USERNAME + ':' + PASSWORD + '@192.168.99.100:9091',
+					`http://${USERNAME}:${PASSWORD}@192.168.99.100:9091`,
 					null,
 					registry
 				);
