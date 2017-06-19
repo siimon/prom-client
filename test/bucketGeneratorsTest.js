@@ -1,10 +1,10 @@
 'use strict';
 
 describe('bucketGenerators', function() {
-	var linearBuckets = require('../index').linearBuckets;
-	var exponentialBuckets = require('../index').exponentialBuckets;
+	const linearBuckets = require('../index').linearBuckets;
+	const exponentialBuckets = require('../index').exponentialBuckets;
 
-	var result;
+	let result;
 	describe('linear buckets', function() {
 		beforeEach(function() {
 			result = linearBuckets(0, 50, 10);
@@ -22,7 +22,7 @@ describe('bucketGenerators', function() {
 			expect(result[4] - result[3]).toEqual(50);
 		});
 		it('should not allow negative count', function() {
-			var fn = function() {
+			const fn = function() {
 				linearBuckets(2, 1, 0);
 			};
 			expect(fn).toThrowError(Error);
@@ -46,19 +46,19 @@ describe('bucketGenerators', function() {
 		});
 
 		it('should not allow factor of equal or less than 1', function() {
-			var fn = function() {
+			const fn = function() {
 				exponentialBuckets(1, 1, 5);
 			};
 			expect(fn).toThrowError(Error);
 		});
 		it('should not allow negative start', function() {
-			var fn = function() {
+			const fn = function() {
 				exponentialBuckets(0, 1, 5);
 			};
 			expect(fn).toThrowError(Error);
 		});
 		it('should not allow negative count', function() {
-			var fn = function() {
+			const fn = function() {
 				exponentialBuckets(2, 10, 0);
 			};
 			expect(fn).toThrowError(Error);

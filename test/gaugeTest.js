@@ -1,11 +1,11 @@
 'use strict';
 
 describe('gauge', function() {
-	var Gauge = require('../index').Gauge;
-	var Registry = require('../index').Registry;
-	var globalRegistry = require('../index').register;
-	var sinon = require('sinon');
-	var instance;
+	const Gauge = require('../index').Gauge;
+	const Registry = require('../index').Registry;
+	const globalRegistry = require('../index').register;
+	const sinon = require('sinon');
+	let instance;
 
 	describe('global registry', function() {
 		afterEach(function() {
@@ -42,8 +42,8 @@ describe('gauge', function() {
 			});
 
 			it('should start a timer and set a gauge to elapsed in seconds', function() {
-				var clock = sinon.useFakeTimers();
-				var doneFn = instance.startTimer();
+				const clock = sinon.useFakeTimers();
+				const doneFn = instance.startTimer();
 				clock.tick(500);
 				doneFn();
 				expectValue(0.5);
@@ -51,14 +51,14 @@ describe('gauge', function() {
 			});
 
 			it('should set to current time', function() {
-				var clock = sinon.useFakeTimers();
+				const clock = sinon.useFakeTimers();
 				instance.setToCurrentTime();
 				expectValue(Date.now());
 				clock.restore();
 			});
 
 			it('should not allow non numbers', function() {
-				var fn = function() {
+				const fn = function() {
 					instance.set('asd');
 				};
 				expect(fn).toThrowError(Error);
@@ -82,22 +82,22 @@ describe('gauge', function() {
 					expectValue(500);
 				});
 				it('should be able to set value to current time', function() {
-					var clock = sinon.useFakeTimers();
+					const clock = sinon.useFakeTimers();
 					instance.labels('200').setToCurrentTime();
 					expectValue(Date.now());
 					clock.restore();
 				});
 				it('should be able to start a timer', function() {
-					var clock = sinon.useFakeTimers();
-					var end = instance.labels('200').startTimer();
+					const clock = sinon.useFakeTimers();
+					const end = instance.labels('200').startTimer();
 					clock.tick(1000);
 					end();
 					expectValue(1);
 					clock.restore();
 				});
 				it('should be able to start a timer and set labels afterwards', function() {
-					var clock = sinon.useFakeTimers();
-					var end = instance.startTimer();
+					const clock = sinon.useFakeTimers();
+					const end = instance.startTimer();
 					clock.tick(1000);
 					end({ code: 200 });
 					expectValue(1);
@@ -105,8 +105,8 @@ describe('gauge', function() {
 				});
 				it('should allow labels before and after timers', function() {
 					instance = new Gauge('name_2', 'help', ['code', 'success']);
-					var clock = sinon.useFakeTimers();
-					var end = instance.startTimer({ code: 200 });
+					const clock = sinon.useFakeTimers();
+					const end = instance.startTimer({ code: 200 });
 					clock.tick(1000);
 					end({ success: 'SUCCESS' });
 					expectValue(1);
@@ -128,13 +128,13 @@ describe('gauge', function() {
 					expectValue(500, 1485392700000);
 				});
 				it('should not allow non numbers', function() {
-					var fn = function() {
+					const fn = function() {
 						instance.labels('200').set(500, 'blah');
 					};
 					expect(fn).toThrowError(Error);
 				});
 				it('should not allow invalid dates', function() {
-					var fn = function() {
+					const fn = function() {
 						instance.labels('200').set(500, new Date('blah'));
 					};
 					expect(fn).toThrowError(Error);
@@ -181,8 +181,8 @@ describe('gauge', function() {
 			});
 
 			it('should start a timer and set a gauge to elapsed in seconds', function() {
-				var clock = sinon.useFakeTimers();
-				var doneFn = instance.startTimer();
+				const clock = sinon.useFakeTimers();
+				const doneFn = instance.startTimer();
 				clock.tick(500);
 				doneFn();
 				expectValue(0.5);
@@ -190,14 +190,14 @@ describe('gauge', function() {
 			});
 
 			it('should set to current time', function() {
-				var clock = sinon.useFakeTimers();
+				const clock = sinon.useFakeTimers();
 				instance.setToCurrentTime();
 				expectValue(Date.now());
 				clock.restore();
 			});
 
 			it('should not allow non numbers', function() {
-				var fn = function() {
+				const fn = function() {
 					instance.set('asd');
 				};
 				expect(fn).toThrowError(Error);
@@ -225,22 +225,22 @@ describe('gauge', function() {
 					expectValue(500);
 				});
 				it('should be able to set value to current time', function() {
-					var clock = sinon.useFakeTimers();
+					const clock = sinon.useFakeTimers();
 					instance.labels('200').setToCurrentTime();
 					expectValue(Date.now());
 					clock.restore();
 				});
 				it('should be able to start a timer', function() {
-					var clock = sinon.useFakeTimers();
-					var end = instance.labels('200').startTimer();
+					const clock = sinon.useFakeTimers();
+					const end = instance.labels('200').startTimer();
 					clock.tick(1000);
 					end();
 					expectValue(1);
 					clock.restore();
 				});
 				it('should be able to start a timer and set labels afterwards', function() {
-					var clock = sinon.useFakeTimers();
-					var end = instance.startTimer();
+					const clock = sinon.useFakeTimers();
+					const end = instance.startTimer();
 					clock.tick(1000);
 					end({ code: 200 });
 					expectValue(1);
@@ -252,8 +252,8 @@ describe('gauge', function() {
 						help: 'help',
 						labelNames: ['code', 'success']
 					});
-					var clock = sinon.useFakeTimers();
-					var end = instance.startTimer({ code: 200 });
+					const clock = sinon.useFakeTimers();
+					const end = instance.startTimer({ code: 200 });
 					clock.tick(1000);
 					end({ success: 'SUCCESS' });
 					expectValue(1);
@@ -275,13 +275,13 @@ describe('gauge', function() {
 					expectValue(500, 1485392700000);
 				});
 				it('should not allow non numbers', function() {
-					var fn = function() {
+					const fn = function() {
 						instance.labels('200').set(500, 'blah');
 					};
 					expect(fn).toThrowError(Error);
 				});
 				it('should not allow invalid dates', function() {
-					var fn = function() {
+					const fn = function() {
 						instance.labels('200').set(500, new Date('blah'));
 					};
 					expect(fn).toThrowError(Error);
@@ -311,7 +311,7 @@ describe('gauge', function() {
 		});
 	});
 	describe('registry instance', function() {
-		var registryInstance;
+		let registryInstance;
 		beforeEach(function() {
 			registryInstance = new Registry();
 			instance = new Gauge({
@@ -346,13 +346,13 @@ describe('gauge', function() {
 				expectValue(500, 1485392700000);
 			});
 			it('should not allow non numbers', function() {
-				var fn = function() {
+				const fn = function() {
 					instance.labels('200').set(500, 'blah');
 				};
 				expect(fn).toThrowError(Error);
 			});
 			it('should not allow invalid dates', function() {
-				var fn = function() {
+				const fn = function() {
 					instance.labels('200').set(500, new Date('blah'));
 				};
 				expect(fn).toThrowError(Error);

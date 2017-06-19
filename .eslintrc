@@ -52,6 +52,8 @@
 	"yoda": 2,
 	"valid-jsdoc": 2,
 	"object-shorthand": 2,
+	"no-var": 2,
+	"prefer-const": 2,
 	"prettier/prettier": [2, {"useTabs": true, "singleQuote": true}]
   }
 }

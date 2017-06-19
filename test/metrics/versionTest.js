@@ -1,11 +1,11 @@
 'use strict';
 
-var nodeVersion = process.version;
-var versionSegments = nodeVersion.slice(1).split('.').map(Number);
+const nodeVersion = process.version;
+const versionSegments = nodeVersion.slice(1).split('.').map(Number);
 
 describe('version', function() {
-	var register = require('../../index').register;
-	var version = require('../../lib/metrics/version');
+	const register = require('../../index').register;
+	const version = require('../../lib/metrics/version');
 
 	beforeAll(function() {
 		register.clear();
@@ -24,7 +24,7 @@ describe('version', function() {
 		version()();
 
 		setTimeout(function() {
-			var metrics = register.getMetricsAsJSON();
+			const metrics = register.getMetricsAsJSON();
 			expect(metrics).toHaveLength(1);
 
 			expect(metrics[0].help).toEqual('Node.js version info.');

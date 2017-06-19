@@ -1,9 +1,9 @@
 'use strict';
 
 describe('heapSizeAndUsed', function() {
-	var heapSizeAndUsed = require('../../lib/metrics/heapSizeAndUsed');
-	var register = require('../../lib/register');
-	var memoryUsedFn = process.memoryUsage;
+	const heapSizeAndUsed = require('../../lib/metrics/heapSizeAndUsed');
+	const register = require('../../lib/register');
+	const memoryUsedFn = process.memoryUsage;
 
 	afterEach(function() {
 		process.memoryUsage = memoryUsedFn;
@@ -19,7 +19,7 @@ describe('heapSizeAndUsed', function() {
 		process.memoryUsage = function() {
 			return { heapTotal: 1000, heapUsed: 500, external: 100 };
 		};
-		var totalGauge = heapSizeAndUsed()().total.get();
+		const totalGauge = heapSizeAndUsed()().total.get();
 		expect(totalGauge.values[0].value).toEqual(1000);
 	});
 
@@ -27,7 +27,7 @@ describe('heapSizeAndUsed', function() {
 		process.memoryUsage = function() {
 			return { heapTotal: 1000, heapUsed: 500, external: 100 };
 		};
-		var gauge = heapSizeAndUsed()().used.get();
+		const gauge = heapSizeAndUsed()().used.get();
 		expect(gauge.values[0].value).toEqual(500);
 	});
 
@@ -35,7 +35,7 @@ describe('heapSizeAndUsed', function() {
 		process.memoryUsage = function() {
 			return { heapTotal: 1000, heapUsed: 500, external: 100 };
 		};
-		var gauge = heapSizeAndUsed()().external.get();
+		const gauge = heapSizeAndUsed()().external.get();
 		expect(gauge.values[0].value).toEqual(100);
 	});
 });

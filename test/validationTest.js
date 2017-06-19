@@ -2,7 +2,7 @@
 
 describe('validation', function() {
 	describe('validateLabel', function() {
-		var validateLabel = require('../lib/validation').validateLabel;
+		const validateLabel = require('../lib/validation').validateLabel;
 
 		it('should not throw on known label', function() {
 			expect(function() {

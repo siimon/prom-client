@@ -1,18 +1,18 @@
 'use strict';
 
-var pushGatewayPath = '/path';
-var pushGatewayURL = 'http://192.168.99.100:9091';
-var pushGatewayFullURL = pushGatewayURL + pushGatewayPath;
+const pushGatewayPath = '/path';
+const pushGatewayURL = 'http://192.168.99.100:9091';
+const pushGatewayFullURL = pushGatewayURL + pushGatewayPath;
 
 describe('pushgateway with path', function() {
-	var Pushgateway = require('../index').Pushgateway;
-	var nock = require('nock');
-	var register = require('../index').register;
-	var Registry = require('../index').Registry;
-	var instance;
-	var registry = undefined;
+	const Pushgateway = require('../index').Pushgateway;
+	const nock = require('nock');
+	const register = require('../index').register;
+	const Registry = require('../index').Registry;
+	let instance;
+	let registry = undefined;
 
-	var tests = function() {
+	const tests = function() {
 		describe('pushAdd', function() {
 			it('should push metrics', function(done) {
 				setupNock(202, 'post', '/metrics/job/testJob');
@@ -79,8 +79,8 @@ describe('pushgateway with path', function() {
 		});
 
 		describe('when using basic authentication', function() {
-			var USERNAME = 'unittest';
-			var PASSWORD = 'unittest';
+			const USERNAME = 'unittest';
+			const PASSWORD = 'unittest';
 
 			beforeEach(function() {
 				instance = new Pushgateway(
@@ -161,8 +161,8 @@ describe('pushgateway with path', function() {
 		beforeEach(function() {
 			registry = undefined;
 			instance = new Pushgateway(pushGatewayFullURL);
-			var promClient = require('../index');
-			var cnt = new promClient.Counter('test', 'test');
+			const promClient = require('../index');
+			const cnt = new promClient.Counter('test', 'test');
 			cnt.inc(100);
 		});
 		tests();
@@ -171,8 +171,8 @@ describe('pushgateway with path', function() {
 		beforeEach(function() {
 			registry = new Registry();
 			instance = new Pushgateway(pushGatewayFullURL, null, registry);
-			var promClient = require('../index');
-			var cnt = new promClient.Counter({
+			const promClient = require('../index');
+			const cnt = new promClient.Counter({
 				name: 'test',
 				help: 'test',
 				registers: [registry]
