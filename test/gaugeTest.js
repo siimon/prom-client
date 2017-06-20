@@ -4,7 +4,7 @@ describe('gauge', () => {
 	const Gauge = require('../index').Gauge;
 	const Registry = require('../index').Registry;
 	const globalRegistry = require('../index').register;
-	const sinon = require('sinon');
+	const lolex = require('lolex');
 	let instance;
 
 	describe('global registry', () => {
@@ -42,19 +42,19 @@ describe('gauge', () => {
 			});
 
 			it('should start a timer and set a gauge to elapsed in seconds', () => {
-				const clock = sinon.useFakeTimers();
+				const clock = lolex.install();
 				const doneFn = instance.startTimer();
 				clock.tick(500);
 				doneFn();
 				expectValue(0.5);
-				clock.restore();
+				clock.uninstall();
 			});
 
 			it('should set to current time', () => {
-				const clock = sinon.useFakeTimers();
+				const clock = lolex.install();
 				instance.setToCurrentTime();
 				expectValue(Date.now());
-				clock.restore();
+				clock.uninstall();
 			});
 
 			it('should not allow non numbers', () => {
@@ -82,35 +82,35 @@ describe('gauge', () => {
 					expectValue(500);
 				});
 				it('should be able to set value to current time', () => {
-					const clock = sinon.useFakeTimers();
+					const clock = lolex.install();
 					instance.labels('200').setToCurrentTime();
 					expectValue(Date.now());
-					clock.restore();
+					clock.uninstall();
 				});
 				it('should be able to start a timer', () => {
-					const clock = sinon.useFakeTimers();
+					const clock = lolex.install();
 					const end = instance.labels('200').startTimer();
 					clock.tick(1000);
 					end();
 					expectValue(1);
-					clock.restore();
+					clock.uninstall();
 				});
 				it('should be able to start a timer and set labels afterwards', () => {
-					const clock = sinon.useFakeTimers();
+					const clock = lolex.install();
 					const end = instance.startTimer();
 					clock.tick(1000);
 					end({ code: 200 });
 					expectValue(1);
-					clock.restore();
+					clock.uninstall();
 				});
 				it('should allow labels before and after timers', () => {
 					instance = new Gauge('name_2', 'help', ['code', 'success']);
-					const clock = sinon.useFakeTimers();
+					const clock = lolex.install();
 					const end = instance.startTimer({ code: 200 });
 					clock.tick(1000);
 					end({ success: 'SUCCESS' });
 					expectValue(1);
-					clock.restore();
+					clock.uninstall();
 				});
 			});
 
@@ -181,19 +181,19 @@ describe('gauge', () => {
 			});
 
 			it('should start a timer and set a gauge to elapsed in seconds', () => {
-				const clock = sinon.useFakeTimers();
+				const clock = lolex.install();
 				const doneFn = instance.startTimer();
 				clock.tick(500);
 				doneFn();
 				expectValue(0.5);
-				clock.restore();
+				clock.uninstall();
 			});
 
 			it('should set to current time', () => {
-				const clock = sinon.useFakeTimers();
+				const clock = lolex.install();
 				instance.setToCurrentTime();
 				expectValue(Date.now());
-				clock.restore();
+				clock.uninstall();
 			});
 
 			it('should not allow non numbers', () => {
@@ -225,26 +225,26 @@ describe('gauge', () => {
 					expectValue(500);
 				});
 				it('should be able to set value to current time', () => {
-					const clock = sinon.useFakeTimers();
+					const clock = lolex.install();
 					instance.labels('200').setToCurrentTime();
 					expectValue(Date.now());
-					clock.restore();
+					clock.uninstall();
 				});
 				it('should be able to start a timer', () => {
-					const clock = sinon.useFakeTimers();
+					const clock = lolex.install();
 					const end = instance.labels('200').startTimer();
 					clock.tick(1000);
 					end();
 					expectValue(1);
-					clock.restore();
+					clock.uninstall();
 				});
 				it('should be able to start a timer and set labels afterwards', () => {
-					const clock = sinon.useFakeTimers();
+					const clock = lolex.install();
 					const end = instance.startTimer();
 					clock.tick(1000);
 					end({ code: 200 });
 					expectValue(1);
-					clock.restore();
+					clock.uninstall();
 				});
 				it('should allow labels before and after timers', () => {
 					instance = new Gauge({
@@ -252,12 +252,12 @@ describe('gauge', () => {
 						help: 'help',
 						labelNames: ['code', 'success']
 					});
-					const clock = sinon.useFakeTimers();
+					const clock = lolex.install();
 					const end = instance.startTimer({ code: 200 });
 					clock.tick(1000);
 					end({ success: 'SUCCESS' });
 					expectValue(1);
-					clock.restore();
+					clock.uninstall();
 				});
 			});
 

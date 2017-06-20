@@ -4,7 +4,7 @@ describe('histogram', () => {
 	const Histogram = require('../index').Histogram;
 	const Registry = require('../index').Registry;
 	const globalRegistry = require('../index').register;
-	const sinon = require('sinon');
+	const lolex = require('lolex');
 	let instance;
 
 	afterEach(() => {
@@ -83,13 +83,13 @@ describe('histogram', () => {
 		});
 
 		it('should time requests', () => {
-			const clock = sinon.useFakeTimers();
+			const clock = lolex.install();
 			const doneFn = instance.startTimer();
 			clock.tick(500);
 			doneFn();
 			const valuePair = getValueByLabel(0.5, instance.get().values);
 			expect(valuePair.value).toEqual(1);
-			clock.restore();
+			clock.uninstall();
 		});
 
 		it('should not allow non numbers', () => {
@@ -160,7 +160,7 @@ describe('histogram', () => {
 			});
 
 			it('should start a timer', () => {
-				const clock = sinon.useFakeTimers();
+				const clock = lolex.install();
 				const end = instance.labels('get').startTimer();
 				clock.tick(500);
 				end();
@@ -171,11 +171,11 @@ describe('histogram', () => {
 					instance.get().values
 				);
 				expect(res.value).toEqual(1);
-				clock.restore();
+				clock.uninstall();
 			});
 
 			it('should start a timer and set labels afterwards', () => {
-				const clock = sinon.useFakeTimers();
+				const clock = lolex.install();
 				const end = instance.startTimer();
 				clock.tick(500);
 				end({ method: 'get' });
@@ -186,7 +186,7 @@ describe('histogram', () => {
 					instance.get().values
 				);
 				expect(res.value).toEqual(1);
-				clock.restore();
+				clock.uninstall();
 			});
 
 			it('should allow labels before and after timers', () => {
@@ -195,7 +195,7 @@ describe('histogram', () => {
 					'Histogram with labels fn',
 					['method', 'success']
 				);
-				const clock = sinon.useFakeTimers();
+				const clock = lolex.install();
 				const end = instance.startTimer({ method: 'get' });
 				clock.tick(500);
 				end({ success: 'SUCCESS' });
@@ -213,7 +213,7 @@ describe('histogram', () => {
 				);
 				expect(res1.value).toEqual(1);
 				expect(res2.value).toEqual(1);
-				clock.restore();
+				clock.uninstall();
 			});
 		});
 	});
@@ -296,13 +296,13 @@ describe('histogram', () => {
 			});
 
 			it('should time requests', () => {
-				const clock = sinon.useFakeTimers();
+				const clock = lolex.install();
 				const doneFn = instance.startTimer();
 				clock.tick(500);
 				doneFn();
 				const valuePair = getValueByLabel(0.5, instance.get().values);
 				expect(valuePair.value).toEqual(1);
-				clock.restore();
+				clock.uninstall();
 			});
 
 			it('should not allow non numbers', () => {
@@ -380,7 +380,7 @@ describe('histogram', () => {
 				});
 
 				it('should start a timer', () => {
-					const clock = sinon.useFakeTimers();
+					const clock = lolex.install();
 					const end = instance.labels('get').startTimer();
 					clock.tick(500);
 					end();
@@ -391,11 +391,11 @@ describe('histogram', () => {
 						instance.get().values
 					);
 					expect(res.value).toEqual(1);
-					clock.restore();
+					clock.uninstall();
 				});
 
 				it('should start a timer and set labels afterwards', () => {
-					const clock = sinon.useFakeTimers();
+					const clock = lolex.install();
 					const end = instance.startTimer();
 					clock.tick(500);
 					end({ method: 'get' });
@@ -406,7 +406,7 @@ describe('histogram', () => {
 						instance.get().values
 					);
 					expect(res.value).toEqual(1);
-					clock.restore();
+					clock.uninstall();
 				});
 
 				it('should allow labels before and after timers', () => {
@@ -415,7 +415,7 @@ describe('histogram', () => {
 						help: 'Histogram with labels fn',
 						labelNames: ['method', 'success']
 					});
-					const clock = sinon.useFakeTimers();
+					const clock = lolex.install();
 					const end = instance.startTimer({ method: 'get' });
 					clock.tick(500);
 					end({ success: 'SUCCESS' });
@@ -433,7 +433,7 @@ describe('histogram', () => {
 					);
 					expect(res1.value).toEqual(1);
 					expect(res2.value).toEqual(1);
-					clock.restore();
+					clock.uninstall();
 				});
 			});
 		});
