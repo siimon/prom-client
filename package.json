@@ -37,8 +37,8 @@
     "husky": "^0.13.4",
     "jest": "^20.0.4",
     "lint-staged": "^4.0.0",
+    "lolex": "^1.6.0",
     "prettier": "^1.4.4",
-    "sinon": "^2.0.0",
     "typescript": "^2.0.3"
   },
   "dependencies": {

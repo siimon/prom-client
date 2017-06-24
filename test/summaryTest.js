@@ -4,7 +4,7 @@ describe('summary', () => {
 	const Summary = require('../index').Summary;
 	const Registry = require('../index').Registry;
 	const globalRegistry = require('../index').register;
-	const sinon = require('sinon');
+	const lolex = require('lolex');
 	let instance;
 
 	describe('global registry', () => {
@@ -186,7 +186,7 @@ describe('summary', () => {
 				});
 
 				it('should start a timer', () => {
-					const clock = sinon.useFakeTimers();
+					const clock = lolex.install();
 					const end = instance.labels('GET', '/test').startTimer();
 					clock.tick(1000);
 					end();
@@ -207,11 +207,11 @@ describe('summary', () => {
 					expect(values[2].labels.endpoint).toEqual('/test');
 					expect(values[2].value).toEqual(1);
 
-					clock.restore();
+					clock.uninstall();
 				});
 
 				it('should start a timer and set labels afterwards', () => {
-					const clock = sinon.useFakeTimers();
+					const clock = lolex.install();
 					const end = instance.startTimer();
 					clock.tick(1000);
 					end({ method: 'GET', endpoint: '/test' });
@@ -232,11 +232,11 @@ describe('summary', () => {
 					expect(values[2].labels.endpoint).toEqual('/test');
 					expect(values[2].value).toEqual(1);
 
-					clock.restore();
+					clock.uninstall();
 				});
 
 				it('should allow labels before and after timers', () => {
-					const clock = sinon.useFakeTimers();
+					const clock = lolex.install();
 					const end = instance.startTimer({ method: 'GET' });
 					clock.tick(1000);
 					end({ endpoint: '/test' });
@@ -257,7 +257,7 @@ describe('summary', () => {
 					expect(values[2].labels.endpoint).toEqual('/test');
 					expect(values[2].value).toEqual(1);
 
-					clock.restore();
+					clock.uninstall();
 				});
 			});
 		});
@@ -442,7 +442,7 @@ describe('summary', () => {
 				});
 
 				it('should start a timer', () => {
-					const clock = sinon.useFakeTimers();
+					const clock = lolex.install();
 					const end = instance.labels('GET', '/test').startTimer();
 					clock.tick(1000);
 					end();
@@ -463,11 +463,11 @@ describe('summary', () => {
 					expect(values[2].labels.endpoint).toEqual('/test');
 					expect(values[2].value).toEqual(1);
 
-					clock.restore();
+					clock.uninstall();
 				});
 
 				it('should start a timer and set labels afterwards', () => {
-					const clock = sinon.useFakeTimers();
+					const clock = lolex.install();
 					const end = instance.startTimer();
 					clock.tick(1000);
 					end({ method: 'GET', endpoint: '/test' });
@@ -488,11 +488,11 @@ describe('summary', () => {
 					expect(values[2].labels.endpoint).toEqual('/test');
 					expect(values[2].value).toEqual(1);
 
-					clock.restore();
+					clock.uninstall();
 				});
 
 				it('should allow labels before and after timers', () => {
-					const clock = sinon.useFakeTimers();
+					const clock = lolex.install();
 					const end = instance.startTimer({ method: 'GET' });
 					clock.tick(1000);
 					end({ endpoint: '/test' });
@@ -513,7 +513,7 @@ describe('summary', () => {
 					expect(values[2].labels.endpoint).toEqual('/test');
 					expect(values[2].value).toEqual(1);
 
-					clock.restore();
+					clock.uninstall();
 				});
 			});
 		});
