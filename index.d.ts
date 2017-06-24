@@ -8,46 +8,52 @@ export class Registry {
 	/**
 	 * Get string representation for all metrics
 	 */
-	metrics(): string
+	metrics(): string;
+
 	/**
 	 * Remove all metrics from the registry
 	 */
-	clear(): void
+	clear(): void;
+
 	/**
 	 * Get all metrics as objects
 	 */
-	getMetricsAsJSON(): metric[]
+	getMetricsAsJSON(): metric[];
+
 	/**
 	 * Remove a single metric
 	 * @param name The name of the metric to remove
 	 */
-	removeSingleMetric(name: string): void
+	removeSingleMetric(name: string): void;
+
 	/**
 	 * Get a single metric
 	 * @param name The name of the metric
 	 */
-	getSingleMetric(name:string): Metric
+	getSingleMetric(name: string): Metric;
+
 	/**
 	 * Get a string representation of a single metric by name
 	 * @param name The name of the metric
 	 */
-	getSingleMetricAsString(name:string): string
+	getSingleMetricAsString(name: string): string;
+
 	/**
-	* Merge registers
-	* @param registers The registers you want to merge together
-	*/
-	static merge(registers: Registry[]): Registry
+	 * Merge registers
+	 * @param registers The registers you want to merge together
+	 */
+	static merge(registers: Registry[]): Registry;
 }
 
 /**
  * The register that contains all metrics
  */
-export const register: Registry
+export const register: Registry;
 
 /**
-* General metric type
-*/
-export type Metric = Counter | Gauge | Summary | Histogram
+ * General metric type
+ */
+export type Metric = Counter | Gauge | Summary | Histogram;
 
 export enum MetricType {
 	Counter,
@@ -57,37 +63,37 @@ export enum MetricType {
 }
 
 interface metric {
-	name: string,
-	help: string,
-	type: MetricType
+	name: string;
+	help: string;
+	type: MetricType;
 }
+
 interface labelValues {
-	[key: string]: string|number
+	[key: string]: string | number;
 }
 
 export interface CounterConfiguration {
-	name: string,
-	help: string,
-	labelNames?: string [],
-	registers?: Registry[]
+	name: string;
+	help: string;
+	labelNames?: string[];
+	registers?: Registry[];
 }
 
 /**
  * A counter is a cumulative metric that represents a single numerical value that only ever goes up
  */
 export class Counter {
-
 	/**
 	 * @param configuration Configuration when creating a Counter metric. Name and Help is required.
 	 */
-	constructor(configuration: CounterConfiguration)
+	constructor(configuration: CounterConfiguration);
 
 	/**
 	 * @param name The name of the metric
 	 * @param help Help description
 	 * @param labels Label keys
 	 */
-	constructor(name: string, help: string, labels?: string[])
+	constructor(name: string, help: string, labels?: string[]);
 
 	/**
 	 * Increment for given labels
@@ -95,23 +101,22 @@ export class Counter {
 	 * @param value The number to increment with
 	 * @param timestamp Timestamp to associate the time series with
 	 */
-	inc(labels: labelValues, value?: number, timestamp?: number|Date): void
+	inc(labels: labelValues, value?: number, timestamp?: number | Date): void;
 
 	/**
 	 * Increment with value
 	 * @param value The value to increment with
 	 * @param timestamp Timestamp to associate the time series with
 	 */
-	inc(value?: number, timestamp?: number|Date): void
+	inc(value?: number, timestamp?: number | Date): void;
 
 	/**
 	 * Return the child for given labels
 	 * @param values Label values
 	 * @return Configured counter with given labels
 	 */
-	labels(...values: string[]): Counter.Internal
+	labels(...values: string[]): Counter.Internal;
 }
-
 
 export namespace Counter {
 	interface Internal {
@@ -120,34 +125,32 @@ export namespace Counter {
 		 * @param value The value to increment with
 		 * @param timestamp Timestamp to associate the time series with
 		 */
-		inc(value?: number, timestamp?: number|Date): void
+		inc(value?: number, timestamp?: number | Date): void;
 	}
-
 }
 
-export interface GaugeConfiguration{
-	name: string,
-	help: string,
-	labelNames?: string[],
-	registers?: Registry[]
+export interface GaugeConfiguration {
+	name: string;
+	help: string;
+	labelNames?: string[];
+	registers?: Registry[];
 }
 
 /**
-	A gauge is a metric that represents a single numerical value that can arbitrarily go up and down.
-*/
+ * A gauge is a metric that represents a single numerical value that can arbitrarily go up and down.
+ */
 export class Gauge {
-
 	/**
 	 * @param configuration Configuration when creating a Gauge metric. Name and Help is mandatory
 	 */
-	constructor(configuration: GaugeConfiguration)
+	constructor(configuration: GaugeConfiguration);
 
 	/**
 	 * @param name The name of the metric
 	 * @param help Help description
 	 * @param labels Label keys
 	 */
-	constructor(name: string, help: string, labels?: string[])
+	constructor(name: string, help: string, labels?: string[]);
 
 	/**
 	 * Increment gauge for given labels
@@ -155,14 +158,14 @@ export class Gauge {
 	 * @param value The value to increment with
 	 * @param timestamp Timestamp to associate the time series with
 	 */
-	inc(labels: labelValues, value?: number, timestamp?: number|Date): void
+	inc(labels: labelValues, value?: number, timestamp?: number | Date): void;
 
 	/**
 	 * Increment gauge
 	 * @param value The value to increment with
 	 * @param timestamp Timestamp to associate the time series with
 	 */
-	inc(value?: number, timestamp?: number|Date): void
+	inc(value?: number, timestamp?: number | Date): void;
 
 	/**
 	 * Decrement gauge
@@ -170,15 +173,14 @@ export class Gauge {
 	 * @param value Value to decrement with
 	 * @param timestamp Timestamp to associate the time series with
 	 */
-	dec(labels: labelValues, value?: number, timestamp?: number|Date): void
+	dec(labels: labelValues, value?: number, timestamp?: number | Date): void;
 
 	/**
 	 * Decrement gauge
 	 * @param value The value to decrement with
 	 * @param timestamp Timestamp to associate the time series with
 	 */
-	dec(value?: number, timestamp?: number|Date): void
-
+	dec(value?: number, timestamp?: number | Date): void;
 
 	/**
 	 * Set gauge value for labels
@@ -186,34 +188,34 @@ export class Gauge {
 	 * @param value The value to set
 	 * @param timestamp Timestamp to associate the time series with
 	 */
-	set(labels: labelValues, value: number, timestamp?: number|Date): void
+	set(labels: labelValues, value: number, timestamp?: number | Date): void;
 
 	/**
 	 * Set gauge value
 	 * @param value The value to set
 	 * @param timestamp Timestamp to associate the time series with
 	 */
-	set(value: number, timestamp?: number|Date): void
+	set(value: number, timestamp?: number | Date): void;
 
 	/**
 	 * Set gauge value to current epoch time in ms
 	 * @param labels Object with label keys and values
 	 */
-	setToCurrentTime(labels?: labelValues): void
+	setToCurrentTime(labels?: labelValues): void;
 
 	/**
 	 * Start a timer where the gauges value will be the duration in seconds
 	 * @param labels Object with label keys and values
 	 * @return Function to invoke when timer should be stopped
 	 */
-	startTimer(labels?: labelValues): (labels?: labelValues) => void
+	startTimer(labels?: labelValues): (labels?: labelValues) => void;
 
 	/**
 	 * Return the child for given labels
 	 * @param values Label values
 	 * @return Configured gauge with given labels
 	 */
-	labels(...values: string[]): Gauge.Internal
+	labels(...values: string[]): Gauge.Internal;
 }
 
 export namespace Gauge {
@@ -223,52 +225,51 @@ export namespace Gauge {
 		 * @param value The value to increment with
 		 * @param timestamp Timestamp to associate the time series with
 		 */
-		inc(value?: number, timestamp?: number|Date): void
+		inc(value?: number, timestamp?: number | Date): void;
 
 		/**
 		 * Decrement with value
 		 * @param value The value to decrement with
 		 * @param timestamp Timestamp to associate the time series with
 		 */
-		dec(value?: number, timestamp?: number|Date): void
+		dec(value?: number, timestamp?: number | Date): void;
 
 		/**
 		 * Set gauges value
 		 * @param value The value to set
 		 * @param timestamp Timestamp to associate the time series with
 		 */
-		set(value: number, timestamp?: number|Date): void
+		set(value: number, timestamp?: number | Date): void;
 
 		/**
-	 	 * Set gauge value to current epoch time in ms
+		 * Set gauge value to current epoch time in ms
 		 */
-		setToCurrentTime(): void
+		setToCurrentTime(): void;
 
 		/**
 		 * Start a timer where the gauges value will be the duration in seconds
 		 * @return Function to invoke when timer should be stopped
 		 */
-		startTimer(): (labels?: labelValues) => void
+		startTimer(): (labels?: labelValues) => void;
 	}
 }
 
 export interface HistogramConfiguration {
-	name: string,
-	help: string,
-	labelNames?: string[],
-	buckets?: number[],
-	registers?: Registry[]
+	name: string;
+	help: string;
+	labelNames?: string[];
+	buckets?: number[];
+	registers?: Registry[];
 }
 
 /**
  * A histogram samples observations (usually things like request durations or response sizes) and counts them in configurable buckets
  */
 export class Histogram {
-
 	/**
 	 * @param configuration Configuration when creating the Histogram. Name and Help is mandatory
 	 */
-	constructor(configuration: HistogramConfiguration)
+	constructor(configuration: HistogramConfiguration);
 
 	/**
 	 * @param name The name of metric
@@ -276,41 +277,49 @@ export class Histogram {
 	 * @param labels Label keys
 	 * @param config Configuration object for Histograms
 	 */
-	constructor(name: string, help: string, labels?: string[], config?: Histogram.Config)
+	constructor(
+		name: string,
+		help: string,
+		labels?: string[],
+		config?: Histogram.Config
+	);
 	/**
 	 * @param name The name of metric
 	 * @param help Help description
 	 * @param config Configuration object for Histograms
 	 */
-	constructor(name: string, help: string, config: Histogram.Config)
+	constructor(name: string, help: string, config: Histogram.Config);
 
 	/**
 	 * Observe value
 	 * @param value The value to observe
 	 */
-	observe(value: number): void
+	observe(value: number): void;
 	/**
 	 * Observe value for given labels
 	 * @param labels Object with label keys and values
 	 * @param value The value to observe
 	 */
-	observe(labels: labelValues, value: number): void
+	observe(labels: labelValues, value: number): void;
+
 	/**
 	 * Start a timer where the value in seconds will observed
 	 * @param labels Object with label keys and values
 	 * @return Function to invoke when timer should be stopped
 	 */
-	startTimer(labels?: labelValues): (labels?: labelValues) => void
+	startTimer(labels?: labelValues): (labels?: labelValues) => void;
+
 	/**
 	 * Reset histogram values
 	 */
-	reset(): void
+	reset(): void;
+
 	/**
 	 * Return the child for given labels
 	 * @param values Label values
 	 * @return Configured histogram with given labels
 	 */
-	labels(...values: string[]): Histogram.Internal
+	labels(...values: string[]): Histogram.Internal;
 }
 
 export namespace Histogram {
@@ -319,40 +328,40 @@ export namespace Histogram {
 		 * Observe value
 		 * @param value The value to observe
 		 */
-		observe(value: number): void
+		observe(value: number): void;
+
 		/**
 		 * Start a timer where the value in seconds will observed
 		 * @param labels Object with label keys and values
 		 * @return Function to invoke when timer should be stopped
 		 */
-		startTimer(): (labels?: labelValues) => void
+		startTimer(): (labels?: labelValues) => void;
 	}
 
 	interface Config {
 		/**
 		 * Buckets used in the histogram
 		 */
-		buckets?: number[]
+		buckets?: number[];
 	}
 }
 
-export interface SummaryConfiguration{
-	name: string,
-	help: string,
-	labelNames?: string[]
-	percentiles?: number[],
-	registers?: Registry[]
+export interface SummaryConfiguration {
+	name: string;
+	help: string;
+	labelNames?: string[];
+	percentiles?: number[];
+	registers?: Registry[];
 }
 
 /**
  * A summary samples observations
  */
 export class Summary {
-
 	/**
 	 * @param configuration Configuration when creating Summary metric. Name and Help is mandatory
 	 */
-	constructor(configuration: SummaryConfiguration)
+	constructor(configuration: SummaryConfiguration);
 
 	/**
 	 * @param name The name of the metric
@@ -360,42 +369,49 @@ export class Summary {
 	 * @param labels Label keys
 	 * @param config Configuration object
 	 */
-	constructor(name: string, help: string, labels?: string[], config?: Summary.Config)
+	constructor(
+		name: string,
+		help: string,
+		labels?: string[],
+		config?: Summary.Config
+	);
 	/**
 	 * @param name The name of the metric
 	 * @param help Help description
 	 * @param config Configuration object
 	 */
-	constructor(name: string, help: string, config: Summary.Config)
+	constructor(name: string, help: string, config: Summary.Config);
 
 	/**
 	 * Observe value in summary
 	 * @param value The value to observe
 	 */
-	observe(value: number): void
+	observe(value: number): void;
 	/**
 	 * Observe value for given labels
 	 * @param labels Object with label keys and values
 	 * @param value Value to observe
 	 */
-	observe(labels: labelValues, value: number): void
+	observe(labels: labelValues, value: number): void;
+
 	/**
 	 * Start a timer where the value in seconds will observed
 	 * @param labels Object with label keys and values
 	 * @return Function to invoke when timer should be stopped
 	 */
-	startTimer(labels?: labelValues): (labels?: labelValues) => void
+	startTimer(labels?: labelValues): (labels?: labelValues) => void;
+
 	/**
 	 * Reset all values in the summary
 	 */
-	reset(): void
+	reset(): void;
 
 	/**
 	 * Return the child for given labels
 	 * @param values Label values
 	 * @return Configured summary with given labels
 	 */
-	labels(...values: string[]): Summary.Internal
+	labels(...values: string[]): Summary.Internal;
 }
 
 export namespace Summary {
@@ -404,20 +420,21 @@ export namespace Summary {
 		 * Observe value in summary
 		 * @param value The value to observe
 		 */
-		observe(value: number): void
+		observe(value: number): void;
+
 		/**
 		 * Start a timer where the value in seconds will observed
 		 * @param labels Object with label keys and values
 		 * @return Function to invoke when timer should be stopped
 		 */
-		startTimer(): (labels?: labelValues) => void
+		startTimer(): (labels?: labelValues) => void;
 	}
 
 	interface Config {
 		/**
 		 * Configurable percentiles, values should never be greater than 1
 		 */
-		percentiles?: number[]
+		percentiles?: number[];
 	}
 }
 
@@ -430,26 +447,37 @@ export class Pushgateway {
 	 * @param options Options
 	 * @param registry Registry
 	 */
-	constructor(url: string, options?: any, registry?: Registry)
+	constructor(url: string, options?: any, registry?: Registry);
 
 	/**
 	 * Add metric and overwrite old ones
 	 * @param params Push parameters
 	 * @param callback Callback when request is complete
 	 */
-	pushAdd(params: Pushgateway.Parameters, callback: (error?: Error, httpResponse?: any, body?: any) => void): void;
+	pushAdd(
+		params: Pushgateway.Parameters,
+		callback: (error?: Error, httpResponse?: any, body?: any) => void
+	): void;
+
 	/**
 	 * Overwrite all metric (using PUT to Pushgateway)
 	 * @param params Push parameters
 	 * @param callback Callback when request is complete
 	 */
-	push(params: Pushgateway.Parameters, callback: (error?: Error, httpResponse?: any, body?: any) => void): void;
+	push(
+		params: Pushgateway.Parameters,
+		callback: (error?: Error, httpResponse?: any, body?: any) => void
+	): void;
+
 	/**
 	 * Delete all metrics for jobName
 	 * @param params Push parameters
 	 * @param callback Callback when request is complete
 	 */
-	delete(params: Pushgateway.Parameters, callback: (error?: Error, httpResponse?: any, body?: any) => void): void;
+	delete(
+		params: Pushgateway.Parameters,
+		callback: (error?: Error, httpResponse?: any, body?: any) => void
+	): void;
 }
 
 export namespace Pushgateway {
@@ -457,13 +485,13 @@ export namespace Pushgateway {
 		/**
 		 * Jobname that is pushing the metric
 		 */
-		jobName: string,
+		jobName: string;
 		/**
 		 * Label sets used in the url when making a request to the Pushgateway,
 		 */
 		groupings?: {
-			[key: string]: string
-		}
+			[key: string]: string;
+		};
 	}
 }
 
@@ -474,7 +502,12 @@ export namespace Pushgateway {
  * @param count The number of items in array
  * @return An array with the requested number of elements
  */
-export function linearBuckets(start: number, width: number, count: number): number[]
+export function linearBuckets(
+	start: number,
+	width: number,
+	count: number
+): number[];
+
 /**
  * Create an array that grows exponentially
  * @param start The first value in the array
@@ -482,23 +515,28 @@ export function linearBuckets(start: number, width: number, count: number): numb
  * @param count The number of items in array
  * @return An array with the requested number of elements
  */
-export function exponentialBuckets(start: number, factor: number, count: number): number[]
+export function exponentialBuckets(
+	start: number,
+	factor: number,
+	count: number
+): number[];
+
 /**
  * Configure default metrics
  * @param interval The interval how often the default metrics should be probed
  * @return The setInterval number
  */
-export function collectDefaultMetrics(interval: number): number
+export function collectDefaultMetrics(interval: number): number;
 
 /**
  * Configure default metrics
  * @return The setInterval number
  */
-export function collectDefaultMetrics(): number
+export function collectDefaultMetrics(): number;
 
 export interface defaultMetrics {
 	/**
 	 * All available default metrics
 	 */
-	metricsList: string[]
+	metricsList: string[];
 }
