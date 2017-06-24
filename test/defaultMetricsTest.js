@@ -2,6 +2,7 @@
 
 describe('collectDefaultMetrics', () => {
 	const register = require('../index').register;
+	const Registry = require('../index').Registry;
 	const collectDefaultMetrics = require('../index').collectDefaultMetrics;
 	let platform;
 	let cpuUsage;
@@ -72,6 +73,20 @@ describe('collectDefaultMetrics', () => {
 			};
 
 			expect(fn).not.toThrowError(Error);
+		});
+	});
+
+	describe('custom registry', () => {
+		it('should allow to register metrics to custom registry', () => {
+			const registry = new Registry();
+
+			expect(register.getMetricsAsJSON()).toHaveLength(0);
+			expect(registry.getMetricsAsJSON()).toHaveLength(0);
+
+			interval = collectDefaultMetrics({ register: registry });
+
+			expect(register.getMetricsAsJSON()).toHaveLength(0);
+			expect(registry.getMetricsAsJSON()).not.toHaveLength(0);
 		});
 	});
 });

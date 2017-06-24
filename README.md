@@ -23,8 +23,9 @@ NOTE: Some of the metrics, concerning File Descriptors and Memory, are only avai
 In addition, some Node-specific metrics are included, such as event loop lag, active handles and Node.js version. See what metrics there are in
 [lib/metrics](lib/metrics).
 
-The function returned from `collectDefaultMetrics` takes 1 option, a timeout for how often the probe should
-be fired. By default probes are launched every 10 seconds, but this can be modified like this:
+`collectDefaultMetrics` takes 1 options object with 2 entries, a timeout for how often the probe should be fired and a
+registry to which metrics should be registered. By default probes are launched every 10 seconds, but this can be
+modified like this:
 
 ```js
 const client = require('prom-client');
@@ -32,7 +33,19 @@ const client = require('prom-client');
 const collectDefaultMetrics = client.collectDefaultMetrics;
 
 // Probe every 5th second.
-collectDefaultMetrics(5000);
+collectDefaultMetrics({ timeout: 5000 });
+````
+
+To register metrics to another registry, pass it in as `register`:
+
+```js
+const client = require('prom-client');
+
+const collectDefaultMetrics = client.collectDefaultMetrics;
+const Registry = client.Registry;
+const register = new Registry();
+
+collectDefaultMetrics({ register });
 ````
 
 You can get the full list of metrics by inspecting `client.collectDefaultMetrics.metricsList`.
