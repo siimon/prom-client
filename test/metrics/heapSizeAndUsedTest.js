@@ -2,12 +2,12 @@
 
 describe('heapSizeAndUsed', () => {
 	const heapSizeAndUsed = require('../../lib/metrics/heapSizeAndUsed');
-	const register = require('../../lib/register');
+	const globalRegistry = require('../../lib/registry').globalRegistry;
 	const memoryUsedFn = process.memoryUsage;
 
 	afterEach(() => {
 		process.memoryUsage = memoryUsedFn;
-		register.clear();
+		globalRegistry.clear();
 	});
 
 	it('should return an empty function if memoryUsed does not exist', () => {

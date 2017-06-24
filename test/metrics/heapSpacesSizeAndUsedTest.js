@@ -46,14 +46,14 @@ jest.mock('v8', () => {
 
 describe('heapSpacesSizeAndUsed', () => {
 	let heapSpacesSizeAndUsed;
-	const register = require('../../lib/register');
+	const globalRegistry = require('../../lib/registry').globalRegistry;
 
 	beforeEach(() => {
 		heapSpacesSizeAndUsed = require('../../lib/metrics/heapSpacesSizeAndUsed');
 	});
 
 	afterEach(() => {
-		register.clear();
+		globalRegistry.clear();
 	});
 
 	it('should set total heap spaces size gauges with from v8', () => {
