@@ -232,7 +232,7 @@ const mergedRegistries = client.Registry.merge([registry, client.register]);
 
 You can get all metrics by running `register.metrics()`, which will output a string for prometheus to consume.
 
-##### Geting a single metric for Prometheus displaying
+##### Getting a single metric for Prometheus displaying
 
 If you need to output a single metric for Prometheus, you can use `register.getSingleMetricAsString(*name of metric*)`, it will output a string for Prometheus to consume.
 
@@ -251,7 +251,7 @@ It is possible to push metrics via a [Pushgateway](https://github.com/prometheus
 
 ```js
 const client = require('prom-client');
-const gateway = new client.Pushgateway('http://127.0.0.1:9091');
+let gateway = new client.Pushgateway('http://127.0.0.1:9091');
 
 gateway.pushAdd({ jobName: 'test' }, function(err, resp, body) { }); //Add metric and overwrite old ones
 gateway.push({ jobName: 'test' }, function(err, resp, body) { }); //Overwrite all metrics (use PUT)
