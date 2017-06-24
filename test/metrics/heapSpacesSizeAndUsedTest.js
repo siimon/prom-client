@@ -2,43 +2,45 @@
 
 jest.mock('v8', () => {
 	return {
-		getHeapSpaceStatistics: jest.fn().mockReturnValue([
-			{
-				space_name: 'new_space',
-				space_size: 100,
-				space_used_size: 50,
-				space_available_size: 500,
-				physical_space_size: 100
-			},
-			{
-				space_name: 'old_space',
-				space_size: 100,
-				space_used_size: 50,
-				space_available_size: 500,
-				physical_space_size: 100
-			},
-			{
-				space_name: 'code_space',
-				space_size: 100,
-				space_used_size: 50,
-				space_available_size: 500,
-				physical_space_size: 100
-			},
-			{
-				space_name: 'map_space',
-				space_size: 100,
-				space_used_size: 50,
-				space_available_size: 500,
-				physical_space_size: 100
-			},
-			{
-				space_name: 'large_object_space',
-				space_size: 100,
-				space_used_size: 50,
-				space_available_size: 500,
-				physical_space_size: 100
-			}
-		])
+		getHeapSpaceStatistics() {
+			return [
+				{
+					space_name: 'new_space',
+					space_size: 100,
+					space_used_size: 50,
+					space_available_size: 500,
+					physical_space_size: 100
+				},
+				{
+					space_name: 'old_space',
+					space_size: 100,
+					space_used_size: 50,
+					space_available_size: 500,
+					physical_space_size: 100
+				},
+				{
+					space_name: 'code_space',
+					space_size: 100,
+					space_used_size: 50,
+					space_available_size: 500,
+					physical_space_size: 100
+				},
+				{
+					space_name: 'map_space',
+					space_size: 100,
+					space_used_size: 50,
+					space_available_size: 500,
+					physical_space_size: 100
+				},
+				{
+					space_name: 'large_object_space',
+					space_size: 100,
+					space_used_size: 50,
+					space_available_size: 500,
+					physical_space_size: 100
+				}
+			];
+		}
 	};
 });
 
