@@ -2,7 +2,7 @@
 
 const express = require('express');
 const server = express();
-const register = require('../lib/register');
+const register = require('../lib/registry').globalRegistry;
 
 const Histogram = require('../').Histogram;
 const h = new Histogram({
