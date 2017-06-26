@@ -59,9 +59,27 @@ describe('register', () => {
 		expect(actual).toHaveLength(4);
 	});
 
-	describe('should escape', () => {
-		let escapedResult;
-		beforeEach(() => {
+	it('should handle a metric with default labels', function() {
+		register.setDefaultLabels({'testLabel':'testValue'});
+		register.registerMetric({
+			get: function() {
+				return {
+					name: 'test_metric',
+					type: 'counter',
+					help: 'A test metric',
+					values: [ {
+						value: 1
+					}]
+				};
+			}
+		});
+		var actual = register.metrics().split('\n');
+		expect(actual).to.have.length(4);
+	});
+
+	describe('should escape', function() {
+		var escapedResult;
+		beforeEach(function() {
 			register.registerMetric({
 				get() {
 					return {
