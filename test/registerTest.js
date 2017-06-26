@@ -55,55 +55,55 @@ describe('register', () => {
 				};
 			}
 		});
-		const actual = register.metrics().split('\n');
-		expect(actual).toHaveLength(4);
+		expect(register.metrics().split('\n')).toHaveLength(4);
 	});
 
-	it('should handle a metric with default labels', function() {
-		register.setDefaultLabels({'testLabel':'testValue'});
+	it('should handle a metric with default labels', () => {
+		register.setDefaultLabels({ testLabel: 'testValue' });
 		register.registerMetric({
-			get: function() {
+			get() {
 				return {
 					name: 'test_metric',
 					type: 'counter',
 					help: 'A test metric',
-					values: [ {
-						value: 1
-					}]
+					values: [{ value: 1 }]
 				};
 			}
 		});
 
-		var output = register.metrics().split('\n');
-		expect(output[2]).to.equal('test_metric{testLabel="testValue"} 1');
+		const output = register.metrics().split('\n')[2];
+		expect(output).toEqual('test_metric{testLabel="testValue"} 1');
 	});
 
-	it('labeled metrics should take precidence over defaulted', function() {
-		register.setDefaultLabels({'testLabel':'testValue'});
+	it('labeled metrics should take precidence over defaulted', () => {
+		register.setDefaultLabels({ testLabel: 'testValue' });
 		register.registerMetric({
-			get: function() {
+			get() {
 				return {
 					name: 'test_metric',
 					type: 'counter',
 					help: 'A test metric',
-					values: [ {
-						value: 1,
-						labels: {
-							testLabel:'overlapped',
-							anotherLabel:'value123'
+					values: [
+						{
+							value: 1,
+							labels: {
+								testLabel: 'overlapped',
+								anotherLabel: 'value123'
+							}
 						}
-					}]
+					]
 				};
 			}
 		});
 
-		var output = register.metrics().split('\n');
-		expect(output[2]).to.equal('test_metric{testLabel="overlapped",anotherLabel="value123"} 1');
+		expect(register.metrics().split('\n')[2]).toEqual(
+			'test_metric{testLabel="overlapped",anotherLabel="value123"} 1'
+		);
 	});
 
-	describe('should escape', function() {
-		var escapedResult;
-		beforeEach(function() {
+	describe('should escape', () => {
+		let escapedResult;
+		beforeEach(() => {
 			register.registerMetric({
 				get() {
 					return {
