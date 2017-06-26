@@ -78,6 +78,29 @@ describe('register', () => {
 		expect(output[2]).to.equal('test_metric{testLabel="testValue"} 1');
 	});
 
+	it('labeled metrics should take precidence over defaulted', function() {
+		register.setDefaultLabels({'testLabel':'testValue'});
+		register.registerMetric({
+			get: function() {
+				return {
+					name: 'test_metric',
+					type: 'counter',
+					help: 'A test metric',
+					values: [ {
+						value: 1,
+						labels: {
+							testLabel:'overlapped',
+							anotherLabel:'value123'
+						}
+					}]
+				};
+			}
+		});
+
+		var output = register.metrics().split('\n');
+		expect(output[2]).to.equal('test_metric{testLabel="overlapped",anotherLabel="value123"} 1');
+	});
+
 	describe('should escape', function() {
 		var escapedResult;
 		beforeEach(function() {
