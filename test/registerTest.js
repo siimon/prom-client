@@ -73,8 +73,9 @@ describe('register', () => {
 				};
 			}
 		});
-		var actual = register.metrics().split('\n');
-		expect(actual).to.have.length(4);
+
+		var output = register.metrics().split('\n');
+		expect(output[2]).to.equal('test_metric{testLabel="testValue"} 1');
 	});
 
 	describe('should escape', function() {
