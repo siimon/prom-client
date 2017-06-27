@@ -207,7 +207,7 @@ This will output metrics in the following way:
 process_resident_memory_bytes{serviceName="api-v1"} 33853440 1498510040309
 ```
 
-Default metrics will be overridden if there is a name conflict.
+Default labels will be overridden if there is a name conflict.
 
 `register.clear()` will clear default labels.
 
