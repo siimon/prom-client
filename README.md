@@ -195,8 +195,8 @@ xhrRequest(function(err, res) {
 
 Static labels may be applied to every metric emitted by a registry:
 ```js
-var client = require('prom-client');
-var defaultLabels = { serviceName: "api-v1"};
+const client = require('prom-client');
+const defaultLabels = { serviceName: "api-v1" };
 client.register.setDefaultLabels(defaultLabels);
 ```
 
