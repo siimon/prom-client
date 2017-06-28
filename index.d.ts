@@ -33,10 +33,10 @@ export class Registry {
 	getSingleMetric(name: string): Metric;
 
 	/**
-   * Set static labels to every metric emitted by this registry
-   * @param object of name/value pairs:
-   * { defaultLabel: "value", anotherLabel: "value 2" }
-   */
+	 * Set static labels to every metric emitted by this registry
+	 * @param object of name/value pairs:
+	 * { defaultLabel: "value", anotherLabel: "value 2" }
+	 */
 	setDefaultLabels(labels: Object): void;
 
 	/**
