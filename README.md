@@ -191,6 +191,26 @@ xhrRequest(function(err, res) {
 });
 ```
 
+##### Default Labels (segmented by registry)
+
+Static labels may be applied to every metric emitted by a registry:
+```js
+const client = require('prom-client');
+const defaultLabels = { serviceName: "api-v1" };
+client.register.setDefaultLabels(defaultLabels);
+```
+
+This will output metrics in the following way:
+```
+# HELP process_resident_memory_bytes Resident memory size in bytes.
+# TYPE process_resident_memory_bytes gauge
+process_resident_memory_bytes{serviceName="api-v1"} 33853440 1498510040309
+```
+
+Default labels will be overridden if there is a name conflict.
+
+`register.clear()` will clear default labels.
+
 #### Timestamps
 
 Counter and gauge metrics can take a timestamp argument after the value argument.
