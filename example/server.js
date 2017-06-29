@@ -2,7 +2,7 @@
 
 const express = require('express');
 const server = express();
-const register = require('../lib/registry').globalRegistry;
+const register = require('../').register;
 
 const Histogram = require('../').Histogram;
 const h = new Histogram({
@@ -58,5 +58,6 @@ server.get('/metrics/counter', (req, res) => {
 	res.end(register.getSingleMetricAsString('test_counter'));
 });
 
-console.log('Server listening to 3000, metrics exposed on /metrics endpoint'); //eslint-disable-line no-console
+//eslint-disable-next-line no-console
+console.log('Server listening to 3000, metrics exposed on /metrics endpoint');
 server.listen(3000);
