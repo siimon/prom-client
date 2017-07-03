@@ -99,6 +99,7 @@ export class Counter {
 	 * @param name The name of the metric
 	 * @param help Help description
 	 * @param labels Label keys
+	 * @deprecated
 	 */
 	constructor(name: string, help: string, labels?: string[]);
 
@@ -156,6 +157,7 @@ export class Gauge {
 	 * @param name The name of the metric
 	 * @param help Help description
 	 * @param labels Label keys
+	 * @deprecated
 	 */
 	constructor(name: string, help: string, labels?: string[]);
 
@@ -294,6 +296,7 @@ export class Histogram {
 	 * @param name The name of metric
 	 * @param help Help description
 	 * @param config Configuration object for Histograms
+	 * @deprecated
 	 */
 	constructor(name: string, help: string, config: Histogram.Config);
 
@@ -386,6 +389,7 @@ export class Summary {
 	 * @param name The name of the metric
 	 * @param help Help description
 	 * @param config Configuration object
+	 * @deprecated
 	 */
 	constructor(name: string, help: string, config: Summary.Config);
 
