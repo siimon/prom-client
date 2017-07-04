@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 ### Breaking
+### Added
+### Changed
+
+## [10.0.0] - 2017-07-04
+### Breaking
 - Print deprecation warning when metrics are constructed using non-objects
 - Print deprecation warning when `collectDefaultMetrics` is called with a number
 ### Added
@@ -43,7 +48,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Creating metrics with one argument per parameter - use object literals instead.
 
 
-[Unreleased]: https://github.com/siimon/prom-client/compare/v9.1.1...HEAD
+[Unreleased]: https://github.com/siimon/prom-client/compare/v10.0.0...HEAD
+[10.0.0]: https://github.com/siimon/prom-client/compare/v9.1.1...v10.0.0
 [9.1.1]: https://github.com/siimon/prom-client/compare/v9.1.0...v9.1.1
 [9.1.0]: https://github.com/siimon/prom-client/compare/v9.0.0...v9.1.0
 [9.0.0]: https://github.com/siimon/prom-client/commit/1ef835f908e1a5032f228bbc754479fe7ccf5201
