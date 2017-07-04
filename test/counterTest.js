@@ -71,7 +71,7 @@ describe('counter', () => {
 					instance.labels('POST', '/test').inc();
 
 					const values = instance.get().values;
-					expect(values).toHaveLength(2);
+					expect(values).toHaveLength(3);
 				});
 
 				it('should handle labels which are provided as arguments to inc()', () => {
@@ -79,7 +79,7 @@ describe('counter', () => {
 					instance.inc({ method: 'POST', endpoint: '/test' });
 
 					const values = instance.get().values;
-					expect(values).toHaveLength(2);
+					expect(values).toHaveLength(3);
 				});
 
 				it('should throw error if label lengths does not match', () => {
@@ -92,7 +92,7 @@ describe('counter', () => {
 				it('should increment label value with provided value', () => {
 					instance.labels('GET', '/test').inc(100);
 					const values = instance.get().values;
-					expect(values[0].value).toEqual(100);
+					expect(values[1].value).toEqual(100);
 				});
 			});
 		});
@@ -143,6 +143,11 @@ describe('counter', () => {
 			instance.inc(0);
 			expect(instance.get().values[0].value).toEqual(0);
 		});
+		it('should init counter to 0', () => {
+			const values = instance.get().values;
+			expect(values).toHaveLength(1);
+			expect(values[0].value).toEqual(0);
+		});
 
 		describe('labels', () => {
 			beforeEach(() => {
@@ -158,7 +163,7 @@ describe('counter', () => {
 				instance.labels('POST', '/test').inc();
 
 				const values = instance.get().values;
-				expect(values).toHaveLength(2);
+				expect(values).toHaveLength(3);
 			});
 
 			it('should handle labels which are provided as arguments to inc()', () => {
@@ -166,7 +171,7 @@ describe('counter', () => {
 				instance.inc({ method: 'POST', endpoint: '/test' });
 
 				const values = instance.get().values;
-				expect(values).toHaveLength(2);
+				expect(values).toHaveLength(3);
 			});
 
 			it('should throw error if label lengths does not match', () => {
@@ -186,7 +191,7 @@ describe('counter', () => {
 			it('should increment label value with provided value', () => {
 				instance.labels('GET', '/test').inc(100);
 				const values = instance.get().values;
-				expect(values[0].value).toEqual(100);
+				expect(values[1].value).toEqual(100);
 			});
 		});
 	});
