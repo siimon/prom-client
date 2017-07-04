@@ -71,20 +71,20 @@ describe('gauge', () => {
 				});
 				it('should be able to increment', () => {
 					instance.labels('200').inc();
-					expectValue(21);
+					expectValueWithLabels(21);
 				});
 				it('should be able to decrement', () => {
 					instance.labels('200').dec();
-					expectValue(19);
+					expectValueWithLabels(19);
 				});
 				it('should be able to set value', () => {
 					instance.labels('200').set(500);
-					expectValue(500);
+					expectValueWithLabels(500);
 				});
 				it('should be able to set value to current time', () => {
 					const clock = lolex.install();
 					instance.labels('200').setToCurrentTime();
-					expectValue(Date.now());
+					expectValueWithLabels(Date.now());
 					clock.uninstall();
 				});
 				it('should be able to start a timer', () => {
@@ -92,7 +92,7 @@ describe('gauge', () => {
 					const end = instance.labels('200').startTimer();
 					clock.tick(1000);
 					end();
-					expectValue(1);
+					expectValueWithLabels(1);
 					clock.uninstall();
 				});
 				it('should be able to start a timer and set labels afterwards', () => {
@@ -100,7 +100,7 @@ describe('gauge', () => {
 					const end = instance.startTimer();
 					clock.tick(1000);
 					end({ code: 200 });
-					expectValue(1);
+					expectValueWithLabels(1);
 					clock.uninstall();
 				});
 				it('should allow labels before and after timers', () => {
@@ -109,7 +109,7 @@ describe('gauge', () => {
 					const end = instance.startTimer({ code: 200 });
 					clock.tick(1000);
 					end({ success: 'SUCCESS' });
-					expectValue(1);
+					expectValueWithLabels(1);
 					clock.uninstall();
 				});
 			});
@@ -121,11 +121,11 @@ describe('gauge', () => {
 				});
 				it('should be able to set value and timestamp as Date', () => {
 					instance.labels('200').set(500, new Date('2017-01-26T01:05Z'));
-					expectValue(500, 1485392700000);
+					expectValueWithLabels(500, 1485392700000);
 				});
 				it('should be able to set value and timestamp as number', () => {
 					instance.labels('200').set(500, 1485392700000);
-					expectValue(500, 1485392700000);
+					expectValueWithLabels(500, 1485392700000);
 				});
 				it('should not allow non numbers', () => {
 					const fn = function() {
@@ -141,11 +141,11 @@ describe('gauge', () => {
 				});
 				it('should be able to increment', () => {
 					instance.labels('200').inc(1, 1485392700000);
-					expectValue(21, 1485392700000);
+					expectValueWithLabels(21, 1485392700000);
 				});
 				it('should be able to decrement', () => {
 					instance.labels('200').dec(1, 1485392700000);
-					expectValue(19, 1485392700000);
+					expectValueWithLabels(19, 1485392700000);
 				});
 			});
 		});
@@ -203,6 +203,14 @@ describe('gauge', () => {
 				expect(fn).toThrowError(Error);
 			});
 
+			it('should init to 0', () => {
+				instance = new Gauge({
+					name: 'init_gauge',
+					help: 'somehelp'
+				});
+				expectValue(0);
+			});
+
 			describe('with labels', () => {
 				beforeEach(() => {
 					instance = new Gauge({
@@ -214,20 +222,20 @@ describe('gauge', () => {
 				});
 				it('should be able to increment', () => {
 					instance.labels('200').inc();
-					expectValue(21);
+					expectValueWithLabels(21);
 				});
 				it('should be able to decrement', () => {
 					instance.labels('200').dec();
-					expectValue(19);
+					expectValueWithLabels(19);
 				});
 				it('should be able to set value', () => {
 					instance.labels('200').set(500);
-					expectValue(500);
+					expectValueWithLabels(500);
 				});
 				it('should be able to set value to current time', () => {
 					const clock = lolex.install();
 					instance.labels('200').setToCurrentTime();
-					expectValue(Date.now());
+					expectValueWithLabels(Date.now());
 					clock.uninstall();
 				});
 				it('should be able to start a timer', () => {
@@ -235,7 +243,7 @@ describe('gauge', () => {
 					const end = instance.labels('200').startTimer();
 					clock.tick(1000);
 					end();
-					expectValue(1);
+					expectValueWithLabels(1);
 					clock.uninstall();
 				});
 				it('should be able to start a timer and set labels afterwards', () => {
@@ -243,7 +251,7 @@ describe('gauge', () => {
 					const end = instance.startTimer();
 					clock.tick(1000);
 					end({ code: 200 });
-					expectValue(1);
+					expectValueWithLabels(1);
 					clock.uninstall();
 				});
 				it('should allow labels before and after timers', () => {
@@ -256,7 +264,7 @@ describe('gauge', () => {
 					const end = instance.startTimer({ code: 200 });
 					clock.tick(1000);
 					end({ success: 'SUCCESS' });
-					expectValue(1);
+					expectValueWithLabels(1);
 					clock.uninstall();
 				});
 			});
@@ -268,11 +276,11 @@ describe('gauge', () => {
 				});
 				it('should be able to set value and timestamp as Date', () => {
 					instance.labels('200').set(500, new Date('2017-01-26T01:05Z'));
-					expectValue(500, 1485392700000);
+					expectValueWithLabels(500, 1485392700000);
 				});
 				it('should be able to set value and timestamp as number', () => {
 					instance.labels('200').set(500, 1485392700000);
-					expectValue(500, 1485392700000);
+					expectValueWithLabels(500, 1485392700000);
 				});
 				it('should not allow non numbers', () => {
 					const fn = function() {
@@ -288,11 +296,11 @@ describe('gauge', () => {
 				});
 				it('should be able to increment', () => {
 					instance.labels('200').inc(1, 1485392700000);
-					expectValue(21, 1485392700000);
+					expectValueWithLabels(21, 1485392700000);
 				});
 				it('should be able to decrement', () => {
 					instance.labels('200').dec(1, 1485392700000);
-					expectValue(19, 1485392700000);
+					expectValueWithLabels(19, 1485392700000);
 				});
 			});
 		});
@@ -339,11 +347,11 @@ describe('gauge', () => {
 			});
 			it('should be able to set value and timestamp as Date', () => {
 				instance.labels('200').set(500, new Date('2017-01-26T01:05Z'));
-				expectValue(500, 1485392700000);
+				expectValueWithLabels(500, 1485392700000);
 			});
 			it('should be able to set value and timestamp as number', () => {
 				instance.labels('200').set(500, 1485392700000);
-				expectValue(500, 1485392700000);
+				expectValueWithLabels(500, 1485392700000);
 			});
 			it('should not allow non numbers', () => {
 				const fn = function() {
@@ -359,11 +367,11 @@ describe('gauge', () => {
 			});
 			it('should be able to increment', () => {
 				instance.labels('200').inc(1, 1485392700000);
-				expectValue(21, 1485392700000);
+				expectValueWithLabels(21, 1485392700000);
 			});
 			it('should be able to decrement', () => {
 				instance.labels('200').dec(1, 1485392700000);
-				expectValue(19, 1485392700000);
+				expectValueWithLabels(19, 1485392700000);
 			});
 		});
 	});
@@ -371,5 +379,10 @@ describe('gauge', () => {
 	function expectValue(val, timestamp) {
 		expect(instance.get().values[0].value).toEqual(val);
 		expect(instance.get().values[0].timestamp).toEqual(timestamp);
+	}
+
+	function expectValueWithLabels(val, timestamp) {
+		expect(instance.get().values[1].value).toEqual(val);
+		expect(instance.get().values[1].timestamp).toEqual(timestamp);
 	}
 });
