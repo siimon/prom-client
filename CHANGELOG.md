@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Breaking
 - Print deprecation warning when metrics are constructed using non-objects
+- Print deprecation warning when `collectDefaultMetrics` is called with a number
 ### Added
 - Ability to set default labels by registry
 - Allow passing in `registry` as second argument to `collectDefaultMetrics` to use that instead of the default registry
