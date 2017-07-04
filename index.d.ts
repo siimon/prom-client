@@ -532,18 +532,27 @@ export function exponentialBuckets(
 	count: number
 ): number[];
 
-/**
- * Configure default metrics
- * @param interval The interval how often the default metrics should be probed
- * @return The setInterval number
- */
-export function collectDefaultMetrics(interval: number): number;
+export interface DefaultMetricsCollectorConfiguration {
+	interval?: number;
+	registry?: Registry;
+}
 
 /**
  * Configure default metrics
+ * @param config Configuration object for default metrics collector
  * @return The setInterval number
  */
-export function collectDefaultMetrics(): number;
+export function collectDefaultMetrics(
+	config?: DefaultMetricsCollectorConfiguration
+): number;
+
+/**
+ * Configure default metrics
+ * @param interval The interval how often the default metrics should be probed
+ * @deprecated
+ * @return The setInterval number
+ */
+export function collectDefaultMetrics(interval: number): number;
 
 export interface defaultMetrics {
 	/**

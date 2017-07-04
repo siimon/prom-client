@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Print deprecation warning when metrics are constructed using non-objects
 ### Added
 - Ability to set default labels by registry
+- Allow passing in `registry` as second argument to `collectDefaultMetrics` to use that instead of the default registry
 ### Changed
 - Convert code base to ES2015 code (node 4)
   - add engines field to package.json
@@ -16,7 +17,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   - Arrow functions over binding or putting `this` in a variable
   - Use template strings
   - `prototype` -> `class`
-
 
 ## [9.1.1] - 2017-06-17
 ### Changed
