@@ -2,6 +2,10 @@
 
 describe('register', () => {
 	const register = require('../index').register;
+	const Counter = require('../index').Counter;
+	const Gauge = require('../index').Gauge;
+	const Histogram = require('../index').Histogram;
+	const Summary = require('../index').Summary;
 
 	beforeEach(() => {
 		register.clear();
@@ -102,11 +106,6 @@ describe('register', () => {
 	});
 
 	it('should output all initialized metrics at value 0', () => {
-		const Counter = require('../index').Counter;
-		const Gauge = require('../index').Gauge;
-		const Histogram = require('../index').Histogram;
-		const Summary = require('../index').Summary;
-
 		new Counter({ name: 'counter', help: 'help' });
 		new Gauge({ name: 'gauge', help: 'help' });
 		new Histogram({ name: 'histogram', help: 'help' });
@@ -116,11 +115,6 @@ describe('register', () => {
 	});
 
 	it('should not output all initialized metrics at value 0 if labels', () => {
-		const Counter = require('../index').Counter;
-		const Gauge = require('../index').Gauge;
-		const Histogram = require('../index').Histogram;
-		const Summary = require('../index').Summary;
-
 		new Counter({ name: 'counter', help: 'help', labelNames: ['label'] });
 		new Gauge({ name: 'gauge', help: 'help', labelNames: ['label'] });
 		new Histogram({ name: 'histogram', help: 'help', labelNames: ['label'] });
