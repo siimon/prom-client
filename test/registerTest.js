@@ -101,6 +101,20 @@ describe('register', () => {
 		);
 	});
 
+	it('should output all initialized metrics at value 0', () => {
+		const Counter = require('../index').Counter;
+		const Gauge = require('../index').Gauge;
+		const Histogram = require('../index').Histogram;
+		const Summary = require('../index').Summary;
+
+		new Counter({ name: 'counter', help: 'help' });
+		new Gauge({ name: 'gauge', help: 'help' });
+		new Histogram({ name: 'histogram', help: 'help' });
+		new Summary({ name: 'summary', help: 'help' });
+
+		expect(register.metrics()).toMatchSnapshot();
+	});
+
 	describe('should escape', () => {
 		let escapedResult;
 		beforeEach(() => {
