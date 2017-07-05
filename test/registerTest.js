@@ -115,6 +115,20 @@ describe('register', () => {
 		expect(register.metrics()).toMatchSnapshot();
 	});
 
+	it('should not output all initialized metrics at value 0 if labels', () => {
+		const Counter = require('../index').Counter;
+		const Gauge = require('../index').Gauge;
+		const Histogram = require('../index').Histogram;
+		const Summary = require('../index').Summary;
+
+		new Counter({ name: 'counter', help: 'help', labelNames: ['label'] });
+		new Gauge({ name: 'gauge', help: 'help', labelNames: ['label'] });
+		new Histogram({ name: 'histogram', help: 'help', labelNames: ['label'] });
+		new Summary({ name: 'summary', help: 'help', labelNames: ['label'] });
+
+		expect(register.metrics()).toMatchSnapshot();
+	});
+
 	describe('should escape', () => {
 		let escapedResult;
 		beforeEach(() => {

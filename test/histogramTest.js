@@ -78,8 +78,8 @@ describe('histogram', () => {
 			histogram.observe({ code: '200' }, 1);
 			histogram.observe({ code: '300' }, 1);
 			const values = getValuesByLabel(1, histogram.get().values);
+			expect(values[0].value).toEqual(1);
 			expect(values[1].value).toEqual(1);
-			expect(values[2].value).toEqual(1);
 		});
 
 		it('should time requests', () => {
@@ -291,8 +291,8 @@ describe('histogram', () => {
 				histogram.observe({ code: '200' }, 1);
 				histogram.observe({ code: '300' }, 1);
 				const values = getValuesByLabel(1, histogram.get().values);
+				expect(values[0].value).toEqual(1);
 				expect(values[1].value).toEqual(1);
-				expect(values[2].value).toEqual(1);
 			});
 
 			it('should time requests', () => {

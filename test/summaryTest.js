@@ -152,36 +152,36 @@ describe('summary', () => {
 					instance.labels('POST', '/test').observe(100);
 
 					const values = instance.get().values;
-					expect(values).toHaveLength(9);
-					expect(values[3].labels.method).toEqual('GET');
-					expect(values[3].labels.endpoint).toEqual('/test');
+					expect(values).toHaveLength(6);
+					expect(values[0].labels.method).toEqual('GET');
+					expect(values[0].labels.endpoint).toEqual('/test');
+					expect(values[0].labels.quantile).toEqual(0.9);
+					expect(values[0].value).toEqual(50);
+
+					expect(values[1].metricName).toEqual('summary_test_sum');
+					expect(values[1].labels.method).toEqual('GET');
+					expect(values[1].labels.endpoint).toEqual('/test');
+					expect(values[1].value).toEqual(50);
+
+					expect(values[2].metricName).toEqual('summary_test_count');
+					expect(values[2].labels.method).toEqual('GET');
+					expect(values[2].labels.endpoint).toEqual('/test');
+					expect(values[2].value).toEqual(1);
+
 					expect(values[3].labels.quantile).toEqual(0.9);
-					expect(values[3].value).toEqual(50);
+					expect(values[3].labels.method).toEqual('POST');
+					expect(values[3].labels.endpoint).toEqual('/test');
+					expect(values[3].value).toEqual(100);
 
 					expect(values[4].metricName).toEqual('summary_test_sum');
-					expect(values[4].labels.method).toEqual('GET');
+					expect(values[4].labels.method).toEqual('POST');
 					expect(values[4].labels.endpoint).toEqual('/test');
-					expect(values[4].value).toEqual(50);
+					expect(values[4].value).toEqual(100);
 
 					expect(values[5].metricName).toEqual('summary_test_count');
-					expect(values[5].labels.method).toEqual('GET');
+					expect(values[5].labels.method).toEqual('POST');
 					expect(values[5].labels.endpoint).toEqual('/test');
 					expect(values[5].value).toEqual(1);
-
-					expect(values[6].labels.quantile).toEqual(0.9);
-					expect(values[6].labels.method).toEqual('POST');
-					expect(values[6].labels.endpoint).toEqual('/test');
-					expect(values[6].value).toEqual(100);
-
-					expect(values[7].metricName).toEqual('summary_test_sum');
-					expect(values[7].labels.method).toEqual('POST');
-					expect(values[7].labels.endpoint).toEqual('/test');
-					expect(values[7].value).toEqual(100);
-
-					expect(values[8].metricName).toEqual('summary_test_count');
-					expect(values[8].labels.method).toEqual('POST');
-					expect(values[8].labels.endpoint).toEqual('/test');
-					expect(values[8].value).toEqual(1);
 				});
 
 				it('should throw error if label lengths does not match', () => {
@@ -197,21 +197,21 @@ describe('summary', () => {
 					clock.tick(1000);
 					end();
 					const values = instance.get().values;
-					expect(values).toHaveLength(6);
-					expect(values[3].labels.method).toEqual('GET');
-					expect(values[3].labels.endpoint).toEqual('/test');
-					expect(values[3].labels.quantile).toEqual(0.9);
-					expect(values[3].value).toEqual(1);
+					expect(values).toHaveLength(3);
+					expect(values[0].labels.method).toEqual('GET');
+					expect(values[0].labels.endpoint).toEqual('/test');
+					expect(values[0].labels.quantile).toEqual(0.9);
+					expect(values[0].value).toEqual(1);
 
-					expect(values[4].metricName).toEqual('summary_test_sum');
-					expect(values[4].labels.method).toEqual('GET');
-					expect(values[4].labels.endpoint).toEqual('/test');
-					expect(values[4].value).toEqual(1);
+					expect(values[1].metricName).toEqual('summary_test_sum');
+					expect(values[1].labels.method).toEqual('GET');
+					expect(values[1].labels.endpoint).toEqual('/test');
+					expect(values[1].value).toEqual(1);
 
-					expect(values[5].metricName).toEqual('summary_test_count');
-					expect(values[5].labels.method).toEqual('GET');
-					expect(values[5].labels.endpoint).toEqual('/test');
-					expect(values[5].value).toEqual(1);
+					expect(values[2].metricName).toEqual('summary_test_count');
+					expect(values[2].labels.method).toEqual('GET');
+					expect(values[2].labels.endpoint).toEqual('/test');
+					expect(values[2].value).toEqual(1);
 
 					clock.uninstall();
 				});
@@ -222,21 +222,21 @@ describe('summary', () => {
 					clock.tick(1000);
 					end({ method: 'GET', endpoint: '/test' });
 					const values = instance.get().values;
-					expect(values).toHaveLength(6);
-					expect(values[3].labels.method).toEqual('GET');
-					expect(values[3].labels.endpoint).toEqual('/test');
-					expect(values[3].labels.quantile).toEqual(0.9);
-					expect(values[3].value).toEqual(1);
+					expect(values).toHaveLength(3);
+					expect(values[0].labels.method).toEqual('GET');
+					expect(values[0].labels.endpoint).toEqual('/test');
+					expect(values[0].labels.quantile).toEqual(0.9);
+					expect(values[0].value).toEqual(1);
 
-					expect(values[4].metricName).toEqual('summary_test_sum');
-					expect(values[4].labels.method).toEqual('GET');
-					expect(values[4].labels.endpoint).toEqual('/test');
-					expect(values[4].value).toEqual(1);
+					expect(values[1].metricName).toEqual('summary_test_sum');
+					expect(values[1].labels.method).toEqual('GET');
+					expect(values[1].labels.endpoint).toEqual('/test');
+					expect(values[1].value).toEqual(1);
 
-					expect(values[5].metricName).toEqual('summary_test_count');
-					expect(values[5].labels.method).toEqual('GET');
-					expect(values[5].labels.endpoint).toEqual('/test');
-					expect(values[5].value).toEqual(1);
+					expect(values[2].metricName).toEqual('summary_test_count');
+					expect(values[2].labels.method).toEqual('GET');
+					expect(values[2].labels.endpoint).toEqual('/test');
+					expect(values[2].value).toEqual(1);
 
 					clock.uninstall();
 				});
@@ -247,21 +247,21 @@ describe('summary', () => {
 					clock.tick(1000);
 					end({ endpoint: '/test' });
 					const values = instance.get().values;
-					expect(values).toHaveLength(6);
-					expect(values[3].labels.method).toEqual('GET');
-					expect(values[3].labels.endpoint).toEqual('/test');
-					expect(values[3].labels.quantile).toEqual(0.9);
-					expect(values[3].value).toEqual(1);
+					expect(values).toHaveLength(3);
+					expect(values[0].labels.method).toEqual('GET');
+					expect(values[0].labels.endpoint).toEqual('/test');
+					expect(values[0].labels.quantile).toEqual(0.9);
+					expect(values[0].value).toEqual(1);
 
-					expect(values[4].metricName).toEqual('summary_test_sum');
-					expect(values[4].labels.method).toEqual('GET');
-					expect(values[4].labels.endpoint).toEqual('/test');
-					expect(values[4].value).toEqual(1);
+					expect(values[1].metricName).toEqual('summary_test_sum');
+					expect(values[1].labels.method).toEqual('GET');
+					expect(values[1].labels.endpoint).toEqual('/test');
+					expect(values[1].value).toEqual(1);
 
-					expect(values[5].metricName).toEqual('summary_test_count');
-					expect(values[5].labels.method).toEqual('GET');
-					expect(values[5].labels.endpoint).toEqual('/test');
-					expect(values[5].value).toEqual(1);
+					expect(values[2].metricName).toEqual('summary_test_count');
+					expect(values[2].labels.method).toEqual('GET');
+					expect(values[2].labels.endpoint).toEqual('/test');
+					expect(values[2].value).toEqual(1);
 
 					clock.uninstall();
 				});
@@ -408,36 +408,36 @@ describe('summary', () => {
 					instance.labels('POST', '/test').observe(100);
 
 					const values = instance.get().values;
-					expect(values).toHaveLength(9);
-					expect(values[3].labels.method).toEqual('GET');
-					expect(values[3].labels.endpoint).toEqual('/test');
+					expect(values).toHaveLength(6);
+					expect(values[0].labels.method).toEqual('GET');
+					expect(values[0].labels.endpoint).toEqual('/test');
+					expect(values[0].labels.quantile).toEqual(0.9);
+					expect(values[0].value).toEqual(50);
+
+					expect(values[1].metricName).toEqual('summary_test_sum');
+					expect(values[1].labels.method).toEqual('GET');
+					expect(values[1].labels.endpoint).toEqual('/test');
+					expect(values[1].value).toEqual(50);
+
+					expect(values[2].metricName).toEqual('summary_test_count');
+					expect(values[2].labels.method).toEqual('GET');
+					expect(values[2].labels.endpoint).toEqual('/test');
+					expect(values[2].value).toEqual(1);
+
 					expect(values[3].labels.quantile).toEqual(0.9);
-					expect(values[3].value).toEqual(50);
+					expect(values[3].labels.method).toEqual('POST');
+					expect(values[3].labels.endpoint).toEqual('/test');
+					expect(values[3].value).toEqual(100);
 
 					expect(values[4].metricName).toEqual('summary_test_sum');
-					expect(values[4].labels.method).toEqual('GET');
+					expect(values[4].labels.method).toEqual('POST');
 					expect(values[4].labels.endpoint).toEqual('/test');
-					expect(values[4].value).toEqual(50);
+					expect(values[4].value).toEqual(100);
 
 					expect(values[5].metricName).toEqual('summary_test_count');
-					expect(values[5].labels.method).toEqual('GET');
+					expect(values[5].labels.method).toEqual('POST');
 					expect(values[5].labels.endpoint).toEqual('/test');
 					expect(values[5].value).toEqual(1);
-
-					expect(values[6].labels.quantile).toEqual(0.9);
-					expect(values[6].labels.method).toEqual('POST');
-					expect(values[6].labels.endpoint).toEqual('/test');
-					expect(values[6].value).toEqual(100);
-
-					expect(values[7].metricName).toEqual('summary_test_sum');
-					expect(values[7].labels.method).toEqual('POST');
-					expect(values[7].labels.endpoint).toEqual('/test');
-					expect(values[7].value).toEqual(100);
-
-					expect(values[8].metricName).toEqual('summary_test_count');
-					expect(values[8].labels.method).toEqual('POST');
-					expect(values[8].labels.endpoint).toEqual('/test');
-					expect(values[8].value).toEqual(1);
 				});
 
 				it('should throw error if label lengths does not match', () => {
@@ -453,21 +453,21 @@ describe('summary', () => {
 					clock.tick(1000);
 					end();
 					const values = instance.get().values;
-					expect(values).toHaveLength(6);
-					expect(values[3].labels.method).toEqual('GET');
-					expect(values[3].labels.endpoint).toEqual('/test');
-					expect(values[3].labels.quantile).toEqual(0.9);
-					expect(values[3].value).toEqual(1);
+					expect(values).toHaveLength(3);
+					expect(values[0].labels.method).toEqual('GET');
+					expect(values[0].labels.endpoint).toEqual('/test');
+					expect(values[0].labels.quantile).toEqual(0.9);
+					expect(values[0].value).toEqual(1);
 
-					expect(values[4].metricName).toEqual('summary_test_sum');
-					expect(values[4].labels.method).toEqual('GET');
-					expect(values[4].labels.endpoint).toEqual('/test');
-					expect(values[4].value).toEqual(1);
+					expect(values[1].metricName).toEqual('summary_test_sum');
+					expect(values[1].labels.method).toEqual('GET');
+					expect(values[1].labels.endpoint).toEqual('/test');
+					expect(values[1].value).toEqual(1);
 
-					expect(values[5].metricName).toEqual('summary_test_count');
-					expect(values[5].labels.method).toEqual('GET');
-					expect(values[5].labels.endpoint).toEqual('/test');
-					expect(values[5].value).toEqual(1);
+					expect(values[2].metricName).toEqual('summary_test_count');
+					expect(values[2].labels.method).toEqual('GET');
+					expect(values[2].labels.endpoint).toEqual('/test');
+					expect(values[2].value).toEqual(1);
 
 					clock.uninstall();
 				});
@@ -478,21 +478,21 @@ describe('summary', () => {
 					clock.tick(1000);
 					end({ method: 'GET', endpoint: '/test' });
 					const values = instance.get().values;
-					expect(values).toHaveLength(6);
-					expect(values[3].labels.method).toEqual('GET');
-					expect(values[3].labels.endpoint).toEqual('/test');
-					expect(values[3].labels.quantile).toEqual(0.9);
-					expect(values[3].value).toEqual(1);
+					expect(values).toHaveLength(3);
+					expect(values[0].labels.method).toEqual('GET');
+					expect(values[0].labels.endpoint).toEqual('/test');
+					expect(values[0].labels.quantile).toEqual(0.9);
+					expect(values[0].value).toEqual(1);
 
-					expect(values[4].metricName).toEqual('summary_test_sum');
-					expect(values[4].labels.method).toEqual('GET');
-					expect(values[4].labels.endpoint).toEqual('/test');
-					expect(values[4].value).toEqual(1);
+					expect(values[1].metricName).toEqual('summary_test_sum');
+					expect(values[1].labels.method).toEqual('GET');
+					expect(values[1].labels.endpoint).toEqual('/test');
+					expect(values[1].value).toEqual(1);
 
-					expect(values[5].metricName).toEqual('summary_test_count');
-					expect(values[5].labels.method).toEqual('GET');
-					expect(values[5].labels.endpoint).toEqual('/test');
-					expect(values[5].value).toEqual(1);
+					expect(values[2].metricName).toEqual('summary_test_count');
+					expect(values[2].labels.method).toEqual('GET');
+					expect(values[2].labels.endpoint).toEqual('/test');
+					expect(values[2].value).toEqual(1);
 
 					clock.uninstall();
 				});
@@ -503,21 +503,21 @@ describe('summary', () => {
 					clock.tick(1000);
 					end({ endpoint: '/test' });
 					const values = instance.get().values;
-					expect(values).toHaveLength(6);
-					expect(values[3].labels.method).toEqual('GET');
-					expect(values[3].labels.endpoint).toEqual('/test');
-					expect(values[3].labels.quantile).toEqual(0.9);
-					expect(values[3].value).toEqual(1);
+					expect(values).toHaveLength(3);
+					expect(values[0].labels.method).toEqual('GET');
+					expect(values[0].labels.endpoint).toEqual('/test');
+					expect(values[0].labels.quantile).toEqual(0.9);
+					expect(values[0].value).toEqual(1);
 
-					expect(values[4].metricName).toEqual('summary_test_sum');
-					expect(values[4].labels.method).toEqual('GET');
-					expect(values[4].labels.endpoint).toEqual('/test');
-					expect(values[4].value).toEqual(1);
+					expect(values[1].metricName).toEqual('summary_test_sum');
+					expect(values[1].labels.method).toEqual('GET');
+					expect(values[1].labels.endpoint).toEqual('/test');
+					expect(values[1].value).toEqual(1);
 
-					expect(values[5].metricName).toEqual('summary_test_count');
-					expect(values[5].labels.method).toEqual('GET');
-					expect(values[5].labels.endpoint).toEqual('/test');
-					expect(values[5].value).toEqual(1);
+					expect(values[2].metricName).toEqual('summary_test_count');
+					expect(values[2].labels.method).toEqual('GET');
+					expect(values[2].labels.endpoint).toEqual('/test');
+					expect(values[2].value).toEqual(1);
 
 					clock.uninstall();
 				});

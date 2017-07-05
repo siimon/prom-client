@@ -1,5 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`register should not output all initialized metrics at value 0 if labels 1`] = `
+"# HELP counter help
+# TYPE counter counter
+
+# HELP gauge help
+# TYPE gauge gauge
+
+# HELP histogram help
+# TYPE histogram histogram
+
+# HELP summary help
+# TYPE summary summary
+"
+`;
+
 exports[`register should output all initialized metrics at value 0 1`] = `
 "# HELP counter help
 # TYPE counter counter
