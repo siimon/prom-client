@@ -9,6 +9,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Metrics should be initialized to 0 when there are no labels
 ### Changed
 
+## [10.0.1] - 2017-07-06
+### Breaking
+### Added
+- Metrics should be initialized to 0 when there are no labels
+### Changed
+
 ## [10.0.0] - 2017-07-04
 ### Breaking
 - Print deprecation warning when metrics are constructed using non-objects
