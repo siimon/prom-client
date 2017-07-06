@@ -130,6 +130,12 @@ describe('summary', () => {
 				expect(instance.get().values[2].value).toEqual(0);
 			});
 
+			it('should init to 0', () => {
+				instance.get().values.forEach(percentile => {
+					expect(percentile.value).toEqual(0);
+				});
+			});
+
 			describe('labels', () => {
 				beforeEach(() => {
 					globalRegistry.clear();

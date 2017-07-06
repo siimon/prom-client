@@ -203,6 +203,14 @@ describe('gauge', () => {
 				expect(fn).toThrowError(Error);
 			});
 
+			it('should init to 0', () => {
+				instance = new Gauge({
+					name: 'init_gauge',
+					help: 'somehelp'
+				});
+				expectValue(0);
+			});
+
 			describe('with labels', () => {
 				beforeEach(() => {
 					instance = new Gauge({

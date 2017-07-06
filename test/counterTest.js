@@ -143,6 +143,11 @@ describe('counter', () => {
 			instance.inc(0);
 			expect(instance.get().values[0].value).toEqual(0);
 		});
+		it('should init counter to 0', () => {
+			const values = instance.get().values;
+			expect(values).toHaveLength(1);
+			expect(values[0].value).toEqual(0);
+		});
 
 		describe('labels', () => {
 			beforeEach(() => {

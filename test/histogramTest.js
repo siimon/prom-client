@@ -352,6 +352,12 @@ describe('histogram', () => {
 				expect(valuePair.value).toEqual(undefined);
 			});
 
+			it('should init to 0', () => {
+				instance.get().values.forEach(bucket => {
+					expect(bucket.value).toEqual(0);
+				});
+			});
+
 			describe('labels', () => {
 				beforeEach(() => {
 					instance = new Histogram({

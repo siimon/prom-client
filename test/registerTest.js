@@ -2,6 +2,10 @@
 
 describe('register', () => {
 	const register = require('../index').register;
+	const Counter = require('../index').Counter;
+	const Gauge = require('../index').Gauge;
+	const Histogram = require('../index').Histogram;
+	const Summary = require('../index').Summary;
 
 	beforeEach(() => {
 		register.clear();
@@ -99,6 +103,24 @@ describe('register', () => {
 		expect(register.metrics().split('\n')[2]).toEqual(
 			'test_metric{testLabel="overlapped",anotherLabel="value123"} 1'
 		);
+	});
+
+	it('should output all initialized metrics at value 0', () => {
+		new Counter({ name: 'counter', help: 'help' });
+		new Gauge({ name: 'gauge', help: 'help' });
+		new Histogram({ name: 'histogram', help: 'help' });
+		new Summary({ name: 'summary', help: 'help' });
+
+		expect(register.metrics()).toMatchSnapshot();
+	});
+
+	it('should not output all initialized metrics at value 0 if labels', () => {
+		new Counter({ name: 'counter', help: 'help', labelNames: ['label'] });
+		new Gauge({ name: 'gauge', help: 'help', labelNames: ['label'] });
+		new Histogram({ name: 'histogram', help: 'help', labelNames: ['label'] });
+		new Summary({ name: 'summary', help: 'help', labelNames: ['label'] });
+
+		expect(register.metrics()).toMatchSnapshot();
 	});
 
 	describe('should escape', () => {
