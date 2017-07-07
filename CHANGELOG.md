@@ -6,14 +6,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Breaking
 ### Added
-- Metrics should be initialized to 0 when there are no labels
 ### Changed
 
+## [10.0.2] - 2017-07-07
+### Changed
+- Don't poll default metrics every single tick
+
 ## [10.0.1] - 2017-07-06
-### Breaking
 ### Added
 - Metrics should be initialized to 0 when there are no labels
-### Changed
 
 ## [10.0.0] - 2017-07-04
 ### Breaking
@@ -55,7 +56,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Creating metrics with one argument per parameter - use object literals instead.
 
 
-[Unreleased]: https://github.com/siimon/prom-client/compare/v10.0.0...HEAD
+[Unreleased]: https://github.com/siimon/prom-client/compare/v10.0.2...HEAD
+[10.0.2]: https://github.com/siimon/prom-client/compare/v10.0.1...v10.0.2
+[10.0.1]: https://github.com/siimon/prom-client/compare/v10.0.0...v10.0.1
 [10.0.0]: https://github.com/siimon/prom-client/compare/v9.1.1...v10.0.0
 [9.1.1]: https://github.com/siimon/prom-client/compare/v9.1.0...v9.1.1
 [9.1.0]: https://github.com/siimon/prom-client/compare/v9.0.0...v9.1.0
