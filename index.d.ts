@@ -16,6 +16,12 @@ export class Registry {
 	clear(): void;
 
 	/**
+	 * Register metric to register
+	 * @param metric Metric to add to register
+	 */
+	registerMetric(metric: Metric): void;
+
+	/**
 	 * Get all metrics as objects
 	 */
 	getMetricsAsJSON(): metric[];

@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Breaking
 ### Added
+- Added registerMetric to definitions file
 ### Changed
 
 ## [10.0.2] - 2017-07-07
