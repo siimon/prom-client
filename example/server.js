@@ -58,6 +58,9 @@ server.get('/metrics/counter', (req, res) => {
 	res.end(register.getSingleMetricAsString('test_counter'));
 });
 
+//Enable collection of default metrics
+require('../').collectDefaultMetrics();
+
 //eslint-disable-next-line no-console
 console.log('Server listening to 3000, metrics exposed on /metrics endpoint');
 server.listen(3000);
