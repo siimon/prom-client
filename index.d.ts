@@ -540,7 +540,7 @@ export function exponentialBuckets(
 
 export interface DefaultMetricsCollectorConfiguration {
 	interval?: number;
-	registry?: Registry;
+	register?: Registry;
 }
 
 /**
