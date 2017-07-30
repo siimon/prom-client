@@ -2,13 +2,23 @@
 // Definitions by: Simon Nyberg http://twitter.com/siimon_nyberg
 
 /**
+ * Options pass to Registry.metrics()
+ */
+export interface MetricsOpts {
+	/**
+	 * Whether to include timestamps in the output, defaults to true
+	 */
+	timestamps?: boolean;
+}
+
+/**
  * Container for all registered metrics
  */
 export class Registry {
 	/**
 	 * Get string representation for all metrics
 	 */
-	metrics(): string;
+	metrics(opts?: MetricsOpts): string;
 
 	/**
 	 * Remove all metrics from the registry
