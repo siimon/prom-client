@@ -204,6 +204,16 @@ describe('register', () => {
 		expect(output).toEqual(metric);
 	});
 
+	it('should allow gettings metrics without timestamps', () => {
+		const metric = getMetric();
+		register.registerMetric(metric);
+		const metrics = register.metrics({ timestamps: false });
+
+		expect(metrics.split('\n')[3]).toEqual(
+			'test_metric{label="bye",code="404"} 34'
+		);
+	});
+
 	describe('merging', () => {
 		const Registry = require('../lib/registry');
 		let registryOne;
