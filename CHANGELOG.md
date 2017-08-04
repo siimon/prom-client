@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - Added registerMetric to definitions file
 ### Changed
+- Don't pass timestamps through to pushgateway by default
 
 ## [10.0.2] - 2017-07-07
 ### Changed
