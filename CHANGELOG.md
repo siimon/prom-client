@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Breaking
 ### Added
+### Changed
+
+## [10.0.3] - 2017-08-07
+### Breaking
+### Added
 - Added registerMetric to definitions file
 ### Changed
 - Fixed typing of DefaultMetricsCollectorConfiguration in definitions file
@@ -59,7 +64,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Creating metrics with one argument per parameter - use object literals instead.
 
 
-[Unreleased]: https://github.com/siimon/prom-client/compare/v10.0.2...HEAD
+[Unreleased]: https://github.com/siimon/prom-client/compare/v10.0.3...HEAD
+[10.0.3]: https://github.com/siimon/prom-client/compare/v10.0.2...v10.0.3
 [10.0.2]: https://github.com/siimon/prom-client/compare/v10.0.1...v10.0.2
 [10.0.1]: https://github.com/siimon/prom-client/compare/v10.0.0...v10.0.1
 [10.0.0]: https://github.com/siimon/prom-client/compare/v9.1.1...v10.0.0
