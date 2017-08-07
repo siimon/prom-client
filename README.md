@@ -265,6 +265,8 @@ const mergedRegistries = client.Registry.merge([registry, client.register]);
 
 You can get all metrics by running `register.metrics()`, which will output a string for prometheus to consume.
 
+`register.metrics()` takes an optional object with a `timestamps` field. Setting this to false will strip timestamps from the string.
+
 ##### Getting a single metric for Prometheus displaying
 
 If you need to output a single metric for Prometheus, you can use `register.getSingleMetricAsString(*name of metric*)`, it will output a string for Prometheus to consume.
@@ -281,6 +283,8 @@ You can remove all metrics by calling `register.clear()`. You can also remove a 
 #### Pushgateway
 
 It is possible to push metrics via a [Pushgateway](https://github.com/prometheus/pushgateway).
+
+Note that timestamps will be stripped before the metrics are pushed, since pushgateway >= 0.4 does not accept timestamps.
 
 ```js
 const client = require('prom-client');
