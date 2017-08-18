@@ -34,19 +34,25 @@ describe('counter', () => {
 				const fn = function() {
 					instance.inc(1, 'blah');
 				};
-				expect(fn).toThrowError(Error);
+				expect(fn).toThrowErrorMatchingSnapshot();
 			});
 			it('should not allow invalid date as timestamp', () => {
 				const fn = function() {
 					instance.inc(1, new Date('blah'));
 				};
-				expect(fn).toThrowError(Error);
+				expect(fn).toThrowErrorMatchingSnapshot();
 			});
 			it('should not be possible to decrease a counter', () => {
 				const fn = function() {
 					instance.inc(-100);
 				};
-				expect(fn).toThrowError(Error);
+				expect(fn).toThrowErrorMatchingSnapshot();
+			});
+			it('should throw an error when the value is not a number', () => {
+				const fn = () => {
+					instance.inc('3ms');
+				};
+				expect(fn).toThrowErrorMatchingSnapshot();
 			});
 			it('should handle incrementing with 0', () => {
 				instance.inc(0);
@@ -86,7 +92,7 @@ describe('counter', () => {
 					const fn = function() {
 						instance.labels('GET').inc();
 					};
-					expect(fn).toThrowError(Error);
+					expect(fn).toThrowErrorMatchingSnapshot();
 				});
 
 				it('should increment label value with provided value', () => {
@@ -125,19 +131,25 @@ describe('counter', () => {
 			const fn = function() {
 				instance.inc(1, 'blah');
 			};
-			expect(fn).toThrowError(Error);
+			expect(fn).toThrowErrorMatchingSnapshot();
 		});
 		it('should not allow invalid date as timestamp', () => {
 			const fn = function() {
 				instance.inc(1, new Date('blah'));
 			};
-			expect(fn).toThrowError(Error);
+			expect(fn).toThrowErrorMatchingSnapshot();
 		});
 		it('should not be possible to decrease a counter', () => {
 			const fn = function() {
 				instance.inc(-100);
 			};
-			expect(fn).toThrowError(Error);
+			expect(fn).toThrowErrorMatchingSnapshot();
+		});
+		it('should throw an error when the value is not a number', () => {
+			const fn = () => {
+				instance.inc('3ms');
+			};
+			expect(fn).toThrowErrorMatchingSnapshot();
 		});
 		it('should handle incrementing with 0', () => {
 			instance.inc(0);
@@ -178,14 +190,14 @@ describe('counter', () => {
 				const fn = function() {
 					instance.labels('GET').inc();
 				};
-				expect(fn).toThrowError(Error);
+				expect(fn).toThrowErrorMatchingSnapshot();
 			});
 
 			it('should throw error if label lengths does not match', () => {
 				const fn = function() {
 					instance.labels('GET').inc();
 				};
-				expect(fn).toThrowError(Error);
+				expect(fn).toThrowErrorMatchingSnapshot();
 			});
 
 			it('should increment label value with provided value', () => {

@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`counter global registry with a parameter for each variable labels should throw error if label lengths does not match 1`] = `"Invalid number of arguments"`;
+
+exports[`counter global registry with a parameter for each variable should not allow invalid date as timestamp 1`] = `"Timestamp is not a valid date or number: Invalid Date"`;
+
+exports[`counter global registry with a parameter for each variable should not allow non number as timestamp 1`] = `"Timestamp is not a valid date or number: blah"`;
+
+exports[`counter global registry with a parameter for each variable should not be possible to decrease a counter 1`] = `"It is not possible to decrease a counter"`;
+
+exports[`counter global registry with a parameter for each variable should throw an error when the value is not a number 1`] = `"Value is not a valid number: 3ms"`;
+
+exports[`counter with params as object labels should throw error if label lengths does not match 1`] = `"Invalid number of arguments"`;
+
+exports[`counter with params as object labels should throw error if label lengths does not match 2`] = `"Invalid number of arguments"`;
+
+exports[`counter with params as object should not allow invalid date as timestamp 1`] = `"Timestamp is not a valid date or number: Invalid Date"`;
+
+exports[`counter with params as object should not allow non number as timestamp 1`] = `"Timestamp is not a valid date or number: blah"`;
+
+exports[`counter with params as object should not be possible to decrease a counter 1`] = `"It is not possible to decrease a counter"`;
+
+exports[`counter with params as object should throw an error when the value is not a number 1`] = `"Value is not a valid number: 3ms"`;

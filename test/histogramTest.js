@@ -96,7 +96,7 @@ describe('histogram', () => {
 			const fn = function() {
 				instance.observe('asd');
 			};
-			expect(fn).toThrowError(Error);
+			expect(fn).toThrowErrorMatchingSnapshot();
 		});
 
 		it('should allow custom labels', () => {
@@ -110,7 +110,7 @@ describe('histogram', () => {
 			const fn = function() {
 				new Histogram('name', 'help', ['le']);
 			};
-			expect(fn).toThrowError(Error);
+			expect(fn).toThrowErrorMatchingSnapshot();
 		});
 
 		it('should observe value if outside most upper bound', () => {
@@ -156,7 +156,7 @@ describe('histogram', () => {
 				const fn = function() {
 					instance.labels('get', '500').observe(4);
 				};
-				expect(fn).toThrowError(Error);
+				expect(fn).toThrowErrorMatchingSnapshot();
 			});
 
 			it('should start a timer', () => {
@@ -309,7 +309,7 @@ describe('histogram', () => {
 				const fn = function() {
 					instance.observe('asd');
 				};
-				expect(fn).toThrowError(Error);
+				expect(fn).toThrowErrorMatchingSnapshot();
 			});
 
 			it('should allow custom labels', () => {
@@ -327,7 +327,7 @@ describe('histogram', () => {
 				const fn = function() {
 					new Histogram({ name: 'name', help: 'help', labelNames: ['le'] });
 				};
-				expect(fn).toThrowError(Error);
+				expect(fn).toThrowErrorMatchingSnapshot();
 			});
 
 			it('should observe value if outside most upper bound', () => {
@@ -382,7 +382,7 @@ describe('histogram', () => {
 					const fn = function() {
 						instance.labels('get', '500').observe(4);
 					};
-					expect(fn).toThrowError(Error);
+					expect(fn).toThrowErrorMatchingSnapshot();
 				});
 
 				it('should start a timer', () => {

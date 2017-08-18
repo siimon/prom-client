@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Breaking
 ### Added
+- Include invalid values in the error messages
+
 ### Changed
 
 ## [10.0.3] - 2017-08-07

@@ -61,7 +61,7 @@ describe('gauge', () => {
 				const fn = function() {
 					instance.set('asd');
 				};
-				expect(fn).toThrowError(Error);
+				expect(fn).toThrowErrorMatchingSnapshot();
 			});
 
 			describe('with labels', () => {
@@ -131,13 +131,13 @@ describe('gauge', () => {
 					const fn = function() {
 						instance.labels('200').set(500, 'blah');
 					};
-					expect(fn).toThrowError(Error);
+					expect(fn).toThrowErrorMatchingSnapshot();
 				});
 				it('should not allow invalid dates', () => {
 					const fn = function() {
 						instance.labels('200').set(500, new Date('blah'));
 					};
-					expect(fn).toThrowError(Error);
+					expect(fn).toThrowErrorMatchingSnapshot();
 				});
 				it('should be able to increment', () => {
 					instance.labels('200').inc(1, 1485392700000);
@@ -200,7 +200,7 @@ describe('gauge', () => {
 				const fn = function() {
 					instance.set('asd');
 				};
-				expect(fn).toThrowError(Error);
+				expect(fn).toThrowErrorMatchingSnapshot();
 			});
 
 			it('should init to 0', () => {
@@ -286,13 +286,13 @@ describe('gauge', () => {
 					const fn = function() {
 						instance.labels('200').set(500, 'blah');
 					};
-					expect(fn).toThrowError(Error);
+					expect(fn).toThrowErrorMatchingSnapshot();
 				});
 				it('should not allow invalid dates', () => {
 					const fn = function() {
 						instance.labels('200').set(500, new Date('blah'));
 					};
-					expect(fn).toThrowError(Error);
+					expect(fn).toThrowErrorMatchingSnapshot();
 				});
 				it('should be able to increment', () => {
 					instance.labels('200').inc(1, 1485392700000);
@@ -357,13 +357,13 @@ describe('gauge', () => {
 				const fn = function() {
 					instance.labels('200').set(500, 'blah');
 				};
-				expect(fn).toThrowError(Error);
+				expect(fn).toThrowErrorMatchingSnapshot();
 			});
 			it('should not allow invalid dates', () => {
 				const fn = function() {
 					instance.labels('200').set(500, new Date('blah'));
 				};
-				expect(fn).toThrowError(Error);
+				expect(fn).toThrowErrorMatchingSnapshot();
 			});
 			it('should be able to increment', () => {
 				instance.labels('200').inc(1, 1485392700000);
