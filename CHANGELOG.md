@@ -6,12 +6,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Breaking
 ### Added
-- Include invalid values in the error messages
-
 ### Changed
 
+## [10.0.4] - 2017-08-22
+### Changed
+- Include invalid values in the error messages
+
 ## [10.0.3] - 2017-08-07
-### Breaking
 ### Added
 - Added registerMetric to definitions file
 ### Changed
@@ -66,7 +67,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Creating metrics with one argument per parameter - use object literals instead.
 
 
-[Unreleased]: https://github.com/siimon/prom-client/compare/v10.0.3...HEAD
+[Unreleased]: https://github.com/siimon/prom-client/compare/v10.0.4...HEAD
+[10.0.4]: https://github.com/siimon/prom-client/compare/v10.0.3...v10.0.4
 [10.0.3]: https://github.com/siimon/prom-client/compare/v10.0.2...v10.0.3
 [10.0.2]: https://github.com/siimon/prom-client/compare/v10.0.1...v10.0.2
 [10.0.1]: https://github.com/siimon/prom-client/compare/v10.0.0...v10.0.1
