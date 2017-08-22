@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`summary global registry with a parameter for each variable labels should throw error if label lengths does not match 1`] = `"Invalid number of arguments"`;
+
+exports[`summary global registry with a parameter for each variable should throw an error when the value is not a number 1`] = `"Value is not a valid number: 3ms"`;
+
+exports[`summary global registry with param as object labels should throw error if label lengths does not match 1`] = `"Invalid number of arguments"`;

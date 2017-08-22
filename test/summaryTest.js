@@ -136,6 +136,13 @@ describe('summary', () => {
 				});
 			});
 
+			it('should throw an error when the value is not a number', () => {
+				const fn = () => {
+					instance.observe('3ms');
+				};
+				expect(fn).toThrowErrorMatchingSnapshot();
+			});
+
 			describe('labels', () => {
 				beforeEach(() => {
 					globalRegistry.clear();
@@ -188,7 +195,7 @@ describe('summary', () => {
 					const fn = function() {
 						instance.labels('GET').observe();
 					};
-					expect(fn).toThrowError(Error);
+					expect(fn).toThrowErrorMatchingSnapshot();
 				});
 
 				it('should start a timer', () => {
@@ -444,7 +451,7 @@ describe('summary', () => {
 					const fn = function() {
 						instance.labels('GET').observe();
 					};
-					expect(fn).toThrowError(Error);
+					expect(fn).toThrowErrorMatchingSnapshot();
 				});
 
 				it('should start a timer', () => {
