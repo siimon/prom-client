@@ -2,7 +2,8 @@
   "plugins": ["prettier"],
   "extends": "eslint:recommended",
   "env": {
-	"node": true
+	"node": true,
+	"es6": true
   },
   "parserOptions": {
 	"ecmaVersion": 2015
@@ -55,6 +56,12 @@
 		"no-shadow": "off",
 		"no-unused-expressions": "off"
 	  }
+	},
+	{
+		"files": ["example/**/*.js"],
+		"rules": {
+			"no-console": "off"
+		}
 	}
   ]
 }

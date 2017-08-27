@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Breaking
 ### Added
+- Support aggregating metrics across workers in a Node.js cluster.
 ### Changed
 
 ## [10.0.4] - 2017-08-22

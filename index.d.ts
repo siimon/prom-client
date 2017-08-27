@@ -73,10 +73,48 @@ export class Registry {
  */
 export const register: Registry;
 
+export class AggregatorRegistry extends Registry {
+	/**
+	 * Gets aggregated metrics for all workers. The optional callback and
+	 * returned Promise resolve with the same value; either may be used.
+	 * @param {Function?} callback (err, metrics) => any
+	 * @return {Promise<string>} Promise that resolves with the aggregated
+	 *   metrics.
+	 */
+	clusterMetrics(
+		cb?: (err: Error | null, metrics?: string) => any
+	): Promise<string>;
+
+	/**
+	 * Creates a new Registry instance from an array of metrics that were
+	 * created by `registry.getMetricsAsJSON()`. Metrics are aggregated using
+	 * the method specified by their `aggregator` property, or by summation if
+	 * `aggregator` is undefined.
+	 * @param {Array} metricsArr Array of metrics, each of which created by
+	 *   `registry.getMetricsAsJSON()`.
+	 * @return {Registry} aggregated registry.
+	 */
+	static aggregate(metricsArr: Array<Object>): Registry;
+
+	/**
+	 * Sets the registry or registries to be aggregated. Call from workers to
+	 * use a registry/registries other than the default global registry.
+	 * @param {Array<Registry>|Registry} regs Registry or registries to be
+	 *   aggregated.
+	 * @return {void}
+	 */
+	static setRegistries(regs: Array<Registry> | Registry): void;
+}
+
 /**
  * General metric type
  */
 export type Metric = Counter | Gauge | Summary | Histogram;
+
+/**
+ * Aggregation methods, used for aggregating metrics in a Node.js cluster.
+ */
+export type Aggregator = 'omit' | 'sum' | 'first' | 'min' | 'max' | 'average';
 
 export enum MetricType {
 	Counter,
@@ -89,6 +127,7 @@ interface metric {
 	name: string;
 	help: string;
 	type: MetricType;
+	aggregator: Aggregator;
 }
 
 interface labelValues {
@@ -100,6 +139,7 @@ export interface CounterConfiguration {
 	help: string;
 	labelNames?: string[];
 	registers?: Registry[];
+	aggregator?: Aggregator;
 }
 
 /**
@@ -158,6 +198,7 @@ export interface GaugeConfiguration {
 	help: string;
 	labelNames?: string[];
 	registers?: Registry[];
+	aggregator?: Aggregator;
 }
 
 /**
@@ -285,6 +326,7 @@ export interface HistogramConfiguration {
 	labelNames?: string[];
 	buckets?: number[];
 	registers?: Registry[];
+	aggregator?: Aggregator;
 }
 
 /**
@@ -378,6 +420,7 @@ export interface SummaryConfiguration {
 	labelNames?: string[];
 	percentiles?: number[];
 	registers?: Registry[];
+	aggregator?: Aggregator;
 }
 
 /**
