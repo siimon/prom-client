@@ -4,7 +4,17 @@ A prometheus client for node.js that supports histogram, summaries, gauges and c
 
 ### Usage
 
-See example folder for a sample usage. The library does not bundle any web framework, to expose the metrics just return the metrics() function in the registry.
+See example folder for a sample usage. The library does not bundle any web framework, to expose the metrics just return the `metrics()` function in the registry.
+
+#### Usage with Node.js's `cluster` module
+
+Node.js's `cluster` module spawns multiple processes and hands off socket connections to those workers. Returning metrics from a worker's local registry will only reveal that individual worker's metrics, which is generally undesirable. To solve this, you can aggregate all of the workers' metrics in the master process. See `example/cluster.js` for an example.
+
+Default metrics use sensible aggregation methods. Custom metrics are summed across workers by default. To use a different aggregation method, set the `aggregator` property in the metric config to one of 'sum', 'first', 'min', 'max', 'average' or 'omit'. (See `lib/metrics/version.js` for an example.)
+
+If you need to expose metrics about an individual worker, you can include a value that is unique to the worker (such as the worker ID or process ID) in a label. (See `example/server.js` for an example using `worker_${cluster.worker.id}` as a label value.)
+
+Metrics are aggregated from the global registry by default. To use a different registry, call `client.AggregatorRegistry.setRegistries(registryOrArrayOfRegistries)` from the worker processes.
 
 ### API
 
@@ -248,7 +258,7 @@ You can prevent this by setting last parameter when creating the metric to `fals
 Using non-global registries requires creating Registry instance and adding it inside `registers` inside the configuration object. Alternatively
 you can pass an empty `registers` array and register it manually.
 
-Registry has a merge function that enables you to expose multiple registries on the same endpoint. If the same metric name exists in both registries, an error will be thrown.
+Registry has a `merge` function that enables you to expose multiple registries on the same endpoint. If the same metric name exists in both registries, an error will be thrown.
 
 ```js
 const client = require('prom-client');
@@ -259,6 +269,15 @@ registry.registerMetric(histogram);
 counter.inc();
 
 const mergedRegistries = client.Registry.merge([registry, client.register]);
+```
+
+If you want to use multiple or non-default registries with the Node.js `cluster` module, you will need to set the registry/registries to aggregate from:
+
+```js
+const AggregatorRegistry = client.AggregatorRegistry;
+AggregatorRegistry.setRegistries(registry);
+// or for multiple registries:
+AggregatorRegistry.setRegistries([registry1, registry2]);
 ```
 
 #### Register
@@ -279,6 +298,22 @@ If you need to get a reference to a previously registered metric, you can use `r
 
 You can remove all metrics by calling `register.clear()`. You can also remove a single metric by calling
 `register.removeSingleMetric(*name of metric*)`.
+
+##### Cluster metrics
+
+You can get aggregated metrics for all workers in a node.js cluster with `register.clusterMetrics()`. This method both returns a promise and accepts a callback, both of which resolve with a metrics string suitable for Prometheus to consume.
+
+```js
+register.clusterMetrics()
+	.then(metrics => { /* ... */ })
+	.catch(err => { /* ... */ });
+
+// - or -
+
+register.clusterMetrics((err, metrics) => {
+	// ...
+});
+```
 
 #### Pushgateway
 

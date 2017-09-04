@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+const cluster = require('cluster');
 const server = express();
 const register = require('../').register;
 
@@ -48,6 +49,13 @@ setInterval(() => {
 	g.labels('post', '300').inc();
 }, 100);
 
+if (cluster.isWorker) {
+	// Expose some worker-specific metric as an example
+	setInterval(() => {
+		c.inc({ code: `worker_${cluster.worker.id}` });
+	}, 2000);
+}
+
 server.get('/metrics', (req, res) => {
 	res.set('Content-Type', register.contentType);
 	res.end(register.metrics());
@@ -61,6 +69,5 @@ server.get('/metrics/counter', (req, res) => {
 //Enable collection of default metrics
 require('../').collectDefaultMetrics();
 
-//eslint-disable-next-line no-console
 console.log('Server listening to 3000, metrics exposed on /metrics endpoint');
 server.listen(3000);

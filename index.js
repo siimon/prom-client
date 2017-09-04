@@ -19,3 +19,6 @@ exports.linearBuckets = require('./lib/bucketGenerators').linearBuckets;
 exports.exponentialBuckets = require('./lib/bucketGenerators').exponentialBuckets;
 
 exports.collectDefaultMetrics = require('./lib/defaultMetrics');
+
+exports.aggregators = require('./lib/metricAggregators').aggregators;
+exports.AggregatorRegistry = require('./lib/cluster');
