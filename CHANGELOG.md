@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 ### Breaking
+### Changed
+### Added
+
+## [10.1.0]
+### Breaking
 ### Added
 - Support aggregating metrics across workers in a Node.js cluster.
 ### Changed
