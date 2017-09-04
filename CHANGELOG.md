@@ -71,7 +71,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Creating metrics with one argument per parameter - use object literals instead.
 
 
-[Unreleased]: https://github.com/siimon/prom-client/compare/v10.0.4...HEAD
+[Unreleased]: https://github.com/siimon/prom-client/compare/v10.1.0...HEAD
+[10.1.0]: https://github.com/siimon/prom-client/compare/v10.0.4...v10.1.0
 [10.0.4]: https://github.com/siimon/prom-client/compare/v10.0.3...v10.0.4
 [10.0.3]: https://github.com/siimon/prom-client/compare/v10.0.2...v10.0.3
 [10.0.2]: https://github.com/siimon/prom-client/compare/v10.0.1...v10.0.2
