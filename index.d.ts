@@ -50,7 +50,7 @@ export class Registry {
 
 	/**
 	 * Set static labels to every metric emitted by this registry
-	 * @param object of name/value pairs:
+	 * @param labels of name/value pairs:
 	 * { defaultLabel: "value", anotherLabel: "value 2" }
 	 */
 	setDefaultLabels(labels: Object): void;
@@ -60,6 +60,11 @@ export class Registry {
 	 * @param name The name of the metric
 	 */
 	getSingleMetricAsString(name: string): string;
+
+	/**
+	 * Gets the Content-Type of the metrics for use in the response headers.
+	 */
+	contentType: string;
 
 	/**
 	 * Merge registers
@@ -77,7 +82,7 @@ export class AggregatorRegistry extends Registry {
 	/**
 	 * Gets aggregated metrics for all workers. The optional callback and
 	 * returned Promise resolve with the same value; either may be used.
-	 * @param {Function?} callback (err, metrics) => any
+	 * @param {Function?} cb (err, metrics) => any
 	 * @return {Promise<string>} Promise that resolves with the aggregated
 	 *   metrics.
 	 */
@@ -592,7 +597,7 @@ export function exponentialBuckets(
 ): number[];
 
 export interface DefaultMetricsCollectorConfiguration {
-	interval?: number;
+	timeout?: number;
 	register?: Registry;
 }
 
@@ -607,11 +612,11 @@ export function collectDefaultMetrics(
 
 /**
  * Configure default metrics
- * @param interval The interval how often the default metrics should be probed
- * @deprecated
+ * @param timeout The interval how often the default metrics should be probed
+ * @deprecated A number to defaultMetrics is deprecated, please use \`collectDefaultMetrics({ timeout: ${timeout} })\`.
  * @return The setInterval number
  */
-export function collectDefaultMetrics(interval: number): number;
+export function collectDefaultMetrics(timeout: number): number;
 
 export interface defaultMetrics {
 	/**

@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Breaking
 ### Changed
+- Update TypeScript definitions and JSDoc comments to match JavaScript sources
+
 ### Added
 
 ## [10.1.0] - 2017-09-04
