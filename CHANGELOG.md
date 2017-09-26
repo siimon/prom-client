@@ -6,9 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Breaking
 ### Changed
-- Update TypeScript definitions and JSDoc comments to match JavaScript sources
-
 ### Added
+
+## [10.1.1] - 2017-09-26
+### Changed
+- Update TypeScript definitions and JSDoc comments to match JavaScript sources
+- Fix lexical scope of `arguments` in cluster code
 
 ## [10.1.0] - 2017-09-04
 ### Added
@@ -73,7 +76,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Creating metrics with one argument per parameter - use object literals instead.
 
 
-[Unreleased]: https://github.com/siimon/prom-client/compare/v10.1.0...HEAD
+[Unreleased]: https://github.com/siimon/prom-client/compare/v10.1.1...HEAD
+[10.1.0]: https://github.com/siimon/prom-client/compare/v10.1.0...v10.1.1
 [10.1.0]: https://github.com/siimon/prom-client/compare/v10.0.4...v10.1.0
 [10.0.4]: https://github.com/siimon/prom-client/compare/v10.0.3...v10.0.4
 [10.0.3]: https://github.com/siimon/prom-client/compare/v10.0.2...v10.0.3
