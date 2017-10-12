@@ -101,6 +101,24 @@ describe('counter', () => {
 					expect(values[0].value).toEqual(100);
 				});
 			});
+
+			describe('empty labels', () => {
+				beforeEach(() => {
+					instance = new Counter('gauge_test_3', 'test');
+				});
+
+				it('should increment counter', () => {
+					instance.inc({});
+					expect(instance.get().values[0].value).toEqual(1);
+					expect(instance.get().values[0].timestamp).toEqual(undefined);
+				});
+
+				it('should increment with a provided value', () => {
+					instance.inc({}, 100);
+					expect(instance.get().values[0].value).toEqual(100);
+					expect(instance.get().values[0].timestamp).toEqual(undefined);
+				});
+			});
 		});
 	});
 
