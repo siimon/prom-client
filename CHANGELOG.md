@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Breaking
 ### Changed
+- Don't add event listeners if cluster module is not used.
 ### Added
 
 ## [10.1.1] - 2017-09-26
