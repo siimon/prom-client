@@ -1,7 +1,10 @@
 'use strict';
 
 const nodeVersion = process.version;
-const versionSegments = nodeVersion.slice(1).split('.').map(Number);
+const versionSegments = nodeVersion
+	.slice(1)
+	.split('.')
+	.map(Number);
 
 describe('version', () => {
 	const register = require('../../index').register;
