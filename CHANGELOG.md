@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Breaking
 ### Changed
 ### Added
+- Added `reset` to Counter and Gauge
+- Added `resetMetrics` to register to calling `reset` of all metric instances
 
 ## [10.1.1] - 2017-09-26
 ### Changed
