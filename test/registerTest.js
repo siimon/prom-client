@@ -204,49 +204,6 @@ describe('register', () => {
 		expect(output).toEqual(metric);
 	});
 
-	it('should allow resetting a counter', () => {
-		const metric = new Counter({
-			name: 'test_metric',
-			help: 'Another test metric',
-			labelNames: ['serial', 'active']
-		});
-		register.registerMetric(metric);
-
-		metric.inc({ serial: '12345', active: 'yes' }, 12);
-		expect(metric.get().values[0].value).toEqual(12);
-		expect(metric.get().values[0].labels.serial).toEqual('12345');
-		expect(metric.get().values[0].labels.active).toEqual('yes');
-
-		register.resetMetrics('serial');
-
-		const output = register.getSingleMetric('test_metric');
-		expect(output.get().values[0].value).toEqual(0);
-		expect(output.get().values[0].labels.serial).toEqual(undefined);
-		expect(output.get().values[0].labels.active).toEqual(undefined);
-	});
-
-	it('should allow resetting a gauge', () => {
-		const metric = new Gauge({
-			name: 'test_metric',
-			help: 'Another test metric',
-			labelNames: ['serial', 'active']
-		});
-		register.registerMetric(metric);
-
-		// const output = register.getSingleMetric('test_metric');
-		metric.set({ serial: '12345', active: 'yes' }, 12);
-		expect(metric.get().values[0].value).toEqual(12);
-		expect(metric.get().values[0].labels.serial).toEqual('12345');
-		expect(metric.get().values[0].labels.active).toEqual('yes');
-
-		register.resetMetrics();
-
-		const output = register.getSingleMetric('test_metric');
-		expect(output.get().values[0].value).toEqual(0);
-		expect(output.get().values[0].labels.serial).toEqual(undefined);
-		expect(output.get().values[0].labels.active).toEqual(undefined);
-	});
-
 	it('should allow gettings metrics without timestamps', () => {
 		const metric = getMetric();
 		register.registerMetric(metric);
@@ -255,6 +212,49 @@ describe('register', () => {
 		expect(metrics.split('\n')[3]).toEqual(
 			'test_metric{label="bye",code="404"} 34'
 		);
+	});
+
+	describe('resetting', () => {
+		it('should allow resetting all metrics', () => {
+			const counter = new Counter({
+				name: 'test_counter',
+				help: 'test metric',
+				labelNames: ['serial', 'active']
+			});
+			const gauge = new Gauge({
+				name: 'test_gauge',
+				help: 'Another test metric',
+				labelNames: ['level']
+			});
+			const histo = new Histogram({
+				name: 'test_histo',
+				help: 'test'
+			});
+			const summ = new Summary('test_summ', 'test', { percentiles: [0.5] });
+			register.registerMetric(counter);
+			register.registerMetric(gauge);
+			register.registerMetric(histo);
+			register.registerMetric(summ);
+
+			counter.inc({ serial: '12345', active: 'yes' }, 12);
+			gauge.set({ level: 'low' }, -12);
+			histo.observe(1);
+			summ.observe(100);
+
+			register.resetMetrics();
+
+			const same_counter = register.getSingleMetric('test_counter');
+			expect(same_counter.get().values).toEqual([]);
+
+			const same_gauge = register.getSingleMetric('test_gauge');
+			expect(same_gauge.get().values).toEqual([]);
+
+			const same_histo = register.getSingleMetric('test_histo');
+			expect(histo.get().values).toEqual([]);
+
+			const same_summ = register.getSingleMetric('test_summ');
+			expect(same_summ.get().values[0].value).toEqual(0);
+		});
 	});
 
 	describe('merging', () => {

@@ -240,4 +240,42 @@ describe('counter', () => {
 			expect(instance.get().values[0].timestamp).toEqual(undefined);
 		});
 	});
+	describe('counter reset', () => {
+		xit('should reset labelless counter', () => {
+			const instance = new Counter({
+				name: 'test_metric',
+				help: 'Another test metric'
+			});
+
+			instance.inc(12);
+			expect(instance.get().values[0].value).toEqual(12);
+
+			instance.reset();
+			expect(instance.get().values[0].value).toEqual(0);
+
+			instance.inc(10);
+			expect(instance.get().values[0].value).toEqual(10);
+		});
+		it('should reset the counter, incl labels', () => {
+			const instance = new Counter({
+				name: 'test_metric',
+				help: 'Another test metric',
+				labelNames: ['serial', 'active']
+			});
+
+			instance.inc({ serial: '12345', active: 'yes' }, 12);
+			expect(instance.get().values[0].value).toEqual(12);
+			expect(instance.get().values[0].labels.serial).toEqual('12345');
+			expect(instance.get().values[0].labels.active).toEqual('yes');
+
+			instance.reset();
+
+			expect(instance.get().values).toEqual([]);
+
+			instance.inc({ serial: '12345', active: 'no' }, 10);
+			expect(instance.get().values[0].value).toEqual(10);
+			expect(instance.get().values[0].labels.serial).toEqual('12345');
+			expect(instance.get().values[0].labels.active).toEqual('no');
+		});
+	});
 });

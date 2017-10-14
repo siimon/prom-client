@@ -26,6 +26,11 @@ export class Registry {
 	clear(): void;
 
 	/**
+	 * Reset all metrics in the registry
+	 */
+	resetMetrics(): void;
+
+	/**
 	 * Register metric to register
 	 * @param metric Metric to add to register
 	 */
@@ -185,6 +190,11 @@ export class Counter {
 	 * @return Configured counter with given labels
 	 */
 	labels(...values: string[]): Counter.Internal;
+
+	/**
+	 * Reset counter values
+	 */
+	reset(): void;
 }
 
 export namespace Counter {
@@ -287,6 +297,11 @@ export class Gauge {
 	 * @return Configured gauge with given labels
 	 */
 	labels(...values: string[]): Gauge.Internal;
+
+	/**
+	 * Reset gauge values
+	 */
+	reset(): void;
 }
 
 export namespace Gauge {
