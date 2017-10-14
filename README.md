@@ -176,6 +176,12 @@ xhrRequest(function(err, res) {
 	end(); // Observes the value to xhrRequests duration in seconds
 });
 ```
+A Histogram can be reset manually. This removes the label-values combinations and
+reinitializes the observations.
+
+```js
+histogram.reset();
+```
 
 #### Summary
 
@@ -204,6 +210,13 @@ const end = summary.startTimer();
 xhrRequest(function(err, res) {
 	end(); // Observes the value to xhrRequests duration in seconds
 });
+```
+
+A Summary can be reset manually. This removes the label-values combinations and
+reinitializes the observations.
+
+```js
+summary.reset();
 ```
 
 #### Labels
