@@ -376,7 +376,10 @@ describe('gauge', () => {
 		});
 	});
 	describe('gauge reset', () => {
-		xit('should reset labelless gauge', () => {
+		afterEach(() => {
+			globalRegistry.clear();
+		});
+		it('should reset labelless gauge', () => {
 			const instance = new Gauge({
 				name: 'test_metric',
 				help: 'Another test metric'

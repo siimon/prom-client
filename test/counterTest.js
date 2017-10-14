@@ -241,7 +241,10 @@ describe('counter', () => {
 		});
 	});
 	describe('counter reset', () => {
-		xit('should reset labelless counter', () => {
+		afterEach(() => {
+			globalRegistry.clear();
+		});
+		it('should reset labelless counter', () => {
 			const instance = new Counter({
 				name: 'test_metric',
 				help: 'Another test metric'
