@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Breaking
 ### Changed
+- Fixed issue with counters having extra records when using empty labels
 ### Added
 - Added `reset` to Counter and Gauge
 - Added `resetMetrics` to register to calling `reset` of all metric instances
