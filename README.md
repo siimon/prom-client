@@ -104,6 +104,14 @@ counter.inc(); // Inc with 1
 counter.inc(10); // Inc with 10
 ```
 
+A counter can be reset manually. This removes the label-values combinations and
+initializes to 0.
+
+```js
+counter.reset();
+counter.inc(); // Inc with 1 starting from 0
+```
+
 #### Gauge
 
 Gauges are similar to Counters but Gauges value can be decreased.
@@ -116,6 +124,13 @@ gauge.inc(); // Inc with 1
 gauge.inc(10); // Inc with 10
 gauge.dec(); // Dec with 1
 gauge.dec(10); // Dec with 10
+```
+A gauge can be reset manually. This removes the label-values combinations and
+initializes to 0.
+
+```js
+gauge.reset();
+gauge.inc(); // Inc with 1 starting from 0
 ```
 
 There are some utilities for common use cases:
@@ -161,6 +176,12 @@ xhrRequest(function(err, res) {
 	end(); // Observes the value to xhrRequests duration in seconds
 });
 ```
+A Histogram can be reset manually. This removes the label-values combinations and
+reinitializes the observations.
+
+```js
+histogram.reset();
+```
 
 #### Summary
 
@@ -189,6 +210,13 @@ const end = summary.startTimer();
 xhrRequest(function(err, res) {
 	end(); // Observes the value to xhrRequests duration in seconds
 });
+```
+
+A Summary can be reset manually. This removes the label-values combinations and
+reinitializes the observations.
+
+```js
+summary.reset();
 ```
 
 #### Labels
@@ -298,6 +326,11 @@ If you need to get a reference to a previously registered metric, you can use `r
 
 You can remove all metrics by calling `register.clear()`. You can also remove a single metric by calling
 `register.removeSingleMetric(*name of metric*)`.
+
+##### Resetting metrics
+
+If you need to reset all metrics, you can use `register.resetMetrics()`. The metrics will remain present in the register and can be used without the need to
+instantiate them again, like you would need to do after `register.clear()`.
 
 ##### Cluster metrics
 
