@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Breaking
 ### Changed
+### Added
+
+## [10.2.0] - 2017-10-16
+### Changed
 - Don't add event listeners if cluster module is not used.
 - Fixed issue with counters having extra records when using empty labels
 ### Added
@@ -80,8 +84,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Creating metrics with one argument per parameter - use object literals instead.
 
 
-[Unreleased]: https://github.com/siimon/prom-client/compare/v10.1.1...HEAD
-[10.1.0]: https://github.com/siimon/prom-client/compare/v10.1.0...v10.1.1
+[Unreleased]: https://github.com/siimon/prom-client/compare/v10.2.0...HEAD
+[10.2.0]: https://github.com/siimon/prom-client/compare/v10.1.1...v10.2.0
+[10.1.1]: https://github.com/siimon/prom-client/compare/v10.1.0...v10.1.1
 [10.1.0]: https://github.com/siimon/prom-client/compare/v10.0.4...v10.1.0
 [10.0.4]: https://github.com/siimon/prom-client/compare/v10.0.3...v10.0.4
 [10.0.3]: https://github.com/siimon/prom-client/compare/v10.0.2...v10.0.3
