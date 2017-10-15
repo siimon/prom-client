@@ -6,11 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Breaking
 ### Changed
-### Added
-
-## [10.1.2] - 2017-10-16
-### Changed
 - Fixed issue with counters having extra records when using empty labels
+### Added
 
 ## [10.1.1] - 2017-09-26
 ### Changed
