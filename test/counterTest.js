@@ -110,13 +110,13 @@ describe('counter', () => {
 				it('should increment counter', () => {
 					instance.inc({});
 					expect(instance.get().values[0].value).toEqual(1);
-					expect(instance.get().values[0].timestamp).toEqual(undefined);
+					expect(instance.get().values[0].timestamp).toBeUndefined();
 				});
 
 				it('should increment with a provided value', () => {
 					instance.inc({}, 100);
 					expect(instance.get().values[0].value).toEqual(100);
-					expect(instance.get().values[0].timestamp).toEqual(undefined);
+					expect(instance.get().values[0].timestamp).toBeUndefined();
 				});
 			});
 		});
