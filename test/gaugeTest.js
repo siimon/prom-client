@@ -375,6 +375,47 @@ describe('gauge', () => {
 			});
 		});
 	});
+	describe('gauge reset', () => {
+		afterEach(() => {
+			globalRegistry.clear();
+		});
+		it('should reset labelless gauge', () => {
+			const instance = new Gauge({
+				name: 'test_metric',
+				help: 'Another test metric'
+			});
+
+			instance.set(12);
+			expect(instance.get().values[0].value).toEqual(12);
+
+			instance.reset();
+			expect(instance.get().values[0].value).toEqual(0);
+
+			instance.set(10);
+			expect(instance.get().values[0].value).toEqual(10);
+		});
+		it('should reset the gauge, incl labels', () => {
+			const instance = new Gauge({
+				name: 'test_metric',
+				help: 'Another test metric',
+				labelNames: ['serial', 'active']
+			});
+
+			instance.set({ serial: '12345', active: 'yes' }, 12);
+			expect(instance.get().values[0].value).toEqual(12);
+			expect(instance.get().values[0].labels.serial).toEqual('12345');
+			expect(instance.get().values[0].labels.active).toEqual('yes');
+
+			instance.reset();
+
+			expect(instance.get().values).toEqual([]);
+
+			instance.set({ serial: '12345', active: 'no' }, 10);
+			expect(instance.get().values[0].value).toEqual(10);
+			expect(instance.get().values[0].labels.serial).toEqual('12345');
+			expect(instance.get().values[0].labels.active).toEqual('no');
+		});
+	});
 
 	function expectValue(val, timestamp) {
 		expect(instance.get().values[0].value).toEqual(val);

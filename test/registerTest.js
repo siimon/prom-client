@@ -214,6 +214,49 @@ describe('register', () => {
 		);
 	});
 
+	describe('resetting', () => {
+		it('should allow resetting all metrics', () => {
+			const counter = new Counter({
+				name: 'test_counter',
+				help: 'test metric',
+				labelNames: ['serial', 'active']
+			});
+			const gauge = new Gauge({
+				name: 'test_gauge',
+				help: 'Another test metric',
+				labelNames: ['level']
+			});
+			const histo = new Histogram({
+				name: 'test_histo',
+				help: 'test'
+			});
+			const summ = new Summary('test_summ', 'test', { percentiles: [0.5] });
+			register.registerMetric(counter);
+			register.registerMetric(gauge);
+			register.registerMetric(histo);
+			register.registerMetric(summ);
+
+			counter.inc({ serial: '12345', active: 'yes' }, 12);
+			gauge.set({ level: 'low' }, -12);
+			histo.observe(1);
+			summ.observe(100);
+
+			register.resetMetrics();
+
+			const same_counter = register.getSingleMetric('test_counter');
+			expect(same_counter.get().values).toEqual([]);
+
+			const same_gauge = register.getSingleMetric('test_gauge');
+			expect(same_gauge.get().values).toEqual([]);
+
+			const same_histo = register.getSingleMetric('test_histo');
+			expect(histo.get().values).toEqual([]);
+
+			const same_summ = register.getSingleMetric('test_summ');
+			expect(same_summ.get().values[0].value).toEqual(0);
+		});
+	});
+
 	describe('merging', () => {
 		const Registry = require('../lib/registry');
 		let registryOne;
