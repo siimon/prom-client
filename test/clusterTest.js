@@ -4,18 +4,17 @@ const cluster = require('cluster');
 
 describe('AggregatorRegistry', () => {
 	it('requiring the cluster should not add any listeners', () => {
-		jest.resetModules();
-		expect(cluster.listenerCount('message')).toBe(0);
+		const originalListenerCount = cluster.listenerCount('message');
 
 		require('../lib/cluster');
 
-		expect(cluster.listenerCount('message')).toBe(0);
+		expect(cluster.listenerCount('message')).toBe(originalListenerCount);
 
 		jest.resetModules();
 
 		require('../lib/cluster');
 
-		expect(cluster.listenerCount('message')).toBe(0);
+		expect(cluster.listenerCount('message')).toBe(originalListenerCount);
 	});
 
 	describe('aggregatorRegistry.clusterMetrics()', () => {
