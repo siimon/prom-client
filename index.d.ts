@@ -21,6 +21,11 @@ export class Registry {
 	metrics(opts?: MetricsOpts): string;
 
 	/**
+	 * The content-type that the metrics should be served with
+	 */
+	contentType: string;
+
+	/**
 	 * Remove all metrics from the registry
 	 */
 	clear(): void;
