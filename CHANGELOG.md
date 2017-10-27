@@ -6,8 +6,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Breaking
 ### Changed
-- Only resolve/reject `clusterMetrics` promise if no callback is provided
 ### Added
+
+## [10.2.1] - 2017-10-27
+### Changed
+- Only resolve/reject `clusterMetrics` promise if no callback is provided
 
 ## [10.2.0] - 2017-10-16
 ### Changed
@@ -85,7 +88,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Creating metrics with one argument per parameter - use object literals instead.
 
 
-[Unreleased]: https://github.com/siimon/prom-client/compare/v10.2.0...HEAD
+[Unreleased]: https://github.com/siimon/prom-client/compare/v10.2.1...HEAD
+[10.2.1]: https://github.com/siimon/prom-client/compare/v10.2.0...v10.2.1
 [10.2.0]: https://github.com/siimon/prom-client/compare/v10.1.1...v10.2.0
 [10.1.1]: https://github.com/siimon/prom-client/compare/v10.1.0...v10.1.1
 [10.1.0]: https://github.com/siimon/prom-client/compare/v10.0.4...v10.1.0
