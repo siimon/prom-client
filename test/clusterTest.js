@@ -21,27 +21,15 @@ describe('AggregatorRegistry', () => {
 		it('works properly if there are no cluster workers', done => {
 			const AggregatorRegistry = require('../lib/cluster');
 			const ar = new AggregatorRegistry();
-			let cbCalled = false;
-			let promiseResolved = false;
 			let tickElapsed = false;
 			process.nextTick(() => {
 				tickElapsed = true;
 			});
-			const maybeDone = () => {
-				if (cbCalled && promiseResolved) done();
-			};
-			const ret = ar.clusterMetrics((err, metrics) => {
-				cbCalled = true;
+			ar.clusterMetrics((err, metrics) => {
 				expect(tickElapsed).toBe(true);
 				expect(err).toBeNull();
 				expect(metrics).toEqual('');
-				maybeDone();
-			});
-			ret.then(metrics => {
-				promiseResolved = true;
-				expect(tickElapsed).toBe(true);
-				expect(metrics).toEqual('');
-				maybeDone();
+				done();
 			});
 		});
 	});

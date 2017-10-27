@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Breaking
 ### Changed
+- Only resolve/reject `clusterMetrics` promise if no callback is provided
 ### Added
 
 ## [10.2.0] - 2017-10-16
