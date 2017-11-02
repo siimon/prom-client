@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Breaking
 ### Changed
+- Fixed invalid process_virtual_memory_bytes reported under linux
 ### Added
 
 ## [10.2.1] - 2017-10-27
