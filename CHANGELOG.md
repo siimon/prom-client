@@ -6,8 +6,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Breaking
 ### Changed
-- Fixed invalid process_virtual_memory_bytes reported under linux
 ### Added
+
+## [10.2.2] - 2017-11-02
+### Changed
+- Fixed invalid `process_virtual_memory_bytes` reported under linux
 
 ## [10.2.1] - 2017-10-27
 ### Changed
@@ -89,7 +92,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Creating metrics with one argument per parameter - use object literals instead.
 
 
-[Unreleased]: https://github.com/siimon/prom-client/compare/v10.2.1...HEAD
+[Unreleased]: https://github.com/siimon/prom-client/compare/v10.2.2...HEAD
+[10.2.2]: https://github.com/siimon/prom-client/compare/v10.2.1...v10.2.2
 [10.2.1]: https://github.com/siimon/prom-client/compare/v10.2.0...v10.2.1
 [10.2.0]: https://github.com/siimon/prom-client/compare/v10.1.1...v10.2.0
 [10.1.1]: https://github.com/siimon/prom-client/compare/v10.1.0...v10.1.1
