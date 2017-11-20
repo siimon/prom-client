@@ -1,62 +1,67 @@
 {
-  "name": "prom-client",
-  "version": "10.2.2",
-  "description": "Client for prometheus",
-  "main": "index.js",
-  "files": [
-    "lib/",
-    "index.js",
-    "index.d.ts"
-  ],
-  "engines": {
-    "node": ">=4"
-  },
-  "scripts": {
-    "test": "npm run lint && npm run compile-typescript && npm run test-unit",
-    "lint": "eslint .",
-    "test-unit": "jest",
-    "compile-typescript": "tsc index.d.ts --noImplicitAny",
-    "precommit": "lint-staged"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:siimon/prom-client.git"
-  },
-  "keywords": [
-    "Prometheus",
-    "Metrics",
-    "Client"
-  ],
-  "author": "Simon Nyberg",
-  "license": "Apache-2.0",
-  "homepage": "https://github.com/siimon/prom-client",
-  "devDependencies": {
-    "eslint": "^4.1.1",
-    "eslint-plugin-prettier": "^2.1.2",
-    "express": "^4.13.3",
-    "husky": "^0.14.3",
-    "jest": "^21.2.1",
-    "lint-staged": "^4.0.0",
-    "lolex": "^2.1.3",
-    "prettier": "1.7.4",
-    "typescript": "^2.5.2"
-  },
-  "dependencies": {
-    "tdigest": "^0.1.1"
-  },
-  "types": "./index.d.ts",
-  "jest": {
-    "testEnvironment": "node",
-    "testRegex": ".*Test\\.js$"
-  },
-  "lint-staged": {
-    "*.js": [
-      "eslint --fix",
-      "git add"
-    ],
-    "*.ts": [
-      "prettier --write --use-tabs --single-quote",
-      "git add"
-    ]
-  }
+	"name": "prom-client",
+	"version": "10.2.2",
+	"description": "Client for prometheus",
+	"main": "index.js",
+	"files": ["lib/", "index.js", "index.d.ts"],
+	"engines": {
+		"node": ">=4"
+	},
+	"scripts": {
+		"test": "npm run lint && npm run compile-typescript && npm run test-unit",
+		"lint": "eslint .",
+		"test-unit": "jest",
+		"compile-typescript": "tsc index.d.ts --noImplicitAny",
+		"precommit": "lint-staged"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:siimon/prom-client.git"
+	},
+	"keywords": ["Prometheus", "Metrics", "Client"],
+	"author": "Simon Nyberg",
+	"license": "Apache-2.0",
+	"homepage": "https://github.com/siimon/prom-client",
+	"devDependencies": {
+		"eslint": "^4.1.1",
+		"eslint-plugin-prettier": "^2.1.2",
+		"express": "^4.13.3",
+		"husky": "^0.14.3",
+		"jest": "^21.2.1",
+		"lint-staged": "^5.0.0",
+		"lolex": "^2.1.3",
+		"prettier": "1.8.2",
+		"typescript": "^2.5.2"
+	},
+	"dependencies": {
+		"tdigest": "^0.1.1"
+	},
+	"types": "./index.d.ts",
+	"jest": {
+		"testEnvironment": "node",
+		"testRegex": ".*Test\\.js$"
+	},
+	"lint-staged": {
+		"*.js": ["eslint --fix", "git add"],
+		"*.{ts,md,json}": ["prettier --write", "git add"],
+		".eslintrc": ["prettier --write", "git add"]
+	},
+	"prettier": {
+		"singleQuote": true,
+		"useTabs": true,
+		"overrides": [
+			{
+				"files": "*.md",
+				"options": {
+					"useTabs": false
+				}
+			},
+			{
+				"files": ".eslintrc",
+				"options": {
+					"parser": "json"
+				}
+			}
+		]
+	}
 }
