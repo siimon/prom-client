@@ -179,6 +179,25 @@ describe('register', () => {
 			expect(output[0].help).toEqual('A test metric');
 			expect(output[0].values.length).toEqual(2);
 		});
+
+		it('should add default labels to JSON', () => {
+			register.registerMetric(getMetric());
+			register.setDefaultLabels({
+				defaultRegistryLabel: 'testValue'
+			});
+			const output = register.getMetricsAsJSON();
+
+			expect(output.length).toEqual(1);
+			expect(output[0].name).toEqual('test_metric');
+			expect(output[0].type).toEqual('counter');
+			expect(output[0].help).toEqual('A test metric');
+			expect(output[0].values.length).toEqual(2);
+			expect(output[0].values[0].labels).toEqual({
+				code: '303',
+				label: 'hello',
+				defaultRegistryLabel: 'testValue'
+			});
+		});
 	});
 
 	it('should allow removing single metrics', () => {
