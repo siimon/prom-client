@@ -11,6 +11,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+* Fixed issue that `registry.getMetricsAsJSON()` ignores registry default labels
+
 ### Added
 
 ## [10.2.2] - 2017-11-02
