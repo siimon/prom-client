@@ -9,6 +9,9 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Breaking
 
+* Fixed `gauge.setToCurrentTime()` to use seconds instead of milliseconds
+  * This conforms to Prometheus [best practices](https://prometheus.io/docs/practices/naming/#base-units)
+
 ### Changed
 
 ### Added
