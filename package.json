@@ -2,7 +2,8 @@
 	"name": "prom-client",
 	"version": "11.0.0",
 	"description": "Client for prometheus",
-	"main": "index.js",
+	"main": "index.server.js",
+	"browser": "index.client.js",
 	"files": ["lib/", "index.js", "index.d.ts"],
 	"engines": {
 		"node": ">=6"
