@@ -272,6 +272,13 @@ describe('summary', () => {
 
 					clock.uninstall();
 				});
+
+				it('should not mutate passed startLabels', () => {
+					const startLabels = { method: 'GET' };
+					const end = instance.startTimer(startLabels);
+					end({ endpoint: '/test' });
+					expect(startLabels).toEqual({ method: 'GET' });
+				});
 			});
 		});
 
@@ -527,6 +534,13 @@ describe('summary', () => {
 					expect(values[2].value).toEqual(1);
 
 					clock.uninstall();
+				});
+
+				it('should not mutate passed startLabels', () => {
+					const startLabels = { method: 'GET' };
+					const end = instance.startTimer(startLabels);
+					end({ endpoint: '/test' });
+					expect(startLabels).toEqual({ method: 'GET' });
 				});
 			});
 		});

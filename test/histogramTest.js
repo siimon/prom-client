@@ -215,6 +215,13 @@ describe('histogram', () => {
 				expect(res2.value).toEqual(1);
 				clock.uninstall();
 			});
+
+			it('should not mutate passed startLabels', () => {
+				const startLabels = { method: 'GET' };
+				const end = instance.startTimer(startLabels);
+				end({ method: 'POST' });
+				expect(startLabels).toEqual({ method: 'GET' });
+			});
 		});
 	});
 
@@ -440,6 +447,13 @@ describe('histogram', () => {
 					expect(res1.value).toEqual(1);
 					expect(res2.value).toEqual(1);
 					clock.uninstall();
+				});
+
+				it('should not mutate passed startLabels', () => {
+					const startLabels = { method: 'GET' };
+					const end = instance.startTimer(startLabels);
+					end({ method: 'POST' });
+					expect(startLabels).toEqual({ method: 'GET' });
 				});
 			});
 		});

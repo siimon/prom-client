@@ -11,6 +11,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+* Fixed `startTimer` utility to not mutate objects passed as `startLabels`
+
 ### Added
 
 ## [11.0.0] - 2018-03-10

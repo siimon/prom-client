@@ -112,6 +112,12 @@ describe('gauge', () => {
 					expectValue(1);
 					clock.uninstall();
 				});
+				it('should not mutate passed startLabels', () => {
+					const startLabels = { code: '200' };
+					const end = instance.startTimer(startLabels);
+					end({ code: '400' });
+					expect(startLabels).toEqual({ code: '200' });
+				});
 			});
 
 			describe('with timestamp', () => {
@@ -266,6 +272,12 @@ describe('gauge', () => {
 					end({ success: 'SUCCESS' });
 					expectValue(1);
 					clock.uninstall();
+				});
+				it('should not mutate passed startLabels', () => {
+					const startLabels = { code: '200' };
+					const end = instance.startTimer(startLabels);
+					end({ code: '400' });
+					expect(startLabels).toEqual({ code: '200' });
 				});
 			});
 
