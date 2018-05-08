@@ -88,6 +88,13 @@ describe('counter', () => {
 					expect(values).toHaveLength(2);
 				});
 
+				it("should throw error if one of lables isn't in labelNames list provided to constructor", () => {
+					const fn = function() {
+						instance.inc({ method: 'GET', endpoint: '/test', status: 500 });
+					};
+					expect(fn).toThrowErrorMatchingSnapshot();
+				});
+
 				it('should throw error if label lengths does not match', () => {
 					const fn = function() {
 						instance.labels('GET').inc();

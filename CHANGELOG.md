@@ -12,6 +12,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 * Fixed `startTimer` utility to not mutate objects passed as `startLabels`
+* Fixed `Counter` to validate labels parameter of `inc()` against initial labelset
 
 ### Added
 
