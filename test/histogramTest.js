@@ -223,6 +223,96 @@ describe('histogram', () => {
 				expect(startLabels).toEqual({ method: 'GET' });
 			});
 		});
+
+		describe('remove', () => {
+			beforeEach(() => {
+				instance = new Histogram(
+					'histogram_labels',
+					'Histogram with labels fn',
+					['method']
+				);
+			});
+
+			it('should remove matching label', () => {
+				instance.labels('POST').observe(3);
+				instance.labels('GET').observe(4);
+				instance.remove('POST');
+
+				const res = getValueByLeAndLabel(
+					5,
+					'method',
+					'GET',
+					instance.get().values
+				);
+				expect(res.value).toEqual(1);
+			});
+
+			it('should remove all labels', () => {
+				instance.labels('POST').observe(3);
+				instance.labels('GET').observe(4);
+				instance.remove('POST');
+				instance.remove('GET');
+
+				expect(instance.get().values).toHaveLength(0);
+			});
+
+			it('should throw error if label lengths does not match', () => {
+				const fn = function() {
+					instance.remove('GET', '/foo');
+				};
+				expect(fn).toThrowErrorMatchingSnapshot();
+			});
+
+			it('should remove timer labels', () => {
+				const clock = lolex.install();
+				const getEnd = instance.labels('GET').startTimer();
+				const postEnd = instance.labels('POST').startTimer();
+				clock.tick(500);
+				postEnd();
+				getEnd();
+				instance.remove('POST');
+				const res1 = getValueByLeAndLabel(
+					0.5,
+					'method',
+					'GET',
+					instance.get().values
+				);
+				const res2 = getValueByLeAndLabel(
+					0.5,
+					'method',
+					'POST',
+					instance.get().values
+				);
+				expect(res1.value).toEqual(1);
+				expect(res2.value).toEqual(undefined);
+				clock.uninstall();
+			});
+
+			it('should remove timer labels when labels are set afterwards', () => {
+				const clock = lolex.install();
+				const end = instance.startTimer();
+				clock.tick(500);
+				end({ method: 'GET' });
+				instance.remove('GET');
+				expect(instance.get().values).toHaveLength(0);
+				clock.uninstall();
+			});
+
+			it('should remove labels before and after timers', () => {
+				instance = new Histogram({
+					name: 'histogram_labels_2',
+					help: 'Histogram with labels fn',
+					labelNames: ['method', 'success']
+				});
+				const clock = lolex.install();
+				const end = instance.startTimer({ method: 'GET' });
+				clock.tick(500);
+				end({ success: 'SUCCESS' });
+				instance.remove('GET', 'SUCCESS');
+				expect(instance.get().values).toHaveLength(0);
+				clock.uninstall();
+			});
+		});
 	});
 
 	describe('with object as params', () => {
@@ -456,7 +546,91 @@ describe('histogram', () => {
 					expect(startLabels).toEqual({ method: 'GET' });
 				});
 			});
+
+			describe('remove', () => {
+				beforeEach(() => {
+					instance = new Histogram({
+						name: 'histogram_labels',
+						help: 'Histogram with labels fn',
+						labelNames: ['method']
+					});
+				});
+
+				it('should remove matching label', () => {
+					instance.labels('POST').observe(3);
+					instance.labels('GET').observe(4);
+					instance.remove('POST');
+
+					const res = getValueByLeAndLabel(
+						5,
+						'method',
+						'GET',
+						instance.get().values
+					);
+					expect(res.value).toEqual(1);
+				});
+
+				it('should remove all labels', () => {
+					instance.labels('POST').observe(3);
+					instance.labels('GET').observe(4);
+					instance.remove('POST');
+					instance.remove('GET');
+
+					expect(instance.get().values).toHaveLength(0);
+				});
+
+				it('should throw error if label lengths does not match', () => {
+					const fn = function() {
+						instance.remove('GET', '/foo');
+					};
+					expect(fn).toThrowErrorMatchingSnapshot();
+				});
+
+				it('should remove timer labels', () => {
+					const clock = lolex.install();
+					const getEnd = instance.labels('GET').startTimer();
+					const postEnd = instance.labels('POST').startTimer();
+					clock.tick(500);
+					postEnd();
+					getEnd();
+					instance.remove('POST');
+					const res = getValueByLeAndLabel(
+						0.5,
+						'method',
+						'GET',
+						instance.get().values
+					);
+					expect(res.value).toEqual(1);
+					clock.uninstall();
+				});
+
+				it('should remove timer labels when labels are set afterwards', () => {
+					const clock = lolex.install();
+					const end = instance.startTimer();
+					clock.tick(500);
+					end({ method: 'GET' });
+					instance.remove('GET');
+					expect(instance.get().values).toHaveLength(0);
+					clock.uninstall();
+				});
+
+				it('should remove labels before and after timers', () => {
+					instance = new Histogram({
+						name: 'histogram_labels_2',
+						help: 'Histogram with labels fn',
+						labelNames: ['method', 'success']
+					});
+					const clock = lolex.install();
+					const end = instance.startTimer({ method: 'GET' });
+					clock.tick(500);
+					end({ success: 'SUCCESS' });
+					instance.remove('GET', 'SUCCESS');
+					expect(instance.get().values).toHaveLength(0);
+					clock.uninstall();
+				});
+			});
 		});
+
 		describe('without registry', () => {
 			beforeEach(() => {
 				instance = new Histogram({

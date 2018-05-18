@@ -2,6 +2,8 @@
 
 exports[`gauge global registry with a parameter for each variable should not allow non numbers 1`] = `"Value is not a valid number: asd"`;
 
+exports[`gauge global registry with a parameter for each variable with remove should throw error if label lengths does not match 1`] = `"Invalid number of arguments"`;
+
 exports[`gauge global registry with a parameter for each variable with timestamp should not allow invalid dates 1`] = `"Timestamp is not a valid date or number: Invalid Date"`;
 
 exports[`gauge global registry with a parameter for each variable with timestamp should not allow non numbers 1`] = `"Timestamp is not a valid date or number: blah"`;
