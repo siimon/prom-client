@@ -63,6 +63,14 @@ describe('collectDefaultMetrics', () => {
 		expect(register.getMetricsAsJSON()).toHaveLength(0);
 	});
 
+	it('should prefix metric names when configured', () => {
+		interval = collectDefaultMetrics({ prefix: 'some_prefix_' });
+		expect(register.getMetricsAsJSON()).not.toHaveLength(0);
+		register.getMetricsAsJSON().forEach(metric => {
+			expect(metric.name.substring(0, 12)).toEqual('some_prefix_');
+		});
+	});
+
 	describe('disabling', () => {
 		it('should not throw error', () => {
 			const fn = function() {

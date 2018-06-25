@@ -7,6 +7,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Added ability to set a name prefix in the default metrics
+
 ### Breaking
 
 ### Changed
