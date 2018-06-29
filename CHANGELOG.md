@@ -7,17 +7,22 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-* Added ability to set a name prefix in the default metrics
-
 ### Breaking
 
 ### Changed
 
-* Fixed `startTimer` utility to not mutate objects passed as `startLabels`
-* Fixed `Counter` to validate labels parameter of `inc()` against initial labelset
-* Fixed `AggregatorFactory` losing the aggregator method of metrics
-
 ### Added
+
+## [11.1.0] - 2018-06-29
+
+* Added ability to set a name prefix in the default metrics
+
+### Changed
+
+* Fixed `startTimer` utility to not mutate objects passed as `startLabels`
+* Fixed `Counter` to validate labels parameter of `inc()` against initial
+  labelset
+* Fixed `AggregatorFactory` losing the aggregator method of metrics
 
 ## [11.0.0] - 2018-03-10
 
