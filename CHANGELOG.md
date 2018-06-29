@@ -13,6 +13,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 * Fixed `startTimer` utility to not mutate objects passed as `startLabels`
 * Fixed `Counter` to validate labels parameter of `inc()` against initial labelset
+* Fixed `AggregatorFactory` losing the aggregator method of metrics
 
 ### Added
 

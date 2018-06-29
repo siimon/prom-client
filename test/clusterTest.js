@@ -171,7 +171,8 @@ describe('AggregatorRegistry', () => {
 						value: 2.8412637018068043,
 						metricName: 'test_histogram_bucket'
 					}
-				]
+				],
+				aggregator: 'sum'
 			});
 		});
 
@@ -185,7 +186,8 @@ describe('AggregatorRegistry', () => {
 					{ value: 0.49, labels: { method: 'get', code: 200 } },
 					{ value: 0.88, labels: {} },
 					{ value: 74, labels: { method: 'post', code: '300' } }
-				]
+				],
+				aggregator: 'sum'
 			});
 		});
 
@@ -204,7 +206,8 @@ describe('AggregatorRegistry', () => {
 				help: 'Lag of event loop in seconds.',
 				name: 'nodejs_eventloop_lag_seconds',
 				type: 'gauge',
-				values: [{ value: 0.0085, labels: {} }]
+				values: [{ value: 0.0085, labels: {} }],
+				aggregator: 'average'
 			});
 		});
 
@@ -216,7 +219,8 @@ describe('AggregatorRegistry', () => {
 				help: 'Lag of event loop in seconds.',
 				name: 'nodejs_eventloop_lag_seconds',
 				type: 'gauge',
-				values: [{ value: 0.0085, labels: {} }]
+				values: [{ value: 0.0085, labels: {} }],
+				aggregator: 'average'
 			});
 		});
 
@@ -231,7 +235,8 @@ describe('AggregatorRegistry', () => {
 						value: 1,
 						labels: { version: 'v6.11.1', major: 6, minor: 11, patch: 1 }
 					}
-				]
+				],
+				aggregator: 'first'
 			});
 		});
 	});
