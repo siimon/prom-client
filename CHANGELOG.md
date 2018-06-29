@@ -11,9 +11,13 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-* Fixed `processOpenFileDescriptors` metric when no custom config was set
-
 ### Added
+
+## [11.1.1] - 2018-06-29
+
+### Changed
+
+* Fixed `processOpenFileDescriptors` metric when no custom config was set
 
 ## [11.1.0] - 2018-06-29
 
