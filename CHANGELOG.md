@@ -11,6 +11,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+* Allow setting Gauge values to NaN, +Inf, and -Inf
+
 ### Added
 
 ## [11.1.1] - 2018-06-29
