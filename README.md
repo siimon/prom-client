@@ -3,13 +3,13 @@
 A prometheus client for node.js that supports histogram, summaries, gauges and
 counters.
 
-### Usage
+## Usage
 
 See example folder for a sample usage. The library does not bundle any web
 framework, to expose the metrics just return the `metrics()` function in the
 registry.
 
-#### Usage with Node.js's `cluster` module
+### Usage with Node.js's `cluster` module
 
 Node.js's `cluster` module spawns multiple processes and hands off socket
 connections to those workers. Returning metrics from a worker's local registry
@@ -32,13 +32,13 @@ registry, call
 `client.AggregatorRegistry.setRegistries(registryOrArrayOfRegistries)` from the
 worker processes.
 
-### API
+## API
 
-#### Configuration
+### Configuration
 
 All metric types has 2 mandatory parameters, name and help.
 
-#### Default metrics
+### Default metrics
 
 There are some default metrics recommended by Prometheus
 [itself](https://prometheus.io/docs/instrumenting/writing_clientlibs/#standard-and-runtime-collectors).
@@ -114,7 +114,7 @@ NOTE: `unref` is called on the `interval` internally, so it will not keep your
 node process going indefinitely if it's the only thing keeping it from shutting
 down.
 
-##### Stop polling default metrics
+#### Stop polling default metrics
 
 To stop collecting the default metrics, you have to call the function and pass
 it to `clearInterval`.
@@ -128,7 +128,7 @@ clearInterval(client.collectDefaultMetrics());
 client.register.clear();
 ```
 
-#### Counter
+### Counter
 
 Counters go up, and reset when the process restarts.
 
@@ -150,7 +150,7 @@ counter.reset();
 counter.inc(); // Inc with 1 starting from 0
 ```
 
-#### Gauge
+### Gauge
 
 Gauges are similar to Counters but Gauges value can be decreased.
 
@@ -183,7 +183,7 @@ xhrRequest(function(err, res) {
 });
 ```
 
-#### Histogram
+### Histogram
 
 Histograms track sizes and frequency of events.
 
@@ -240,7 +240,7 @@ and reinitializes the observations.
 histogram.reset();
 ```
 
-#### Summary
+### Summary
 
 Summaries calculate percentiles of observed values.
 
@@ -285,7 +285,7 @@ reinitializes the observations.
 summary.reset();
 ```
 
-#### Labels
+### Labels
 
 All metrics can take a labelNames property in the configuration object. All
 labelNames that the metric support needs to be declared here. There are 2 ways
@@ -317,7 +317,7 @@ xhrRequest(function(err, res) {
 });
 ```
 
-##### Default Labels (segmented by registry)
+#### Default Labels (segmented by registry)
 
 Static labels may be applied to every metric emitted by a registry:
 
@@ -339,7 +339,7 @@ Default labels will be overridden if there is a name conflict.
 
 `register.clear()` will clear default labels.
 
-#### Timestamps
+### Timestamps
 
 Counter and gauge metrics can take a timestamp argument after the value
 argument. This argument must be a Date or a number (milliseconds since Unix
@@ -355,7 +355,7 @@ gauge.labels('GET', '200').set(100, new Date()); // Same as above
 counter.inc(1, new Date()); // Increment counter with timestamp
 ```
 
-#### Multiple registries
+### Multiple registries
 
 By default, metrics are automatically registered to the global registry (located
 at `require('prom-client').register`). You can prevent this by setting last
@@ -399,7 +399,7 @@ AggregatorRegistry.setRegistries(registry);
 AggregatorRegistry.setRegistries([registry1, registry2]);
 ```
 
-#### Register
+### Register
 
 You can get all metrics by running `register.metrics()`, which will output a
 string for prometheus to consume.
@@ -407,29 +407,29 @@ string for prometheus to consume.
 `register.metrics()` takes an optional object with a `timestamps` field. Setting
 this to false will strip timestamps from the string.
 
-##### Getting a single metric for Prometheus displaying
+#### Getting a single metric for Prometheus displaying
 
 If you need to output a single metric for Prometheus, you can use
 `register.getSingleMetricAsString(*name of metric*)`, it will output a string
 for Prometheus to consume.
 
-##### Getting a single metric
+#### Getting a single metric
 
 If you need to get a reference to a previously registered metric, you can use
 `register.getSingleMetric(*name of metric*)`.
 
-##### Removing metrics
+#### Removing metrics
 
 You can remove all metrics by calling `register.clear()`. You can also remove a
 single metric by calling `register.removeSingleMetric(*name of metric*)`.
 
-##### Resetting metrics
+#### Resetting metrics
 
 If you need to reset all metrics, you can use `register.resetMetrics()`. The
 metrics will remain present in the register and can be used without the need to
 instantiate them again, like you would need to do after `register.clear()`.
 
-##### Cluster metrics
+#### Cluster metrics
 
 You can get aggregated metrics for all workers in a node.js cluster with
 `register.clusterMetrics()`. This method both returns a promise and accepts a
@@ -453,7 +453,7 @@ register.clusterMetrics((err, metrics) => {
 });
 ```
 
-#### Pushgateway
+### Pushgateway
 
 It is possible to push metrics via a
 [Pushgateway](https://github.com/prometheus/pushgateway).
@@ -480,7 +480,7 @@ gateway.pushAdd({ jobName: 'test', groupings: { key: 'value' } }, function(
 gateway = new client.Pushgateway('http://127.0.0.1:9091', { timeout: 5000 }); //Set the request timeout to 5000ms
 ```
 
-#### Utilites
+### Utilites
 
 For convenience, there are 2 bucket generator functions - linear and
 exponential.
@@ -503,7 +503,7 @@ new client.Histogram({
 The content-type prometheus expects is also exported as a constant, both on the
 `register` and from the main file of this project, called `contentType`.
 
-### Garbage Collection
+## Garbage Collection
 
 To avoid dependencies in this module, GC stats are kept outside of it. If you
 want GC stats, you can use https://github.com/SimenB/node-prometheus-gc-stats
