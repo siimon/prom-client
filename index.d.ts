@@ -42,6 +42,11 @@ export class Registry {
 	getMetricsAsJSON(): metric[];
 
 	/**
+	 * Get all metrics as objects
+	 */
+	getMetricsAsArray(): metric[];
+
+	/**
 	 * Remove a single metric
 	 * @param name The name of the metric to remove
 	 */
