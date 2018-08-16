@@ -44,6 +44,66 @@ describe('register', () => {
 		);
 	});
 
+	it('should handle and output a metric with a NaN value', () => {
+		register.registerMetric({
+			get() {
+				return {
+					name: 'test_metric',
+					type: 'gauge',
+					help: 'A test metric',
+					values: [
+						{
+							value: NaN
+						}
+					]
+				};
+			}
+		});
+		const lines = register.metrics().split('\n');
+		expect(lines).toHaveLength(4);
+		expect(lines[2]).toEqual('test_metric Nan');
+	});
+
+	it('should handle and output a metric with an +Infinity value', () => {
+		register.registerMetric({
+			get() {
+				return {
+					name: 'test_metric',
+					type: 'gauge',
+					help: 'A test metric',
+					values: [
+						{
+							value: Infinity
+						}
+					]
+				};
+			}
+		});
+		const lines = register.metrics().split('\n');
+		expect(lines).toHaveLength(4);
+		expect(lines[2]).toEqual('test_metric +Inf');
+	});
+
+	it('should handle and output a metric with an -Infinity value', () => {
+		register.registerMetric({
+			get() {
+				return {
+					name: 'test_metric',
+					type: 'gauge',
+					help: 'A test metric',
+					values: [
+						{
+							value: -Infinity
+						}
+					]
+				};
+			}
+		});
+		const lines = register.metrics().split('\n');
+		expect(lines).toHaveLength(4);
+		expect(lines[2]).toEqual('test_metric -Inf');
+	});
+
 	it('should handle a metric without labels', () => {
 		register.registerMetric({
 			get() {

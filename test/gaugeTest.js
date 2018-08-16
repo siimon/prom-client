@@ -64,6 +64,21 @@ describe('gauge', () => {
 				expect(fn).toThrowErrorMatchingSnapshot();
 			});
 
+			it('should allow NaN as a value', () => {
+				instance.set(NaN);
+				expectValue(NaN);
+			});
+
+			it('should allow +Inf as a value', () => {
+				instance.set(Infinity);
+				expectValue(Infinity);
+			});
+
+			it('should allow -Inf as a value', () => {
+				instance.set(-Infinity);
+				expectValue(-Infinity);
+			});
+
 			describe('with labels', () => {
 				beforeEach(() => {
 					instance = new Gauge('name', 'help', ['code']);
