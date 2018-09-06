@@ -1,5 +1,5 @@
 {
-	"name": "prom-client",
+	"name": "prom-client-impl-bignumber",
 	"version": "11.1.1",
 	"description": "Client for prometheus",
 	"main": "index.js",
@@ -16,12 +16,12 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git@github.com:siimon/prom-client.git"
+		"url": "git@github.com:derori/prom-client-impl-bignumber.git"
 	},
 	"keywords": ["Prometheus", "Metrics", "Client"],
 	"author": "Simon Nyberg",
 	"license": "Apache-2.0",
-	"homepage": "https://github.com/siimon/prom-client",
+	"homepage": "https://github.com/derori/prom-client-impl-bignumber",
 	"devDependencies": {
 		"eslint": "^4.1.1",
 		"eslint-plugin-prettier": "^2.1.2",
@@ -35,6 +35,7 @@
 		"typescript": "^2.5.2"
 	},
 	"dependencies": {
+		"bignumber.js": "^7.2.1",
 		"tdigest": "^0.1.1"
 	},
 	"types": "./index.d.ts",
