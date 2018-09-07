@@ -1,6 +1,7 @@
 'use strict';
 
 describe('gauge', () => {
+	const BigNumber = require('bignumber.js');
 	const Gauge = require('../index').Gauge;
 	const Registry = require('../index').Registry;
 	const globalRegistry = require('../index').register;
@@ -79,10 +80,20 @@ describe('gauge', () => {
 				expectValue(-Infinity);
 			});
 
+			it('should allow BigNumber as a value', () => {
+				instance.set(new BigNumber('2459438294393290143'));
+				expectValue(new BigNumber('2459438294393290143'));
+			});
+
 			describe('with labels', () => {
 				beforeEach(() => {
 					instance = new Gauge('name', 'help', ['code']);
-					instance.set({ code: '200' }, 20);
+					instance.set(
+						{
+							code: '200'
+						},
+						20
+					);
 				});
 				it('should be able to increment', () => {
 					instance.labels('200').inc();
@@ -95,6 +106,10 @@ describe('gauge', () => {
 				it('should be able to set value', () => {
 					instance.labels('200').set(500);
 					expectValue(500);
+				});
+				it('should be able to set BigNumber value', () => {
+					instance.labels('200').set(new BigNumber('33999490382192109391902'));
+					expectValue(new BigNumber('33999490382192109391902'));
 				});
 				it('should be able to set value to current time', () => {
 					const clock = lolex.install();
@@ -114,39 +129,74 @@ describe('gauge', () => {
 					const clock = lolex.install();
 					const end = instance.startTimer();
 					clock.tick(1000);
-					end({ code: 200 });
+					end({
+						code: 200
+					});
 					expectValue(1);
 					clock.uninstall();
 				});
 				it('should allow labels before and after timers', () => {
 					instance = new Gauge('name_2', 'help', ['code', 'success']);
 					const clock = lolex.install();
-					const end = instance.startTimer({ code: 200 });
+					const end = instance.startTimer({
+						code: 200
+					});
 					clock.tick(1000);
-					end({ success: 'SUCCESS' });
+					end({
+						success: 'SUCCESS'
+					});
 					expectValue(1);
 					clock.uninstall();
 				});
 				it('should not mutate passed startLabels', () => {
-					const startLabels = { code: '200' };
+					const startLabels = {
+						code: '200'
+					};
 					const end = instance.startTimer(startLabels);
-					end({ code: '400' });
-					expect(startLabels).toEqual({ code: '200' });
+					end({
+						code: '400'
+					});
+					expect(startLabels).toEqual({
+						code: '200'
+					});
 				});
 			});
 
 			describe('with timestamp', () => {
 				beforeEach(() => {
 					instance = new Gauge('name', 'help', ['code']);
-					instance.set({ code: '200' }, 20);
+					instance.set(
+						{
+							code: '200'
+						},
+						20
+					);
 				});
 				it('should be able to set value and timestamp as Date', () => {
 					instance.labels('200').set(500, new Date('2017-01-26T01:05Z'));
 					expectValue(500, 1485392700000);
 				});
+				it('should be able to set BigNumber value and timestamp as Date', () => {
+					instance
+						.labels('200')
+						.set(
+							new BigNumber('53999490382192109391902'),
+							new Date('2018-09-05T01:05Z')
+						);
+					expectValue(
+						new BigNumber('53999490382192109391902'),
+						Date.parse('2018-09-05T01:05Z')
+					);
+				});
 				it('should be able to set value and timestamp as number', () => {
 					instance.labels('200').set(500, 1485392700000);
 					expectValue(500, 1485392700000);
+				});
+				it('should be able to set BigNumber value and timestamp as number', () => {
+					instance
+						.labels('200')
+						.set(new BigNumber('63999490382192109391902'), 1485392700000);
+					expectValue(new BigNumber('63999490382192109391902'), 1485392700000);
 				});
 				it('should not allow non numbers', () => {
 					const fn = function() {
@@ -173,7 +223,10 @@ describe('gauge', () => {
 
 		describe('with parameters as object', () => {
 			beforeEach(() => {
-				instance = new Gauge({ name: 'gauge_test', help: 'help' });
+				instance = new Gauge({
+					name: 'gauge_test',
+					help: 'help'
+				});
 				instance.set(10);
 			});
 
@@ -224,6 +277,11 @@ describe('gauge', () => {
 				expect(fn).toThrowErrorMatchingSnapshot();
 			});
 
+			it('should be able to set BigNumber', () => {
+				instance.set(new BigNumber('4649494949494949494949'));
+				expectValue(new BigNumber('4649494949494949494949'));
+			});
+
 			it('should init to 0', () => {
 				instance = new Gauge({
 					name: 'init_gauge',
@@ -239,7 +297,12 @@ describe('gauge', () => {
 						help: 'help',
 						labelNames: ['code']
 					});
-					instance.set({ code: '200' }, 20);
+					instance.set(
+						{
+							code: '200'
+						},
+						20
+					);
 				});
 				it('should be able to increment', () => {
 					instance.labels('200').inc();
@@ -252,6 +315,10 @@ describe('gauge', () => {
 				it('should be able to set value', () => {
 					instance.labels('200').set(500);
 					expectValue(500);
+				});
+				it('should be able to set BigNumber value', () => {
+					instance.labels('200').set(new BigNumber('5649494949494949494949'));
+					expectValue(new BigNumber('5649494949494949494949'));
 				});
 				it('should be able to set value to current time', () => {
 					const clock = lolex.install();
@@ -271,7 +338,9 @@ describe('gauge', () => {
 					const clock = lolex.install();
 					const end = instance.startTimer();
 					clock.tick(1000);
-					end({ code: 200 });
+					end({
+						code: 200
+					});
 					expectValue(1);
 					clock.uninstall();
 				});
@@ -282,32 +351,65 @@ describe('gauge', () => {
 						labelNames: ['code', 'success']
 					});
 					const clock = lolex.install();
-					const end = instance.startTimer({ code: 200 });
+					const end = instance.startTimer({
+						code: 200
+					});
 					clock.tick(1000);
-					end({ success: 'SUCCESS' });
+					end({
+						success: 'SUCCESS'
+					});
 					expectValue(1);
 					clock.uninstall();
 				});
 				it('should not mutate passed startLabels', () => {
-					const startLabels = { code: '200' };
+					const startLabels = {
+						code: '200'
+					};
 					const end = instance.startTimer(startLabels);
-					end({ code: '400' });
-					expect(startLabels).toEqual({ code: '200' });
+					end({
+						code: '400'
+					});
+					expect(startLabels).toEqual({
+						code: '200'
+					});
 				});
 			});
 
 			describe('with timestamp', () => {
 				beforeEach(() => {
 					instance = new Gauge('name', 'help', ['code']);
-					instance.set({ code: '200' }, 20);
+					instance.set(
+						{
+							code: '200'
+						},
+						20
+					);
 				});
 				it('should be able to set value and timestamp as Date', () => {
 					instance.labels('200').set(500, new Date('2017-01-26T01:05Z'));
 					expectValue(500, 1485392700000);
 				});
+				it('should be able to set BigNumber value and timestamp as Date', () => {
+					instance
+						.labels('200')
+						.set(
+							new BigNumber('5649494949494949494949'),
+							new Date('2017-01-26T01:05Z')
+						);
+					expectValue(
+						new BigNumber('5649494949494949494949'),
+						Date.parse('2017-01-26T01:05Z')
+					);
+				});
 				it('should be able to set value and timestamp as number', () => {
 					instance.labels('200').set(500, 1485392700000);
 					expectValue(500, 1485392700000);
+				});
+				it('should be able to set BigNumber value and timestamp as number', () => {
+					instance
+						.labels('200')
+						.set(new BigNumber('5649494949494949494949'), 1485392700000);
+					expectValue(new BigNumber('5649494949494949494949'), 1485392700000);
 				});
 				it('should not allow non numbers', () => {
 					const fn = function() {
@@ -337,7 +439,11 @@ describe('gauge', () => {
 			globalRegistry.clear();
 		});
 		beforeEach(() => {
-			instance = new Gauge({ name: 'gauge_test', help: 'help', registers: [] });
+			instance = new Gauge({
+				name: 'gauge_test',
+				help: 'help',
+				registers: []
+			});
 			instance.set(10);
 		});
 		it('should set a gauge to provided value', () => {
@@ -370,11 +476,25 @@ describe('gauge', () => {
 					labelNames: ['code'],
 					registers: [registryInstance]
 				});
-				instance.set({ code: '200' }, 20);
+				instance.set(
+					{
+						code: '200'
+					},
+					20
+				);
 			});
 			it('should be able to set value and timestamp as Date', () => {
 				instance.labels('200').set(500, new Date('2017-01-26T01:05Z'));
 				expectValue(500, 1485392700000);
+			});
+			it('should be able to set BigNumber value and timestamp as Date', () => {
+				instance
+					.labels('200')
+					.set(
+						new BigNumber('3333333333333333333'),
+						new Date('2017-01-26T01:05Z')
+					);
+				expectValue(new BigNumber('3333333333333333333'), 1485392700000);
 			});
 			it('should be able to set value and timestamp as number', () => {
 				instance.labels('200').set(500, 1485392700000);
@@ -428,7 +548,13 @@ describe('gauge', () => {
 				labelNames: ['serial', 'active']
 			});
 
-			instance.set({ serial: '12345', active: 'yes' }, 12);
+			instance.set(
+				{
+					serial: '12345',
+					active: 'yes'
+				},
+				12
+			);
 			expect(instance.get().values[0].value).toEqual(12);
 			expect(instance.get().values[0].labels.serial).toEqual('12345');
 			expect(instance.get().values[0].labels.active).toEqual('yes');
@@ -437,7 +563,13 @@ describe('gauge', () => {
 
 			expect(instance.get().values).toEqual([]);
 
-			instance.set({ serial: '12345', active: 'no' }, 10);
+			instance.set(
+				{
+					serial: '12345',
+					active: 'no'
+				},
+				10
+			);
 			expect(instance.get().values[0].value).toEqual(10);
 			expect(instance.get().values[0].labels.serial).toEqual('12345');
 			expect(instance.get().values[0].labels.active).toEqual('no');
@@ -445,7 +577,11 @@ describe('gauge', () => {
 	});
 
 	function expectValue(val, timestamp) {
-		expect(instance.get().values[0].value).toEqual(val);
+		if (BigNumber.isBigNumber(instance.get().values[0].value)) {
+			expect(instance.get().values[0].value).toEqual(val);
+		} else {
+			expect(instance.get().values[0].value).toEqual(val);
+		}
 		expect(instance.get().values[0].timestamp).toEqual(timestamp);
 	}
 });
