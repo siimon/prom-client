@@ -1,5 +1,6 @@
 // Type definitions for prom-client
 // Definitions by: Simon Nyberg http://twitter.com/siimon_nyberg
+import { BigNumber } from 'bignumber.js';
 
 /**
  * Options pass to Registry.metrics()
@@ -244,14 +245,18 @@ export class Gauge {
 	 * @param value The value to increment with
 	 * @param timestamp Timestamp to associate the time series with
 	 */
-	inc(labels: labelValues, value?: number, timestamp?: number | Date): void;
+	inc(
+		labels: labelValues,
+		value?: number | BigNumber,
+		timestamp?: number | Date
+	): void;
 
 	/**
 	 * Increment gauge
 	 * @param value The value to increment with
 	 * @param timestamp Timestamp to associate the time series with
 	 */
-	inc(value?: number, timestamp?: number | Date): void;
+	inc(value?: number | BigNumber, timestamp?: number | Date): void;
 
 	/**
 	 * Decrement gauge
@@ -259,14 +264,18 @@ export class Gauge {
 	 * @param value Value to decrement with
 	 * @param timestamp Timestamp to associate the time series with
 	 */
-	dec(labels: labelValues, value?: number, timestamp?: number | Date): void;
+	dec(
+		labels: labelValues,
+		value?: number | BigNumber,
+		timestamp?: number | Date
+	): void;
 
 	/**
 	 * Decrement gauge
 	 * @param value The value to decrement with
 	 * @param timestamp Timestamp to associate the time series with
 	 */
-	dec(value?: number, timestamp?: number | Date): void;
+	dec(value?: number | BigNumber, timestamp?: number | Date): void;
 
 	/**
 	 * Set gauge value for labels
@@ -274,14 +283,18 @@ export class Gauge {
 	 * @param value The value to set
 	 * @param timestamp Timestamp to associate the time series with
 	 */
-	set(labels: labelValues, value: number, timestamp?: number | Date): void;
+	set(
+		labels: labelValues,
+		value: number | BigNumber,
+		timestamp?: number | Date
+	): void;
 
 	/**
 	 * Set gauge value
 	 * @param value The value to set
 	 * @param timestamp Timestamp to associate the time series with
 	 */
-	set(value: number, timestamp?: number | Date): void;
+	set(value: number | BigNumber, timestamp?: number | Date): void;
 
 	/**
 	 * Set gauge value to current epoch time in ms
@@ -316,21 +329,21 @@ export namespace Gauge {
 		 * @param value The value to increment with
 		 * @param timestamp Timestamp to associate the time series with
 		 */
-		inc(value?: number, timestamp?: number | Date): void;
+		inc(value?: number | BigNumber, timestamp?: number | Date): void;
 
 		/**
 		 * Decrement with value
 		 * @param value The value to decrement with
 		 * @param timestamp Timestamp to associate the time series with
 		 */
-		dec(value?: number, timestamp?: number | Date): void;
+		dec(value?: number | BigNumber, timestamp?: number | Date): void;
 
 		/**
 		 * Set gauges value
 		 * @param value The value to set
 		 * @param timestamp Timestamp to associate the time series with
 		 */
-		set(value: number, timestamp?: number | Date): void;
+		set(value: number | BigNumber, timestamp?: number | Date): void;
 
 		/**
 		 * Set gauge value to current epoch time in ms

@@ -1,4 +1,5 @@
 'use strict';
+const BigNumber = require('bignumber.js');
 
 describe('heapSizeAndUsed', () => {
 	const heapSizeAndUsed = require('../../lib/metrics/heapSizeAndUsed');
@@ -21,6 +22,18 @@ describe('heapSizeAndUsed', () => {
 		};
 		const totalGauge = heapSizeAndUsed()().total.get();
 		expect(totalGauge.values[0].value).toEqual(1000);
+	});
+
+	it('should set total heap size gauge with total from memoryUsage bignumber', () => {
+		process.memoryUsage = function() {
+			return {
+				heapTotal: 3456726124253166,
+				heapUsed: 50000000000000000,
+				external: 10000000000000000
+			};
+		};
+		const totalGauge = heapSizeAndUsed()().total.get();
+		expect(totalGauge.values[0].value).toEqual(3456726124253166);
 	});
 
 	it('should set used gauge with used from memoryUsage', () => {
