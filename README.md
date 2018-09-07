@@ -158,6 +158,8 @@ Gauges are similar to Counters but Gauges value can be decreased.
 const client = require('prom-client');
 const gauge = new client.Gauge({ name: 'metric_name', help: 'metric_help' });
 gauge.set(10); // Set to 10
+const BigNumber = require('bignumber.js');
+gauge.set(new BigNumber('203948593849190493')); // Set to BigNumber
 gauge.inc(); // Inc with 1
 gauge.inc(10); // Inc with 10
 gauge.dec(); // Dec with 1
