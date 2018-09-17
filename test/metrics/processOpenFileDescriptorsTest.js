@@ -1,20 +1,21 @@
 'use strict';
 
 describe('processOpenFileDescriptors', () => {
-	const sinon = require('sinon');
 	const register = require('../../index').register;
 	const processOpenFileDescriptors = require('../../lib/metrics/processOpenFileDescriptors');
 
-	const sinonSandbox = sinon.createSandbox();
+	jest.mock(
+		'process',
+		() =>
+			Object.assign({}, jest.requireActual('process'), { platform: 'linux' }) // This metric only works on Linux
+	);
 
 	beforeAll(() => {
-		sinonSandbox.stub(process, 'platform').value('linux'); // This metric only works on Linux
 		register.clear();
 	});
 
 	afterEach(() => {
 		register.clear();
-		sinonSandbox.restore();
 	});
 
 	it('should add metric to the registry', () => {
