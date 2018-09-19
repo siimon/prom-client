@@ -11,10 +11,14 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+### Added
+
+## [11.1.2] - 2018-09-19
+
+### Changed
+
 - Allow setting Gauge values to NaN, +Inf, and -Inf
 - Fixed `histogram` scrape performance by using `acc.push` instead of `acc.concat`. Fixes #216 with #219
-
-### Added
 
 ## [11.1.1] - 2018-06-29
 
