@@ -10,7 +10,10 @@ function runSuite() {
 	console.log(chalk.yellow('\nProgress:'));
 
 	// Add new test suites here.
-	const suites = [createSuites('registry', require('./registry'))];
+	const suites = [
+		createSuites('registry', require('./registry')),
+		createSuites('histogram', require('./histogram'))
+	];
 
 	return Promise.all(suites)
 		.then(reportResults)

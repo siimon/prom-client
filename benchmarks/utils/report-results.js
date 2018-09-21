@@ -5,7 +5,7 @@ const _ = require('lodash');
 const chalk = require('chalk');
 // Percentage (between 0 and 100) slower we will allow local changes to be than published version.
 // This will account for no-op performance changes having a variance difference between versions.
-const ACCEPTABLE_PERCENTAGE_SLOWER = 2.0;
+const ACCEPTABLE_PERCENTAGE_SLOWER = 7.0;
 
 module.exports = reportResults;
 
@@ -69,27 +69,39 @@ function reportResults(resultSuites) {
 		const [fastestHz] = suite.filter('fastest').map('hz');
 		const [slowestHz] = suite.filter('slowest').map('hz');
 		const changeInSpeed = fastestHz - slowestHz;
-		const percentChange = (changeInSpeed / slowestHz) * 100;
+		const percentChange = Math.abs((changeInSpeed / slowestHz) * 100);
 		const prettyPercentChange = Number.parseFloat(percentChange).toPrecision(4);
-		const success =
-			fastestClientName === 'local' ||
-			percentChange <= ACCEPTABLE_PERCENTAGE_SLOWER;
+
+		const isFaster = fastestClientName === 'local';
+		const isAcceptable = percentChange <= ACCEPTABLE_PERCENTAGE_SLOWER;
+
+		const success = isFaster || isAcceptable;
 
 		overallSuccess = overallSuccess && success;
 
-		if (success) {
-			console.log(
-				`${chalk.green('✓')} ${benchmarkName} is ${chalk.yellow(
-					`${prettyPercentChange}% faster`
-				)}`
-			);
+		let statusSymbol;
+		let statusColor;
+		let speed;
+
+		if (isFaster) {
+			speed = 'faster';
+			statusSymbol = '✓';
+			statusColor = chalk.green;
+		} else if (isAcceptable) {
+			speed = 'acceptably slower';
+			statusSymbol = '⚠';
+			statusColor = chalk.yellow;
 		} else {
-			console.log(
-				`${chalk.red('✗')} ${benchmarkName} is ${chalk.yellow(
-					`${prettyPercentChange}% slower`
-				)}`
-			);
+			speed = 'slower';
+			statusSymbol = '✗';
+			statusColor = chalk.red;
 		}
+
+		console.log(
+			`${statusColor(statusSymbol)} ${benchmarkName} is ${statusColor(
+				`${prettyPercentChange}% ${speed}.`
+			)}`
+		);
 	});
 
 	if (!overallSuccess) {
