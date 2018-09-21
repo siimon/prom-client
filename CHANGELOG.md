@@ -13,6 +13,9 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- Fixed performance by avoiding `Object.assign` on hot paths, as well as
+  mutating objects when appropriate.
+
 ## [11.1.2] - 2018-09-19
 
 ### Changed
