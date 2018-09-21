@@ -5,7 +5,7 @@ const _ = require('lodash');
 const chalk = require('chalk');
 // Percentage (between 0 and 100) slower we will allow local changes to be than published version.
 // This will account for no-op performance changes having a variance difference between versions.
-const ACCEPTABLE_PERCENTAGE_SLOWER = 7.0;
+const ACCEPTABLE_PERCENTAGE_SLOWER = 10.0;
 
 module.exports = reportResults;
 
@@ -62,18 +62,16 @@ function reportResults(resultSuites) {
 
 	let overallSuccess = true;
 	suites.forEach(suite => {
-		const [fastestName] = suite.filter('fastest').map('name');
-		const [fastestClientName, ...nameParts] = fastestName.split('#');
+		const fastest = suite.filter('fastest')[0];
+		const slowest = suite.filter('slowest')[0];
+
+		const [fastestClientName, ...nameParts] = fastest.name.split('#');
 		const benchmarkName = nameParts.join('#');
 
-		const [fastestHz] = suite.filter('fastest').map('hz');
-		const [slowestHz] = suite.filter('slowest').map('hz');
-		const changeInSpeed = fastestHz - slowestHz;
-		const percentChange = Math.abs((changeInSpeed / slowestHz) * 100);
-		const prettyPercentChange = Number.parseFloat(percentChange).toPrecision(4);
+		const percentChange = computePercentChange(fastest, slowest);
 
 		const isFaster = fastestClientName === 'local';
-		const isAcceptable = percentChange <= ACCEPTABLE_PERCENTAGE_SLOWER;
+		const isAcceptable = percentChange.value <= ACCEPTABLE_PERCENTAGE_SLOWER;
 
 		const success = isFaster || isAcceptable;
 
@@ -99,7 +97,7 @@ function reportResults(resultSuites) {
 
 		console.log(
 			`${statusColor(statusSymbol)} ${benchmarkName} is ${statusColor(
-				`${prettyPercentChange}% ${speed}.`
+				`${percentChange.prettyValue}% ${speed}.`
 			)}`
 		);
 	});
@@ -109,4 +107,17 @@ function reportResults(resultSuites) {
 			'Benchmarks failed to perform better than the currently published version.'
 		);
 	}
+}
+
+function computePercentChange(slowestBenchmark, fastestBenchmark) {
+	const fastestHz = fastestBenchmark.hz;
+	const slowestHz = slowestBenchmark.hz;
+	const delta = fastestHz - slowestHz;
+	const percentChange = Math.abs((delta / slowestHz) * 100);
+	const prettyPercentChange = Number.parseFloat(percentChange).toPrecision(4);
+
+	return {
+		value: percentChange,
+		prettyValue: prettyPercentChange
+	};
 }

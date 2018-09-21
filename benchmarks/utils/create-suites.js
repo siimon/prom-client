@@ -11,7 +11,7 @@ function createSuites(collectionName, setup) {
 	const suites = {};
 	const createApi = clientName => {
 		return {
-			add(name, fn) {
+			add(name, fn, opts) {
 				if (!suites[name]) {
 					suites[name] = new benchmark.Suite(name)
 						.on('cycle', event => {
@@ -27,7 +27,11 @@ function createSuites(collectionName, setup) {
 				}
 
 				const suite = suites[name];
-				suite.add(`${clientName}#${collectionName}#${name}`, fn);
+				suite.add(
+					`${clientName}#${collectionName}#${name}`,
+					fn,
+					Object.assign({ minSamples: 200 }, opts)
+				);
 			}
 		};
 	};
@@ -41,7 +45,7 @@ function createSuites(collectionName, setup) {
 				suite.on('complete', () => resolve(suite));
 			});
 
-			suite.run({ async: true });
+			suite.run();
 
 			return resultPromise;
 		})
