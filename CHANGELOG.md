@@ -13,7 +13,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
-- Added an initial `benchmark` suite to be run by `npm run benchmarks`.
+- Added an initial `benchmark` suite which can be run with `npm run benchmarks`.
 
 ## [11.1.2] - 2018-09-19
 
