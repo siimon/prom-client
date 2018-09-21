@@ -1,6 +1,6 @@
 'use strict';
 
-const { table } = require('table');
+const Table = require('cli-table');
 const _ = require('lodash');
 const chalk = require('chalk');
 // Percentage (between 0 and 100) slower we will allow local changes to be than published version.
@@ -42,8 +42,12 @@ function reportResults(resultSuites) {
 		const columnNames = _.keys(collectionTable);
 		const rowNames = _.keys(collectionTable.local);
 
-		const tableData = [[chalk.blue(collectionName)].concat(columnNames)].concat(
-			_.map(rowNames, rowName =>
+		const table = new Table({
+			head: [chalk.blue(collectionName)].concat(columnNames)
+		});
+
+		_.forEach(rowNames, rowName => {
+			table.push(
 				[rowName].concat(
 					_.map(columnNames, columnName => {
 						const { value, fastest } = collectionTable[columnName][rowName];
@@ -52,10 +56,10 @@ function reportResults(resultSuites) {
 						return color(value);
 					})
 				)
-			)
-		);
+			);
+		});
 
-		console.log(table(tableData));
+		console.log(`${table.toString()}\n`);
 	});
 
 	console.log(chalk.yellow('Summary:'));
@@ -103,8 +107,16 @@ function reportResults(resultSuites) {
 	});
 
 	if (!overallSuccess) {
-		throw new Error(
-			'Benchmarks failed to perform better than the currently published version.'
+		console.log('\n');
+		console.log(
+			chalk.red(
+				'⚠ Benchmarks failed to perform better than the currently published version.'
+			)
+		);
+		console.log(
+			chalk.yellow(
+				'- Please determine if the performance changes are expected and acceptable.'
+			)
 		);
 	}
 }
