@@ -27,17 +27,13 @@ function createSuites(collectionName, setup) {
 				}
 
 				const suite = suites[name];
-				suite.add(
-					`${clientName}#${collectionName}#${name}`,
-					fn,
-					Object.assign({ minSamples: 200 }, opts)
-				);
+				suite.add(`${clientName}#${collectionName}#${name}`, fn, opts);
 			}
 		};
 	};
 
-	setup(publishedClient, createApi('published'));
 	setup(localClient, createApi('local'));
+	setup(publishedClient, createApi('published'));
 
 	return Promise.all(
 		_.values(suites).map(suite => {

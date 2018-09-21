@@ -1,7 +1,5 @@
 'use strict';
 
-const _ = require('lodash');
-
 module.exports = setupRegistrySuite;
 
 function setupRegistrySuite(client, { add }) {
@@ -10,22 +8,11 @@ function setupRegistrySuite(client, { add }) {
 	const histogram = new client.Histogram({
 		name: 'histogram',
 		help: 'histogram',
-		labelNames: ['a', 'b', 'c', 'd'],
+		labelNames: ['a', 'b'],
 		registers: [registry]
 	});
 
-	const labelValueCount = 2;
-	_.times(labelValueCount, a => {
-		_.times(labelValueCount, b => {
-			_.times(labelValueCount, c => {
-				_.times(labelValueCount, d => {
-					const end = histogram.startTimer();
-
-					end({ a, b, c, d });
-				});
-			});
-		});
-	});
+	histogram.observe(1, { a: 1, b: 1 });
 
 	add('getMetricsAsJSON', () => {
 		registry.getMetricsAsJSON();
