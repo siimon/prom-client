@@ -2,7 +2,15 @@
 
 module.exports = setupHistogramSuite;
 
-function setupHistogramSuite(client, { add }) {
+function setupHistogramSuite(suite) {
+	suite.add(
+		'observe',
+		(client, histogram) => histogram.observe(1, { a: 1, b: 1 }),
+		{ setup }
+	);
+}
+
+function setup(client) {
 	const registry = new client.Registry();
 
 	const histogram = new client.Histogram({
@@ -12,7 +20,5 @@ function setupHistogramSuite(client, { add }) {
 		registers: [registry]
 	});
 
-	add('observe', () => {
-		histogram.observe(1, { a: 1, b: 1 });
-	});
+	return histogram;
 }

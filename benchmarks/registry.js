@@ -2,7 +2,16 @@
 
 module.exports = setupRegistrySuite;
 
-function setupRegistrySuite(client, { add }) {
+function setupRegistrySuite(suite) {
+	suite.add(
+		'getMetricsAsJSON',
+		(client, registry) => registry.getMetricsAsJSON(),
+		{ setup }
+	);
+	suite.add('metrics', (client, registry) => registry.metrics(), { setup });
+}
+
+function setup(client) {
 	const registry = new client.Registry();
 
 	const histogram = new client.Histogram({
@@ -14,11 +23,5 @@ function setupRegistrySuite(client, { add }) {
 
 	histogram.observe(1, { a: 1, b: 1 });
 
-	add('getMetricsAsJSON', () => {
-		registry.getMetricsAsJSON();
-	});
-
-	add('metrics', () => {
-		registry.metrics();
-	});
+	return registry;
 }
