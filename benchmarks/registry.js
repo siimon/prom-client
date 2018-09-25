@@ -41,7 +41,7 @@ function setup(labelCounts) {
 
 		const labelCombinations = getLabelCombinations(labelCounts);
 
-		labelCombinations.forEach(labels => histogram.observe(1, labels));
+		labelCombinations.forEach(labels => histogram.observe(labels, 1));
 
 		return registry;
 	};
