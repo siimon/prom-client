@@ -7,36 +7,41 @@ module.exports = setupHistogramSuite;
 function setupHistogramSuite(suite) {
 	suite.add(
 		'observe#1 with 64',
-		(client, { histogram }) =>
-			permutations([64], labels => histogram.observe(1, labels)),
+		permutations([64], (client, { histogram }, labels) =>
+			histogram.observe(1, labels)
+		),
 		{ teardown, setup: setup(1) }
 	);
 
 	suite.add(
 		'observe#2 with 8',
-		(client, { histogram }) =>
-			permutations([8, 8], labels => histogram.observe(1, labels)),
+		permutations([8, 8], (client, { histogram }, labels) =>
+			histogram.observe(1, labels)
+		),
 		{ teardown, setup: setup(2) }
 	);
 
 	suite.add(
 		'observe#2 with 4 and 2 with 2',
-		(client, { histogram }) =>
-			permutations([4, 4, 2, 2], labels => histogram.observe(1, labels)),
+		permutations([4, 4, 2, 2], (client, { histogram }, labels) =>
+			histogram.observe(1, labels)
+		),
 		{ teardown, setup: setup(4) }
 	);
 
 	suite.add(
 		'observe#2 with 2 and 2 with 4',
-		(client, { histogram }) =>
-			permutations([2, 2, 4, 4], labels => histogram.observe(1, labels)),
+		permutations([2, 2, 4, 4], (client, { histogram }, labels) =>
+			histogram.observe(1, labels)
+		),
 		{ teardown, setup: setup(4) }
 	);
 
 	suite.add(
 		'observe#6 with 2',
-		(client, { histogram }) =>
-			permutations([2, 2, 2, 2, 2, 2], labels => histogram.observe(1, labels)),
+		permutations([2, 2, 2, 2, 2, 2], (client, { histogram }, labels) =>
+			histogram.observe(1, labels)
+		),
 		{ teardown, setup: setup(6) }
 	);
 }
@@ -64,7 +69,7 @@ function getLabelNames(count) {
 	return letters.slice(0, count);
 }
 
-const flatten = (a, b) => [].concat(...a.map(a => b.map(b => [].concat(a, b))));
+const flatten = (a, b) => [].concat(...a.map(c => b.map(d => [].concat(c, d))));
 const cartesianProduct = (a, b, ...c) =>
 	b ? cartesianProduct(flatten(a, b), ...c) : a;
 const times = a => Array.from(Array(a)).map((_, x) => x);
@@ -81,5 +86,6 @@ function permutations(labelValues, fn) {
 		}, {})
 	);
 
-	return () => labelCombinations.forEach(labels => fn(labels));
+	return (client, ctx) =>
+		labelCombinations.forEach(labels => fn(client, ctx, labels));
 }
