@@ -1,27 +1,48 @@
 'use strict';
 
+const { getLabelNames, getLabelCombinations } = require('./utils/labels');
+
 module.exports = setupRegistrySuite;
 
 function setupRegistrySuite(suite) {
-	suite.add(
-		'getMetricsAsJSON',
-		(client, registry) => registry.getMetricsAsJSON(),
-		{ setup }
-	);
-	suite.add('metrics', (client, registry) => registry.metrics(), { setup });
-}
+	const labelSetups = [
+		{ name: '1 with 64', counts: [64] },
+		{ name: '2 with 8', counts: [8, 8] },
+		{ name: '2 with 4 and 2 with 2', counts: [4, 4, 2, 2] },
+		{ name: '2 with 2 and 2 with 4', counts: [2, 2, 4, 4] },
+		{ name: '6 with 2', counts: [2, 2, 2, 2, 2, 2] }
+	];
 
-function setup(client) {
-	const registry = new client.Registry();
-
-	const histogram = new client.Histogram({
-		name: 'histogram',
-		help: 'histogram',
-		labelNames: ['a', 'b'],
-		registers: [registry]
+	labelSetups.forEach(({ name, counts }) => {
+		suite.add(
+			`getMetricsAsJSON#${name}`,
+			(client, registry) => registry.getMetricsAsJSON(),
+			{ setup: setup(counts) }
+		);
 	});
 
-	histogram.observe(1, { a: 1, b: 1 });
+	labelSetups.forEach(({ name, counts }) => {
+		suite.add(`metrics#${name}`, (client, registry) => registry.metrics(), {
+			setup: setup(counts)
+		});
+	});
+}
 
-	return registry;
+function setup(labelCounts) {
+	return client => {
+		const registry = new client.Registry();
+
+		const histogram = new client.Histogram({
+			name: 'histogram',
+			help: 'histogram',
+			labelNames: getLabelNames(labelCounts.length),
+			registers: [registry]
+		});
+
+		const labelCombinations = getLabelCombinations(labelCounts);
+
+		labelCombinations.forEach(labels => histogram.observe(1, labels));
+
+		return registry;
+	};
 }
