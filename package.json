@@ -16,7 +16,7 @@
 		"test": "npm run lint && npm run compile-typescript && npm run test-unit && npm run benchmarks",
 		"lint": "eslint .",
 		"test-unit": "jest",
-		"compile-typescript": "tsc index.d.ts --noImplicitAny --skipLibCheck",
+		"compile-typescript": "tsc index.d.ts --noImplicitAny --target es6",
 		"precommit": "lint-staged"
 	},
 	"repository": {
