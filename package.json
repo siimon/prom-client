@@ -12,10 +12,11 @@
 		"node": ">=6.1"
 	},
 	"scripts": {
+		"benchmarks": "node ./benchmarks/index.js",
 		"test": "npm run lint && npm run compile-typescript && npm run test-unit",
 		"lint": "eslint .",
 		"test-unit": "jest",
-		"compile-typescript": "tsc index.d.ts --noImplicitAny",
+		"compile-typescript": "tsc index.d.ts --noImplicitAny --target es6",
 		"precommit": "lint-staged"
 	},
 	"repository": {
@@ -31,6 +32,7 @@
 	"license": "Apache-2.0",
 	"homepage": "https://github.com/siimon/prom-client",
 	"devDependencies": {
+		"@clevernature/benchmark-regression": "^1.0.0",
 		"eslint": "^5.6.0",
 		"eslint-plugin-node": "^7.0.1",
 		"eslint-plugin-prettier": "^2.1.2",

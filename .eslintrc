@@ -62,7 +62,7 @@
 			}
 		},
 		{
-			"files": ["example/**/*.js"],
+			"files": ["example/**/*.js","benchmarks/**/*.js"],
 			"rules": {
 				"no-console": "off"
 			}
