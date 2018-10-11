@@ -19,7 +19,7 @@
 		"url": "git@github.com:siimon/prom-client.git"
 	},
 	"keywords": ["Prometheus", "Metrics", "Client"],
-	"author": "Simon Nyberg, Derori",
+	"author": "Simon Nyberg",
 	"license": "Apache-2.0",
 	"homepage": "https://github.com/siimon/prom-client",
 	"devDependencies": {
