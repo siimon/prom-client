@@ -92,6 +92,26 @@ describe('histogram', () => {
 			clock.uninstall();
 		});
 
+		it('should time requests with factor - falls inside infinity bucket', () => {
+			const clock = lolex.install();
+			const doneFn = instance.startTimer(null, 1e3);
+			clock.tick(500);
+			doneFn();
+			const valuePair = getValueByLabel('+Inf', instance.get().values);
+			expect(valuePair.value).toEqual(1);
+			clock.uninstall();
+		});
+
+		it('should time requests with factor - falls inside bucket', () => {
+			const clock = lolex.install();
+			const doneFn = instance.startTimer(null, 2);
+			clock.tick(500);
+			doneFn();
+			const valuePair = getValueByLabel(1, instance.get().values);
+			expect(valuePair.value).toEqual(1);
+			clock.uninstall();
+		});
+
 		it('should not allow non numbers', () => {
 			const fn = function() {
 				instance.observe('asd');
@@ -308,6 +328,25 @@ describe('histogram', () => {
 				clock.tick(500);
 				doneFn();
 				const valuePair = getValueByLabel(0.5, instance.get().values);
+				expect(valuePair.value).toEqual(1);
+				clock.uninstall();
+			});
+			it('should time requests with factor - falls inside infinity bucket', () => {
+				const clock = lolex.install();
+				const doneFn = instance.startTimer(null, 1e3);
+				clock.tick(500);
+				doneFn();
+				const valuePair = getValueByLabel('+Inf', instance.get().values);
+				expect(valuePair.value).toEqual(1);
+				clock.uninstall();
+			});
+
+			it('should time requests with factor - falls inside bucket', () => {
+				const clock = lolex.install();
+				const doneFn = instance.startTimer(null, 2);
+				clock.tick(500);
+				doneFn();
+				const valuePair = getValueByLabel(1, instance.get().values);
 				expect(valuePair.value).toEqual(1);
 				clock.uninstall();
 			});

@@ -279,6 +279,15 @@ describe('summary', () => {
 					end({ endpoint: '/test' });
 					expect(startLabels).toEqual({ method: 'GET' });
 				});
+
+				it('should time requests with factor', () => {
+					const clock = lolex.install();
+					const doneFn = instance.startTimer(null, 1e3);
+					clock.tick(500);
+					doneFn();
+					expect(instance.get().values[1].value).toEqual(500);
+					clock.uninstall();
+				});
 			});
 		});
 

@@ -303,11 +303,11 @@ gauge.set({ method: 'GET', statusCode: '200' }, 100); // 1st version, Set value 
 gauge.labels('GET', '200').set(100); // 2nd version, Same as above
 ```
 
-It is also possible to use timers with labels, both before and after the timer
+It is also possible to use timers with labels, and factor for multiple the duration time (ex: value 1e3 gives milliseconds) both before and after the timer
 is created:
 
 ```js
-const end = startTimer({ method: 'GET' }); // Set method to GET, we don't know statusCode yet
+const end = startTimer({ method: 'GET' }, 1e3); // Set method to GET, we don't know statusCode yet
 xhrRequest(function(err, res) {
   if (err) {
     end({ statusCode: '500' }); // Sets value to xhrRequest duration in seconds with statusCode 500

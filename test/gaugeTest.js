@@ -50,6 +50,15 @@ describe('gauge', () => {
 				clock.uninstall();
 			});
 
+			it('should start a timer and set a gauge to elapsed in milliseconds using factor parameter', () => {
+				const clock = lolex.install();
+				const doneFn = instance.startTimer(null, 1e3);
+				clock.tick(500);
+				doneFn();
+				expectValue(500);
+				clock.uninstall();
+			});
+
 			it('should set to current time', () => {
 				const clock = lolex.install();
 				instance.setToCurrentTime();
