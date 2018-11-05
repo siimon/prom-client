@@ -586,4 +586,36 @@ describe('summary', () => {
 			expect(registryInstance.getMetricsAsJSON().length).toEqual(1);
 		});
 	});
+
+	describe('sliding window', () => {
+		let clock;
+		beforeEach(() => {
+			clock = lolex.install();
+			instance = new Summary({
+				name: 'summary_test',
+				help: 'test',
+				maxAgeSeconds: 5,
+				ageBuckets: 5
+			});
+		});
+
+		it('should slide', () => {
+			instance.observe(100);
+
+			for (let i = 0; i < 5; i++) {
+				expect(instance.get().values[0].labels.quantile).toEqual(0.01);
+				expect(instance.get().values[0].value).toEqual(100);
+				expect(instance.get().values[7].metricName).toEqual('summary_test_sum');
+				expect(instance.get().values[7].value).toEqual(100);
+				expect(instance.get().values[8].metricName).toEqual(
+					'summary_test_count'
+				);
+				expect(instance.get().values[8].value).toEqual(1);
+				clock.tick(1001);
+			}
+
+			expect(instance.get().values[0].labels.quantile).toEqual(0.01);
+			expect(instance.get().values[0].value).toEqual(0);
+		});
+	});
 });
