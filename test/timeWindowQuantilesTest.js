@@ -43,7 +43,9 @@ describe('timeWindowQuantiles', () => {
 
 	describe('rotatation', () => {
 		it('rotatation interval should be configured', () => {
-			let localInstance = new TimeWindowQuantiles(1, 1);
+			let localInstance = new TimeWindowQuantiles(undefined, undefined);
+			expect(localInstance.durationBetweenRotatesMillis).toEqual(Infinity);
+			localInstance = new TimeWindowQuantiles(1, 1);
 			expect(localInstance.durationBetweenRotatesMillis).toEqual(1000);
 			localInstance = new TimeWindowQuantiles(10, 5);
 			expect(localInstance.durationBetweenRotatesMillis).toEqual(2000);
