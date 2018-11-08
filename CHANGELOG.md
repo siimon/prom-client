@@ -11,6 +11,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Updated child dependency `merge` patch version to remove vulnerability.
+
 ### Added
 
 - Added an initial `benchmark` suite which can be run with `npm run benchmarks`.
