@@ -35,7 +35,7 @@
 		"typescript": "^2.5.2"
 	},
 	"dependencies": {
-		"bignumber.js": "^7.2.1",
+		"bignumber.js": "^8.0.1",
 		"tdigest": "^0.1.1"
 	},
 	"types": "./index.d.ts",
