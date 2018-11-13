@@ -446,6 +446,8 @@ export interface SummaryConfiguration {
 	percentiles?: number[];
 	registers?: Registry[];
 	aggregator?: Aggregator;
+	maxAgeSeconds?: number;
+	ageBuckets?: number;
 }
 
 /**
