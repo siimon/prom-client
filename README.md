@@ -258,6 +258,23 @@ new client.Summary({
 });
 ```
 
+To enable the sliding window functionality for summaries you need to add
+`maxAgeSeconds` and `ageBuckets` to the config like this:
+
+```js
+const client = require('prom-client');
+new client.Summary({
+  name: 'metric_name',
+  help: 'metric_help',
+  maxAgeSeconds: 600,
+  ageBuckets: 5
+});
+```
+
+The `maxAgeSeconds` will tell how old an bucket can be before it is reset and
+`ageBuckets` configures how many buckets we will have in our sliding window for
+the summary.
+
 Usage example
 
 ```js
