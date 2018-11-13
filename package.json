@@ -1,13 +1,9 @@
 {
 	"name": "prom-client",
-	"version": "11.1.3",
+	"version": "11.2.0",
 	"description": "Client for prometheus",
 	"main": "index.js",
-	"files": [
-		"lib/",
-		"index.js",
-		"index.d.ts"
-	],
+	"files": ["lib/", "index.js", "index.d.ts"],
 	"engines": {
 		"node": ">=6.1"
 	},
@@ -23,11 +19,7 @@
 		"type": "git",
 		"url": "git@github.com:siimon/prom-client.git"
 	},
-	"keywords": [
-		"Prometheus",
-		"Metrics",
-		"Client"
-	],
+	"keywords": ["Prometheus", "Metrics", "Client"],
 	"author": "Simon Nyberg",
 	"license": "Apache-2.0",
 	"homepage": "https://github.com/siimon/prom-client",
@@ -53,18 +45,9 @@
 		"testRegex": ".*Test\\.js$"
 	},
 	"lint-staged": {
-		"*.js": [
-			"eslint --fix",
-			"git add"
-		],
-		"*.{ts,md,json,yml}": [
-			"prettier --write",
-			"git add"
-		],
-		".{eslintrc,travis.yml}": [
-			"prettier --write",
-			"git add"
-		]
+		"*.js": ["eslint --fix", "git add"],
+		"*.{ts,md,json,yml}": ["prettier --write", "git add"],
+		".{eslintrc,travis.yml}": ["prettier --write", "git add"]
 	},
 	"prettier": {
 		"singleQuote": true,
