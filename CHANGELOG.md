@@ -13,6 +13,16 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+## [11.2.1]
+
+### Breaking
+
+### Changed
+
+### Added
+
+* Updated types for Summary in typescript definition file
+
 ## [11.2.0]
 
 ### Changed
