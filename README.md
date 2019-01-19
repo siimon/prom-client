@@ -142,14 +142,6 @@ counter.inc(); // Inc with 1
 counter.inc(10); // Inc with 10
 ```
 
-A counter can be reset manually. This removes the label-values combinations and
-initializes to 0.
-
-```js
-counter.reset();
-counter.inc(); // Inc with 1 starting from 0
-```
-
 ### Gauge
 
 Gauges are similar to Counters but Gauges value can be decreased.
@@ -162,14 +154,6 @@ gauge.inc(); // Inc with 1
 gauge.inc(10); // Inc with 10
 gauge.dec(); // Dec with 1
 gauge.dec(10); // Dec with 10
-```
-
-A gauge can be reset manually. This removes the label-values combinations and
-initializes to 0.
-
-```js
-gauge.reset();
-gauge.inc(); // Inc with 1 starting from 0
 ```
 
 There are some utilities for common use cases:
@@ -233,13 +217,6 @@ xhrRequest(function(err, res) {
 });
 ```
 
-A Histogram can be reset manually. This removes the label-values combinations
-and reinitializes the observations.
-
-```js
-histogram.reset();
-```
-
 ### Summary
 
 Summaries calculate percentiles of observed values.
@@ -293,13 +270,6 @@ const end = summary.startTimer();
 xhrRequest(function(err, res) {
   end(); // Observes the value to xhrRequests duration in seconds
 });
-```
-
-A Summary can be reset manually. This removes the label-values combinations and
-reinitializes the observations.
-
-```js
-summary.reset();
 ```
 
 ### Labels
