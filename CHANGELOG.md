@@ -11,6 +11,9 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Check that cluster worker is still connected before attempting to query it for
+  metrics. (#244)
+
 ### Added
 
 ## [11.2.1]
