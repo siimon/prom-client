@@ -9,6 +9,7 @@ const benchmarks = createRegressionBenchmark(currentClient, [
 
 benchmarks.suite('registry', require('./registry'));
 benchmarks.suite('histogram', require('./histogram'));
+benchmarks.suite('summary', require('./summary'));
 benchmarks.run().catch(err => {
 	console.error(err.stack);
 	// eslint-disable-next-line no-process-exit
