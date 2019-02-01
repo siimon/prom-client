@@ -4,6 +4,8 @@ exports[`counter global registry with a parameter for each variable labels shoul
 
 exports[`counter global registry with a parameter for each variable labels should throw error if one of lables isn't in labelNames list provided to constructor 1`] = `"Added label \\"status\\" is not included in initial labelset: [ 'method', 'endpoint' ]"`;
 
+exports[`counter global registry with a parameter for each variable remove should throw error if label lengths does not match 1`] = `"Invalid number of arguments"`;
+
 exports[`counter global registry with a parameter for each variable should not allow invalid date as timestamp 1`] = `"Timestamp is not a valid date or number: Invalid Date"`;
 
 exports[`counter global registry with a parameter for each variable should not allow non number as timestamp 1`] = `"Timestamp is not a valid date or number: blah"`;
@@ -11,6 +13,8 @@ exports[`counter global registry with a parameter for each variable should not a
 exports[`counter global registry with a parameter for each variable should not be possible to decrease a counter 1`] = `"It is not possible to decrease a counter"`;
 
 exports[`counter global registry with a parameter for each variable should throw an error when the value is not a number 1`] = `"Value is not a valid number: 3ms"`;
+
+exports[`counter remove should throw error if label lengths does not match 1`] = `"Invalid number of arguments"`;
 
 exports[`counter with params as object labels should throw error if label lengths does not match 1`] = `"Invalid number of arguments"`;
 

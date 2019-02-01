@@ -109,6 +109,46 @@ describe('counter', () => {
 				});
 			});
 
+			describe('remove', () => {
+				beforeEach(() => {
+					instance = new Counter('gauge_test_3', 'help', [
+						'method',
+						'endpoint'
+					]);
+					instance.labels('GET', '/test').inc();
+					instance.labels('POST', '/test').inc();
+				});
+
+				afterEach(() => {
+					globalRegistry.clear();
+				});
+
+				it('should remove matching label', () => {
+					instance.remove('POST', '/test');
+
+					const values = instance.get().values;
+					expect(values).toHaveLength(1);
+					expect(values[0].value).toEqual(1);
+					expect(values[0].labels.method).toEqual('GET');
+					expect(values[0].labels.endpoint).toEqual('/test');
+					expect(values[0].timestamp).toEqual(undefined);
+				});
+
+				it('should remove all labels', () => {
+					instance.remove('GET', '/test');
+					instance.remove('POST', '/test');
+
+					expect(instance.get().values).toHaveLength(0);
+				});
+
+				it('should throw error if label lengths does not match', () => {
+					const fn = function() {
+						instance.remove('GET');
+					};
+					expect(fn).toThrowErrorMatchingSnapshot();
+				});
+			});
+
 			describe('empty labels', () => {
 				beforeEach(() => {
 					instance = new Counter('gauge_test_3', 'test');
@@ -232,6 +272,48 @@ describe('counter', () => {
 			});
 		});
 	});
+
+	describe('remove', () => {
+		beforeEach(() => {
+			instance = new Counter({
+				name: 'gauge_test_3',
+				help: 'help',
+				labelNames: ['method', 'endpoint']
+			});
+			instance.inc({ method: 'GET', endpoint: '/test' });
+			instance.inc({ method: 'POST', endpoint: '/test' });
+		});
+
+		afterEach(() => {
+			globalRegistry.clear();
+		});
+
+		it('should remove matching label', () => {
+			instance.remove('POST', '/test');
+
+			const values = instance.get().values;
+			expect(values).toHaveLength(1);
+			expect(values[0].value).toEqual(1);
+			expect(values[0].labels.method).toEqual('GET');
+			expect(values[0].labels.endpoint).toEqual('/test');
+			expect(values[0].timestamp).toEqual(undefined);
+		});
+
+		it('should remove all labels', () => {
+			instance.remove('GET', '/test');
+			instance.remove('POST', '/test');
+
+			expect(instance.get().values).toHaveLength(0);
+		});
+
+		it('should throw error if label lengths does not match', () => {
+			const fn = function() {
+				instance.remove('GET');
+			};
+			expect(fn).toThrowErrorMatchingSnapshot();
+		});
+	});
+
 	describe('without registry', () => {
 		beforeEach(() => {
 			instance = new Counter({

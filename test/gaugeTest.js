@@ -135,6 +135,32 @@ describe('gauge', () => {
 				});
 			});
 
+			describe('with remove', () => {
+				beforeEach(() => {
+					instance = new Gauge('name', 'help', ['code']);
+					instance.set({ code: '200' }, 20);
+					instance.set({ code: '400' }, 0);
+				});
+				it('should be able to remove matching label', () => {
+					instance.remove('200');
+					const values = instance.get().values;
+					expect(values.length).toEqual(1);
+					expect(values[0].labels.code).toEqual('400');
+					expect(values[0].value).toEqual(0);
+				});
+				it('should be able to remove all labels', () => {
+					instance.remove('200');
+					instance.remove('400');
+					expect(instance.get().values.length).toEqual(0);
+				});
+				it('should throw error if label lengths does not match', () => {
+					const fn = function() {
+						instance.remove('200', 'GET');
+					};
+					expect(fn).toThrowErrorMatchingSnapshot();
+				});
+			});
+
 			describe('with timestamp', () => {
 				beforeEach(() => {
 					instance = new Gauge('name', 'help', ['code']);
@@ -293,6 +319,30 @@ describe('gauge', () => {
 					const end = instance.startTimer(startLabels);
 					end({ code: '400' });
 					expect(startLabels).toEqual({ code: '200' });
+				});
+			});
+
+			describe('with remove', () => {
+				beforeEach(() => {
+					instance = new Gauge({
+						name: 'name',
+						help: 'help',
+						labelNames: ['code']
+					});
+					instance.set({ code: '200' }, 20);
+					instance.set({ code: '400' }, 0);
+				});
+				it('should be able to remove matching label', () => {
+					instance.remove('200');
+					const values = instance.get().values;
+					expect(values.length).toEqual(1);
+					expect(values[0].labels.code).toEqual('400');
+					expect(values[0].value).toEqual(0);
+				});
+				it('should be able to remove all labels', () => {
+					instance.remove('200');
+					instance.remove('400');
+					expect(instance.get().values.length).toEqual(0);
 				});
 			});
 

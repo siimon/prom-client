@@ -280,6 +280,137 @@ describe('summary', () => {
 					expect(startLabels).toEqual({ method: 'GET' });
 				});
 			});
+
+			describe('remove', () => {
+				beforeEach(() => {
+					globalRegistry.clear();
+					instance = new Summary(
+						'summary_test',
+						'help',
+						['method', 'endpoint'],
+						{ percentiles: [0.9] }
+					);
+
+					instance.labels('GET', '/test').observe(50);
+					instance.labels('POST', '/test').observe(100);
+				});
+
+				it('should remove matching label', () => {
+					instance.remove('GET', '/test');
+
+					const values = instance.get().values;
+					expect(values).toHaveLength(3);
+					expect(values[0].labels.quantile).toEqual(0.9);
+					expect(values[0].labels.method).toEqual('POST');
+					expect(values[0].labels.endpoint).toEqual('/test');
+					expect(values[0].value).toEqual(100);
+
+					expect(values[1].metricName).toEqual('summary_test_sum');
+					expect(values[1].labels.method).toEqual('POST');
+					expect(values[1].labels.endpoint).toEqual('/test');
+					expect(values[1].value).toEqual(100);
+
+					expect(values[2].metricName).toEqual('summary_test_count');
+					expect(values[2].labels.method).toEqual('POST');
+					expect(values[2].labels.endpoint).toEqual('/test');
+					expect(values[2].value).toEqual(1);
+				});
+
+				it('should remove all labels', () => {
+					instance.remove('GET', '/test');
+					instance.remove('POST', '/test');
+
+					expect(instance.get().values).toHaveLength(0);
+				});
+
+				it('should throw error if label lengths does not match', () => {
+					const fn = function() {
+						instance.remove('GET');
+					};
+					expect(fn).toThrowErrorMatchingSnapshot();
+				});
+
+				it('should remove timer values', () => {
+					const clock = lolex.install();
+					const end = instance.labels('GET', '/test').startTimer();
+					clock.tick(1000);
+					end();
+					instance.remove('GET', '/test');
+
+					const values = instance.get().values;
+					expect(values).toHaveLength(3);
+					expect(values[0].labels.quantile).toEqual(0.9);
+					expect(values[0].labels.method).toEqual('POST');
+					expect(values[0].labels.endpoint).toEqual('/test');
+					expect(values[0].value).toEqual(100);
+
+					expect(values[1].metricName).toEqual('summary_test_sum');
+					expect(values[1].labels.method).toEqual('POST');
+					expect(values[1].labels.endpoint).toEqual('/test');
+					expect(values[1].value).toEqual(100);
+
+					expect(values[2].metricName).toEqual('summary_test_count');
+					expect(values[2].labels.method).toEqual('POST');
+					expect(values[2].labels.endpoint).toEqual('/test');
+					expect(values[2].value).toEqual(1);
+
+					clock.uninstall();
+				});
+
+				it('should remove timer values when labels are set afterwards', () => {
+					const clock = lolex.install();
+					const end = instance.startTimer();
+					clock.tick(1000);
+					end({ method: 'GET', endpoint: '/test' });
+					instance.remove('GET', '/test');
+
+					const values = instance.get().values;
+					expect(values).toHaveLength(3);
+					expect(values[0].labels.quantile).toEqual(0.9);
+					expect(values[0].labels.method).toEqual('POST');
+					expect(values[0].labels.endpoint).toEqual('/test');
+					expect(values[0].value).toEqual(100);
+
+					expect(values[1].metricName).toEqual('summary_test_sum');
+					expect(values[1].labels.method).toEqual('POST');
+					expect(values[1].labels.endpoint).toEqual('/test');
+					expect(values[1].value).toEqual(100);
+
+					expect(values[2].metricName).toEqual('summary_test_count');
+					expect(values[2].labels.method).toEqual('POST');
+					expect(values[2].labels.endpoint).toEqual('/test');
+					expect(values[2].value).toEqual(1);
+
+					clock.uninstall();
+				});
+
+				it('should remove timer values with before and after labels', () => {
+					const clock = lolex.install();
+					const end = instance.startTimer({ method: 'GET' });
+					clock.tick(1000);
+					end({ endpoint: '/test' });
+					instance.remove('GET', '/test');
+
+					const values = instance.get().values;
+					expect(values).toHaveLength(3);
+					expect(values[0].labels.quantile).toEqual(0.9);
+					expect(values[0].labels.method).toEqual('POST');
+					expect(values[0].labels.endpoint).toEqual('/test');
+					expect(values[0].value).toEqual(100);
+
+					expect(values[1].metricName).toEqual('summary_test_sum');
+					expect(values[1].labels.method).toEqual('POST');
+					expect(values[1].labels.endpoint).toEqual('/test');
+					expect(values[1].value).toEqual(100);
+
+					expect(values[2].metricName).toEqual('summary_test_count');
+					expect(values[2].labels.method).toEqual('POST');
+					expect(values[2].labels.endpoint).toEqual('/test');
+					expect(values[2].value).toEqual(1);
+
+					clock.uninstall();
+				});
+			});
 		});
 
 		describe('with param as object', () => {
@@ -541,6 +672,137 @@ describe('summary', () => {
 					const end = instance.startTimer(startLabels);
 					end({ endpoint: '/test' });
 					expect(startLabels).toEqual({ method: 'GET' });
+				});
+			});
+
+			describe('remove', () => {
+				beforeEach(() => {
+					globalRegistry.clear();
+					instance = new Summary({
+						name: 'summary_test',
+						help: 'help',
+						labelNames: ['method', 'endpoint'],
+						percentiles: [0.9]
+					});
+
+					instance.labels('GET', '/test').observe(50);
+					instance.labels('POST', '/test').observe(100);
+				});
+
+				it('should remove matching label', () => {
+					instance.remove('GET', '/test');
+
+					const values = instance.get().values;
+					expect(values).toHaveLength(3);
+					expect(values[0].labels.quantile).toEqual(0.9);
+					expect(values[0].labels.method).toEqual('POST');
+					expect(values[0].labels.endpoint).toEqual('/test');
+					expect(values[0].value).toEqual(100);
+
+					expect(values[1].metricName).toEqual('summary_test_sum');
+					expect(values[1].labels.method).toEqual('POST');
+					expect(values[1].labels.endpoint).toEqual('/test');
+					expect(values[1].value).toEqual(100);
+
+					expect(values[2].metricName).toEqual('summary_test_count');
+					expect(values[2].labels.method).toEqual('POST');
+					expect(values[2].labels.endpoint).toEqual('/test');
+					expect(values[2].value).toEqual(1);
+				});
+
+				it('should remove all labels', () => {
+					instance.remove('GET', '/test');
+					instance.remove('POST', '/test');
+
+					expect(instance.get().values).toHaveLength(0);
+				});
+
+				it('should throw error if label lengths does not match', () => {
+					const fn = function() {
+						instance.remove('GET');
+					};
+					expect(fn).toThrowErrorMatchingSnapshot();
+				});
+
+				it('should remove timer values', () => {
+					const clock = lolex.install();
+					const end = instance.labels('GET', '/test').startTimer();
+					clock.tick(1000);
+					end();
+					instance.remove('GET', '/test');
+
+					const values = instance.get().values;
+					expect(values).toHaveLength(3);
+					expect(values[0].labels.quantile).toEqual(0.9);
+					expect(values[0].labels.method).toEqual('POST');
+					expect(values[0].labels.endpoint).toEqual('/test');
+					expect(values[0].value).toEqual(100);
+
+					expect(values[1].metricName).toEqual('summary_test_sum');
+					expect(values[1].labels.method).toEqual('POST');
+					expect(values[1].labels.endpoint).toEqual('/test');
+					expect(values[1].value).toEqual(100);
+
+					expect(values[2].metricName).toEqual('summary_test_count');
+					expect(values[2].labels.method).toEqual('POST');
+					expect(values[2].labels.endpoint).toEqual('/test');
+					expect(values[2].value).toEqual(1);
+
+					clock.uninstall();
+				});
+
+				it('should remove timer values when labels are set afterwards', () => {
+					const clock = lolex.install();
+					const end = instance.startTimer();
+					clock.tick(1000);
+					end({ method: 'GET', endpoint: '/test' });
+					instance.remove('GET', '/test');
+
+					const values = instance.get().values;
+					expect(values).toHaveLength(3);
+					expect(values[0].labels.quantile).toEqual(0.9);
+					expect(values[0].labels.method).toEqual('POST');
+					expect(values[0].labels.endpoint).toEqual('/test');
+					expect(values[0].value).toEqual(100);
+
+					expect(values[1].metricName).toEqual('summary_test_sum');
+					expect(values[1].labels.method).toEqual('POST');
+					expect(values[1].labels.endpoint).toEqual('/test');
+					expect(values[1].value).toEqual(100);
+
+					expect(values[2].metricName).toEqual('summary_test_count');
+					expect(values[2].labels.method).toEqual('POST');
+					expect(values[2].labels.endpoint).toEqual('/test');
+					expect(values[2].value).toEqual(1);
+
+					clock.uninstall();
+				});
+
+				it('should remove timer values with before and after labels', () => {
+					const clock = lolex.install();
+					const end = instance.startTimer({ method: 'GET' });
+					clock.tick(1000);
+					end({ endpoint: '/test' });
+					instance.remove('GET', '/test');
+
+					const values = instance.get().values;
+					expect(values).toHaveLength(3);
+					expect(values[0].labels.quantile).toEqual(0.9);
+					expect(values[0].labels.method).toEqual('POST');
+					expect(values[0].labels.endpoint).toEqual('/test');
+					expect(values[0].value).toEqual(100);
+
+					expect(values[1].metricName).toEqual('summary_test_sum');
+					expect(values[1].labels.method).toEqual('POST');
+					expect(values[1].labels.endpoint).toEqual('/test');
+					expect(values[1].value).toEqual(100);
+
+					expect(values[2].metricName).toEqual('summary_test_count');
+					expect(values[2].labels.method).toEqual('POST');
+					expect(values[2].labels.endpoint).toEqual('/test');
+					expect(values[2].value).toEqual(1);
+
+					clock.uninstall();
 				});
 			});
 		});
