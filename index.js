@@ -8,6 +8,7 @@
 exports.register = require('./lib/registry').globalRegistry;
 exports.Registry = require('./lib/registry');
 exports.contentType = require('./lib/registry').globalRegistry.contentType;
+exports.validateMetricName = require('./lib/validation').validateMetricName;
 
 exports.Counter = require('./lib/counter');
 exports.Gauge = require('./lib/gauge');
