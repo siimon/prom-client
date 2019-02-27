@@ -1,16 +1,18 @@
 init:
-  - git config --global core.autocrlf true
+  - git config --global core.autocrlf false
 
 environment:
   matrix:
     - nodejs_version: 6
-    - nodejs_version: 7
     - nodejs_version: 8
-    - nodejs_version: 9
+    - nodejs_version: 10
+    - nodejs_version: 11
 
 install:
   - ps: Install-Product node $env:nodejs_version
-  - npm install
+  - npm -g install npm
+  - set PATH=%APPDATA%\npm;%PATH%
+  - npm ci
 
 test_script:
   - node --version && npm --version

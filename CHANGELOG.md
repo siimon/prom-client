@@ -16,6 +16,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - Parameter `compressCount` in Summaries to control compression of data in t-digest.
+- Added a `remove()` method on each metric type, based on [Prometheus "Writing Client Libraries" section on labels](https://prometheus.io/docs/instrumenting/writing_clientlibs/#labels)
 
 ## [11.2.1]
 

@@ -200,6 +200,12 @@ export class Counter {
 	 * Reset counter values
 	 */
 	reset(): void;
+
+	/**
+	 * Remove metrics for the given label values
+	 * @param values Label values
+	 */
+	remove(...values: string[]): void;
 }
 
 export namespace Counter {
@@ -307,6 +313,12 @@ export class Gauge {
 	 * Reset gauge values
 	 */
 	reset(): void;
+
+	/**
+	 * Remove metrics for the given label values
+	 * @param values Label values
+	 */
+	remove(...values: string[]): void;
 }
 
 export namespace Gauge {
@@ -413,6 +425,12 @@ export class Histogram {
 	 * @return Configured histogram with given labels
 	 */
 	labels(...values: string[]): Histogram.Internal;
+
+	/**
+	 * Remove metrics for the given label values
+	 * @param values Label values
+	 */
+	remove(...values: string[]): void;
 }
 
 export namespace Histogram {
@@ -510,6 +528,12 @@ export class Summary {
 	 * @return Configured summary with given labels
 	 */
 	labels(...values: string[]): Summary.Internal;
+
+	/**
+	 * Remove metrics for the given label values
+	 * @param values Label values
+	 */
+	remove(...values: string[]): void;
 }
 
 export namespace Summary {
