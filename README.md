@@ -32,6 +32,15 @@ registry, call
 `client.AggregatorRegistry.setRegistries(registryOrArrayOfRegistries)` from the
 worker processes.
 
+### Usage with Node.js's `pm2` module
+
+Instead of `cluster` module there is no direct access to the master process
+in `pm2`. To return metrics for the whole cluster you can do IPC calls from the
+active instance to the rest of them and wait while all their locally collected
+metrics will be sent. Finally you have to aggregate all received metrics.
+
+See `example/pm2-cluster.js` for an example.
+
 ## API
 
 ### Configuration
