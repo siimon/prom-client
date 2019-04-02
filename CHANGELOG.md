@@ -11,6 +11,9 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Check that cluster worker is still connected before attempting to query it for
+  metrics. (#244)
+
 ### Added
 
 - Added a `remove()` method on each metric type, based on [Prometheus "Writing Client Libraries" section on labels](https://prometheus.io/docs/instrumenting/writing_clientlibs/#labels)
