@@ -11,6 +11,12 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+### Added
+
+## [11.3.0] - 2019-04-02
+
+### Changed
+
 - Check that cluster worker is still connected before attempting to query it for
   metrics. (#244)
 
