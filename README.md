@@ -88,6 +88,17 @@ const collectDefaultMetrics = client.collectDefaultMetrics;
 collectDefaultMetrics({ prefix: 'my_application_' });
 ```
 
+To disable metric timstamps set `timestamps` to `false` (You can find the list of metrics that support this feature in `test/defaultMetricsTest.js`):
+
+```js
+const client = require('prom-client');
+
+const collectDefaultMetrics = client.collectDefaultMetrics;
+
+// Probe every 5th second.
+collectDefaultMetrics({ timestamps: false });
+```
+
 You can get the full list of metrics by inspecting
 `client.collectDefaultMetrics.metricsList`.
 
