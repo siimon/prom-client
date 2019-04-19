@@ -71,6 +71,26 @@ describe('collectDefaultMetrics', () => {
 		});
 	});
 
+	it('should omit timestamp in certain metrics', () => {
+		const metricsWithToggableTimestamp = [
+			'nodejs_active_handles_total',
+			'nodejs_external_memory_bytes',
+			'nodejs_heap_size_total_bytes',
+			'nodejs_heap_size_used_bytes'
+		];
+		interval = collectDefaultMetrics({ timestamps: false });
+		expect(register.getMetricsAsJSON()).not.toHaveLength(0);
+		const testableMetrics = register
+			.getMetricsAsJSON()
+			.filter(
+				metrics => metricsWithToggableTimestamp.indexOf(metrics.name) !== -1
+			);
+		testableMetrics.forEach(metric => {
+			expect(metric.values).not.toHaveLength(0);
+			expect(metric.values[0].timestamp).not.toBeDefined();
+		});
+	});
+
 	describe('disabling', () => {
 		it('should not throw error', () => {
 			const fn = function() {
