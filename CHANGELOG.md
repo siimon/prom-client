@@ -13,6 +13,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- Added `timestamps` toggle to `collectDefaultMetrics` options
+
 ## [11.3.0] - 2019-04-02
 
 ### Changed
