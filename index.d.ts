@@ -644,6 +644,7 @@ export function exponentialBuckets(
 
 export interface DefaultMetricsCollectorConfiguration {
 	timeout?: number;
+	timestamps?: boolean;
 	register?: Registry;
 	prefix?: string;
 }
