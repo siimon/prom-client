@@ -22,7 +22,7 @@ describe('processHandles', () => {
 		expect(metrics).toHaveLength(2);
 
 		expect(metrics[0].help).toEqual(
-			'Number of active handles grouped by handle type.'
+			'Number of active libuv handles grouped by handle type. Every handle type is C++ class name.'
 		);
 		expect(metrics[0].type).toEqual('gauge');
 		expect(metrics[0].name).toEqual('nodejs_active_handles');
