@@ -655,7 +655,7 @@ export interface DefaultMetricsCollectorConfiguration {
  */
 export function collectDefaultMetrics(
 	config?: DefaultMetricsCollectorConfiguration
-): number;
+): ReturnType<typeof setInterval>;
 
 /**
  * Configure default metrics
