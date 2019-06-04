@@ -671,3 +671,10 @@ export interface defaultMetrics {
 	 */
 	metricsList: string[];
 }
+
+/**
+ * Validate a metric name
+ * @param name The name to validate
+ * @return True if the metric name is valid, false if not
+ */
+export function validateMetricName(name: string): boolean;
