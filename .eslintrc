@@ -1,6 +1,10 @@
 {
 	"plugins": ["prettier"],
-	"extends": ["eslint:recommended", "plugin:node/recommended"],
+	"extends": [
+		"eslint:recommended",
+		"plugin:node/recommended",
+		"plugin:prettier/recommended"
+	],
 	"env": {
 		"node": true,
 		"es6": true
@@ -45,8 +49,7 @@
 			"as-needed",
 			{ "requireReturnForObjectLiteral": true }
 		],
-		"prefer-template": "error",
-		"prettier/prettier": "error"
+		"prefer-template": "error"
 	},
 	"overrides": [
 		{
@@ -62,7 +65,7 @@
 			}
 		},
 		{
-			"files": ["example/**/*.js","benchmarks/**/*.js"],
+			"files": ["example/**/*.js", "benchmarks/**/*.js"],
 			"rules": {
 				"no-console": "off"
 			}
