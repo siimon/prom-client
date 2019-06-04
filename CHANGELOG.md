@@ -15,6 +15,13 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 - Added `timestamps` toggle to `collectDefaultMetrics` options
 
+## [11.4.0] - 2019-06-04
+
+### Added
+
+- `nodejs_active_handles` metric to the `collectDefaultMetrics()`. Unlike `nodejs_active_handles_total` it split count of active handles by type.
+- `nodejs_active_requests` metric to the `collectDefaultMetrics()`. Unlike `nodejs_active_requests_total` it split count of active requests by type.
+
 ## [11.3.0] - 2019-04-02
 
 ### Changed
