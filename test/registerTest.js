@@ -5,6 +5,7 @@ describe('register', () => {
 	const Counter = require('../index').Counter;
 	const Gauge = require('../index').Gauge;
 	const Histogram = require('../index').Histogram;
+	const Registry = require('../index').Registry;
 	const Summary = require('../index').Summary;
 
 	beforeEach(() => {
@@ -43,95 +44,60 @@ describe('register', () => {
 	});
 
 	it('should handle and output a metric with a NaN value', () => {
-		register.registerMetric({
-			get() {
-				return {
-					name: 'test_metric',
-					type: 'gauge',
-					help: 'A test metric',
-					values: [
-						{
-							value: NaN,
-						},
-					],
-				};
-			},
+		const gauge = new Gauge({
+			name: 'test_metric',
+			help: 'A test metric',
 		});
+		gauge.set(NaN);
+		register.registerMetric(gauge);
+
 		const lines = register.metrics().split('\n');
 		expect(lines).toHaveLength(4);
 		expect(lines[2]).toEqual('test_metric Nan');
 	});
 
 	it('should handle and output a metric with an +Infinity value', () => {
-		register.registerMetric({
-			get() {
-				return {
-					name: 'test_metric',
-					type: 'gauge',
-					help: 'A test metric',
-					values: [
-						{
-							value: Infinity,
-						},
-					],
-				};
-			},
+		const gauge = new Gauge({
+			name: 'test_metric',
+			help: 'A test metric',
 		});
+		gauge.set(Infinity);
+		register.registerMetric(gauge);
 		const lines = register.metrics().split('\n');
 		expect(lines).toHaveLength(4);
 		expect(lines[2]).toEqual('test_metric +Inf');
 	});
 
 	it('should handle and output a metric with an -Infinity value', () => {
-		register.registerMetric({
-			get() {
-				return {
-					name: 'test_metric',
-					type: 'gauge',
-					help: 'A test metric',
-					values: [
-						{
-							value: -Infinity,
-						},
-					],
-				};
-			},
+		const gauge = new Gauge({
+			name: 'test_metric',
+			help: 'A test metric',
 		});
+		gauge.set(-Infinity);
+		register.registerMetric(gauge);
 		const lines = register.metrics().split('\n');
 		expect(lines).toHaveLength(4);
 		expect(lines[2]).toEqual('test_metric -Inf');
 	});
 
 	it('should handle a metric without labels', () => {
-		register.registerMetric({
-			get() {
-				return {
-					name: 'test_metric',
-					type: 'counter',
-					help: 'A test metric',
-					values: [
-						{
-							value: 1,
-						},
-					],
-				};
-			},
+		const counter = new Counter({
+			name: 'test_metric',
+			help: 'A test metric',
 		});
+		counter.inc(1);
+		register.registerMetric(counter);
 		expect(register.metrics().split('\n')).toHaveLength(4);
 	});
 
 	it('should handle a metric with default labels', () => {
 		register.setDefaultLabels({ testLabel: 'testValue' });
-		register.registerMetric({
-			get() {
-				return {
-					name: 'test_metric',
-					type: 'counter',
-					help: 'A test metric',
-					values: [{ value: 1 }],
-				};
-			},
+		const counter = new Counter({
+			name: 'test_metric',
+			help: 'A test metric',
 		});
+		counter.inc(1);
+		register.registerMetric(counter);
 
 		const output = register.metrics().split('\n')[2];
 		expect(output).toEqual('test_metric{testLabel="testValue"} 1');
@@ -139,24 +105,13 @@ describe('register', () => {
 
 	it('labeled metrics should take precidence over defaulted', () => {
 		register.setDefaultLabels({ testLabel: 'testValue' });
-		register.registerMetric({
-			get() {
-				return {
-					name: 'test_metric',
-					type: 'counter',
-					help: 'A test metric',
-					values: [
-						{
-							value: 1,
-							labels: {
-								testLabel: 'overlapped',
-								anotherLabel: 'value123',
-							},
-						},
-					],
-				};
-			},
+		const counter = new Counter({
+			name: 'test_metric',
+			help: 'A test metric',
+			labelNames: ['testLabel', 'anotherLabel'],
 		});
+		counter.inc({ testLabel: 'overlapped', anotherLabel: 'value123' }, 1);
+		register.registerMetric(counter);
 
 		expect(register.metrics().split('\n')[2]).toEqual(
 			'test_metric{testLabel="overlapped",anotherLabel="value123"} 1',
@@ -181,49 +136,35 @@ describe('register', () => {
 		expect(register.metrics()).toMatchSnapshot();
 	});
 
-	describe('should escape', () => {
-		let escapedResult;
-		beforeEach(() => {
-			register.registerMetric({
-				get() {
-					return {
-						name: 'test_"_\\_\n_metric',
-						help: 'help_help',
-						type: 'counter',
-					};
-				},
-			});
-			escapedResult = register.metrics();
+	it('should escape " in label values', () => {
+		const counter = new Counter({
+			name: 'test_metric',
+			help: 'A test metric',
+			labelNames: ['label', 'code'],
 		});
-		it('backslash to \\\\', () => {
-			expect(escapedResult).toMatch(/\\\\/);
-		});
-		it('newline to \\\\n', () => {
-			expect(escapedResult).toMatch(/\n/);
-		});
+		counter.inc({ label: 'hello', code: '3"03' }, 12);
+		register.registerMetric(counter);
+		const escapedResult = register.metrics();
+		expect(escapedResult).toMatch(
+			'test_metric{label="hello",code="3\\"03"} 12',
+		);
 	});
 
-	it('should escape " in label values', () => {
-		register.registerMetric({
-			get() {
-				return {
-					name: 'test_metric',
-					type: 'counter',
-					help: 'A test metric',
-					values: [
-						{
-							value: 12,
-							labels: {
-								label: 'hello',
-								code: '3"03',
-							},
-						},
-					],
-				};
-			},
+	it('should escape " in default label values', () => {
+		const counter = new Counter({
+			name: 'test_metric',
+			help: 'A test metric',
+			labelNames: ['label', 'code'],
 		});
+		counter.inc({ label: 'hello', code: '3"03' }, 12);
+		register.setDefaultLabels({
+			defaultRegistryLabel: 'test"Value',
+		});
+		register.registerMetric(counter);
 		const escapedResult = register.metrics();
-		expect(escapedResult).toMatch(/\\"/);
+		expect(escapedResult).toMatch(
+			'test_metric{label="hello",code="3\\"03",defaultRegistryLabel="test\\"Value"} 12',
+		);
 	});
 
 	describe('should output metrics as JSON', () => {
@@ -260,7 +201,7 @@ describe('register', () => {
 
 	it('should allow removing single metrics', () => {
 		register.registerMetric(getMetric());
-		register.registerMetric(getMetric('some other name'));
+		register.registerMetric(getMetric({ name: 'some_other_name' }));
 
 		let output = register.getMetricsAsJSON();
 		expect(output.length).toEqual(2);
@@ -270,7 +211,7 @@ describe('register', () => {
 		output = register.getMetricsAsJSON();
 
 		expect(output.length).toEqual(1);
-		expect(output[0].name).toEqual('some other name');
+		expect(output[0].name).toEqual('some_other_name');
 	});
 
 	it('should allow getting single metrics', () => {
@@ -427,7 +368,7 @@ describe('register', () => {
 					const metrics = r.metrics();
 					const lines = metrics.split('\n');
 					expect(lines).toContain(
-						'my_histogram_bucket{le="1",type="myType",env="development"} 1',
+						'my_histogram_bucket{type="myType",env="development",le="1"} 1',
 					);
 
 					myHist.observe(1);
@@ -435,7 +376,7 @@ describe('register', () => {
 					const metrics2 = r.metrics();
 					const lines2 = metrics2.split('\n');
 					expect(lines2).toContain(
-						'my_histogram_bucket{le="1",type="myType",env="development"} 2',
+						'my_histogram_bucket{type="myType",env="development",le="1"} 2',
 					);
 				});
 			});
@@ -577,7 +518,6 @@ describe('register', () => {
 	});
 
 	describe('merging', () => {
-		const Registry = require('../lib/registry');
 		let registryOne;
 		let registryTwo;
 
@@ -587,8 +527,12 @@ describe('register', () => {
 		});
 
 		it('should merge all provided registers', () => {
-			registryOne.registerMetric(getMetric('one'));
-			registryTwo.registerMetric(getMetric('two'));
+			registryOne.registerMetric(
+				getMetric({ name: 'one', registers: [registryOne] }),
+			);
+			registryTwo.registerMetric(
+				getMetric({ name: 'two', registers: [registryTwo] }),
+			);
 
 			const merged = Registry.merge([
 				registryOne,
@@ -598,8 +542,8 @@ describe('register', () => {
 		});
 
 		it('should throw if same name exists on both registers', () => {
-			registryOne.registerMetric(getMetric());
-			registryTwo.registerMetric(getMetric());
+			registryOne.registerMetric(getMetric({ registers: [registryOne] }));
+			registryTwo.registerMetric(getMetric({ registers: [registryTwo] }));
 
 			const fn = function () {
 				Registry.merge([registryOne, registryTwo]);
@@ -609,33 +553,16 @@ describe('register', () => {
 		});
 	});
 
-	function getMetric(name) {
-		name = name || 'test_metric';
-		return {
-			name,
-			get() {
-				return {
-					name,
-					type: 'counter',
-					help: 'A test metric',
-					values: [
-						{
-							value: 12,
-							labels: {
-								label: 'hello',
-								code: '303',
-							},
-						},
-						{
-							value: 34,
-							labels: {
-								label: 'bye',
-								code: '404',
-							},
-						},
-					],
-				};
-			},
-		};
+	function getMetric(configuration) {
+		const counter = new Counter({
+			name: 'test_metric',
+			help: 'A test metric',
+			labelNames: ['label', 'code'],
+			...configuration,
+		});
+		counter.inc({ label: 'hello', code: '303' }, 12);
+		counter.inc({ label: 'bye', code: '404' }, 34);
+
+		return counter;
 	}
 });
