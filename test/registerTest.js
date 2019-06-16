@@ -1,5 +1,7 @@
 'use strict';
 
+const Metric = require('../lib/metric');
+
 describe('register', () => {
 	const register = require('../index').register;
 	const Counter = require('../index').Counter;
@@ -45,95 +47,114 @@ describe('register', () => {
 	});
 
 	it('should handle and output a metric with a NaN value', () => {
-		register.registerMetric({
-			get() {
-				return {
-					name: 'test_metric',
-					type: 'gauge',
-					help: 'A test metric',
-					values: [
-						{
-							value: NaN
-						}
-					]
-				};
-			}
-		});
+		const metric = new Metric(
+			{
+				registers: [],
+				name: 'test_metric',
+				help: 'A test metric'
+			},
+			'gauge'
+		);
+		metric.get = () => {
+			return {
+				name: 'test_metric',
+				type: 'gauge',
+				help: 'A test metric',
+				values: [{ value: NaN }]
+			};
+		};
+		register.registerMetric(metric);
 		const lines = register.metrics().split('\n');
 		expect(lines).toHaveLength(4);
 		expect(lines[2]).toEqual('test_metric Nan');
 	});
 
 	it('should handle and output a metric with an +Infinity value', () => {
-		register.registerMetric({
-			get() {
-				return {
-					name: 'test_metric',
-					type: 'gauge',
-					help: 'A test metric',
-					values: [
-						{
-							value: Infinity
-						}
-					]
-				};
-			}
-		});
+		const metric = new Metric(
+			{
+				registers: [],
+				name: 'test_metric',
+				help: 'A test metric'
+			},
+			'gauge'
+		);
+		metric.get = () => {
+			return {
+				name: 'test_metric',
+				type: 'gauge',
+				help: 'A test metric',
+				values: [{ value: Infinity }]
+			};
+		};
+		register.registerMetric(metric);
 		const lines = register.metrics().split('\n');
 		expect(lines).toHaveLength(4);
 		expect(lines[2]).toEqual('test_metric +Inf');
 	});
 
 	it('should handle and output a metric with an -Infinity value', () => {
-		register.registerMetric({
-			get() {
-				return {
-					name: 'test_metric',
-					type: 'gauge',
-					help: 'A test metric',
-					values: [
-						{
-							value: -Infinity
-						}
-					]
-				};
-			}
-		});
+		const metric = new Metric(
+			{
+				registers: [],
+				name: 'test_metric',
+				help: 'A test metric'
+			},
+			'gauge'
+		);
+		metric.get = () => {
+			return {
+				name: 'test_metric',
+				type: 'gauge',
+				help: 'A test metric',
+				values: [{ value: -Infinity }]
+			};
+		};
+		register.registerMetric(metric);
 		const lines = register.metrics().split('\n');
 		expect(lines).toHaveLength(4);
 		expect(lines[2]).toEqual('test_metric -Inf');
 	});
 
 	it('should handle a metric without labels', () => {
-		register.registerMetric({
-			get() {
-				return {
-					name: 'test_metric',
-					type: 'counter',
-					help: 'A test metric',
-					values: [
-						{
-							value: 1
-						}
-					]
-				};
-			}
-		});
+		const metric = new Metric(
+			{
+				registers: [],
+				name: 'test_metric',
+				help: 'A test metric'
+			},
+			'counter'
+		);
+		metric.get = () => {
+			return {
+				name: 'test_metric',
+				type: 'counter',
+				help: 'A test metric',
+				values: [{ value: 1 }]
+			};
+		};
+		register.registerMetric(metric);
 		expect(register.metrics().split('\n')).toHaveLength(4);
 	});
 
 	it('should handle a metric with default labels', () => {
 		register.setDefaultLabels({ testLabel: 'testValue' });
-		register.registerMetric({
-			get() {
-				return {
-					name: 'test_metric',
-					type: 'counter',
-					help: 'A test metric',
-					values: [{ value: 1 }]
-				};
-			}
-		});
+		const metric = new Metric(
+			{
+				registers: [],
+				name: 'test_metric',
+				help: 'A test metric'
+			},
+			'counter'
+		);
+		metric.get = () => {
+			return {
+				name: 'test_metric',
+				type: 'counter',
+				help: 'A test metric',
+				values: [{ value: 1 }]
+			};
+		};
+		register.registerMetric(metric);
 
 		const output = register.metrics().split('\n')[2];
 		expect(output).toEqual('test_metric{testLabel="testValue"} 1');
@@ -141,24 +162,33 @@ describe('register', () => {
 
 	it('labeled metrics should take precidence over defaulted', () => {
 		register.setDefaultLabels({ testLabel: 'testValue' });
-		register.registerMetric({
-			get() {
-				return {
-					name: 'test_metric',
-					type: 'counter',
-					help: 'A test metric',
-					values: [
-						{
-							value: 1,
-							labels: {
-								testLabel: 'overlapped',
-								anotherLabel: 'value123'
-							}
+
+		const metric = new Metric(
+			{
+				registers: [],
+				name: 'test_metric',
+				help: 'A test metric',
+				labelNames: ['testLabel', 'anotherLabel']
+			},
+			'counter'
+		);
+		metric.get = () => {
+			return {
+				name: 'test_metric',
+				type: 'counter',
+				help: 'A test metric',
+				values: [
+					{
+						value: 1,
+						labels: {
+							testLabel: 'overlapped',
+							anotherLabel: 'value123'
 						}
-					]
-				};
-			}
-		});
+					}
+				]
+			};
+		};
+		register.registerMetric(metric);
 
 		expect(register.metrics().split('\n')[2]).toEqual(
 			'test_metric{testLabel="overlapped",anotherLabel="value123"} 1'
@@ -186,15 +216,22 @@ describe('register', () => {
 	describe('should escape', () => {
 		let escapedResult;
 		beforeEach(() => {
-			register.registerMetric({
-				get() {
-					return {
-						name: 'test_"_\\_\n_metric',
-						help: 'help_help',
-						type: 'counter'
-					};
-				}
-			});
+			const metric = new Metric(
+				{
+					registers: [],
+					name: 'test_"_\\_\n_metric',
+					help: 'help_help'
+				},
+				'counter'
+			);
+			metric.get = () => {
+				return {
+					name: 'test_"_\\_\n_metric',
+					help: 'help_help',
+					type: 'counter'
+				};
+			};
+			register.registerMetric(metric);
 			escapedResult = register.metrics();
 		});
 		it('backslash to \\\\', () => {
@@ -206,24 +243,32 @@ describe('register', () => {
 	});
 
 	it('should escape " in label values', () => {
-		register.registerMetric({
-			get() {
-				return {
-					name: 'test_metric',
-					type: 'counter',
-					help: 'A test metric',
-					values: [
-						{
-							value: 12,
-							labels: {
-								label: 'hello',
-								code: '3"03'
-							}
+		const metric = new Metric(
+			{
+				registers: [],
+				name: 'test_metric',
+				help: 'A test metric',
+				labelNames: ['label', 'code']
+			},
+			'counter'
+		);
+		metric.get = () => {
+			return {
+				name: 'test_metric',
+				type: 'counter',
+				help: 'A test metric',
+				values: [
+					{
+						value: 12,
+						labels: {
+							label: 'hello',
+							code: '3"03'
 						}
-					]
-				};
-			}
-		});
+					}
+				]
+			};
+		};
+		register.registerMetric(metric);
 		const escapedResult = register.metrics();
 		expect(escapedResult).toMatch(/\\"/);
 	});
@@ -371,32 +416,39 @@ describe('register', () => {
 
 	function getMetric(name) {
 		name = name || 'test_metric';
-		return {
-			name,
-			get() {
-				return {
-					name,
-					type: 'counter',
-					help: 'A test metric',
-					values: [
-						{
-							value: 12,
-							labels: {
-								label: 'hello',
-								code: '303'
-							}
-						},
-						{
-							value: 34,
-							timestamp: 1485392700000,
-							labels: {
-								label: 'bye',
-								code: '404'
-							}
+		const metric = new Metric(
+			{
+				name,
+				registers: [],
+				help: 'A test metric',
+				labelNames: ['label', 'code']
+			},
+			'counter'
+		);
+		metric.get = () => {
+			return {
+				name,
+				type: 'counter',
+				help: 'A test metric',
+				values: [
+					{
+						value: 12,
+						labels: {
+							label: 'hello',
+							code: '303'
 						}
-					]
-				};
-			}
+					},
+					{
+						value: 34,
+						timestamp: 1485392700000,
+						labels: {
+							label: 'bye',
+							code: '404'
+						}
+					}
+				]
+			};
 		};
+		return metric;
 	}
 });
