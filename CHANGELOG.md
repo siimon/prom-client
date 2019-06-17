@@ -25,6 +25,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - chore: add test for `process_start_time_seconds`
 
 ### Added
+- `nodejs_gc_runs` metric to the `collectDefaultMetrics()`. It counts number of GC runs with split by GC type.
+- `nodejs_gc_duration_summary` metric to the `collectDefaultMetrics()`. It counts 0.5, 0.75, 0.9, 0.99 percentiles of GC duration (in seconds).
 
 ## [11.5.3] - 2019-06-27
 
