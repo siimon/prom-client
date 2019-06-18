@@ -34,6 +34,13 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 - fix: guard against missing constructor
 
+- Following bootstap timing metrics collection implemented:
+  - `nodejs_node_start` - Node process start time
+  - `nodejs_v8_start` - V8 start time
+  - `nodejs_environment_initialized` - Node.js environment initialization complete time
+  - `nodejs_bootstrap_complete` - Node.js bootstrap complete time
+  - `nodejs_loop_start` - Node.js event loop start time
+
 ## [11.5.0] - 2019-06-04
 
 ### Added
