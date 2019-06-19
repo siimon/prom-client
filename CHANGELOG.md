@@ -14,6 +14,9 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - `nodejs_eventloop_lag_seconds` - perf_hooks is available then this metric is calculate as mean event loop lag. Previous calculation was misleading
 
 ### Added
+- `monitorNextTick` option to the `collectDefaultMetrics()` config. It enables collection of two metrics listed below
+- `nodejs_tick_count`  counts number of ticks executed by process.nextTick().
+- `nodejs_tick_duration_summary` counts 0.5, 0.75, 0.9, 0.99 percentiles of tick execution time (in seconds).
 
 - `nodejs_gc_runs` metric to the `collectDefaultMetrics()`. It counts number of GC runs with split by GC type.
 - `nodejs_gc_duration_summary` metric to the `collectDefaultMetrics()`. It counts 0.5, 0.75, 0.9, 0.99 percentiles of GC duration (in seconds).

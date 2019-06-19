@@ -41,6 +41,10 @@ setInterval(() => {
 
 setInterval(() => {
 	c.inc();
+	function exampleNextTick() {
+		c.inc();
+	}
+	process.nextTick(exampleNextTick);
 }, 2000);
 
 setInterval(() => {
