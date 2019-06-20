@@ -336,6 +336,46 @@ describe('register', () => {
 		});
 	});
 
+	describe('Registry with default labels', () => {
+		const Registry = require('../lib/registry');
+
+		it('should not throw with default labels', () => {
+			const r = new Registry();
+			r.setDefaultLabels({
+				env: 'development'
+			});
+
+			const hist = new Histogram({
+				name: 'my_histogram',
+				help: 'my histogram',
+				registers: [r],
+				labelNames: ['type']
+			});
+
+			const myHist = hist.labels('myType');
+
+			myHist.observe(1);
+
+			const metrics = r.metrics();
+			const lines = metrics.split('\n');
+			expect(
+				lines.indexOf(
+					'my_histogram_bucket{le="1",type="myType",env="development"} 1'
+				) >= 0
+			).toEqual(true);
+
+			myHist.observe(1);
+
+			const metrics2 = r.metrics();
+			const lines2 = metrics2.split('\n');
+			expect(
+				lines2.indexOf(
+					'my_histogram_bucket{le="1",type="myType",env="development"} 2'
+				) >= 0
+			).toEqual(true);
+		});
+	});
+
 	describe('merging', () => {
 		const Registry = require('../lib/registry');
 		let registryOne;
