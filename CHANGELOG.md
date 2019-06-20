@@ -11,9 +11,19 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+### Added
+
+## [11.5.2] - 2019-06-20
+
+### Changed
+
 - fix: avoid mutation bug in registry
 
-### Added
+## [11.5.1] - 2019-06-13
+
+### Changed
+
+- fix: guard against missing constructor
 
 ## [11.5.0] - 2019-06-04
 
