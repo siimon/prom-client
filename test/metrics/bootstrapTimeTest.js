@@ -22,7 +22,7 @@ describe('bootstrapTime', () => {
 		// Check if perf_hooks module is available
 		let perf_hooks;
 		try {
-			// eslint-disable-next-line node/no-unsupported-features/node-builtins
+			// eslint-disable-next-line
 			perf_hooks = require('perf_hooks');
 		} catch (e) {
 			// node version is too old
