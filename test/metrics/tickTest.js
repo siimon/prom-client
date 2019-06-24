@@ -15,7 +15,7 @@ describe('tick', () => {
 	it('should add metric to the registry', () => {
 		expect(register.getMetricsAsJSON()).toHaveLength(0);
 
-		tick()();
+		tick(register, { monitorNextTick: true })();
 
 		const metrics = register.getMetricsAsJSON();
 
