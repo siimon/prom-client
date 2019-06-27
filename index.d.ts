@@ -466,6 +466,7 @@ export interface SummaryConfiguration {
 	aggregator?: Aggregator;
 	maxAgeSeconds?: number;
 	ageBuckets?: number;
+	compressCount?: number;
 }
 
 /**
