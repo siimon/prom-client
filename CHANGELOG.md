@@ -11,10 +11,14 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+### Added
+
+## [11.5.1] - 2019-06-27
+
+### Changed
+
 - Parameter `compressCount` in Summaries to control compression of data in t-digest.
 - Compress t-digest in Summaries
-
-### Added
 
 ## [11.5.2] - 2019-06-20
 
