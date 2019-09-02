@@ -11,17 +11,29 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- `nodejs_eventloop_lag_seconds` - perf_hooks is available then this metric is calculate as mean event loop lag. Previous calculation was misleading
+
 ### Added
 
 - `nodejs_gc_runs` metric to the `collectDefaultMetrics()`. It counts number of GC runs with split by GC type.
 - `nodejs_gc_duration_summary` metric to the `collectDefaultMetrics()`. It counts 0.5, 0.75, 0.9, 0.99 percentiles of GC duration (in seconds).
 
 - Following bootstap timing metrics collection implemented:
+
   - `nodejs_node_start` - Node process start time
   - `nodejs_v8_start` - V8 start time
   - `nodejs_environment_initialized` - Node.js environment initialization complete time
   - `nodejs_bootstrap_complete` - Node.js bootstrap complete time
   - `nodejs_loop_start` - Node.js event loop start time
+
+- Following event loop metrics collection implemented:
+  - `nodejs_eventloop_lag_min_seconds` - event loop minimum lag
+  - `nodejs_eventloop_lag_max_seconds` - event loop maximum lag
+  - `nodejs_eventloop_lag_mean_seconds` - event loop mean lag
+  - `nodejs_eventloop_lag_stddev_seconds` - standard deviation of event loop lag
+  - `nodejs_eventloop_lag_p50_seconds` - 50 percentile of event loop lag
+  - `nodejs_eventloop_lag_p90_seconds` - 90 percentile of event loop lag
+  - `nodejs_eventloop_lag_p99_seconds` - 99 percentile of event loop lag
 
 ## [11.5.3] - 2019-06-27
 
