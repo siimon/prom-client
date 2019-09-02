@@ -12,8 +12,16 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 ### Added
+
 - `nodejs_gc_runs` metric to the `collectDefaultMetrics()`. It counts number of GC runs with split by GC type.
 - `nodejs_gc_duration_summary` metric to the `collectDefaultMetrics()`. It counts 0.5, 0.75, 0.9, 0.99 percentiles of GC duration (in seconds).
+
+- Following bootstap timing metrics collection implemented:
+  - `nodejs_node_start` - Node process start time
+  - `nodejs_v8_start` - V8 start time
+  - `nodejs_environment_initialized` - Node.js environment initialization complete time
+  - `nodejs_bootstrap_complete` - Node.js bootstrap complete time
+  - `nodejs_loop_start` - Node.js event loop start time
 
 ## [11.5.3] - 2019-06-27
 
@@ -33,13 +41,6 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 - fix: guard against missing constructor
-
-- Following bootstap timing metrics collection implemented:
-  - `nodejs_node_start` - Node process start time
-  - `nodejs_v8_start` - V8 start time
-  - `nodejs_environment_initialized` - Node.js environment initialization complete time
-  - `nodejs_bootstrap_complete` - Node.js bootstrap complete time
-  - `nodejs_loop_start` - Node.js event loop start time
 
 ## [11.5.0] - 2019-06-04
 
@@ -63,6 +64,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
   metrics. (#244)
 
 ### Added
+
 - Added a `remove()` method on each metric type, based on [Prometheus "Writing Client Libraries" section on labels](https://prometheus.io/docs/instrumenting/writing_clientlibs/#labels)
 
 ## [11.2.1]
