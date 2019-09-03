@@ -41,6 +41,10 @@ setInterval(() => {
 
 setInterval(() => {
 	c.inc();
+	function exampleNextTick() {
+		c.inc();
+	}
+	process.nextTick(exampleNextTick);
 }, 2000);
 
 setInterval(() => {
@@ -55,6 +59,19 @@ if (cluster.isWorker) {
 		c.inc({ code: `worker_${cluster.worker.id}` });
 	}, 2000);
 }
+
+// Generate some garbage
+const t = [];
+setInterval(() => {
+	for (let i = 0; i < 100; i++) {
+		t.push(new Date());
+	}
+}, 10);
+setInterval(() => {
+	while (t.length > 0) {
+		t.pop();
+	}
+});
 
 server.get('/metrics', (req, res) => {
 	res.set('Content-Type', register.contentType);
