@@ -339,40 +339,242 @@ describe('register', () => {
 	describe('Registry with default labels', () => {
 		const Registry = require('../lib/registry');
 
-		it('should not throw with default labels', () => {
-			const r = new Registry();
-			r.setDefaultLabels({
-				env: 'development'
+		describe('mutation tests', () => {
+			describe('registry.metrics()', () => {
+				it('should not throw with default labels (counter)', () => {
+					const r = new Registry();
+					r.setDefaultLabels({
+						env: 'development'
+					});
+
+					const counter = new Counter({
+						name: 'my_counter',
+						help: 'my counter',
+						registers: [r],
+						labelNames: ['type']
+					});
+
+					const myCounter = counter.labels('myType');
+
+					myCounter.inc();
+
+					const metrics = r.metrics();
+					const lines = metrics.split('\n');
+					expect(lines).toContain(
+						'my_counter{type="myType",env="development"} 1'
+					);
+
+					myCounter.inc();
+
+					const metrics2 = r.metrics();
+					const lines2 = metrics2.split('\n');
+					expect(lines2).toContain(
+						'my_counter{type="myType",env="development"} 2'
+					);
+				});
+
+				it('should not throw with default labels (gauge)', () => {
+					const r = new Registry();
+					r.setDefaultLabels({
+						env: 'development'
+					});
+
+					const gauge = new Gauge({
+						name: 'my_gauge',
+						help: 'my gauge',
+						registers: [r],
+						labelNames: ['type']
+					});
+
+					const myGauge = gauge.labels('myType');
+
+					myGauge.inc(1);
+
+					const metrics = r.metrics();
+					const lines = metrics.split('\n');
+					expect(lines).toContain(
+						'my_gauge{type="myType",env="development"} 1'
+					);
+
+					myGauge.inc(2);
+
+					const metrics2 = r.metrics();
+					const lines2 = metrics2.split('\n');
+					expect(lines2).toContain(
+						'my_gauge{type="myType",env="development"} 3'
+					);
+				});
+
+				it('should not throw with default labels (histogram)', () => {
+					const r = new Registry();
+					r.setDefaultLabels({
+						env: 'development'
+					});
+
+					const hist = new Histogram({
+						name: 'my_histogram',
+						help: 'my histogram',
+						registers: [r],
+						labelNames: ['type']
+					});
+
+					const myHist = hist.labels('myType');
+
+					myHist.observe(1);
+
+					const metrics = r.metrics();
+					const lines = metrics.split('\n');
+					expect(lines).toContain(
+						'my_histogram_bucket{le="1",type="myType",env="development"} 1'
+					);
+
+					myHist.observe(1);
+
+					const metrics2 = r.metrics();
+					const lines2 = metrics2.split('\n');
+					expect(lines2).toContain(
+						'my_histogram_bucket{le="1",type="myType",env="development"} 2'
+					);
+				});
 			});
 
-			const hist = new Histogram({
-				name: 'my_histogram',
-				help: 'my histogram',
-				registers: [r],
-				labelNames: ['type']
+			describe('registry.getMetricsAsJSON()', () => {
+				it('should not throw with default labels (counter)', () => {
+					const r = new Registry();
+					r.setDefaultLabels({
+						env: 'development'
+					});
+
+					const counter = new Counter({
+						name: 'my_counter',
+						help: 'my counter',
+						registers: [r],
+						labelNames: ['type']
+					});
+
+					const myCounter = counter.labels('myType');
+
+					myCounter.inc();
+
+					const metrics = r.getMetricsAsJSON();
+					expect(metrics).toContainEqual({
+						aggregator: 'sum',
+						help: 'my counter',
+						name: 'my_counter',
+						type: 'counter',
+						values: [
+							{
+								labels: { env: 'development', type: 'myType' },
+								timestamp: undefined,
+								value: 1
+							}
+						]
+					});
+
+					myCounter.inc();
+
+					const metrics2 = r.getMetricsAsJSON();
+					expect(metrics2).toContainEqual({
+						aggregator: 'sum',
+						help: 'my counter',
+						name: 'my_counter',
+						type: 'counter',
+						values: [
+							{
+								labels: { env: 'development', type: 'myType' },
+								timestamp: undefined,
+								value: 2
+							}
+						]
+					});
+				});
+
+				it('should not throw with default labels (gauge)', () => {
+					const r = new Registry();
+					r.setDefaultLabels({
+						env: 'development'
+					});
+
+					const gauge = new Gauge({
+						name: 'my_gauge',
+						help: 'my gauge',
+						registers: [r],
+						labelNames: ['type']
+					});
+
+					const myGauge = gauge.labels('myType');
+
+					myGauge.inc(1);
+
+					const metrics = r.getMetricsAsJSON();
+					expect(metrics).toContainEqual({
+						aggregator: 'sum',
+						help: 'my gauge',
+						name: 'my_gauge',
+						type: 'gauge',
+						values: [
+							{
+								labels: { env: 'development', type: 'myType' },
+								timestamp: undefined,
+								value: 1
+							}
+						]
+					});
+
+					myGauge.inc(2);
+
+					const metrics2 = r.getMetricsAsJSON();
+					expect(metrics2).toContainEqual({
+						aggregator: 'sum',
+						help: 'my gauge',
+						name: 'my_gauge',
+						type: 'gauge',
+						values: [
+							{
+								labels: { env: 'development', type: 'myType' },
+								timestamp: undefined,
+								value: 3
+							}
+						]
+					});
+				});
+
+				it('should not throw with default labels (histogram)', () => {
+					const r = new Registry();
+					r.setDefaultLabels({
+						env: 'development'
+					});
+
+					const hist = new Histogram({
+						name: 'my_histogram',
+						help: 'my histogram',
+						registers: [r],
+						labelNames: ['type']
+					});
+
+					const myHist = hist.labels('myType');
+
+					myHist.observe(1);
+
+					const metrics = r.getMetricsAsJSON();
+					// NOTE: at this test we don't need to check exacte JSON schema
+					expect(metrics[0].values).toContainEqual({
+						labels: { env: 'development', le: 1, type: 'myType' },
+						metricName: 'my_histogram_bucket',
+						value: 1
+					});
+
+					myHist.observe(1);
+
+					const metrics2 = r.getMetricsAsJSON();
+					// NOTE: at this test we don't need to check exacte JSON schema
+					expect(metrics2[0].values).toContainEqual({
+						labels: { env: 'development', le: 1, type: 'myType' },
+						metricName: 'my_histogram_bucket',
+						value: 2
+					});
+				});
 			});
-
-			const myHist = hist.labels('myType');
-
-			myHist.observe(1);
-
-			const metrics = r.metrics();
-			const lines = metrics.split('\n');
-			expect(
-				lines.indexOf(
-					'my_histogram_bucket{le="1",type="myType",env="development"} 1'
-				) >= 0
-			).toEqual(true);
-
-			myHist.observe(1);
-
-			const metrics2 = r.metrics();
-			const lines2 = metrics2.split('\n');
-			expect(
-				lines2.indexOf(
-					'my_histogram_bucket{le="1",type="myType",env="development"} 2'
-				) >= 0
-			).toEqual(true);
 		});
 	});
 
