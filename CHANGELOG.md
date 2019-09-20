@@ -15,6 +15,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 - Changed `Metric` labelNames & labelValues in TypeScript declaration to a generic type `T extends string`, instead of `string`
 - Lazy-load Node.js Cluster module to fix Passenger support (#293)
+- fix: avoid mutation bug in `registry.getMetricsAsJSON()`
+- fix: improve performance of `registry.getMetrics*`
 
 ### Added
 
