@@ -34,7 +34,7 @@ export class Registry {
 	 * Register metric to register
 	 * @param metric Metric to add to register
 	 */
-	registerMetric(metric: Metric): void;
+	registerMetric<T extends string>(metric: Metric<T>): void;
 
 	/**
 	 * Get all metrics as objects
@@ -56,7 +56,7 @@ export class Registry {
 	 * Get a single metric
 	 * @param name The name of the metric
 	 */
-	getSingleMetric(name: string): Metric;
+	getSingleMetric<T extends string>(name: string): Metric<T>;
 
 	/**
 	 * Set static labels to every metric emitted by this registry
@@ -124,7 +124,11 @@ export class AggregatorRegistry extends Registry {
 /**
  * General metric type
  */
-export type Metric = Counter | Gauge | Summary | Histogram;
+export type Metric<T extends string> =
+	| Counter<T>
+	| Gauge<T>
+	| Summary<T>
+	| Histogram<T>;
 
 /**
  * Aggregation methods, used for aggregating metrics in a Node.js cluster.
@@ -145,14 +149,12 @@ interface metric {
 	aggregator: Aggregator;
 }
 
-interface labelValues {
-	[key: string]: string | number;
-}
+type LabelValues<T extends string> = Partial<Record<T, string | number>>;
 
-export interface CounterConfiguration {
+export interface CounterConfiguration<T extends string> {
 	name: string;
 	help: string;
-	labelNames?: string[];
+	labelNames?: T[];
 	registers?: Registry[];
 	aggregator?: Aggregator;
 }
@@ -160,11 +162,11 @@ export interface CounterConfiguration {
 /**
  * A counter is a cumulative metric that represents a single numerical value that only ever goes up
  */
-export class Counter {
+export class Counter<T extends string> {
 	/**
 	 * @param configuration Configuration when creating a Counter metric. Name and Help is required.
 	 */
-	constructor(configuration: CounterConfiguration);
+	constructor(configuration: CounterConfiguration<T>);
 
 	/**
 	 * @param name The name of the metric
@@ -172,7 +174,7 @@ export class Counter {
 	 * @param labels Label keys
 	 * @deprecated
 	 */
-	constructor(name: string, help: string, labels?: string[]);
+	constructor(name: string, help: string, labels?: T[]);
 
 	/**
 	 * Increment for given labels
@@ -180,7 +182,7 @@ export class Counter {
 	 * @param value The number to increment with
 	 * @param timestamp Timestamp to associate the time series with
 	 */
-	inc(labels: labelValues, value?: number, timestamp?: number | Date): void;
+	inc(labels: LabelValues<T>, value?: number, timestamp?: number | Date): void;
 
 	/**
 	 * Increment with value
@@ -219,10 +221,10 @@ export namespace Counter {
 	}
 }
 
-export interface GaugeConfiguration {
+export interface GaugeConfiguration<T extends string> {
 	name: string;
 	help: string;
-	labelNames?: string[];
+	labelNames?: T[];
 	registers?: Registry[];
 	aggregator?: Aggregator;
 }
@@ -230,11 +232,11 @@ export interface GaugeConfiguration {
 /**
  * A gauge is a metric that represents a single numerical value that can arbitrarily go up and down.
  */
-export class Gauge {
+export class Gauge<T extends string> {
 	/**
 	 * @param configuration Configuration when creating a Gauge metric. Name and Help is mandatory
 	 */
-	constructor(configuration: GaugeConfiguration);
+	constructor(configuration: GaugeConfiguration<T>);
 
 	/**
 	 * @param name The name of the metric
@@ -242,7 +244,7 @@ export class Gauge {
 	 * @param labels Label keys
 	 * @deprecated
 	 */
-	constructor(name: string, help: string, labels?: string[]);
+	constructor(name: string, help: string, labels?: T[]);
 
 	/**
 	 * Increment gauge for given labels
@@ -250,7 +252,7 @@ export class Gauge {
 	 * @param value The value to increment with
 	 * @param timestamp Timestamp to associate the time series with
 	 */
-	inc(labels: labelValues, value?: number, timestamp?: number | Date): void;
+	inc(labels: LabelValues<T>, value?: number, timestamp?: number | Date): void;
 
 	/**
 	 * Increment gauge
@@ -265,7 +267,7 @@ export class Gauge {
 	 * @param value Value to decrement with
 	 * @param timestamp Timestamp to associate the time series with
 	 */
-	dec(labels: labelValues, value?: number, timestamp?: number | Date): void;
+	dec(labels: LabelValues<T>, value?: number, timestamp?: number | Date): void;
 
 	/**
 	 * Decrement gauge
@@ -280,7 +282,7 @@ export class Gauge {
 	 * @param value The value to set
 	 * @param timestamp Timestamp to associate the time series with
 	 */
-	set(labels: labelValues, value: number, timestamp?: number | Date): void;
+	set(labels: LabelValues<T>, value: number, timestamp?: number | Date): void;
 
 	/**
 	 * Set gauge value
@@ -293,21 +295,21 @@ export class Gauge {
 	 * Set gauge value to current epoch time in ms
 	 * @param labels Object with label keys and values
 	 */
-	setToCurrentTime(labels?: labelValues): void;
+	setToCurrentTime(labels?: LabelValues<T>): void;
 
 	/**
 	 * Start a timer where the gauges value will be the duration in seconds
 	 * @param labels Object with label keys and values
 	 * @return Function to invoke when timer should be stopped
 	 */
-	startTimer(labels?: labelValues): (labels?: labelValues) => void;
+	startTimer(labels?: LabelValues<T>): (labels?: LabelValues<T>) => void;
 
 	/**
 	 * Return the child for given labels
 	 * @param values Label values
 	 * @return Configured gauge with given labels
 	 */
-	labels(...values: string[]): Gauge.Internal;
+	labels(...values: string[]): Gauge.Internal<T>;
 
 	/**
 	 * Reset gauge values
@@ -322,7 +324,7 @@ export class Gauge {
 }
 
 export namespace Gauge {
-	interface Internal {
+	interface Internal<T extends string> {
 		/**
 		 * Increment gauge with value
 		 * @param value The value to increment with
@@ -353,14 +355,14 @@ export namespace Gauge {
 		 * Start a timer where the gauges value will be the duration in seconds
 		 * @return Function to invoke when timer should be stopped
 		 */
-		startTimer(): (labels?: labelValues) => void;
+		startTimer(): (labels?: LabelValues<T>) => void;
 	}
 }
 
-export interface HistogramConfiguration {
+export interface HistogramConfiguration<T extends string> {
 	name: string;
 	help: string;
-	labelNames?: string[];
+	labelNames?: T[];
 	buckets?: number[];
 	registers?: Registry[];
 	aggregator?: Aggregator;
@@ -369,11 +371,11 @@ export interface HistogramConfiguration {
 /**
  * A histogram samples observations (usually things like request durations or response sizes) and counts them in configurable buckets
  */
-export class Histogram {
+export class Histogram<T extends string> {
 	/**
 	 * @param configuration Configuration when creating the Histogram. Name and Help is mandatory
 	 */
-	constructor(configuration: HistogramConfiguration);
+	constructor(configuration: HistogramConfiguration<T>);
 
 	/**
 	 * @param name The name of metric
@@ -384,7 +386,7 @@ export class Histogram {
 	constructor(
 		name: string,
 		help: string,
-		labels?: string[],
+		labels?: T[],
 		config?: Histogram.Config
 	);
 	/**
@@ -405,14 +407,14 @@ export class Histogram {
 	 * @param labels Object with label keys and values
 	 * @param value The value to observe
 	 */
-	observe(labels: labelValues, value: number): void;
+	observe(labels: LabelValues<T>, value: number): void;
 
 	/**
 	 * Start a timer where the value in seconds will observed
 	 * @param labels Object with label keys and values
 	 * @return Function to invoke when timer should be stopped
 	 */
-	startTimer(labels?: labelValues): (labels?: labelValues) => void;
+	startTimer(labels?: LabelValues<T>): (labels?: LabelValues<T>) => void;
 
 	/**
 	 * Reset histogram values
@@ -424,7 +426,7 @@ export class Histogram {
 	 * @param values Label values
 	 * @return Configured histogram with given labels
 	 */
-	labels(...values: string[]): Histogram.Internal;
+	labels(...values: string[]): Histogram.Internal<T>;
 
 	/**
 	 * Remove metrics for the given label values
@@ -434,7 +436,7 @@ export class Histogram {
 }
 
 export namespace Histogram {
-	interface Internal {
+	interface Internal<T extends string> {
 		/**
 		 * Observe value
 		 * @param value The value to observe
@@ -446,7 +448,7 @@ export namespace Histogram {
 		 * @param labels Object with label keys and values
 		 * @return Function to invoke when timer should be stopped
 		 */
-		startTimer(): (labels?: labelValues) => void;
+		startTimer(): (labels?: LabelValues<T>) => void;
 	}
 
 	interface Config {
@@ -457,10 +459,10 @@ export namespace Histogram {
 	}
 }
 
-export interface SummaryConfiguration {
+export interface SummaryConfiguration<T extends string> {
 	name: string;
 	help: string;
-	labelNames?: string[];
+	labelNames?: T[];
 	percentiles?: number[];
 	registers?: Registry[];
 	aggregator?: Aggregator;
@@ -472,11 +474,11 @@ export interface SummaryConfiguration {
 /**
  * A summary samples observations
  */
-export class Summary {
+export class Summary<T extends string> {
 	/**
 	 * @param configuration Configuration when creating Summary metric. Name and Help is mandatory
 	 */
-	constructor(configuration: SummaryConfiguration);
+	constructor(configuration: SummaryConfiguration<T>);
 
 	/**
 	 * @param name The name of the metric
@@ -487,7 +489,7 @@ export class Summary {
 	constructor(
 		name: string,
 		help: string,
-		labels?: string[],
+		labels?: T[],
 		config?: Summary.Config
 	);
 	/**
@@ -508,14 +510,14 @@ export class Summary {
 	 * @param labels Object with label keys and values
 	 * @param value Value to observe
 	 */
-	observe(labels: labelValues, value: number): void;
+	observe(labels: LabelValues<T>, value: number): void;
 
 	/**
 	 * Start a timer where the value in seconds will observed
 	 * @param labels Object with label keys and values
 	 * @return Function to invoke when timer should be stopped
 	 */
-	startTimer(labels?: labelValues): (labels?: labelValues) => void;
+	startTimer(labels?: LabelValues<T>): (labels?: LabelValues<T>) => void;
 
 	/**
 	 * Reset all values in the summary
@@ -527,7 +529,7 @@ export class Summary {
 	 * @param values Label values
 	 * @return Configured summary with given labels
 	 */
-	labels(...values: string[]): Summary.Internal;
+	labels(...values: string[]): Summary.Internal<T>;
 
 	/**
 	 * Remove metrics for the given label values
@@ -537,7 +539,7 @@ export class Summary {
 }
 
 export namespace Summary {
-	interface Internal {
+	interface Internal<T extends string> {
 		/**
 		 * Observe value in summary
 		 * @param value The value to observe
@@ -549,7 +551,7 @@ export namespace Summary {
 		 * @param labels Object with label keys and values
 		 * @return Function to invoke when timer should be stopped
 		 */
-		startTimer(): (labels?: labelValues) => void;
+		startTimer(): (labels?: LabelValues<T>) => void;
 	}
 
 	interface Config {
