@@ -11,6 +11,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Changed `Metric` labelNames & labelValues in TypeScript declaration to a generic type `T extends string`, instead of `string`
+
 ### Added
 
 ## [11.5.3] - 2019-06-27
@@ -54,6 +56,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
   metrics. (#244)
 
 ### Added
+
 - Added a `remove()` method on each metric type, based on [Prometheus "Writing Client Libraries" section on labels](https://prometheus.io/docs/instrumenting/writing_clientlibs/#labels)
 
 ## [11.2.1]
