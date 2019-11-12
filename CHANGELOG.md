@@ -9,6 +9,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Breaking
 
+- Dropped support for Node.js v6
+
 ### Changed
 
 - Changed `Metric` labelNames & labelValues in TypeScript declaration to a generic type `T extends string`, instead of `string`
