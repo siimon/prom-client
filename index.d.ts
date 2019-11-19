@@ -93,6 +93,8 @@ export class AggregatorRegistry extends Registry {
 	 * Gets aggregated metrics for all workers. The optional callback and
 	 * returned Promise resolve with the same value; either may be used.
 	 * @param {Function?} cb (err, metrics) => any
+	 * @param {Object?} opt options for
+	 * @param {Registry?} opt.registry additional registry to merge with
 	 * @return {Promise<string>} Promise that resolves with the aggregated
 	 *   metrics.
 	 */
