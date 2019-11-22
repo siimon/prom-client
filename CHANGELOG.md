@@ -9,7 +9,14 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Breaking
 
+- Dropped support for Node.js v6
+
 ### Changed
+
+- Changed `Metric` labelNames & labelValues in TypeScript declaration to a generic type `T extends string`, instead of `string`
+- Lazy-load Node.js Cluster module to fix Passenger support (#293)
+- fix: avoid mutation bug in `registry.getMetricsAsJSON()`
+- fix: improve performance of `registry.getMetrics*`
 
 ### Added
 
@@ -54,6 +61,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
   metrics. (#244)
 
 ### Added
+
 - Added a `remove()` method on each metric type, based on [Prometheus "Writing Client Libraries" section on labels](https://prometheus.io/docs/instrumenting/writing_clientlibs/#labels)
 
 ## [11.2.1]
