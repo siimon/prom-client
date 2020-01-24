@@ -20,6 +20,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - fix: improve performance of `registry.getMetrics*`
 - chore: reindent package.json
 - chore: correct var name in processStartTime
+- chore: add test for `process_start_time_seconds`
 
 ### Added
 
