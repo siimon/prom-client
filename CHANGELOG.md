@@ -19,6 +19,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - fix: avoid mutation bug in `registry.getMetricsAsJSON()`
 - fix: improve performance of `registry.getMetrics*`
 - chore: reindent package.json
+- chore: correct var name in processStartTime
 
 ### Added
 
