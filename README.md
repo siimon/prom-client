@@ -224,7 +224,7 @@ Utility to observe request durations
 ```js
 const end = histogram.startTimer();
 xhrRequest(function(err, res) {
-  end(); // Observes the value to xhrRequests duration in seconds
+  const seconds = end(); // Observes and returns the value to xhrRequests duration in seconds
 });
 ```
 

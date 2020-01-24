@@ -402,6 +402,15 @@ describe('histogram', () => {
 				clock.uninstall();
 			});
 
+			it('should time requests, end function should return time spent value', () => {
+				const clock = lolex.install();
+				const doneFn = instance.startTimer();
+				clock.tick(500);
+				const value = doneFn();
+				expect(value).toEqual(0.5);
+				clock.uninstall();
+			});
+
 			it('should not allow non numbers', () => {
 				const fn = function() {
 					instance.observe('asd');
