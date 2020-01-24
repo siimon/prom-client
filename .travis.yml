@@ -7,4 +7,5 @@ node_js:
 os:
   - linux
   - osx
+  - windows
 osx_image: xcode7.3
