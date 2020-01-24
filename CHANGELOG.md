@@ -9,7 +9,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Breaking
 
-- Dropped support for Node.js v6
+- Dropped support for end-of-life Node.js versions 6.x and 8.x
 
 ### Changed
 
