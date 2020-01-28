@@ -13,6 +13,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- chore: remove ignored package-lock.json
 - fix: `process_max_fds` is process limit, not OS (#314)
 - Changed `Metric` labelNames & labelValues in TypeScript declaration to a generic type `T extends string`, instead of `string`
 - Lazy-load Node.js Cluster module to fix Passenger support (#293)
