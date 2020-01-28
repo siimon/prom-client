@@ -19,6 +19,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - Lazy-load Node.js Cluster module to fix Passenger support (#293)
 - fix: avoid mutation bug in `registry.getMetricsAsJSON()`
 - fix: improve performance of `registry.getMetrics*`
+- End function of histogram `startTimer`, when invoked returns the number of seconds
 - chore: reindent package.json
 - chore: correct var name in processStartTime
 - chore: add test for `process_start_time_seconds`
