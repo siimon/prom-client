@@ -9,15 +9,20 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Breaking
 
-- Dropped support for Node.js v6
+- Dropped support for end-of-life Node.js versions 6.x and 8.x
 
 ### Changed
 
+- chore: remove ignored package-lock.json
+- fix: `process_max_fds` is process limit, not OS (#314)
 - Changed `Metric` labelNames & labelValues in TypeScript declaration to a generic type `T extends string`, instead of `string`
 - Lazy-load Node.js Cluster module to fix Passenger support (#293)
 - fix: avoid mutation bug in `registry.getMetricsAsJSON()`
 - fix: improve performance of `registry.getMetrics*`
 - End function of histogram `startTimer`, when invoked returns the number of seconds
+- chore: reindent package.json
+- chore: correct var name in processStartTime
+- chore: add test for `process_start_time_seconds`
 
 ### Added
 
