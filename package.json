@@ -67,6 +67,7 @@
 		]
 	},
 	"prettier": {
+		"endOfLine": "auto",
 		"singleQuote": true,
 		"useTabs": true,
 		"overrides": [
