@@ -39,7 +39,7 @@
 		"express": "^4.13.3",
 		"husky": "^4.2.1",
 		"jest": "^25.1.0",
-		"lint-staged": "^7.0.0",
+		"lint-staged": "^10.0.4",
 		"lolex": "^5.1.2",
 		"prettier": "1.19.1",
 		"typescript": "^3.0.3"
@@ -53,18 +53,9 @@
 		"testRegex": ".*Test\\.js$"
 	},
 	"lint-staged": {
-		"*.js": [
-			"eslint --fix",
-			"git add"
-		],
-		"*.{ts,md,json,yml}": [
-			"prettier --write",
-			"git add"
-		],
-		".{eslintrc,travis.yml}": [
-			"prettier --write",
-			"git add"
-		]
+		"*.js": "eslint --fix",
+		"*.{ts,md,json,yml}": "prettier --write",
+		".{eslintrc,travis.yml}": "prettier --write"
 	},
 	"prettier": {
 		"singleQuote": true,
