@@ -4,7 +4,7 @@ const createRegressionBenchmark = require('@clevernature/benchmark-regression');
 
 const currentClient = require('..');
 const benchmarks = createRegressionBenchmark(currentClient, [
-	'prom-client@latest'
+	'prom-client@latest',
 ]);
 
 benchmarks.suite('registry', require('./registry'));

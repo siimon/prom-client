@@ -97,7 +97,7 @@ export class AggregatorRegistry extends Registry {
 	 *   metrics.
 	 */
 	clusterMetrics(
-		cb?: (err: Error | null, metrics?: string) => any
+		cb?: (err: Error | null, metrics?: string) => any,
 	): Promise<string>;
 
 	/**
@@ -139,7 +139,7 @@ export enum MetricType {
 	Counter,
 	Gauge,
 	Histogram,
-	Summary
+	Summary,
 }
 
 interface metric {
@@ -387,7 +387,7 @@ export class Histogram<T extends string> {
 		name: string,
 		help: string,
 		labels?: T[],
-		config?: Histogram.Config
+		config?: Histogram.Config,
 	);
 	/**
 	 * @param name The name of metric
@@ -490,7 +490,7 @@ export class Summary<T extends string> {
 		name: string,
 		help: string,
 		labels?: T[],
-		config?: Summary.Config
+		config?: Summary.Config,
 	);
 	/**
 	 * @param name The name of the metric
@@ -580,7 +580,7 @@ export class Pushgateway {
 	 */
 	pushAdd(
 		params: Pushgateway.Parameters,
-		callback: (error?: Error, httpResponse?: any, body?: any) => void
+		callback: (error?: Error, httpResponse?: any, body?: any) => void,
 	): void;
 
 	/**
@@ -590,7 +590,7 @@ export class Pushgateway {
 	 */
 	push(
 		params: Pushgateway.Parameters,
-		callback: (error?: Error, httpResponse?: any, body?: any) => void
+		callback: (error?: Error, httpResponse?: any, body?: any) => void,
 	): void;
 
 	/**
@@ -600,7 +600,7 @@ export class Pushgateway {
 	 */
 	delete(
 		params: Pushgateway.Parameters,
-		callback: (error?: Error, httpResponse?: any, body?: any) => void
+		callback: (error?: Error, httpResponse?: any, body?: any) => void,
 	): void;
 }
 
@@ -629,7 +629,7 @@ export namespace Pushgateway {
 export function linearBuckets(
 	start: number,
 	width: number,
-	count: number
+	count: number,
 ): number[];
 
 /**
@@ -642,7 +642,7 @@ export function linearBuckets(
 export function exponentialBuckets(
 	start: number,
 	factor: number,
-	count: number
+	count: number,
 ): number[];
 
 export interface DefaultMetricsCollectorConfiguration {
@@ -658,7 +658,7 @@ export interface DefaultMetricsCollectorConfiguration {
  * @return The setInterval number
  */
 export function collectDefaultMetrics(
-	config?: DefaultMetricsCollectorConfiguration
+	config?: DefaultMetricsCollectorConfiguration,
 ): ReturnType<typeof setInterval>;
 
 /**

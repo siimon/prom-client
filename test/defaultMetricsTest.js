@@ -13,14 +13,14 @@ describe('collectDefaultMetrics', () => {
 		cpuUsage = process.cpuUsage;
 
 		Object.defineProperty(process, 'platform', {
-			value: 'my-bogus-platform'
+			value: 'my-bogus-platform',
 		});
 
 		if (cpuUsage) {
 			Object.defineProperty(process, 'cpuUsage', {
 				value() {
 					return { user: 1000, system: 10 };
-				}
+				},
 			});
 		} else {
 			process.cpuUsage = function() {
@@ -33,12 +33,12 @@ describe('collectDefaultMetrics', () => {
 
 	afterAll(() => {
 		Object.defineProperty(process, 'platform', {
-			value: platform
+			value: platform,
 		});
 
 		if (cpuUsage) {
 			Object.defineProperty(process, 'cpuUsage', {
-				value: cpuUsage
+				value: cpuUsage,
 			});
 		} else {
 			delete process.cpuUsage;
@@ -76,14 +76,14 @@ describe('collectDefaultMetrics', () => {
 			'nodejs_active_handles_total',
 			'nodejs_external_memory_bytes',
 			'nodejs_heap_size_total_bytes',
-			'nodejs_heap_size_used_bytes'
+			'nodejs_heap_size_used_bytes',
 		];
 		interval = collectDefaultMetrics({ timestamps: false });
 		expect(register.getMetricsAsJSON()).not.toHaveLength(0);
 		const testableMetrics = register
 			.getMetricsAsJSON()
 			.filter(
-				metrics => metricsWithToggableTimestamp.indexOf(metrics.name) !== -1
+				metrics => metricsWithToggableTimestamp.indexOf(metrics.name) !== -1,
 			);
 		testableMetrics.forEach(metric => {
 			expect(metric.values).not.toHaveLength(0);
