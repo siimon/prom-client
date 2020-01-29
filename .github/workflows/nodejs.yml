@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build:
-    name: Test on Node.js v${{ matrix.node-version }}
+    name: Test on Node.js v${{ matrix.node-version }} and OS ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
