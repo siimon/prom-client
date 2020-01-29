@@ -38,7 +38,7 @@ describe('register', () => {
 		expect(() => {
 			register.registerMetric(getMetric());
 		}).toThrowError(
-			'A metric with the name test_metric has already been registered.'
+			'A metric with the name test_metric has already been registered.',
 		);
 	});
 
@@ -51,11 +51,11 @@ describe('register', () => {
 					help: 'A test metric',
 					values: [
 						{
-							value: NaN
-						}
-					]
+							value: NaN,
+						},
+					],
 				};
-			}
+			},
 		});
 		const lines = register.metrics().split('\n');
 		expect(lines).toHaveLength(4);
@@ -71,11 +71,11 @@ describe('register', () => {
 					help: 'A test metric',
 					values: [
 						{
-							value: Infinity
-						}
-					]
+							value: Infinity,
+						},
+					],
 				};
-			}
+			},
 		});
 		const lines = register.metrics().split('\n');
 		expect(lines).toHaveLength(4);
@@ -91,11 +91,11 @@ describe('register', () => {
 					help: 'A test metric',
 					values: [
 						{
-							value: -Infinity
-						}
-					]
+							value: -Infinity,
+						},
+					],
 				};
-			}
+			},
 		});
 		const lines = register.metrics().split('\n');
 		expect(lines).toHaveLength(4);
@@ -111,11 +111,11 @@ describe('register', () => {
 					help: 'A test metric',
 					values: [
 						{
-							value: 1
-						}
-					]
+							value: 1,
+						},
+					],
 				};
-			}
+			},
 		});
 		expect(register.metrics().split('\n')).toHaveLength(4);
 	});
@@ -128,9 +128,9 @@ describe('register', () => {
 					name: 'test_metric',
 					type: 'counter',
 					help: 'A test metric',
-					values: [{ value: 1 }]
+					values: [{ value: 1 }],
 				};
-			}
+			},
 		});
 
 		const output = register.metrics().split('\n')[2];
@@ -150,16 +150,16 @@ describe('register', () => {
 							value: 1,
 							labels: {
 								testLabel: 'overlapped',
-								anotherLabel: 'value123'
-							}
-						}
-					]
+								anotherLabel: 'value123',
+							},
+						},
+					],
 				};
-			}
+			},
 		});
 
 		expect(register.metrics().split('\n')[2]).toEqual(
-			'test_metric{testLabel="overlapped",anotherLabel="value123"} 1'
+			'test_metric{testLabel="overlapped",anotherLabel="value123"} 1',
 		);
 	});
 
@@ -189,9 +189,9 @@ describe('register', () => {
 					return {
 						name: 'test_"_\\_\n_metric',
 						help: 'help_help',
-						type: 'counter'
+						type: 'counter',
 					};
-				}
+				},
 			});
 			escapedResult = register.metrics();
 		});
@@ -215,12 +215,12 @@ describe('register', () => {
 							value: 12,
 							labels: {
 								label: 'hello',
-								code: '3"03'
-							}
-						}
-					]
+								code: '3"03',
+							},
+						},
+					],
 				};
-			}
+			},
 		});
 		const escapedResult = register.metrics();
 		expect(escapedResult).toMatch(/\\"/);
@@ -241,7 +241,7 @@ describe('register', () => {
 		it('should add default labels to JSON', () => {
 			register.registerMetric(getMetric());
 			register.setDefaultLabels({
-				defaultRegistryLabel: 'testValue'
+				defaultRegistryLabel: 'testValue',
 			});
 			const output = register.getMetricsAsJSON();
 
@@ -253,7 +253,7 @@ describe('register', () => {
 			expect(output[0].values[0].labels).toEqual({
 				code: '303',
 				label: 'hello',
-				defaultRegistryLabel: 'testValue'
+				defaultRegistryLabel: 'testValue',
 			});
 		});
 	});
@@ -287,7 +287,7 @@ describe('register', () => {
 		const metrics = register.metrics();
 
 		expect(metrics.split('\n')[3]).toEqual(
-			'test_metric{label="bye",code="404"} 34'
+			'test_metric{label="bye",code="404"} 34',
 		);
 	});
 
@@ -296,21 +296,21 @@ describe('register', () => {
 			const counter = new Counter({
 				name: 'test_counter',
 				help: 'test metric',
-				labelNames: ['serial', 'active']
+				labelNames: ['serial', 'active'],
 			});
 			const gauge = new Gauge({
 				name: 'test_gauge',
 				help: 'Another test metric',
-				labelNames: ['level']
+				labelNames: ['level'],
 			});
 			const histo = new Histogram({
 				name: 'test_histo',
-				help: 'test'
+				help: 'test',
 			});
 			const summ = new Summary({
 				name: 'test_summ',
 				help: 'test',
-				percentiles: [0.5]
+				percentiles: [0.5],
 			});
 			register.registerMetric(counter);
 			register.registerMetric(gauge);
@@ -346,14 +346,14 @@ describe('register', () => {
 				it('should not throw with default labels (counter)', () => {
 					const r = new Registry();
 					r.setDefaultLabels({
-						env: 'development'
+						env: 'development',
 					});
 
 					const counter = new Counter({
 						name: 'my_counter',
 						help: 'my counter',
 						registers: [r],
-						labelNames: ['type']
+						labelNames: ['type'],
 					});
 
 					const myCounter = counter.labels('myType');
@@ -363,7 +363,7 @@ describe('register', () => {
 					const metrics = r.metrics();
 					const lines = metrics.split('\n');
 					expect(lines).toContain(
-						'my_counter{type="myType",env="development"} 1'
+						'my_counter{type="myType",env="development"} 1',
 					);
 
 					myCounter.inc();
@@ -371,21 +371,21 @@ describe('register', () => {
 					const metrics2 = r.metrics();
 					const lines2 = metrics2.split('\n');
 					expect(lines2).toContain(
-						'my_counter{type="myType",env="development"} 2'
+						'my_counter{type="myType",env="development"} 2',
 					);
 				});
 
 				it('should not throw with default labels (gauge)', () => {
 					const r = new Registry();
 					r.setDefaultLabels({
-						env: 'development'
+						env: 'development',
 					});
 
 					const gauge = new Gauge({
 						name: 'my_gauge',
 						help: 'my gauge',
 						registers: [r],
-						labelNames: ['type']
+						labelNames: ['type'],
 					});
 
 					const myGauge = gauge.labels('myType');
@@ -395,7 +395,7 @@ describe('register', () => {
 					const metrics = r.metrics();
 					const lines = metrics.split('\n');
 					expect(lines).toContain(
-						'my_gauge{type="myType",env="development"} 1'
+						'my_gauge{type="myType",env="development"} 1',
 					);
 
 					myGauge.inc(2);
@@ -403,21 +403,21 @@ describe('register', () => {
 					const metrics2 = r.metrics();
 					const lines2 = metrics2.split('\n');
 					expect(lines2).toContain(
-						'my_gauge{type="myType",env="development"} 3'
+						'my_gauge{type="myType",env="development"} 3',
 					);
 				});
 
 				it('should not throw with default labels (histogram)', () => {
 					const r = new Registry();
 					r.setDefaultLabels({
-						env: 'development'
+						env: 'development',
 					});
 
 					const hist = new Histogram({
 						name: 'my_histogram',
 						help: 'my histogram',
 						registers: [r],
-						labelNames: ['type']
+						labelNames: ['type'],
 					});
 
 					const myHist = hist.labels('myType');
@@ -427,7 +427,7 @@ describe('register', () => {
 					const metrics = r.metrics();
 					const lines = metrics.split('\n');
 					expect(lines).toContain(
-						'my_histogram_bucket{le="1",type="myType",env="development"} 1'
+						'my_histogram_bucket{le="1",type="myType",env="development"} 1',
 					);
 
 					myHist.observe(1);
@@ -435,7 +435,7 @@ describe('register', () => {
 					const metrics2 = r.metrics();
 					const lines2 = metrics2.split('\n');
 					expect(lines2).toContain(
-						'my_histogram_bucket{le="1",type="myType",env="development"} 2'
+						'my_histogram_bucket{le="1",type="myType",env="development"} 2',
 					);
 				});
 			});
@@ -444,14 +444,14 @@ describe('register', () => {
 				it('should not throw with default labels (counter)', () => {
 					const r = new Registry();
 					r.setDefaultLabels({
-						env: 'development'
+						env: 'development',
 					});
 
 					const counter = new Counter({
 						name: 'my_counter',
 						help: 'my counter',
 						registers: [r],
-						labelNames: ['type']
+						labelNames: ['type'],
 					});
 
 					const myCounter = counter.labels('myType');
@@ -467,9 +467,9 @@ describe('register', () => {
 						values: [
 							{
 								labels: { env: 'development', type: 'myType' },
-								value: 1
-							}
-						]
+								value: 1,
+							},
+						],
 					});
 
 					myCounter.inc();
@@ -483,23 +483,23 @@ describe('register', () => {
 						values: [
 							{
 								labels: { env: 'development', type: 'myType' },
-								value: 2
-							}
-						]
+								value: 2,
+							},
+						],
 					});
 				});
 
 				it('should not throw with default labels (gauge)', () => {
 					const r = new Registry();
 					r.setDefaultLabels({
-						env: 'development'
+						env: 'development',
 					});
 
 					const gauge = new Gauge({
 						name: 'my_gauge',
 						help: 'my gauge',
 						registers: [r],
-						labelNames: ['type']
+						labelNames: ['type'],
 					});
 
 					const myGauge = gauge.labels('myType');
@@ -515,9 +515,9 @@ describe('register', () => {
 						values: [
 							{
 								labels: { env: 'development', type: 'myType' },
-								value: 1
-							}
-						]
+								value: 1,
+							},
+						],
 					});
 
 					myGauge.inc(2);
@@ -531,23 +531,23 @@ describe('register', () => {
 						values: [
 							{
 								labels: { env: 'development', type: 'myType' },
-								value: 3
-							}
-						]
+								value: 3,
+							},
+						],
 					});
 				});
 
 				it('should not throw with default labels (histogram)', () => {
 					const r = new Registry();
 					r.setDefaultLabels({
-						env: 'development'
+						env: 'development',
 					});
 
 					const hist = new Histogram({
 						name: 'my_histogram',
 						help: 'my histogram',
 						registers: [r],
-						labelNames: ['type']
+						labelNames: ['type'],
 					});
 
 					const myHist = hist.labels('myType');
@@ -559,7 +559,7 @@ describe('register', () => {
 					expect(metrics[0].values).toContainEqual({
 						labels: { env: 'development', le: 1, type: 'myType' },
 						metricName: 'my_histogram_bucket',
-						value: 1
+						value: 1,
 					});
 
 					myHist.observe(1);
@@ -569,7 +569,7 @@ describe('register', () => {
 					expect(metrics2[0].values).toContainEqual({
 						labels: { env: 'development', le: 1, type: 'myType' },
 						metricName: 'my_histogram_bucket',
-						value: 2
+						value: 2,
 					});
 				});
 			});
@@ -592,7 +592,7 @@ describe('register', () => {
 
 			const merged = Registry.merge([
 				registryOne,
-				registryTwo
+				registryTwo,
 			]).getMetricsAsJSON();
 			expect(merged).toHaveLength(2);
 		});
@@ -623,19 +623,19 @@ describe('register', () => {
 							value: 12,
 							labels: {
 								label: 'hello',
-								code: '303'
-							}
+								code: '303',
+							},
 						},
 						{
 							value: 34,
 							labels: {
 								label: 'bye',
-								code: '404'
-							}
-						}
-					]
+								code: '404',
+							},
+						},
+					],
 				};
-			}
+			},
 		};
 	}
 });

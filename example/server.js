@@ -9,21 +9,21 @@ const Histogram = require('../').Histogram;
 const h = new Histogram({
 	name: 'test_histogram',
 	help: 'Example of a histogram',
-	labelNames: ['code']
+	labelNames: ['code'],
 });
 
 const Counter = require('../').Counter;
 const c = new Counter({
 	name: 'test_counter',
 	help: 'Example of a counter',
-	labelNames: ['code']
+	labelNames: ['code'],
 });
 
 const Gauge = require('../').Gauge;
 const g = new Gauge({
 	name: 'test_gauge',
 	help: 'Example of a gauge',
-	labelNames: ['method', 'code']
+	labelNames: ['method', 'code'],
 });
 
 setTimeout(() => {
@@ -82,11 +82,11 @@ server.get('/metrics/counter', (req, res) => {
 // Enable collection of default metrics
 require('../').collectDefaultMetrics({
 	timeout: 10000,
-	gcDurationBuckets: [0.001, 0.01, 0.1, 1, 2, 5] // These are the default buckets.
+	gcDurationBuckets: [0.001, 0.01, 0.1, 1, 2, 5], // These are the default buckets.
 });
 
 const port = process.env.PORT || 3000;
 console.log(
-	`Server listening to ${port}, metrics exposed on /metrics endpoint`
+	`Server listening to ${port}, metrics exposed on /metrics endpoint`,
 );
 server.listen(port);

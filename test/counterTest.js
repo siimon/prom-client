@@ -53,7 +53,7 @@ describe('counter', () => {
 				instance = new Counter({
 					name: 'gauge_test_2',
 					help: 'help',
-					labelNames: ['method', 'endpoint']
+					labelNames: ['method', 'endpoint'],
 				});
 			});
 
@@ -100,7 +100,7 @@ describe('counter', () => {
 			instance = new Counter({
 				name: 'gauge_test_3',
 				help: 'help',
-				labelNames: ['method', 'endpoint']
+				labelNames: ['method', 'endpoint'],
 			});
 			instance.inc({ method: 'GET', endpoint: '/test' });
 			instance.inc({ method: 'POST', endpoint: '/test' });
@@ -141,7 +141,7 @@ describe('counter', () => {
 			instance = new Counter({
 				name: 'gauge_test',
 				help: 'test',
-				registers: []
+				registers: [],
 			});
 		});
 		it('should increment counter', () => {
@@ -158,7 +158,7 @@ describe('counter', () => {
 			instance = new Counter({
 				name: 'gauge_test',
 				help: 'test',
-				registers: [registryInstance]
+				registers: [registryInstance],
 			});
 		});
 		it('should increment counter', () => {
@@ -176,7 +176,7 @@ describe('counter', () => {
 		it('should reset labelless counter', () => {
 			const instance = new Counter({
 				name: 'test_metric',
-				help: 'Another test metric'
+				help: 'Another test metric',
 			});
 
 			instance.inc(12);
@@ -192,7 +192,7 @@ describe('counter', () => {
 			const instance = new Counter({
 				name: 'test_metric',
 				help: 'Another test metric',
-				labelNames: ['serial', 'active']
+				labelNames: ['serial', 'active'],
 			});
 
 			instance.inc({ serial: '12345', active: 'yes' }, 12);

@@ -34,7 +34,7 @@ export class Registry {
 	/**
 	 * Get all registered collector functions
 	 */
-	collectors(): Collector[]
+	collectors(): Collector[];
 
 	/**
 	 * Get all metrics as objects
@@ -98,7 +98,7 @@ export class AggregatorRegistry extends Registry {
 	 *   metrics.
 	 */
 	clusterMetrics(
-		cb?: (err: Error | null, metrics?: string) => any
+		cb?: (err: Error | null, metrics?: string) => any,
 	): Promise<string>;
 
 	/**
@@ -140,7 +140,7 @@ export enum MetricType {
 	Counter,
 	Gauge,
 	Histogram,
-	Summary
+	Summary,
 }
 
 interface metric {
@@ -161,8 +161,7 @@ interface MetricConfiguration<T extends string> {
 }
 
 export interface CounterConfiguration<T extends string>
-	extends MetricConfiguration<T> {
-}
+	extends MetricConfiguration<T> {}
 
 /**
  * A counter is a cumulative metric that represents a single numerical value that only ever goes up
@@ -216,8 +215,7 @@ export namespace Counter {
 }
 
 export interface GaugeConfiguration<T extends string>
-	extends MetricConfiguration<T> {
-}
+	extends MetricConfiguration<T> {}
 
 /**
  * A gauge is a metric that represents a single numerical value that can arbitrarily go up and down.
@@ -505,7 +503,7 @@ export class Pushgateway {
 	 */
 	pushAdd(
 		params: Pushgateway.Parameters,
-		callback: (error?: Error, httpResponse?: any, body?: any) => void
+		callback: (error?: Error, httpResponse?: any, body?: any) => void,
 	): void;
 
 	/**
@@ -515,7 +513,7 @@ export class Pushgateway {
 	 */
 	push(
 		params: Pushgateway.Parameters,
-		callback: (error?: Error, httpResponse?: any, body?: any) => void
+		callback: (error?: Error, httpResponse?: any, body?: any) => void,
 	): void;
 
 	/**
@@ -525,7 +523,7 @@ export class Pushgateway {
 	 */
 	delete(
 		params: Pushgateway.Parameters,
-		callback: (error?: Error, httpResponse?: any, body?: any) => void
+		callback: (error?: Error, httpResponse?: any, body?: any) => void,
 	): void;
 }
 
@@ -554,7 +552,7 @@ export namespace Pushgateway {
 export function linearBuckets(
 	start: number,
 	width: number,
-	count: number
+	count: number,
 ): number[];
 
 /**
@@ -567,7 +565,7 @@ export function linearBuckets(
 export function exponentialBuckets(
 	start: number,
 	factor: number,
-	count: number
+	count: number,
 ): number[];
 
 export interface DefaultMetricsCollectorConfiguration {
@@ -582,7 +580,7 @@ export interface DefaultMetricsCollectorConfiguration {
  * @param config Configuration object for default metrics collector
  */
 export function collectDefaultMetrics(
-	config?: DefaultMetricsCollectorConfiguration
+	config?: DefaultMetricsCollectorConfiguration,
 ): void;
 
 export interface defaultMetrics {

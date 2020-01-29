@@ -7,7 +7,7 @@ describe('processOpenFileDescriptors', () => {
 	jest.mock(
 		'process',
 		() =>
-			Object.assign({}, jest.requireActual('process'), { platform: 'linux' }) // This metric only works on Linux
+			Object.assign({}, jest.requireActual('process'), { platform: 'linux' }), // This metric only works on Linux
 	);
 
 	beforeAll(() => {

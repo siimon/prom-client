@@ -61,7 +61,7 @@
 		"singleQuote": true,
 		"useTabs": true,
 		"arrowParens": "avoid",
-		"trailingComma": "none",
+		"trailingComma": "all",
 		"overrides": [
 			{
 				"files": "*.md",

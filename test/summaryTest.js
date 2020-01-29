@@ -24,7 +24,7 @@ describe('summary', () => {
 				expect(instance.get().values[7].metricName).toEqual('summary_test_sum');
 				expect(instance.get().values[7].value).toEqual(100);
 				expect(instance.get().values[8].metricName).toEqual(
-					'summary_test_count'
+					'summary_test_count',
 				);
 				expect(instance.get().values[8].value).toEqual(1);
 			});
@@ -68,7 +68,7 @@ describe('summary', () => {
 				expect(instance.get().values[7].value).toEqual(400);
 
 				expect(instance.get().values[8].metricName).toEqual(
-					'summary_test_count'
+					'summary_test_count',
 				);
 				expect(instance.get().values[8].value).toEqual(5);
 			});
@@ -78,7 +78,7 @@ describe('summary', () => {
 				instance = new Summary({
 					name: 'summary_test',
 					help: 'test',
-					percentiles: [0.5, 0.9]
+					percentiles: [0.5, 0.9],
 				});
 				instance.observe(100);
 				instance.observe(100);
@@ -98,7 +98,7 @@ describe('summary', () => {
 				expect(instance.get().values[2].value).toEqual(400);
 
 				expect(instance.get().values[3].metricName).toEqual(
-					'summary_test_count'
+					'summary_test_count',
 				);
 				expect(instance.get().values[3].value).toEqual(5);
 			});
@@ -108,7 +108,7 @@ describe('summary', () => {
 				instance = new Summary({
 					name: 'summary_test',
 					help: 'test',
-					percentiles: [0.5]
+					percentiles: [0.5],
 				});
 				instance.observe(100);
 				expect(instance.get().values[0].labels.quantile).toEqual(0.5);
@@ -118,7 +118,7 @@ describe('summary', () => {
 				expect(instance.get().values[1].value).toEqual(100);
 
 				expect(instance.get().values[2].metricName).toEqual(
-					'summary_test_count'
+					'summary_test_count',
 				);
 				expect(instance.get().values[2].value).toEqual(1);
 
@@ -131,7 +131,7 @@ describe('summary', () => {
 				expect(instance.get().values[1].value).toEqual(0);
 
 				expect(instance.get().values[2].metricName).toEqual(
-					'summary_test_count'
+					'summary_test_count',
 				);
 				expect(instance.get().values[2].value).toEqual(0);
 			});
@@ -143,7 +143,7 @@ describe('summary', () => {
 						name: 'summary_test',
 						help: 'help',
 						labelNames: ['method', 'endpoint'],
-						percentiles: [0.9]
+						percentiles: [0.9],
 					});
 				});
 
@@ -281,7 +281,7 @@ describe('summary', () => {
 						name: 'summary_test',
 						help: 'help',
 						labelNames: ['method', 'endpoint'],
-						percentiles: [0.9]
+						percentiles: [0.9],
 					});
 
 					instance.labels('GET', '/test').observe(50);
@@ -411,7 +411,7 @@ describe('summary', () => {
 			instance = new Summary({
 				name: 'summary_test',
 				help: 'test',
-				registers: []
+				registers: [],
 			});
 		});
 		it('should increase count', () => {
@@ -432,7 +432,7 @@ describe('summary', () => {
 			instance = new Summary({
 				name: 'summary_test',
 				help: 'test',
-				registers: [registryInstance]
+				registers: [registryInstance],
 			});
 		});
 		it('should increment counter', () => {
@@ -459,7 +459,7 @@ describe('summary', () => {
 				name: 'summary_test',
 				help: 'test',
 				maxAgeSeconds: 5,
-				ageBuckets: 5
+				ageBuckets: 5,
 			});
 
 			localInstance.observe(100);
@@ -468,11 +468,11 @@ describe('summary', () => {
 				expect(localInstance.get().values[0].labels.quantile).toEqual(0.01);
 				expect(localInstance.get().values[0].value).toEqual(100);
 				expect(localInstance.get().values[7].metricName).toEqual(
-					'summary_test_sum'
+					'summary_test_sum',
 				);
 				expect(localInstance.get().values[7].value).toEqual(100);
 				expect(localInstance.get().values[8].metricName).toEqual(
-					'summary_test_count'
+					'summary_test_count',
 				);
 				expect(localInstance.get().values[8].value).toEqual(1);
 				clock.tick(1001);
@@ -485,7 +485,7 @@ describe('summary', () => {
 		it('should not slide when maxAgeSeconds and ageBuckets are not configured', () => {
 			const localInstance = new Summary({
 				name: 'summary_test',
-				help: 'test'
+				help: 'test',
 			});
 			localInstance.observe(100);
 
@@ -493,11 +493,11 @@ describe('summary', () => {
 				expect(localInstance.get().values[0].labels.quantile).toEqual(0.01);
 				expect(localInstance.get().values[0].value).toEqual(100);
 				expect(localInstance.get().values[7].metricName).toEqual(
-					'summary_test_sum'
+					'summary_test_sum',
 				);
 				expect(localInstance.get().values[7].value).toEqual(100);
 				expect(localInstance.get().values[8].metricName).toEqual(
-					'summary_test_count'
+					'summary_test_count',
 				);
 				expect(localInstance.get().values[8].value).toEqual(1);
 				clock.tick(1001);
