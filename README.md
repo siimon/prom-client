@@ -185,7 +185,7 @@ Histograms track sizes and frequency of events.
 **Configuration**
 
 The defaults buckets are intended to cover usual web/rpc requests, this can
-however be overriden.
+however be overridden.
 
 ```js
 const client = require('prom-client');
@@ -235,7 +235,7 @@ Summaries calculate percentiles of observed values.
 **Configuration**
 
 The default percentiles are: 0.01, 0.05, 0.5, 0.9, 0.95, 0.99, 0.999. But they
-can be overriden like this:
+can be overridden like this:
 
 ```js
 const client = require('prom-client');
@@ -478,7 +478,7 @@ gateway.pushAdd({ jobName: 'test', groupings: { key: 'value' } }, function(
 gateway = new client.Pushgateway('http://127.0.0.1:9091', { timeout: 5000 }); //Set the request timeout to 5000ms
 ```
 
-### Utilites
+### Utilities
 
 For convenience, there are 2 bucket generator functions - linear and
 exponential.

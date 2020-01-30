@@ -23,6 +23,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - chore: reindent package.json
 - chore: correct var name in processStartTime
 - chore: add test for `process_start_time_seconds`
+- chore: spelling corrections in README
 
 ### Added
 
