@@ -79,11 +79,14 @@ server.get('/metrics/counter', (req, res) => {
 	res.end(register.getSingleMetricAsString('test_counter'));
 });
 
-//Enable collection of default metrics
+// Enable collection of default metrics
 require('../').collectDefaultMetrics({
 	timeout: 10000,
 	gcDurationBuckets: [0.001, 0.01, 0.1, 1, 2, 5] // These are the default buckets.
 });
 
-console.log('Server listening to 3000, metrics exposed on /metrics endpoint');
-server.listen(3000);
+const port = process.env.PORT || 3000;
+console.log(
+	`Server listening to ${port}, metrics exposed on /metrics endpoint`
+);
+server.listen(port);
