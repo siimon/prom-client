@@ -7,12 +7,12 @@ const pushGatewayFullURL = pushGatewayURL + pushGatewayPath;
 const mockHttp = jest.fn().mockReturnValue({
 	on: jest.fn(),
 	end: jest.fn(),
-	write: jest.fn(),
+	write: jest.fn()
 });
 
 jest.mock('http', () => {
 	return {
-		request: mockHttp,
+		request: mockHttp
 	};
 });
 
@@ -50,7 +50,7 @@ describe('pushgateway with path', () => {
 				const invocation = mockHttp.mock.calls[0][0];
 				expect(invocation.method).toEqual('POST');
 				expect(invocation.path).toEqual(
-					'/path/metrics/job/testJob/key/va%26lue',
+					'/path/metrics/job/testJob/key/va%26lue'
 				);
 			});
 		});
@@ -95,7 +95,7 @@ describe('pushgateway with path', () => {
 				instance = new Pushgateway(
 					`http://${auth}@192.168.99.100:9091${pushGatewayPath}`,
 					null,
-					registry,
+					registry
 				);
 			});
 
@@ -132,10 +132,10 @@ describe('pushgateway with path', () => {
 				pushGatewayFullURL,
 				{
 					headers: {
-						'unit-test': '1',
-					},
+						'unit-test': '1'
+					}
 				},
-				registry,
+				registry
 			);
 
 			instance.push({ jobName: 'testJob' });
@@ -170,7 +170,7 @@ describe('pushgateway with path', () => {
 			const cnt = new promClient.Counter({
 				name: 'test',
 				help: 'test',
-				registers: [registry],
+				registers: [registry]
 			});
 			cnt.inc(100);
 		});

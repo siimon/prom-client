@@ -21,7 +21,7 @@ describe('histogram', () => {
 			instance.observe(0.5);
 			const valuePair = getValueByName(
 				'test_histogram_count',
-				instance.get().values,
+				instance.get().values
 			);
 			expect(valuePair.value).toEqual(1);
 		});
@@ -34,7 +34,7 @@ describe('histogram', () => {
 			instance.observe(0.5);
 			const valuePair = getValueByName(
 				'test_histogram_sum',
-				instance.get().values,
+				instance.get().values
 			);
 			expect(valuePair.value).toEqual(0.5);
 		});
@@ -57,7 +57,7 @@ describe('histogram', () => {
 			instance.observe(10);
 			const countValuePair = getValueByName(
 				'test_histogram_count',
-				instance.get().values,
+				instance.get().values
 			);
 			const infValuePair = getValueByLabel('+Inf', instance.get().values);
 			expect(infValuePair.value).toEqual(countValuePair.value);
@@ -65,7 +65,7 @@ describe('histogram', () => {
 
 		it('should add buckets in increasing numerical order', () => {
 			const histogram = new Histogram('test_histogram_2', 'test', {
-				buckets: [1, 5],
+				buckets: [1, 5]
 			});
 			histogram.observe(1.5);
 			const values = histogram.get().values;
@@ -124,7 +124,7 @@ describe('histogram', () => {
 			instance.observe(0.5);
 			let valuePair = getValueByName(
 				'test_histogram_count',
-				instance.get().values,
+				instance.get().values
 			);
 			expect(valuePair.value).toEqual(1);
 			instance.reset();
@@ -137,7 +137,7 @@ describe('histogram', () => {
 				instance = new Histogram(
 					'histogram_labels',
 					'Histogram with labels fn',
-					['method'],
+					['method']
 				);
 			});
 
@@ -147,7 +147,7 @@ describe('histogram', () => {
 					5,
 					'method',
 					'get',
-					instance.get().values,
+					instance.get().values
 				);
 				expect(res.value).toEqual(1);
 			});
@@ -168,7 +168,7 @@ describe('histogram', () => {
 					0.5,
 					'method',
 					'get',
-					instance.get().values,
+					instance.get().values
 				);
 				expect(res.value).toEqual(1);
 				clock.uninstall();
@@ -183,7 +183,7 @@ describe('histogram', () => {
 					0.5,
 					'method',
 					'get',
-					instance.get().values,
+					instance.get().values
 				);
 				expect(res.value).toEqual(1);
 				clock.uninstall();
@@ -193,7 +193,7 @@ describe('histogram', () => {
 				instance = new Histogram(
 					'histogram_labels_2',
 					'Histogram with labels fn',
-					['method', 'success'],
+					['method', 'success']
 				);
 				const clock = lolex.install();
 				const end = instance.startTimer({ method: 'get' });
@@ -203,13 +203,13 @@ describe('histogram', () => {
 					0.5,
 					'method',
 					'get',
-					instance.get().values,
+					instance.get().values
 				);
 				const res2 = getValueByLeAndLabel(
 					0.5,
 					'success',
 					'SUCCESS',
-					instance.get().values,
+					instance.get().values
 				);
 				expect(res1.value).toEqual(1);
 				expect(res2.value).toEqual(1);
@@ -229,7 +229,7 @@ describe('histogram', () => {
 				instance = new Histogram(
 					'histogram_labels',
 					'Histogram with labels fn',
-					['method'],
+					['method']
 				);
 			});
 
@@ -242,7 +242,7 @@ describe('histogram', () => {
 					5,
 					'method',
 					'GET',
-					instance.get().values,
+					instance.get().values
 				);
 				expect(res.value).toEqual(1);
 			});
@@ -275,13 +275,13 @@ describe('histogram', () => {
 					0.5,
 					'method',
 					'GET',
-					instance.get().values,
+					instance.get().values
 				);
 				const res2 = getValueByLeAndLabel(
 					0.5,
 					'method',
 					'POST',
-					instance.get().values,
+					instance.get().values
 				);
 				expect(res1.value).toEqual(1);
 				expect(res2.value).toEqual(undefined);
@@ -302,7 +302,7 @@ describe('histogram', () => {
 				instance = new Histogram({
 					name: 'histogram_labels_2',
 					help: 'Histogram with labels fn',
-					labelNames: ['method', 'success'],
+					labelNames: ['method', 'success']
 				});
 				const clock = lolex.install();
 				const end = instance.startTimer({ method: 'GET' });
@@ -325,7 +325,7 @@ describe('histogram', () => {
 				instance.observe(0.5);
 				const valuePair = getValueByName(
 					'test_histogram_count',
-					instance.get().values,
+					instance.get().values
 				);
 				expect(valuePair.value).toEqual(1);
 			});
@@ -338,7 +338,7 @@ describe('histogram', () => {
 				instance.observe(0.5);
 				const valuePair = getValueByName(
 					'test_histogram_sum',
-					instance.get().values,
+					instance.get().values
 				);
 				expect(valuePair.value).toEqual(0.5);
 			});
@@ -361,7 +361,7 @@ describe('histogram', () => {
 				instance.observe(10);
 				const countValuePair = getValueByName(
 					'test_histogram_count',
-					instance.get().values,
+					instance.get().values
 				);
 				const infValuePair = getValueByLabel('+Inf', instance.get().values);
 				expect(infValuePair.value).toEqual(countValuePair.value);
@@ -371,7 +371,7 @@ describe('histogram', () => {
 				const histogram = new Histogram({
 					name: 'test_histogram_2',
 					help: 'test',
-					buckets: [1, 5],
+					buckets: [1, 5]
 				});
 				histogram.observe(1.5);
 				const values = histogram.get().values;
@@ -383,7 +383,7 @@ describe('histogram', () => {
 				const histogram = new Histogram({
 					name: 'test_histogram_2',
 					help: 'test',
-					labelNames: ['code'],
+					labelNames: ['code']
 				});
 				histogram.observe({ code: '200' }, 1);
 				histogram.observe({ code: '300' }, 1);
@@ -422,7 +422,7 @@ describe('histogram', () => {
 				const i = new Histogram({
 					name: 'histo',
 					help: 'help',
-					labelNames: ['code'],
+					labelNames: ['code']
 				});
 				i.observe({ code: 'test' }, 1);
 				const pair = getValueByLeAndLabel(1, 'code', 'test', i.get().values);
@@ -447,13 +447,13 @@ describe('histogram', () => {
 				instance.observe(0.5);
 				let valuePair = getValueByName(
 					'test_histogram_count',
-					instance.get().values,
+					instance.get().values
 				);
 				expect(valuePair.value).toEqual(1);
 				instance.reset();
 				valuePair = getValueByName(
 					'test_histogram_count',
-					instance.get().values,
+					instance.get().values
 				);
 				expect(valuePair.value).toEqual(undefined);
 			});
@@ -469,7 +469,7 @@ describe('histogram', () => {
 					instance = new Histogram({
 						name: 'histogram_labels',
 						help: 'Histogram with labels fn',
-						labelNames: ['method'],
+						labelNames: ['method']
 					});
 				});
 
@@ -479,7 +479,7 @@ describe('histogram', () => {
 						5,
 						'method',
 						'get',
-						instance.get().values,
+						instance.get().values
 					);
 					expect(res.value).toEqual(1);
 				});
@@ -500,7 +500,7 @@ describe('histogram', () => {
 						0.5,
 						'method',
 						'get',
-						instance.get().values,
+						instance.get().values
 					);
 					expect(res.value).toEqual(1);
 					clock.uninstall();
@@ -515,7 +515,7 @@ describe('histogram', () => {
 						0.5,
 						'method',
 						'get',
-						instance.get().values,
+						instance.get().values
 					);
 					expect(res.value).toEqual(1);
 					clock.uninstall();
@@ -525,7 +525,7 @@ describe('histogram', () => {
 					instance = new Histogram({
 						name: 'histogram_labels_2',
 						help: 'Histogram with labels fn',
-						labelNames: ['method', 'success'],
+						labelNames: ['method', 'success']
 					});
 					const clock = lolex.install();
 					const end = instance.startTimer({ method: 'get' });
@@ -535,13 +535,13 @@ describe('histogram', () => {
 						0.5,
 						'method',
 						'get',
-						instance.get().values,
+						instance.get().values
 					);
 					const res2 = getValueByLeAndLabel(
 						0.5,
 						'success',
 						'SUCCESS',
-						instance.get().values,
+						instance.get().values
 					);
 					expect(res1.value).toEqual(1);
 					expect(res2.value).toEqual(1);
@@ -561,7 +561,7 @@ describe('histogram', () => {
 					instance = new Histogram({
 						name: 'histogram_labels',
 						help: 'Histogram with labels fn',
-						labelNames: ['method'],
+						labelNames: ['method']
 					});
 				});
 
@@ -574,7 +574,7 @@ describe('histogram', () => {
 						5,
 						'method',
 						'GET',
-						instance.get().values,
+						instance.get().values
 					);
 					expect(res.value).toEqual(1);
 				});
@@ -607,7 +607,7 @@ describe('histogram', () => {
 						0.5,
 						'method',
 						'GET',
-						instance.get().values,
+						instance.get().values
 					);
 					expect(res.value).toEqual(1);
 					clock.uninstall();
@@ -627,7 +627,7 @@ describe('histogram', () => {
 					instance = new Histogram({
 						name: 'histogram_labels_2',
 						help: 'Histogram with labels fn',
-						labelNames: ['method', 'success'],
+						labelNames: ['method', 'success']
 					});
 					const clock = lolex.install();
 					const end = instance.startTimer({ method: 'GET' });
@@ -645,14 +645,14 @@ describe('histogram', () => {
 				instance = new Histogram({
 					name: 'test_histogram',
 					help: 'test',
-					registers: [],
+					registers: []
 				});
 			});
 			it('should increase count', () => {
 				instance.observe(0.5);
 				const valuePair = getValueByName(
 					'test_histogram_count',
-					instance.get().values,
+					instance.get().values
 				);
 				expect(valuePair.value).toEqual(1);
 				expect(globalRegistry.getMetricsAsJSON().length).toEqual(0);
@@ -665,14 +665,14 @@ describe('histogram', () => {
 				instance = new Histogram({
 					name: 'test_histogram',
 					help: 'test',
-					registers: [registryInstance],
+					registers: [registryInstance]
 				});
 			});
 			it('should increment counter', () => {
 				instance.observe(0.5);
 				const valuePair = getValueByName(
 					'test_histogram_count',
-					instance.get().values,
+					instance.get().values
 				);
 				expect(valuePair.value).toEqual(1);
 				expect(globalRegistry.getMetricsAsJSON().length).toEqual(0);

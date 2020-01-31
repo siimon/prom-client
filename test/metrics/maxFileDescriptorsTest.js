@@ -32,7 +32,7 @@ describe('processMaxFileDescriptors', () => {
 
 			expect(metrics).toHaveLength(1);
 			expect(metrics[0].help).toEqual(
-				'Maximum number of open file descriptors.',
+				'Maximum number of open file descriptors.'
 			);
 			expect(metrics[0].type).toEqual('gauge');
 			expect(metrics[0].name).toEqual('process_max_fds');

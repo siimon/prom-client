@@ -10,20 +10,20 @@ function setupRegistrySuite(suite) {
 		{ name: '2 with 8', counts: [8, 8] },
 		{ name: '2 with 4 and 2 with 2', counts: [4, 4, 2, 2] },
 		{ name: '2 with 2 and 2 with 4', counts: [2, 2, 4, 4] },
-		{ name: '6 with 2', counts: [2, 2, 2, 2, 2, 2] },
+		{ name: '6 with 2', counts: [2, 2, 2, 2, 2, 2] }
 	];
 
 	labelSetups.forEach(({ name, counts }) => {
 		suite.add(
 			`getMetricsAsJSON#${name}`,
 			(client, registry) => registry.getMetricsAsJSON(),
-			{ setup: setup(counts) },
+			{ setup: setup(counts) }
 		);
 	});
 
 	labelSetups.forEach(({ name, counts }) => {
 		suite.add(`metrics#${name}`, (client, registry) => registry.metrics(), {
-			setup: setup(counts),
+			setup: setup(counts)
 		});
 	});
 }
@@ -36,7 +36,7 @@ function setup(labelCounts) {
 			name: 'histogram',
 			help: 'histogram',
 			labelNames: getLabelNames(labelCounts.length),
-			registers: [registry],
+			registers: [registry]
 		});
 
 		const labelCombinations = getLabelCombinations(labelCounts);

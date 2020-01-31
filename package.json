@@ -58,7 +58,6 @@
 		".{eslintrc,travis.yml}": "prettier --write"
 	},
 	"prettier": {
-		"trailingComma": "all",
 		"singleQuote": true,
 		"useTabs": true,
 		"overrides": [

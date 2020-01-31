@@ -3,12 +3,12 @@
 const mockHttp = jest.fn().mockReturnValue({
 	on: jest.fn(),
 	end: jest.fn(),
-	write: jest.fn(),
+	write: jest.fn()
 });
 
 jest.mock('http', () => {
 	return {
-		request: mockHttp,
+		request: mockHttp
 	};
 });
 
@@ -89,7 +89,7 @@ describe('pushgateway', () => {
 				instance = new Pushgateway(
 					`http://${auth}@192.168.99.100:9091`,
 					null,
-					registry,
+					registry
 				);
 			});
 
@@ -126,10 +126,10 @@ describe('pushgateway', () => {
 				'http://192.168.99.100:9091',
 				{
 					headers: {
-						'unit-test': '1',
-					},
+						'unit-test': '1'
+					}
 				},
-				registry,
+				registry
 			);
 
 			instance.push({ jobName: 'testJob' });
@@ -164,7 +164,7 @@ describe('pushgateway', () => {
 			const cnt = new promeClient.Counter({
 				name: 'test',
 				help: 'test',
-				registers: [registry],
+				registers: [registry]
 			});
 			cnt.inc(100);
 		});

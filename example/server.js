@@ -9,21 +9,21 @@ const Histogram = require('../').Histogram;
 const h = new Histogram({
 	name: 'test_histogram',
 	help: 'Example of a histogram',
-	labelNames: ['code'],
+	labelNames: ['code']
 });
 
 const Counter = require('../').Counter;
 const c = new Counter({
 	name: 'test_counter',
 	help: 'Example of a counter',
-	labelNames: ['code'],
+	labelNames: ['code']
 });
 
 const Gauge = require('../').Gauge;
 const g = new Gauge({
 	name: 'test_gauge',
 	help: 'Example of a gauge',
-	labelNames: ['method', 'code'],
+	labelNames: ['method', 'code']
 });
 
 setTimeout(() => {

@@ -5,7 +5,7 @@ const letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
 module.exports = {
 	getLabelNames,
 	getLabelCombinations,
-	labelCombinationFactory,
+	labelCombinationFactory
 };
 
 function getLabelNames(count) {
@@ -26,7 +26,7 @@ function getLabelCombinations(labelValues) {
 		labelNames.reduce((acc, label, i) => {
 			acc[label] = values[i];
 			return acc;
-		}, {}),
+		}, {})
 	);
 }
 

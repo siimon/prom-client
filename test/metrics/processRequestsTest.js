@@ -21,7 +21,7 @@ describe('processRequests', () => {
 
 		expect(metrics).toHaveLength(2);
 		expect(metrics[0].help).toEqual(
-			'Number of active libuv requests grouped by request type. Every request type is C++ class name.',
+			'Number of active libuv requests grouped by request type. Every request type is C++ class name.'
 		);
 		expect(metrics[0].type).toEqual('gauge');
 		expect(metrics[0].name).toEqual('nodejs_active_requests');
