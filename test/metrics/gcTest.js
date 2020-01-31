@@ -29,19 +29,13 @@ describe('gc', () => {
 		}
 
 		if (perf_hooks) {
-			expect(metrics).toHaveLength(2);
+			expect(metrics).toHaveLength(1);
 
 			expect(metrics[0].help).toEqual(
-				'Count of garbage collections. kind label is one of major, minor, incremental or weakcb.'
+				'Garbage collection duration by kind, one of major, minor, incremental or weakcb.'
 			);
-			expect(metrics[0].type).toEqual('counter');
-			expect(metrics[0].name).toEqual('nodejs_gc_runs_total');
-
-			expect(metrics[1].help).toEqual(
-				'Histogram of garbage collections. kind label is one of major, minor, incremental or weakcb.'
-			);
-			expect(metrics[1].type).toEqual('histogram');
-			expect(metrics[1].name).toEqual('nodejs_gc_duration');
+			expect(metrics[0].type).toEqual('histogram');
+			expect(metrics[0].name).toEqual('nodejs_gc_duration_seconds');
 		} else {
 			expect(metrics).toHaveLength(0);
 		}

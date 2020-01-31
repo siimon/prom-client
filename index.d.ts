@@ -650,6 +650,7 @@ export interface DefaultMetricsCollectorConfiguration {
 	timestamps?: boolean;
 	register?: Registry;
 	prefix?: string;
+	gcDurationBuckets?: number[];
 }
 
 /**

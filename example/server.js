@@ -80,7 +80,10 @@ server.get('/metrics/counter', (req, res) => {
 });
 
 //Enable collection of default metrics
-require('../').collectDefaultMetrics();
+require('../').collectDefaultMetrics({
+	timeout: 10000,
+	gcDurationBuckets: [0.001, 0.005, 0.01]
+});
 
 console.log('Server listening to 3000, metrics exposed on /metrics endpoint');
 server.listen(3000);

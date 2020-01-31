@@ -25,8 +25,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - chore: add test for `process_start_time_seconds`
 
 ### Added
-- `nodejs_gc_runs` metric to the `collectDefaultMetrics()`. It counts number of GC runs with split by GC type.
-- `nodejs_gc_duration_summary` metric to the `collectDefaultMetrics()`. It counts 0.5, 0.75, 0.9, 0.99 percentiles of GC duration (in seconds).
+
+- `nodejs_gc_duration_seconds` histogram metric to the `collectDefaultMetrics()`. Default buckets are [0.001, 0.01, 0.1, 1, 2, 5]. You can pass custom buckets inside configuration object: collectDefaultMetrics({timeout: 10000, gcDurationBuckets:[0.001, 0.005, 0.01,.....]})
 
 ## [11.5.3] - 2019-06-27
 
