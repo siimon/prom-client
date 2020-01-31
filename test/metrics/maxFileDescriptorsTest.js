@@ -39,23 +39,19 @@ describe('processMaxFileDescriptors', () => {
 			expect(metrics[0].values).toHaveLength(1);
 		});
 
-		it('should have a reasonable metric value', done => {
+		it('should have a reasonable metric value', () => {
 			const maxFiles = Number(exec('ulimit -Hn', { encoding: 'utf8' }));
 
 			expect(register.getMetricsAsJSON()).toHaveLength(0);
-			processMaxFileDescriptors(register, { ready })();
+			processMaxFileDescriptors(register, {})();
 
-			function ready() {
-				const metrics = register.getMetricsAsJSON();
+			const metrics = register.getMetricsAsJSON();
 
-				expect(metrics).toHaveLength(1);
-				expect(metrics[0].values).toHaveLength(1);
+			expect(metrics).toHaveLength(1);
+			expect(metrics[0].values).toHaveLength(1);
 
-				expect(metrics[0].values[0].value).toBeLessThanOrEqual(maxFiles);
-				expect(metrics[0].values[0].value).toBeGreaterThan(0);
-
-				return done();
-			}
+			expect(metrics[0].values[0].value).toBeLessThanOrEqual(maxFiles);
+			expect(metrics[0].values[0].value).toBeGreaterThan(0);
 		});
 	}
 });
