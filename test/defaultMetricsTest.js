@@ -111,9 +111,14 @@ describe('collectDefaultMetrics', () => {
 			expect(register.getMetricsAsJSON()).toHaveLength(0);
 			expect(registry.getMetricsAsJSON()).toHaveLength(0);
 
-			interval = collectDefaultMetrics({ register: registry });
+			collectDefaultMetrics();
 
-			expect(register.getMetricsAsJSON()).toHaveLength(0);
+			expect(register.getMetricsAsJSON()).not.toHaveLength(0);
+			expect(registry.getMetricsAsJSON()).toHaveLength(0);
+
+			collectDefaultMetrics({ register: registry });
+
+			expect(register.getMetricsAsJSON()).not.toHaveLength(0);
 			expect(registry.getMetricsAsJSON()).not.toHaveLength(0);
 		});
 	});

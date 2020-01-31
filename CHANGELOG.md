@@ -12,6 +12,9 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - Dropped support for end-of-life Node.js versions 6.x and 8.x
 - Dropped the previously deprecated support for positional parameters in
   constructors, only the config object forms remain.
+- Default metrics are collected on scrape of metrics endpoint, not on an
+  interval. The `timeout` option to `collectDefaultMetrics(conf)` is no longer
+  supported or needed, and the function no longer returns a `Timeout` object.
 
 ### Changed
 

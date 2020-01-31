@@ -590,7 +590,6 @@ export function exponentialBuckets(
 ): number[];
 
 export interface DefaultMetricsCollectorConfiguration {
-	timeout?: number;
 	timestamps?: boolean;
 	register?: Registry;
 	prefix?: string;
@@ -601,11 +600,10 @@ export interface DefaultMetricsCollectorConfiguration {
 /**
  * Configure default metrics
  * @param config Configuration object for default metrics collector
- * @return The setInterval number
  */
 export function collectDefaultMetrics(
 	config?: DefaultMetricsCollectorConfiguration
-): ReturnType<typeof setInterval>;
+): void;
 
 export interface defaultMetrics {
 	/**

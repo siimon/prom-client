@@ -51,24 +51,13 @@ In addition, some Node-specific metrics are included, such as event loop lag,
 active handles, GC and Node.js version. See what metrics there are in
 [lib/metrics](lib/metrics).
 
-`collectDefaultMetrics` takes 1 options object with following entries:
+`collectDefaultMetrics` optionally accepts a config object with following entries:
 
-- `timeout` for how often the probe should be fired. Default: 10 seconds.
-- `prefix` an optional prefix for metric names.
-- `registry` to which metrics should be registered.
+- `prefix` an optional prefix for metric names. Default: no prefix.
+- `registry` to which metrics should be registered. Default: the global default registry.
 - `gcDurationBuckets` with custom buckets for GC duration histogram. Default buckets of GC duration histogram are `[0.001, 0.01, 0.1, 1, 2, 5]` (in seconds).
 - `eventLoopMonitoringPrecision` with sampling rate in milliseconds. Must be greater than zero. Default: 10.
 
-By default probes are launched every 10 seconds, but this can be modified like this:
-
-```js
-const client = require('prom-client');
-
-const collectDefaultMetrics = client.collectDefaultMetrics;
-
-// Probe every 5th second.
-collectDefaultMetrics({ timeout: 5000 });
-```
 
 To register metrics to another registry, pass it in as `register`:
 
@@ -78,7 +67,6 @@ const client = require('prom-client');
 const collectDefaultMetrics = client.collectDefaultMetrics;
 const Registry = client.Registry;
 const register = new Registry();
-
 collectDefaultMetrics({ register });
 ```
 
@@ -96,11 +84,9 @@ To prefix metric names with your own arbitrary string, pass in a `prefix`:
 
 ```js
 const client = require('prom-client');
-
 const collectDefaultMetrics = client.collectDefaultMetrics;
-
-// Probe every 5th second.
-collectDefaultMetrics({ prefix: 'my_application_' });
+const prefix = 'my_application_';
+collectDefaultMetrics({ prefix });
 ```
 
 To disable metric timestamps set `timestamps` to `false` (You can find the list of metrics that support this feature in `test/defaultMetricsTest.js`):
