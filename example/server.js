@@ -56,6 +56,19 @@ if (cluster.isWorker) {
 	}, 2000);
 }
 
+// Generate some garbage
+const t = [];
+setInterval(() => {
+	for (let i = 0; i < 100; i++) {
+		t.push(new Date());
+	}
+}, 10);
+setInterval(() => {
+	while (t.length > 0) {
+		t.pop();
+	}
+});
+
 server.get('/metrics', (req, res) => {
 	res.set('Content-Type', register.contentType);
 	res.end(register.metrics());
