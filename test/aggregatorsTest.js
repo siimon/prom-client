@@ -7,13 +7,19 @@ describe('aggregators', () => {
 			help: 'metric_help',
 			name: 'metric_name',
 			type: 'does not matter',
-			values: [{ labels: [], value: 1 }, { labels: ['label1'], value: 2 }]
+			values: [
+				{ labels: [], value: 1 },
+				{ labels: ['label1'], value: 2 }
+			]
 		},
 		{
 			help: 'metric_help',
 			name: 'metric_name',
 			type: 'does not matter',
-			values: [{ labels: [], value: 3 }, { labels: ['label1'], value: 4 }]
+			values: [
+				{ labels: [], value: 3 },
+				{ labels: ['label1'], value: 4 }
+			]
 		}
 	];
 
