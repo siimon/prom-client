@@ -26,7 +26,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
-- `nodejs_gc_duration_seconds` histogram metric to the `collectDefaultMetrics()`. Default buckets are `[0.001, 0.01, 0.1, 1, 2, 5]`. You can pass custom buckets inside configuration object: `collectDefaultMetrics({gcDurationBuckets:[0.1, 0.2, 0.3]})`
+- feat: implement GC metrics collection without native(C++) modules.
 
 ## [11.5.3] - 2019-06-27
 
