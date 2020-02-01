@@ -169,14 +169,6 @@ export class Counter<T extends string> {
 	constructor(configuration: CounterConfiguration<T>);
 
 	/**
-	 * @param name The name of the metric
-	 * @param help Help description
-	 * @param labels Label keys
-	 * @deprecated
-	 */
-	constructor(name: string, help: string, labels?: T[]);
-
-	/**
 	 * Increment for given labels
 	 * @param labels Object with label keys and values
 	 * @param value The number to increment with
@@ -237,14 +229,6 @@ export class Gauge<T extends string> {
 	 * @param configuration Configuration when creating a Gauge metric. Name and Help is mandatory
 	 */
 	constructor(configuration: GaugeConfiguration<T>);
-
-	/**
-	 * @param name The name of the metric
-	 * @param help Help description
-	 * @param labels Label keys
-	 * @deprecated
-	 */
-	constructor(name: string, help: string, labels?: T[]);
 
 	/**
 	 * Increment gauge for given labels
@@ -378,26 +362,6 @@ export class Histogram<T extends string> {
 	constructor(configuration: HistogramConfiguration<T>);
 
 	/**
-	 * @param name The name of metric
-	 * @param help Help description
-	 * @param labels Label keys
-	 * @param config Configuration object for Histograms
-	 */
-	constructor(
-		name: string,
-		help: string,
-		labels?: T[],
-		config?: Histogram.Config
-	);
-	/**
-	 * @param name The name of metric
-	 * @param help Help description
-	 * @param config Configuration object for Histograms
-	 * @deprecated
-	 */
-	constructor(name: string, help: string, config: Histogram.Config);
-
-	/**
 	 * Observe value
 	 * @param value The value to observe
 	 */
@@ -479,26 +443,6 @@ export class Summary<T extends string> {
 	 * @param configuration Configuration when creating Summary metric. Name and Help is mandatory
 	 */
 	constructor(configuration: SummaryConfiguration<T>);
-
-	/**
-	 * @param name The name of the metric
-	 * @param help Help description
-	 * @param labels Label keys
-	 * @param config Configuration object
-	 */
-	constructor(
-		name: string,
-		help: string,
-		labels?: T[],
-		config?: Summary.Config
-	);
-	/**
-	 * @param name The name of the metric
-	 * @param help Help description
-	 * @param config Configuration object
-	 * @deprecated
-	 */
-	constructor(name: string, help: string, config: Summary.Config);
 
 	/**
 	 * Observe value in summary
@@ -661,14 +605,6 @@ export interface DefaultMetricsCollectorConfiguration {
 export function collectDefaultMetrics(
 	config?: DefaultMetricsCollectorConfiguration
 ): ReturnType<typeof setInterval>;
-
-/**
- * Configure default metrics
- * @param timeout The interval how often the default metrics should be probed
- * @deprecated A number to defaultMetrics is deprecated, please use \`collectDefaultMetrics({ timeout: ${timeout} })\`.
- * @return The setInterval number
- */
-export function collectDefaultMetrics(timeout: number): number;
 
 export interface defaultMetrics {
 	/**

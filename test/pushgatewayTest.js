@@ -148,7 +148,7 @@ describe('pushgateway', () => {
 			registry = undefined;
 			instance = new Pushgateway('http://192.168.99.100:9091');
 			const promClient = require('../index');
-			const cnt = new promClient.Counter('test', 'test');
+			const cnt = new promClient.Counter({ name: 'test', help: 'test' });
 			cnt.inc(100);
 		});
 		tests();
