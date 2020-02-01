@@ -27,6 +27,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- feat: implement GC metrics collection without native(C++) modules.
+
 ## [11.5.3] - 2019-06-27
 
 ### Changed

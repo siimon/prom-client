@@ -56,6 +56,19 @@ if (cluster.isWorker) {
 	}, 2000);
 }
 
+// Generate some garbage
+const t = [];
+setInterval(() => {
+	for (let i = 0; i < 100; i++) {
+		t.push(new Date());
+	}
+}, 10);
+setInterval(() => {
+	while (t.length > 0) {
+		t.pop();
+	}
+});
+
 server.get('/metrics', (req, res) => {
 	res.set('Content-Type', register.contentType);
 	res.end(register.metrics());
@@ -67,7 +80,10 @@ server.get('/metrics/counter', (req, res) => {
 });
 
 //Enable collection of default metrics
-require('../').collectDefaultMetrics();
+require('../').collectDefaultMetrics({
+	timeout: 10000,
+	gcDurationBuckets: [0.001, 0.01, 0.1, 1, 2, 5] // These are the default buckets.
+});
 
 console.log('Server listening to 3000, metrics exposed on /metrics endpoint');
 server.listen(3000);

@@ -48,13 +48,15 @@ NOTE: Some of the metrics, concerning File Descriptors and Memory, are only
 available on Linux.
 
 In addition, some Node-specific metrics are included, such as event loop lag,
-active handles and Node.js version. See what metrics there are in
+active handles, GC and Node.js version. See what metrics there are in
 [lib/metrics](lib/metrics).
 
-`collectDefaultMetrics` takes 1 options object with 3 entries, a timeout for how
-often the probe should be fired, an optional prefix for metric names
-and a registry to which metrics should be registered. By default probes are
-launched every 10 seconds, but this can be modified like this:
+`collectDefaultMetrics` takes 1 options object with up to 4 entries, a timeout for how
+often the probe should be fired, an optional prefix for metric names,
+a registry to which metrics should be registered and
+`gcDurationBuckets` with custom buckets for GC duration histogram.
+Default buckets of GC duration histogram are `[0.001, 0.01, 0.1, 1, 2, 5]` (in seconds).
+By default probes are launched every 10 seconds, but this can be modified like this:
 
 ```js
 const client = require('prom-client');
@@ -75,6 +77,16 @@ const Registry = client.Registry;
 const register = new Registry();
 
 collectDefaultMetrics({ register });
+```
+
+To use custom buckets for GC duration histogram, pass it in as `gcDurationBuckets`:
+
+```js
+const client = require('prom-client');
+
+const collectDefaultMetrics = client.collectDefaultMetrics;
+
+collectDefaultMetrics({ gcDurationBuckets: [0.1, 0.2, 0.3] });
 ```
 
 To prefix metric names with your own arbitrary string, pass in a `prefix`:
