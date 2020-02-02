@@ -28,6 +28,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - feat: implement GC metrics collection without native(C++) modules.
+- faet: implement advanced event loop monitoring
 
 ## [11.5.3] - 2019-06-27
 

@@ -51,11 +51,14 @@ In addition, some Node-specific metrics are included, such as event loop lag,
 active handles, GC and Node.js version. See what metrics there are in
 [lib/metrics](lib/metrics).
 
-`collectDefaultMetrics` takes 1 options object with up to 4 entries, a timeout for how
-often the probe should be fired, an optional prefix for metric names,
-a registry to which metrics should be registered and
-`gcDurationBuckets` with custom buckets for GC duration histogram.
-Default buckets of GC duration histogram are `[0.001, 0.01, 0.1, 1, 2, 5]` (in seconds).
+`collectDefaultMetrics` takes 1 options object with following entries:
+
+- `timeout` for how often the probe should be fired. Default: 10 seconds.
+- `prefix` an optional prefix for metric names.
+- `registry` to which metrics should be registered.
+- `gcDurationBuckets` with custom buckets for GC duration histogram. Default buckets of GC duration histogram are `[0.001, 0.01, 0.1, 1, 2, 5]` (in seconds).
+- `eventLoopMonitoringPrecision` with sampling rate in milliseconds. Must be greater than zero. Default: 10.
+
 By default probes are launched every 10 seconds, but this can be modified like this:
 
 ```js
