@@ -2,23 +2,13 @@
 // Definitions by: Simon Nyberg http://twitter.com/siimon_nyberg
 
 /**
- * Options pass to Registry.metrics()
- */
-export interface MetricsOpts {
-	/**
-	 * Whether to include timestamps in the output, defaults to true
-	 */
-	timestamps?: boolean;
-}
-
-/**
  * Container for all registered metrics
  */
 export class Registry {
 	/**
 	 * Get string representation for all metrics
 	 */
-	metrics(opts?: MetricsOpts): string;
+	metrics(): string;
 
 	/**
 	 * Remove all metrics from the registry
@@ -172,16 +162,14 @@ export class Counter<T extends string> {
 	 * Increment for given labels
 	 * @param labels Object with label keys and values
 	 * @param value The number to increment with
-	 * @param timestamp Timestamp to associate the time series with
 	 */
-	inc(labels: LabelValues<T>, value?: number, timestamp?: number | Date): void;
+	inc(labels: LabelValues<T>, value?: number): void;
 
 	/**
 	 * Increment with value
 	 * @param value The value to increment with
-	 * @param timestamp Timestamp to associate the time series with
 	 */
-	inc(value?: number, timestamp?: number | Date): void;
+	inc(value?: number): void;
 
 	/**
 	 * Return the child for given labels
@@ -207,9 +195,8 @@ export namespace Counter {
 		/**
 		 * Increment with value
 		 * @param value The value to increment with
-		 * @param timestamp Timestamp to associate the time series with
 		 */
-		inc(value?: number, timestamp?: number | Date): void;
+		inc(value?: number): void;
 	}
 }
 
@@ -234,46 +221,40 @@ export class Gauge<T extends string> {
 	 * Increment gauge for given labels
 	 * @param labels Object with label keys and values
 	 * @param value The value to increment with
-	 * @param timestamp Timestamp to associate the time series with
 	 */
-	inc(labels: LabelValues<T>, value?: number, timestamp?: number | Date): void;
+	inc(labels: LabelValues<T>, value?: number): void;
 
 	/**
 	 * Increment gauge
 	 * @param value The value to increment with
-	 * @param timestamp Timestamp to associate the time series with
 	 */
-	inc(value?: number, timestamp?: number | Date): void;
+	inc(value?: number): void;
 
 	/**
 	 * Decrement gauge
 	 * @param labels Object with label keys and values
 	 * @param value Value to decrement with
-	 * @param timestamp Timestamp to associate the time series with
 	 */
-	dec(labels: LabelValues<T>, value?: number, timestamp?: number | Date): void;
+	dec(labels: LabelValues<T>, value?: number): void;
 
 	/**
 	 * Decrement gauge
 	 * @param value The value to decrement with
-	 * @param timestamp Timestamp to associate the time series with
 	 */
-	dec(value?: number, timestamp?: number | Date): void;
+	dec(value?: number): void;
 
 	/**
 	 * Set gauge value for labels
 	 * @param labels Object with label keys and values
 	 * @param value The value to set
-	 * @param timestamp Timestamp to associate the time series with
 	 */
-	set(labels: LabelValues<T>, value: number, timestamp?: number | Date): void;
+	set(labels: LabelValues<T>, value: number): void;
 
 	/**
 	 * Set gauge value
 	 * @param value The value to set
-	 * @param timestamp Timestamp to associate the time series with
 	 */
-	set(value: number, timestamp?: number | Date): void;
+	set(value: number): void;
 
 	/**
 	 * Set gauge value to current epoch time in ms
@@ -312,23 +293,20 @@ export namespace Gauge {
 		/**
 		 * Increment gauge with value
 		 * @param value The value to increment with
-		 * @param timestamp Timestamp to associate the time series with
 		 */
-		inc(value?: number, timestamp?: number | Date): void;
+		inc(value?: number): void;
 
 		/**
 		 * Decrement with value
 		 * @param value The value to decrement with
-		 * @param timestamp Timestamp to associate the time series with
 		 */
-		dec(value?: number, timestamp?: number | Date): void;
+		dec(value?: number): void;
 
 		/**
 		 * Set gauges value
 		 * @param value The value to set
-		 * @param timestamp Timestamp to associate the time series with
 		 */
-		set(value: number, timestamp?: number | Date): void;
+		set(value: number): void;
 
 		/**
 		 * Set gauge value to current epoch time in ms
@@ -590,7 +568,6 @@ export function exponentialBuckets(
 ): number[];
 
 export interface DefaultMetricsCollectorConfiguration {
-	timestamps?: boolean;
 	register?: Registry;
 	prefix?: string;
 	gcDurationBuckets?: number[];

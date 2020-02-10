@@ -28,9 +28,7 @@ describe('register', () => {
 			expect(output[2]).toEqual('test_metric{label="hello",code="303"} 12');
 		});
 		it('with second value of the metric as fourth item', () => {
-			expect(output[3]).toEqual(
-				'test_metric{label="bye",code="404"} 34 1485392700000'
-			);
+			expect(output[3]).toEqual('test_metric{label="bye",code="404"} 34');
 		});
 	});
 
@@ -283,10 +281,10 @@ describe('register', () => {
 		expect(output).toEqual(metric);
 	});
 
-	it('should allow gettings metrics without timestamps', () => {
+	it('should allow gettings metrics', () => {
 		const metric = getMetric();
 		register.registerMetric(metric);
-		const metrics = register.metrics({ timestamps: false });
+		const metrics = register.metrics();
 
 		expect(metrics.split('\n')[3]).toEqual(
 			'test_metric{label="bye",code="404"} 34'
@@ -469,7 +467,6 @@ describe('register', () => {
 						values: [
 							{
 								labels: { env: 'development', type: 'myType' },
-								timestamp: undefined,
 								value: 1
 							}
 						]
@@ -486,7 +483,6 @@ describe('register', () => {
 						values: [
 							{
 								labels: { env: 'development', type: 'myType' },
-								timestamp: undefined,
 								value: 2
 							}
 						]
@@ -519,7 +515,6 @@ describe('register', () => {
 						values: [
 							{
 								labels: { env: 'development', type: 'myType' },
-								timestamp: undefined,
 								value: 1
 							}
 						]
@@ -536,7 +531,6 @@ describe('register', () => {
 						values: [
 							{
 								labels: { env: 'development', type: 'myType' },
-								timestamp: undefined,
 								value: 3
 							}
 						]
@@ -634,7 +628,6 @@ describe('register', () => {
 						},
 						{
 							value: 34,
-							timestamp: 1485392700000,
 							labels: {
 								label: 'bye',
 								code: '404'

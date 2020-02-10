@@ -58,7 +58,6 @@ active handles, GC and Node.js version. See what metrics there are in
 - `gcDurationBuckets` with custom buckets for GC duration histogram. Default buckets of GC duration histogram are `[0.001, 0.01, 0.1, 1, 2, 5]` (in seconds).
 - `eventLoopMonitoringPrecision` with sampling rate in milliseconds. Must be greater than zero. Default: 10.
 
-
 To register metrics to another registry, pass it in as `register`:
 
 ```js
@@ -87,17 +86,6 @@ const client = require('prom-client');
 const collectDefaultMetrics = client.collectDefaultMetrics;
 const prefix = 'my_application_';
 collectDefaultMetrics({ prefix });
-```
-
-To disable metric timestamps set `timestamps` to `false` (You can find the list of metrics that support this feature in `test/defaultMetricsTest.js`):
-
-```js
-const client = require('prom-client');
-
-const collectDefaultMetrics = client.collectDefaultMetrics;
-
-// Probe every 5th second.
-collectDefaultMetrics({ timestamps: false });
 ```
 
 You can get the full list of metrics by inspecting
@@ -338,22 +326,6 @@ Default labels will be overridden if there is a name conflict.
 
 `register.clear()` will clear default labels.
 
-### Timestamps
-
-Counter and gauge metrics can take a timestamp argument after the value
-argument. This argument must be a Date or a number (milliseconds since Unix
-epoch, i.e. 1970-01-01 00:00:00 UTC, excluding leap seconds).
-
-```js
-gauge.set(100, 1485531442231); // Set gauge value and timestamp as milliseconds since Unix epoch
-gauge.set(100, Date.now()); // Set gauge value and timestamp as milliseconds since Unix epoch
-gauge.set(100, new Date()); // Set gauge value and timestamp as Date
-gauge.set({ method: 'GET', statusCode: '200' }, 100, new Date()); // Set gauge value and timestamp with labels
-gauge.labels('GET', '200').set(100, new Date()); // Same as above
-
-counter.inc(1, new Date()); // Increment counter with timestamp
-```
-
 ### Multiple registries
 
 By default, metrics are automatically registered to the global registry (located
@@ -402,9 +374,6 @@ AggregatorRegistry.setRegistries([registry1, registry2]);
 
 You can get all metrics by running `register.metrics()`, which will output a
 string for prometheus to consume.
-
-`register.metrics()` takes an optional object with a `timestamps` field. Setting
-this to false will strip timestamps from the string.
 
 #### Getting a single metric for Prometheus displaying
 
@@ -456,9 +425,6 @@ register.clusterMetrics((err, metrics) => {
 
 It is possible to push metrics via a
 [Pushgateway](https://github.com/prometheus/pushgateway).
-
-Note that timestamps will be stripped before the metrics are pushed, since
-pushgateway >= 0.4 does not accept timestamps.
 
 ```js
 const client = require('prom-client');
