@@ -154,7 +154,7 @@ describe('pushgateway with path', () => {
 			registry = undefined;
 			instance = new Pushgateway(pushGatewayFullURL);
 			const promClient = require('../index');
-			const cnt = new promClient.Counter('test', 'test');
+			const cnt = new promClient.Counter({ name: 'test', help: 'test' });
 			cnt.inc(100);
 		});
 		tests();

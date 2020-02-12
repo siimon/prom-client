@@ -309,7 +309,11 @@ describe('register', () => {
 				name: 'test_histo',
 				help: 'test'
 			});
-			const summ = new Summary('test_summ', 'test', { percentiles: [0.5] });
+			const summ = new Summary({
+				name: 'test_summ',
+				help: 'test',
+				percentiles: [0.5]
+			});
 			register.registerMetric(counter);
 			register.registerMetric(gauge);
 			register.registerMetric(histo);
