@@ -595,6 +595,7 @@ export interface DefaultMetricsCollectorConfiguration {
 	register?: Registry;
 	prefix?: string;
 	gcDurationBuckets?: number[];
+	eventLoopMonitoringPrecision?: number;
 }
 
 /**
