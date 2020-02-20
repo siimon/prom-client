@@ -160,45 +160,6 @@ describe('gauge', () => {
 					expect(instance.get().values.length).toEqual(0);
 				});
 			});
-
-			describe('with timestamp', () => {
-				beforeEach(() => {
-					instance = new Gauge({
-						name: 'name',
-						help: 'help',
-						labelNames: ['code']
-					});
-					instance.set({ code: '200' }, 20);
-				});
-				it('should be able to set value and timestamp as Date', () => {
-					instance.labels('200').set(500, new Date('2017-01-26T01:05Z'));
-					expectValue(500, 1485392700000);
-				});
-				it('should be able to set value and timestamp as number', () => {
-					instance.labels('200').set(500, 1485392700000);
-					expectValue(500, 1485392700000);
-				});
-				it('should not allow non numbers', () => {
-					const fn = function() {
-						instance.labels('200').set(500, 'blah');
-					};
-					expect(fn).toThrowErrorMatchingSnapshot();
-				});
-				it('should not allow invalid dates', () => {
-					const fn = function() {
-						instance.labels('200').set(500, new Date('blah'));
-					};
-					expect(fn).toThrowErrorMatchingSnapshot();
-				});
-				it('should be able to increment', () => {
-					instance.labels('200').inc(1, 1485392700000);
-					expectValue(21, 1485392700000);
-				});
-				it('should be able to decrement', () => {
-					instance.labels('200').dec(1, 1485392700000);
-					expectValue(19, 1485392700000);
-				});
-			});
 		});
 	});
 	describe('without registry', () => {
@@ -229,46 +190,6 @@ describe('gauge', () => {
 			expect(globalRegistry.getMetricsAsJSON().length).toEqual(0);
 			expect(registryInstance.getMetricsAsJSON().length).toEqual(1);
 			expectValue(10);
-		});
-
-		describe('with timestamp', () => {
-			beforeEach(() => {
-				instance = new Gauge({
-					name: 'name',
-					help: 'help',
-					labelNames: ['code'],
-					registers: [registryInstance]
-				});
-				instance.set({ code: '200' }, 20);
-			});
-			it('should be able to set value and timestamp as Date', () => {
-				instance.labels('200').set(500, new Date('2017-01-26T01:05Z'));
-				expectValue(500, 1485392700000);
-			});
-			it('should be able to set value and timestamp as number', () => {
-				instance.labels('200').set(500, 1485392700000);
-				expectValue(500, 1485392700000);
-			});
-			it('should not allow non numbers', () => {
-				const fn = function() {
-					instance.labels('200').set(500, 'blah');
-				};
-				expect(fn).toThrowErrorMatchingSnapshot();
-			});
-			it('should not allow invalid dates', () => {
-				const fn = function() {
-					instance.labels('200').set(500, new Date('blah'));
-				};
-				expect(fn).toThrowErrorMatchingSnapshot();
-			});
-			it('should be able to increment', () => {
-				instance.labels('200').inc(1, 1485392700000);
-				expectValue(21, 1485392700000);
-			});
-			it('should be able to decrement', () => {
-				instance.labels('200').dec(1, 1485392700000);
-				expectValue(19, 1485392700000);
-			});
 		});
 	});
 	describe('gauge reset', () => {
@@ -313,8 +234,7 @@ describe('gauge', () => {
 		});
 	});
 
-	function expectValue(val, timestamp) {
+	function expectValue(val) {
 		expect(instance.get().values[0].value).toEqual(val);
-		expect(instance.get().values[0].timestamp).toEqual(timestamp);
 	}
 });

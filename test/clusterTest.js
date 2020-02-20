@@ -78,7 +78,7 @@ describe('AggregatorRegistry', () => {
 				help: 'Lag of event loop in seconds.',
 				name: 'nodejs_eventloop_lag_seconds',
 				type: 'gauge',
-				values: [{ value: 0.009, labels: {}, timestamp: 1502075832298 }],
+				values: [{ value: 0.009, labels: {} }],
 				aggregator: 'average'
 			},
 			{
@@ -135,7 +135,7 @@ describe('AggregatorRegistry', () => {
 				help: 'Lag of event loop in seconds.',
 				name: 'nodejs_eventloop_lag_seconds',
 				type: 'gauge',
-				values: [{ value: 0.008, labels: {}, timestamp: 1502075832321 }],
+				values: [{ value: 0.008, labels: {} }],
 				aggregator: 'average'
 			},
 			{
