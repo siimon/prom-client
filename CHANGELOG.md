@@ -9,6 +9,14 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Breaking
 
+### Changed
+
+### Added
+
+## [12.0.0] - 2020-02-20
+
+### Breaking
+
 - Dropped support for end-of-life Node.js versions 6.x and 8.x
 - Dropped the previously deprecated support for positional parameters in
   constructors, only the config object forms remain.
