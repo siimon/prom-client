@@ -27,7 +27,7 @@ export class Registry {
 	registerMetric<T extends string>(metric: Metric<T>): void;
 
 	/**
-	 * Add collector, which is invoked on scrape
+	 * Add metric collector, which is invoked on scrape
 	 */
 	registerCollector(collectorFn: Collector): void;
 
