@@ -27,6 +27,16 @@ export class Registry {
 	registerMetric<T extends string>(metric: Metric<T>): void;
 
 	/**
+	 * Add metric collector, which is invoked on scrape
+	 */
+	registerCollector(collectorFn: Collector): void;
+
+	/**
+	 * Get all registered collector functions
+	 */
+	collectors(): Collector[]
+
+	/**
 	 * Get all metrics as objects
 	 */
 	getMetricsAsJSON(): metric[];
@@ -72,6 +82,7 @@ export class Registry {
 	 */
 	static merge(registers: Registry[]): Registry;
 }
+export type Collector = () => void;
 
 /**
  * The register that contains all metrics
