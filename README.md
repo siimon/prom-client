@@ -1,13 +1,13 @@
-# Prometheus client for node.js [![Build Status](https://travis-ci.org/siimon/prom-client.svg?branch=master)](https://travis-ci.org/siimon/prom-client) [![Build status](https://ci.appveyor.com/api/projects/status/k2e0gwonkcee3lp9/branch/master?svg=true)](https://ci.appveyor.com/project/siimon/prom-client/branch/master) [![Actions Status](https://github.com/siimon/prom-client/workflows/Node.js%20CI/badge.svg?branch=master)](https://github.com/siimon/prom-client/actions)
+# Prometheus client for Node.js [![Build Status](https://travis-ci.org/siimon/prom-client.svg?branch=master)](https://travis-ci.org/siimon/prom-client) [![Build status](https://ci.appveyor.com/api/projects/status/k2e0gwonkcee3lp9/branch/master?svg=true)](https://ci.appveyor.com/project/siimon/prom-client/branch/master) [![Actions Status](https://github.com/siimon/prom-client/workflows/Node.js%20CI/badge.svg?branch=master)](https://github.com/siimon/prom-client/actions)
 
-A prometheus client for node.js that supports histogram, summaries, gauges and
+A prometheus client for Node.js that supports histogram, summaries, gauges and
 counters.
 
 ## Usage
 
 See example folder for a sample usage. The library does not bundle any web
-framework, to expose the metrics just return the `metrics()` function in the
-registry.
+framework. To expose the metrics, response to Prometheus HTTP requests with
+the result of `registry.metrics()`.
 
 ### Usage with Node.js's `cluster` module
 
@@ -34,22 +34,17 @@ worker processes.
 
 ## API
 
-### Configuration
-
-All metric types has 2 mandatory parameters, name and help.
-
 ### Default metrics
 
 There are some default metrics recommended by Prometheus
 [itself](https://prometheus.io/docs/instrumenting/writing_clientlibs/#standard-and-runtime-collectors).
-To collect these, call `collectDefaultMetrics`
+To collect these, call `collectDefaultMetrics`. In addition, some
+Node.js-specific metrics are included, such as event loop lag, active handles,
+GC and Node.js version. See [lib/metrics](lib/metrics) for a list of all
+metrics.
 
 NOTE: Some of the metrics, concerning File Descriptors and Memory, are only
 available on Linux.
-
-In addition, some Node-specific metrics are included, such as event loop lag,
-active handles, GC and Node.js version. See what metrics there are in
-[lib/metrics](lib/metrics).
 
 `collectDefaultMetrics` optionally accepts a config object with following entries:
 
@@ -62,7 +57,6 @@ To register metrics to another registry, pass it in as `register`:
 
 ```js
 const client = require('prom-client');
-
 const collectDefaultMetrics = client.collectDefaultMetrics;
 const Registry = client.Registry;
 const register = new Registry();
@@ -73,9 +67,7 @@ To use custom buckets for GC duration histogram, pass it in as `gcDurationBucket
 
 ```js
 const client = require('prom-client');
-
 const collectDefaultMetrics = client.collectDefaultMetrics;
-
 collectDefaultMetrics({ gcDurationBuckets: [0.1, 0.2, 0.3] });
 ```
 
@@ -91,44 +83,21 @@ collectDefaultMetrics({ prefix });
 You can get the full list of metrics by inspecting
 `client.collectDefaultMetrics.metricsList`.
 
-`collectDefaultMetrics` returns an identification when invoked, which is a
-reference to the `Timer` used to keep the probes going. This can be passed to
-`clearInterval` in order to stop all probes.
+### Custom Metrics
 
-NOTE: Existing intervals are automatically cleared when calling
-`collectDefaultMetrics`.
+All metric types have two mandatory parameters: `name` and `help`. Refer to
+<https://prometheus.io/docs/practices/naming/> for guidance on naming metrics.
 
-```js
-const client = require('prom-client');
+For metrics based on point-in-time observations (e.g. current memory usage, as
+opposed to HTTP request durations in a histogram), you should use
+`registry.registerCollector(fn)`, where `fn` is a callback invoked when
+Prometheus scrapes your registry. `fn` should be synchronous so that the
+metric's value is current. See **Gauge** below for an example. (In particular,
+you should not update metric values in a `setInterval` callback.)
 
-const collectDefaultMetrics = client.collectDefaultMetrics;
+See **Labels** for information on how to configure labels for all metric types.
 
-const interval = collectDefaultMetrics();
-
-// ... some time later
-
-clearInterval(interval);
-```
-
-NOTE: `unref` is called on the `interval` internally, so it will not keep your
-node process going indefinitely if it's the only thing keeping it from shutting
-down.
-
-#### Stop polling default metrics
-
-To stop collecting the default metrics, you have to call the function and pass
-it to `clearInterval`.
-
-```js
-const client = require('prom-client');
-
-clearInterval(client.collectDefaultMetrics());
-
-// Clear the register
-client.register.clear();
-```
-
-### Counter
+#### Counter
 
 Counters go up, and reset when the process restarts.
 
@@ -138,61 +107,66 @@ const counter = new client.Counter({
   name: 'metric_name',
   help: 'metric_help'
 });
-counter.inc(); // Inc with 1
-counter.inc(10); // Inc with 10
+counter.inc(); // Increment by 1
+counter.inc(10); // Increment by 10
 ```
 
-### Gauge
+#### Gauge
 
-Gauges are similar to Counters but Gauges value can be decreased.
+Gauges are similar to Counters but a Gauge's value can be decreased.
 
 ```js
 const client = require('prom-client');
 const gauge = new client.Gauge({ name: 'metric_name', help: 'metric_help' });
 gauge.set(10); // Set to 10
-gauge.inc(); // Inc with 1
-gauge.inc(10); // Inc with 10
-gauge.dec(); // Dec with 1
-gauge.dec(10); // Dec with 10
+gauge.inc(); // Increment 1
+gauge.inc(10); // Increment 10
+gauge.dec(); // Decrement by 1
+gauge.dec(10); // Decrement by 10
 ```
 
-There are some utilities for common use cases:
+There's a utility to set a gauge to the current time:
 
 ```js
-gauge.setToCurrentTime(); // Sets value to current time
+gauge.setToCurrentTime();
+```
 
+And there's a utility to time durations:
+
+```js
 const end = gauge.startTimer();
 xhrRequest(function(err, res) {
-  end(); // Sets value to xhrRequests duration in seconds
+  end(); // Sets value to xhrRequest's duration in seconds
 });
 ```
 
-### Histogram
+If the gauge is used for a point-in-time observation, you should register a
+collector function:
+
+```js
+const client = require('prom-client');
+const gauge = new client.Gauge({ name: 'metric_name', help: 'metric_help' });
+client.register.registerCollector(() => {
+  // Invoked when the registry collects its metrics' values.
+  // This should be synchronous.
+  gauge.set(/* the current value */);
+});
+```
+
+#### Histogram
 
 Histograms track sizes and frequency of events.
 
 **Configuration**
 
-The defaults buckets are intended to cover usual web/rpc requests, this can
-however be overridden.
+The defaults buckets are intended to cover usual web/RPC requests, but they can
+be overridden.
 
 ```js
 const client = require('prom-client');
 new client.Histogram({
   name: 'metric_name',
   help: 'metric_help',
-  buckets: [0.1, 5, 15, 50, 100, 500]
-});
-```
-
-You can include all label names as a property as well.
-
-```js
-const client = require('prom-client');
-new client.Histogram({
-  name: 'metric_name',
-  help: 'metric_help',
-  labelNames: ['status_code'],
   buckets: [0.1, 5, 15, 50, 100, 500]
 });
 ```
@@ -208,7 +182,7 @@ const histogram = new client.Histogram({
 histogram.observe(10); // Observe value in histogram
 ```
 
-Utility to observe request durations
+Utility to observe request durations:
 
 ```js
 const end = histogram.startTimer();
@@ -217,14 +191,14 @@ xhrRequest(function(err, res) {
 });
 ```
 
-### Summary
+#### Summary
 
 Summaries calculate percentiles of observed values.
 
 **Configuration**
 
 The default percentiles are: 0.01, 0.05, 0.5, 0.9, 0.95, 0.99, 0.999. But they
-can be overridden like this:
+can be overridden by specifying a `percentiles` array:
 
 ```js
 const client = require('prom-client');
@@ -274,9 +248,9 @@ xhrRequest(function(err, res) {
 
 ### Labels
 
-All metrics can take a labelNames property in the configuration object. All
-labelNames that the metric support needs to be declared here. There are 2 ways
-to add values to the labels
+All metrics can take a `labelNames` property in the configuration object. All
+label names that the metric support needs to be declared here. There are two
+ways to add values to the labels:
 
 ```js
 const client = require('prom-client');
@@ -286,8 +260,10 @@ const gauge = new client.Gauge({
   labelNames: ['method', 'statusCode']
 });
 
-gauge.set({ method: 'GET', statusCode: '200' }, 100); // 1st version, Set value 100 with method set to GET and statusCode to 200
-gauge.labels('GET', '200').set(100); // 2nd version, Same as above
+// 1st version: Set value to 100 with "method" set to "GET" and "statusCode" to "200"
+gauge.set({ method: 'GET', statusCode: '200' }, 100);
+// 2nd version: Same effect as above
+gauge.labels('GET', '200').set(100);
 ```
 
 It is also possible to use timers with labels, both before and after the timer
@@ -329,13 +305,12 @@ Default labels will be overridden if there is a name conflict.
 ### Multiple registries
 
 By default, metrics are automatically registered to the global registry (located
-at `require('prom-client').register`). You can prevent this by setting last
-parameter when creating the metric to `false` (depending on metric, this might
-be 4th or 5th parameter).
+at `require('prom-client').register`). You can prevent this by specifying
+`registers: []` in the metric constructor configuration.
 
-Using non-global registries requires creating Registry instance and adding it
-inside `registers` inside the configuration object. Alternatively you can pass
-an empty `registers` array and register it manually.
+Using non-global registries requires creating a Registry instance and passing it
+inside `registers` in the metric configuration object. Alternatively you can
+pass an empty `registers` array and register it manually.
 
 Registry has a `merge` function that enables you to expose multiple registries
 on the same endpoint. If the same metric name exists in both registries, an
@@ -347,14 +322,14 @@ const registry = new client.Registry();
 const counter = new client.Counter({
   name: 'metric_name',
   help: 'metric_help',
-  registers: [registry]
+  registers: [registry] // specify a non-default registry
 });
 const histogram = new client.Histogram({
   name: 'metric_name',
   help: 'metric_help',
-  registers: []
+  registers: [] // don't automatically register this metric
 });
-registry.registerMetric(histogram);
+registry.registerMetric(histogram); // register metric manually
 counter.inc();
 
 const mergedRegistries = client.Registry.merge([registry, client.register]);
@@ -468,7 +443,8 @@ new client.Histogram({
 The content-type prometheus expects is also exported as a constant, both on the
 `register` and from the main file of this project, called `contentType`.
 
-## Garbage Collection
+### Garbage Collection
 
-To avoid dependencies in this module, GC stats are kept outside of it. If you
-want GC stats, you can use https://github.com/SimenB/node-prometheus-gc-stats
+To avoid native dependencies in this module, GC statistics for bytes reclaimed
+in each GC sweep are kept in a separate module:
+https://github.com/SimenB/node-prometheus-gc-stats.
