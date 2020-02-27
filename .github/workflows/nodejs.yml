@@ -19,5 +19,16 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install and test
-        run: npm it
+      - name: Restore dependencies cache
+        uses: actions/cache@v1
+        id: cache
+        with:
+          path: node_modules
+          key: ${{ matrix.os }}-{{ matrix.node-version }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ matrix.os }}-{{ matrix.node-version }}-node_modules-
+      - name: Install Node Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm i
+      - name: Test
+        run: npm run test
