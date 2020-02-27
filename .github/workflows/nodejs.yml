@@ -27,7 +27,7 @@ jobs:
           key: ${{ matrix.os }}-{{ matrix.node-version }}-node_modules-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ matrix.os }}-{{ matrix.node-version }}-node_modules-
-      - name: Install Node Dependencies
+      - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm i
       - name: Test
