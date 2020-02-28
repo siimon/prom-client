@@ -24,7 +24,7 @@ jobs:
         id: cache
         with:
           path: node_modules
-          key: ${{ matrix.os }}-{{ matrix.node-version }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ matrix.os }}-{{ matrix.node-version }}-node_modules-${{ hashFiles('**/package.json') }}
           restore-keys: |
             ${{ matrix.os }}-{{ matrix.node-version }}-node_modules-
       - name: Install Dependencies
