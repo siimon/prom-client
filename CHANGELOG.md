@@ -11,6 +11,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- fix: provide nodejs_version_info metrics after calling `registry.resetMetrics()` (#238)
+
 ### Added
 
 - feat: exposed `registry.registerCollector()` and `registry.collectors()` methods in TypeScript declaration
