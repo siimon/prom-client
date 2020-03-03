@@ -11,6 +11,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- fix: provide nodejs_version_info metrics after calling `registry.resetMetrics()` (#238)
 - chore: improve performance of `registry.getMetricAsPrometheusString`
 
 ### Added
