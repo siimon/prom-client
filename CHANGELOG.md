@@ -11,6 +11,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- chore: improve performance of `registry.getMetricAsPrometheusString`
+
 ### Added
 
 - feat: exposed `registry.registerCollector()` and `registry.collectors()` methods in TypeScript declaration
@@ -43,7 +45,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - feat: implement GC metrics collection without native(C++) modules.
-- faet: implement advanced event loop monitoring
+- feat: implement advanced event loop monitoring
 
 ## [11.5.3] - 2019-06-27
 
