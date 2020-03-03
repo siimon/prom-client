@@ -12,6 +12,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 - fix: provide nodejs_version_info metrics after calling `registry.resetMetrics()` (#238)
+- chore: improve performance of `registry.getMetricAsPrometheusString`
 
 ### Added
 
@@ -45,7 +46,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - feat: implement GC metrics collection without native(C++) modules.
-- faet: implement advanced event loop monitoring
+- feat: implement advanced event loop monitoring
 
 ## [11.5.3] - 2019-06-27
 
