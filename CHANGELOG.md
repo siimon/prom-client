@@ -16,6 +16,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - feat: exposed `registry.registerCollector()` and `registry.collectors()` methods in TypeScript declaration
+- Added CHANGELOG reminder
 
 ## [12.0.0] - 2020-02-20
 

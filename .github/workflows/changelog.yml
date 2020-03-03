@@ -11,6 +11,6 @@ jobs:
       uses: peterjgrainger/action-changelog-reminder@v1.2.0
       with:
         changelog_regex: 'CHANGELOG\.md'
-        customPrMessage: 'Thanks for opening this Pull request! Each pull requests require an update in the CHANGELOG. Please update it based on your changes.'
+        customPrMessage: 'Thanks for opening this pull request! Each pull request require an update in the CHANGELOG. Please update it based on your changes.'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
