@@ -152,12 +152,16 @@ interface metric {
 
 type LabelValues<T extends string> = Partial<Record<T, string | number>>;
 
-export interface CounterConfiguration<T extends string> {
+interface MetricConfiguration<T extends string> {
 	name: string;
 	help: string;
 	labelNames?: T[];
 	registers?: Registry[];
 	aggregator?: Aggregator;
+}
+
+export interface CounterConfiguration<T extends string>
+	extends MetricConfiguration<T> {
 }
 
 /**
@@ -211,12 +215,8 @@ export namespace Counter {
 	}
 }
 
-export interface GaugeConfiguration<T extends string> {
-	name: string;
-	help: string;
-	labelNames?: T[];
-	registers?: Registry[];
-	aggregator?: Aggregator;
+export interface GaugeConfiguration<T extends string>
+	extends MetricConfiguration<T> {
 }
 
 /**
@@ -332,13 +332,9 @@ export namespace Gauge {
 	}
 }
 
-export interface HistogramConfiguration<T extends string> {
-	name: string;
-	help: string;
-	labelNames?: T[];
+export interface HistogramConfiguration<T extends string>
+	extends MetricConfiguration<T> {
 	buckets?: number[];
-	registers?: Registry[];
-	aggregator?: Aggregator;
 }
 
 /**
@@ -412,13 +408,9 @@ export namespace Histogram {
 	}
 }
 
-export interface SummaryConfiguration<T extends string> {
-	name: string;
-	help: string;
-	labelNames?: T[];
+export interface SummaryConfiguration<T extends string>
+	extends MetricConfiguration<T> {
 	percentiles?: number[];
-	registers?: Registry[];
-	aggregator?: Aggregator;
 	maxAgeSeconds?: number;
 	ageBuckets?: number;
 	compressCount?: number;
