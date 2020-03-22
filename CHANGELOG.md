@@ -14,6 +14,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - fix: provide nodejs_version_info metrics after calling `registry.resetMetrics()` (#238)
 - chore: improve performance of `registry.getMetricAsPrometheusString`
 - chore: refactor metrics to reduce code duplication
+- chore: replace `utils.getPropertiesFromObj` with `Object.values`
 
 ### Added
 
