@@ -7,6 +7,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+- Added: More examples with commented output
+
 ### Breaking
 
 ### Changed
