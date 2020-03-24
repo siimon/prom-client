@@ -91,41 +91,15 @@ collectDefaultMetrics({ prefix });
 You can get the full list of metrics by inspecting
 `client.collectDefaultMetrics.metricsList`.
 
-`collectDefaultMetrics` returns an identification when invoked, which is a
-reference to the `Timer` used to keep the probes going. This can be passed to
-`clearInterval` in order to stop all probes.
-
-NOTE: Existing intervals are automatically cleared when calling
-`collectDefaultMetrics`.
+Default metrics are collected on scrape of metrics endpoint,
+not on an interval.
 
 ```js
 const client = require('prom-client');
 
 const collectDefaultMetrics = client.collectDefaultMetrics;
 
-const interval = collectDefaultMetrics();
-
-// ... some time later
-
-clearInterval(interval);
-```
-
-NOTE: `unref` is called on the `interval` internally, so it will not keep your
-node process going indefinitely if it's the only thing keeping it from shutting
-down.
-
-#### Stop polling default metrics
-
-To stop collecting the default metrics, you have to call the function and pass
-it to `clearInterval`.
-
-```js
-const client = require('prom-client');
-
-clearInterval(client.collectDefaultMetrics());
-
-// Clear the register
-client.register.clear();
+collectDefaultMetrics();
 ```
 
 ### Counter
