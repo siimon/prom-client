@@ -23,7 +23,7 @@ describe('collectDefaultMetrics', () => {
 				}
 			});
 		} else {
-			process.cpuUsage = function() {
+			process.cpuUsage = function () {
 				return { user: 1000, system: 10 };
 			};
 		}
@@ -73,7 +73,7 @@ describe('collectDefaultMetrics', () => {
 
 	describe('disabling', () => {
 		it('should not throw error', () => {
-			const fn = function() {
+			const fn = function () {
 				register.clear();
 			};
 

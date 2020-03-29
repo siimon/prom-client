@@ -185,7 +185,7 @@ describe('summary', () => {
 				});
 
 				it('should throw error if label lengths does not match', () => {
-					const fn = function() {
+					const fn = function () {
 						instance.labels('GET').observe();
 					};
 					expect(fn).toThrowErrorMatchingSnapshot();
@@ -317,7 +317,7 @@ describe('summary', () => {
 				});
 
 				it('should throw error if label lengths does not match', () => {
-					const fn = function() {
+					const fn = function () {
 						instance.remove('GET');
 					};
 					expect(fn).toThrowErrorMatchingSnapshot();

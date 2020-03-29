@@ -601,7 +601,7 @@ describe('register', () => {
 			registryOne.registerMetric(getMetric());
 			registryTwo.registerMetric(getMetric());
 
-			const fn = function() {
+			const fn = function () {
 				Registry.merge([registryOne, registryTwo]);
 			};
 

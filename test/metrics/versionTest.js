@@ -1,10 +1,7 @@
 'use strict';
 
 const nodeVersion = process.version;
-const versionSegments = nodeVersion
-	.slice(1)
-	.split('.')
-	.map(Number);
+const versionSegments = nodeVersion.slice(1).split('.').map(Number);
 
 function expectVersionMetrics(metrics) {
 	expect(metrics).toHaveLength(1);
