@@ -59,7 +59,7 @@ describe('gauge', () => {
 			});
 
 			it('should not allow non numbers', () => {
-				const fn = function() {
+				const fn = function () {
 					instance.set('asd');
 				};
 				expect(fn).toThrowErrorMatchingSnapshot();

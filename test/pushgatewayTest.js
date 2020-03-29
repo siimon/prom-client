@@ -19,7 +19,7 @@ describe('pushgateway', () => {
 	let instance;
 	let registry = undefined;
 
-	const tests = function() {
+	const tests = function () {
 		describe('pushAdd', () => {
 			it('should push metrics', () => {
 				instance.pushAdd({ jobName: 'testJob' });

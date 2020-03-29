@@ -109,7 +109,7 @@ describe('histogram', () => {
 			});
 
 			it('should not allow non numbers', () => {
-				const fn = function() {
+				const fn = function () {
 					instance.observe('asd');
 				};
 				expect(fn).toThrowErrorMatchingSnapshot();
@@ -127,7 +127,7 @@ describe('histogram', () => {
 			});
 
 			it('should not allow le as a custom label', () => {
-				const fn = function() {
+				const fn = function () {
 					new Histogram({ name: 'name', help: 'help', labelNames: ['le'] });
 				};
 				expect(fn).toThrowErrorMatchingSnapshot();
@@ -182,7 +182,7 @@ describe('histogram', () => {
 				});
 
 				it('should not allow different number of labels', () => {
-					const fn = function() {
+					const fn = function () {
 						instance.labels('get', '500').observe(4);
 					};
 					expect(fn).toThrowErrorMatchingSnapshot();
@@ -286,7 +286,7 @@ describe('histogram', () => {
 				});
 
 				it('should throw error if label lengths does not match', () => {
-					const fn = function() {
+					const fn = function () {
 						instance.remove('GET', '/foo');
 					};
 					expect(fn).toThrowErrorMatchingSnapshot();

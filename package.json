@@ -41,7 +41,7 @@
 		"jest": "^25.1.0",
 		"lint-staged": "^10.0.4",
 		"lolex": "^5.1.2",
-		"prettier": "1.19.1",
+		"prettier": "2.0.2",
 		"typescript": "^3.0.3"
 	},
 	"dependencies": {
@@ -60,6 +60,8 @@
 	"prettier": {
 		"singleQuote": true,
 		"useTabs": true,
+		"arrowParens": "avoid",
+		"trailingComma": "none",
 		"overrides": [
 			{
 				"files": "*.md",

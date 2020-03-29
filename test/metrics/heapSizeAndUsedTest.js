@@ -16,7 +16,7 @@ describe('heapSizeAndUsed', () => {
 	});
 
 	it('should set total heap size gauge with total from memoryUsage', () => {
-		process.memoryUsage = function() {
+		process.memoryUsage = function () {
 			return { heapTotal: 1000, heapUsed: 500, external: 100 };
 		};
 		const totalGauge = heapSizeAndUsed()().total.get();
@@ -24,7 +24,7 @@ describe('heapSizeAndUsed', () => {
 	});
 
 	it('should set used gauge with used from memoryUsage', () => {
-		process.memoryUsage = function() {
+		process.memoryUsage = function () {
 			return { heapTotal: 1000, heapUsed: 500, external: 100 };
 		};
 		const gauge = heapSizeAndUsed()().used.get();
@@ -32,7 +32,7 @@ describe('heapSizeAndUsed', () => {
 	});
 
 	it('should set external gauge with external from memoryUsage', () => {
-		process.memoryUsage = function() {
+		process.memoryUsage = function () {
 			return { heapTotal: 1000, heapUsed: 500, external: 100 };
 		};
 		const gauge = heapSizeAndUsed()().external.get();

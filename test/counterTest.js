@@ -27,7 +27,7 @@ describe('counter', () => {
 			expect(instance.get().values[0].value).toEqual(100);
 		});
 		it('should not be possible to decrease a counter', () => {
-			const fn = function() {
+			const fn = function () {
 				instance.inc(-100);
 			};
 			expect(fn).toThrowErrorMatchingSnapshot();
@@ -74,14 +74,14 @@ describe('counter', () => {
 			});
 
 			it('should throw error if label lengths does not match', () => {
-				const fn = function() {
+				const fn = function () {
 					instance.labels('GET').inc();
 				};
 				expect(fn).toThrowErrorMatchingSnapshot();
 			});
 
 			it('should throw error if label lengths does not match', () => {
-				const fn = function() {
+				const fn = function () {
 					instance.labels('GET').inc();
 				};
 				expect(fn).toThrowErrorMatchingSnapshot();
@@ -129,7 +129,7 @@ describe('counter', () => {
 		});
 
 		it('should throw error if label lengths does not match', () => {
-			const fn = function() {
+			const fn = function () {
 				instance.remove('GET');
 			};
 			expect(fn).toThrowErrorMatchingSnapshot();
