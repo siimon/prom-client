@@ -21,7 +21,7 @@ if (cluster.isMaster) {
 
 	metricsServer.listen(3001);
 	console.log(
-		'Cluster metrics server listening to 3001, metrics exposed on /cluster_metrics'
+		'Cluster metrics server listening to 3001, metrics exposed on /cluster_metrics',
 	);
 } else {
 	require('./server.js');

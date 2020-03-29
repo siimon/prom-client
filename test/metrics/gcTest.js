@@ -32,7 +32,7 @@ describe('gc', () => {
 			expect(metrics).toHaveLength(1);
 
 			expect(metrics[0].help).toEqual(
-				'Garbage collection duration by kind, one of major, minor, incremental or weakcb.'
+				'Garbage collection duration by kind, one of major, minor, incremental or weakcb.',
 			);
 			expect(metrics[0].type).toEqual('histogram');
 			expect(metrics[0].name).toEqual('nodejs_gc_duration_seconds');

@@ -33,31 +33,31 @@ describe('eventLoopLag', () => {
 			expect(metrics[2].name).toEqual('nodejs_eventloop_lag_max_seconds');
 
 			expect(metrics[3].help).toEqual(
-				'The mean of the recorded event loop delays.'
+				'The mean of the recorded event loop delays.',
 			);
 			expect(metrics[3].type).toEqual('gauge');
 			expect(metrics[3].name).toEqual('nodejs_eventloop_lag_mean_seconds');
 
 			expect(metrics[4].help).toEqual(
-				'The standard deviation of the recorded event loop delays.'
+				'The standard deviation of the recorded event loop delays.',
 			);
 			expect(metrics[4].type).toEqual('gauge');
 			expect(metrics[4].name).toEqual('nodejs_eventloop_lag_stddev_seconds');
 
 			expect(metrics[5].help).toEqual(
-				'The 50th percentile of the recorded event loop delays.'
+				'The 50th percentile of the recorded event loop delays.',
 			);
 			expect(metrics[5].type).toEqual('gauge');
 			expect(metrics[5].name).toEqual('nodejs_eventloop_lag_p50_seconds');
 
 			expect(metrics[6].help).toEqual(
-				'The 90th percentile of the recorded event loop delays.'
+				'The 90th percentile of the recorded event loop delays.',
 			);
 			expect(metrics[6].type).toEqual('gauge');
 			expect(metrics[6].name).toEqual('nodejs_eventloop_lag_p90_seconds');
 
 			expect(metrics[7].help).toEqual(
-				'The 99th percentile of the recorded event loop delays.'
+				'The 99th percentile of the recorded event loop delays.',
 			);
 			expect(metrics[7].type).toEqual('gauge');
 			expect(metrics[7].name).toEqual('nodejs_eventloop_lag_p99_seconds');

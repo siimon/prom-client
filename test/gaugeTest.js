@@ -68,7 +68,7 @@ describe('gauge', () => {
 			it('should init to 0', () => {
 				instance = new Gauge({
 					name: 'init_gauge',
-					help: 'somehelp'
+					help: 'somehelp',
 				});
 				expectValue(0);
 			});
@@ -78,7 +78,7 @@ describe('gauge', () => {
 					instance = new Gauge({
 						name: 'name',
 						help: 'help',
-						labelNames: ['code']
+						labelNames: ['code'],
 					});
 					instance.set({ code: '200' }, 20);
 				});
@@ -120,7 +120,7 @@ describe('gauge', () => {
 					instance = new Gauge({
 						name: 'name_2',
 						help: 'help',
-						labelNames: ['code', 'success']
+						labelNames: ['code', 'success'],
 					});
 					const clock = lolex.install();
 					const end = instance.startTimer({ code: 200 });
@@ -142,7 +142,7 @@ describe('gauge', () => {
 					instance = new Gauge({
 						name: 'name',
 						help: 'help',
-						labelNames: ['code']
+						labelNames: ['code'],
 					});
 					instance.set({ code: '200' }, 20);
 					instance.set({ code: '400' }, 0);
@@ -182,7 +182,7 @@ describe('gauge', () => {
 			instance = new Gauge({
 				name: 'gauge_test',
 				help: 'help',
-				registers: [registryInstance]
+				registers: [registryInstance],
 			});
 			instance.set(10);
 		});
@@ -199,7 +199,7 @@ describe('gauge', () => {
 		it('should reset labelless gauge', () => {
 			const instance = new Gauge({
 				name: 'test_metric',
-				help: 'Another test metric'
+				help: 'Another test metric',
 			});
 
 			instance.set(12);
@@ -215,7 +215,7 @@ describe('gauge', () => {
 			const instance = new Gauge({
 				name: 'test_metric',
 				help: 'Another test metric',
-				labelNames: ['serial', 'active']
+				labelNames: ['serial', 'active'],
 			});
 
 			instance.set({ serial: '12345', active: 'yes' }, 12);

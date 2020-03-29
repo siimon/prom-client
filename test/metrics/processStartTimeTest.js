@@ -22,7 +22,7 @@ describe('processStartTime', () => {
 
 		expect(metrics).toHaveLength(1);
 		expect(metrics[0].help).toEqual(
-			'Start time of the process since unix epoch in seconds.'
+			'Start time of the process since unix epoch in seconds.',
 		);
 		expect(metrics[0].type).toEqual('gauge');
 		expect(metrics[0].name).toEqual('process_start_time_seconds');
