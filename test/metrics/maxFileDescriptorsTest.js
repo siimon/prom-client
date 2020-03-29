@@ -15,20 +15,20 @@ describe('processMaxFileDescriptors', () => {
 	});
 
 	if (process.platform !== 'linux') {
-		it('should not add metric to the registry', () => {
-			expect(register.getMetricsAsJSON()).toHaveLength(0);
+		it('should not add metric to the registry', async () => {
+			expect(await register.getMetricsAsJSON()).toHaveLength(0);
 
-			processMaxFileDescriptors()();
+			processMaxFileDescriptors();
 
-			expect(register.getMetricsAsJSON()).toHaveLength(0);
+			expect(await register.getMetricsAsJSON()).toHaveLength(0);
 		});
 	} else {
-		it('should add metric to the registry', () => {
-			expect(register.getMetricsAsJSON()).toHaveLength(0);
+		it('should add metric to the registry', async () => {
+			expect(await register.getMetricsAsJSON()).toHaveLength(0);
 
-			processMaxFileDescriptors()();
+			processMaxFileDescriptors();
 
-			const metrics = register.getMetricsAsJSON();
+			const metrics = await register.getMetricsAsJSON();
 
 			expect(metrics).toHaveLength(1);
 			expect(metrics[0].help).toEqual(
@@ -39,13 +39,13 @@ describe('processMaxFileDescriptors', () => {
 			expect(metrics[0].values).toHaveLength(1);
 		});
 
-		it('should have a reasonable metric value', () => {
+		it('should have a reasonable metric value', async () => {
 			const maxFiles = Number(exec('ulimit -Hn', { encoding: 'utf8' }));
 
-			expect(register.getMetricsAsJSON()).toHaveLength(0);
-			processMaxFileDescriptors(register, {})();
+			expect(await register.getMetricsAsJSON()).toHaveLength(0);
+			processMaxFileDescriptors(register, {});
 
-			const metrics = register.getMetricsAsJSON();
+			const metrics = await register.getMetricsAsJSON();
 
 			expect(metrics).toHaveLength(1);
 			expect(metrics[0].values).toHaveLength(1);

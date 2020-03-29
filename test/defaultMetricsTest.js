@@ -6,7 +6,6 @@ describe('collectDefaultMetrics', () => {
 	const collectDefaultMetrics = require('../index').collectDefaultMetrics;
 	let platform;
 	let cpuUsage;
-	let interval;
 
 	beforeAll(() => {
 		platform = process.platform;
@@ -47,28 +46,27 @@ describe('collectDefaultMetrics', () => {
 
 	afterEach(() => {
 		register.clear();
-		clearInterval(interval);
 	});
 
-	it('should add metrics to the registry', () => {
-		expect(register.getMetricsAsJSON()).toHaveLength(0);
-		interval = collectDefaultMetrics();
-		expect(register.getMetricsAsJSON()).not.toHaveLength(0);
+	it('should add metrics to the registry', async () => {
+		expect(await register.getMetricsAsJSON()).toHaveLength(0);
+		collectDefaultMetrics();
+		expect(await register.getMetricsAsJSON()).not.toHaveLength(0);
 	});
 
-	it('should allow blacklisting all metrics', () => {
-		expect(register.getMetricsAsJSON()).toHaveLength(0);
+	it('should allow blacklisting all metrics', async () => {
+		expect(await register.getMetricsAsJSON()).toHaveLength(0);
 		clearInterval(collectDefaultMetrics());
 		register.clear();
-		expect(register.getMetricsAsJSON()).toHaveLength(0);
+		expect(await register.getMetricsAsJSON()).toHaveLength(0);
 	});
 
-	it('should prefix metric names when configured', () => {
-		interval = collectDefaultMetrics({ prefix: 'some_prefix_' });
-		expect(register.getMetricsAsJSON()).not.toHaveLength(0);
-		register.getMetricsAsJSON().forEach(metric => {
+	it('should prefix metric names when configured', async () => {
+		collectDefaultMetrics({ prefix: 'some_prefix_' });
+		expect(await register.getMetricsAsJSON()).not.toHaveLength(0);
+		for (const metric of await register.getMetricsAsJSON()) {
 			expect(metric.name.substring(0, 12)).toEqual('some_prefix_');
-		});
+		}
 	});
 
 	describe('disabling', () => {
@@ -82,21 +80,21 @@ describe('collectDefaultMetrics', () => {
 	});
 
 	describe('custom registry', () => {
-		it('should allow to register metrics to custom registry', () => {
+		it('should allow to register metrics to custom registry', async () => {
 			const registry = new Registry();
 
-			expect(register.getMetricsAsJSON()).toHaveLength(0);
-			expect(registry.getMetricsAsJSON()).toHaveLength(0);
+			expect(await register.getMetricsAsJSON()).toHaveLength(0);
+			expect(await registry.getMetricsAsJSON()).toHaveLength(0);
 
 			collectDefaultMetrics();
 
-			expect(register.getMetricsAsJSON()).not.toHaveLength(0);
-			expect(registry.getMetricsAsJSON()).toHaveLength(0);
+			expect(await register.getMetricsAsJSON()).not.toHaveLength(0);
+			expect(await registry.getMetricsAsJSON()).toHaveLength(0);
 
 			collectDefaultMetrics({ register: registry });
 
-			expect(register.getMetricsAsJSON()).not.toHaveLength(0);
-			expect(registry.getMetricsAsJSON()).not.toHaveLength(0);
+			expect(await register.getMetricsAsJSON()).not.toHaveLength(0);
+			expect(await registry.getMetricsAsJSON()).not.toHaveLength(0);
 		});
 	});
 });

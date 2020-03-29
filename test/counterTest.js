@@ -14,17 +14,17 @@ describe('counter', () => {
 			globalRegistry.clear();
 		});
 
-		it('should increment counter', () => {
+		it('should increment counter', async () => {
 			instance.inc();
-			expect(instance.get().values[0].value).toEqual(1);
+			expect((await instance.get()).values[0].value).toEqual(1);
 			instance.inc();
-			expect(instance.get().values[0].value).toEqual(2);
+			expect((await instance.get()).values[0].value).toEqual(2);
 			instance.inc(0);
-			expect(instance.get().values[0].value).toEqual(2);
+			expect((await instance.get()).values[0].value).toEqual(2);
 		});
-		it('should increment with a provided value', () => {
+		it('should increment with a provided value', async () => {
 			instance.inc(100);
-			expect(instance.get().values[0].value).toEqual(100);
+			expect((await instance.get()).values[0].value).toEqual(100);
 		});
 		it('should not be possible to decrease a counter', () => {
 			const fn = function () {
@@ -38,12 +38,12 @@ describe('counter', () => {
 			};
 			expect(fn).toThrowErrorMatchingSnapshot();
 		});
-		it('should handle incrementing with 0', () => {
+		it('should handle incrementing with 0', async () => {
 			instance.inc(0);
-			expect(instance.get().values[0].value).toEqual(0);
+			expect((await instance.get()).values[0].value).toEqual(0);
 		});
-		it('should init counter to 0', () => {
-			const values = instance.get().values;
+		it('should init counter to 0', async () => {
+			const values = (await instance.get()).values;
 			expect(values).toHaveLength(1);
 			expect(values[0].value).toEqual(0);
 		});
@@ -57,19 +57,19 @@ describe('counter', () => {
 				});
 			});
 
-			it('should handle 1 value per label', () => {
+			it('should handle 1 value per label', async () => {
 				instance.labels('GET', '/test').inc();
 				instance.labels('POST', '/test').inc();
 
-				const values = instance.get().values;
+				const values = (await instance.get()).values;
 				expect(values).toHaveLength(2);
 			});
 
-			it('should handle labels which are provided as arguments to inc()', () => {
+			it('should handle labels which are provided as arguments to inc()', async () => {
 				instance.inc({ method: 'GET', endpoint: '/test' });
 				instance.inc({ method: 'POST', endpoint: '/test' });
 
-				const values = instance.get().values;
+				const values = (await instance.get()).values;
 				expect(values).toHaveLength(2);
 			});
 
@@ -87,9 +87,9 @@ describe('counter', () => {
 				expect(fn).toThrowErrorMatchingSnapshot();
 			});
 
-			it('should increment label value with provided value', () => {
+			it('should increment label value with provided value', async () => {
 				instance.labels('GET', '/test').inc(100);
-				const values = instance.get().values;
+				const values = (await instance.get()).values;
 				expect(values[0].value).toEqual(100);
 			});
 		});
@@ -110,10 +110,10 @@ describe('counter', () => {
 			globalRegistry.clear();
 		});
 
-		it('should remove matching label', () => {
+		it('should remove matching label', async () => {
 			instance.remove('POST', '/test');
 
-			const values = instance.get().values;
+			const values = (await instance.get()).values;
 			expect(values).toHaveLength(1);
 			expect(values[0].value).toEqual(1);
 			expect(values[0].labels.method).toEqual('GET');
@@ -121,11 +121,11 @@ describe('counter', () => {
 			expect(values[0].timestamp).toEqual(undefined);
 		});
 
-		it('should remove all labels', () => {
+		it('should remove all labels', async () => {
 			instance.remove('GET', '/test');
 			instance.remove('POST', '/test');
 
-			expect(instance.get().values).toHaveLength(0);
+			expect((await instance.get()).values).toHaveLength(0);
 		});
 
 		it('should throw error if label lengths does not match', () => {
@@ -144,11 +144,11 @@ describe('counter', () => {
 				registers: [],
 			});
 		});
-		it('should increment counter', () => {
+		it('should increment counter', async () => {
 			instance.inc();
-			expect(globalRegistry.getMetricsAsJSON().length).toEqual(0);
-			expect(instance.get().values[0].value).toEqual(1);
-			expect(instance.get().values[0].timestamp).toEqual(undefined);
+			expect((await globalRegistry.getMetricsAsJSON()).length).toEqual(0);
+			expect((await instance.get()).values[0].value).toEqual(1);
+			expect((await instance.get()).values[0].timestamp).toEqual(undefined);
 		});
 	});
 	describe('registry instance', () => {
@@ -161,34 +161,34 @@ describe('counter', () => {
 				registers: [registryInstance],
 			});
 		});
-		it('should increment counter', () => {
+		it('should increment counter', async () => {
 			instance.inc();
-			expect(globalRegistry.getMetricsAsJSON().length).toEqual(0);
-			expect(registryInstance.getMetricsAsJSON().length).toEqual(1);
-			expect(instance.get().values[0].value).toEqual(1);
-			expect(instance.get().values[0].timestamp).toEqual(undefined);
+			expect((await globalRegistry.getMetricsAsJSON()).length).toEqual(0);
+			expect((await registryInstance.getMetricsAsJSON()).length).toEqual(1);
+			expect((await instance.get()).values[0].value).toEqual(1);
+			expect((await instance.get()).values[0].timestamp).toEqual(undefined);
 		});
 	});
 	describe('counter reset', () => {
 		afterEach(() => {
 			globalRegistry.clear();
 		});
-		it('should reset labelless counter', () => {
+		it('should reset labelless counter', async () => {
 			const instance = new Counter({
 				name: 'test_metric',
 				help: 'Another test metric',
 			});
 
 			instance.inc(12);
-			expect(instance.get().values[0].value).toEqual(12);
+			expect((await instance.get()).values[0].value).toEqual(12);
 
 			instance.reset();
-			expect(instance.get().values[0].value).toEqual(0);
+			expect((await instance.get()).values[0].value).toEqual(0);
 
 			instance.inc(10);
-			expect(instance.get().values[0].value).toEqual(10);
+			expect((await instance.get()).values[0].value).toEqual(10);
 		});
-		it('should reset the counter, incl labels', () => {
+		it('should reset the counter, incl labels', async () => {
 			const instance = new Counter({
 				name: 'test_metric',
 				help: 'Another test metric',
@@ -196,18 +196,18 @@ describe('counter', () => {
 			});
 
 			instance.inc({ serial: '12345', active: 'yes' }, 12);
-			expect(instance.get().values[0].value).toEqual(12);
-			expect(instance.get().values[0].labels.serial).toEqual('12345');
-			expect(instance.get().values[0].labels.active).toEqual('yes');
+			expect((await instance.get()).values[0].value).toEqual(12);
+			expect((await instance.get()).values[0].labels.serial).toEqual('12345');
+			expect((await instance.get()).values[0].labels.active).toEqual('yes');
 
 			instance.reset();
 
-			expect(instance.get().values).toEqual([]);
+			expect((await instance.get()).values).toEqual([]);
 
 			instance.inc({ serial: '12345', active: 'no' }, 10);
-			expect(instance.get().values[0].value).toEqual(10);
-			expect(instance.get().values[0].labels.serial).toEqual('12345');
-			expect(instance.get().values[0].labels.active).toEqual('no');
+			expect((await instance.get()).values[0].value).toEqual(10);
+			expect((await instance.get()).values[0].labels.serial).toEqual('12345');
+			expect((await instance.get()).values[0].labels.active).toEqual('no');
 		});
 	});
 });

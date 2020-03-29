@@ -12,19 +12,19 @@ describe('gc', () => {
 		register.clear();
 	});
 
-	it('should add metric to the registry', () => {
-		expect(register.getMetricsAsJSON()).toHaveLength(0);
+	it('should add metric to the registry', async () => {
+		expect(await register.getMetricsAsJSON()).toHaveLength(0);
 
-		processHandles()();
+		processHandles();
 
-		const metrics = register.getMetricsAsJSON();
+		const metrics = await register.getMetricsAsJSON();
 
 		// Check if perf_hooks module is available
 		let perf_hooks;
 		try {
 			// eslint-disable-next-line
 			perf_hooks = require('perf_hooks');
-		} catch (e) {
+		} catch {
 			// node version is too old
 		}
 

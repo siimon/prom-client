@@ -12,12 +12,12 @@ describe('eventLoopLag', () => {
 		register.clear();
 	});
 
-	it('should add metric to the registry', done => {
-		expect(register.getMetricsAsJSON()).toHaveLength(0);
-		eventLoopLag()();
+	it('should add metric to the registry', async done => {
+		expect(await register.getMetricsAsJSON()).toHaveLength(0);
+		eventLoopLag();
 
-		setTimeout(() => {
-			const metrics = register.getMetricsAsJSON();
+		setTimeout(async () => {
+			const metrics = await register.getMetricsAsJSON();
 			expect(metrics).toHaveLength(8);
 
 			expect(metrics[0].help).toEqual('Lag of event loop in seconds.');
