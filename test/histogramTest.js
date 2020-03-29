@@ -17,65 +17,74 @@ describe('histogram', () => {
 				instance = new Histogram({ name: 'test_histogram', help: 'test' });
 			});
 
-			it('should increase count', () => {
+			it('should increase count', async () => {
 				instance.observe(0.5);
 				const valuePair = getValueByName(
 					'test_histogram_count',
-					instance.get().values,
+					(await instance.get()).values,
 				);
 				expect(valuePair.value).toEqual(1);
 			});
-			it('should be able to observe 0s', () => {
+			it('should be able to observe 0s', async () => {
 				instance.observe(0);
-				const valuePair = getValueByLabel(0.005, instance.get().values);
+				const valuePair = getValueByLabel(0.005, (await instance.get()).values);
 				expect(valuePair.value).toEqual(1);
 			});
-			it('should increase sum', () => {
+			it('should increase sum', async () => {
 				instance.observe(0.5);
 				const valuePair = getValueByName(
 					'test_histogram_sum',
-					instance.get().values,
+					(await instance.get()).values,
 				);
 				expect(valuePair.value).toEqual(0.5);
 			});
-			it('should add item in upper bound bucket', () => {
+			it('should add item in upper bound bucket', async () => {
 				instance.observe(1);
-				const valuePair = getValueByLabel(1, instance.get().values);
+				const valuePair = getValueByLabel(1, (await instance.get()).values);
 				expect(valuePair.value).toEqual(1);
 			});
 
-			it('should be able to monitor more than one item', () => {
+			it('should be able to monitor more than one item', async () => {
 				instance.observe(0.05);
 				instance.observe(5);
-				const firstValuePair = getValueByLabel(0.05, instance.get().values);
-				const secondValuePair = getValueByLabel(5, instance.get().values);
+				const firstValuePair = getValueByLabel(
+					0.05,
+					(await instance.get()).values,
+				);
+				const secondValuePair = getValueByLabel(
+					5,
+					(await instance.get()).values,
+				);
 				expect(firstValuePair.value).toEqual(1);
 				expect(secondValuePair.value).toEqual(2);
 			});
 
-			it('should add a +Inf bucket with the same value as count', () => {
+			it('should add a +Inf bucket with the same value as count', async () => {
 				instance.observe(10);
 				const countValuePair = getValueByName(
 					'test_histogram_count',
-					instance.get().values,
+					(await instance.get()).values,
 				);
-				const infValuePair = getValueByLabel('+Inf', instance.get().values);
+				const infValuePair = getValueByLabel(
+					'+Inf',
+					(await instance.get()).values,
+				);
 				expect(infValuePair.value).toEqual(countValuePair.value);
 			});
 
-			it('should add buckets in increasing numerical order', () => {
+			it('should add buckets in increasing numerical order', async () => {
 				const histogram = new Histogram({
 					name: 'test_histogram_2',
 					help: 'test',
 					buckets: [1, 5],
 				});
 				histogram.observe(1.5);
-				const values = histogram.get().values;
+				const values = (await histogram.get()).values;
 				expect(values[0].labels.le).toEqual(1);
 				expect(values[1].labels.le).toEqual(5);
 				expect(values[2].labels.le).toEqual('+Inf');
 			});
-			it('should group counts on each label set', () => {
+			it('should group counts on each label set', async () => {
 				const histogram = new Histogram({
 					name: 'test_histogram_2',
 					help: 'test',
@@ -83,18 +92,18 @@ describe('histogram', () => {
 				});
 				histogram.observe({ code: '200' }, 1);
 				histogram.observe({ code: '300' }, 1);
-				const values = getValuesByLabel(1, histogram.get().values);
+				const values = getValuesByLabel(1, (await histogram.get()).values);
 				expect(values[0].value).toEqual(1);
 				expect(values[1].value).toEqual(1);
 			});
 
-			it('should time requests', () => {
+			it('should time requests', async () => {
 				jest.useFakeTimers('modern');
 				jest.setSystemTime(0);
 				const doneFn = instance.startTimer();
 				jest.advanceTimersByTime(500);
 				doneFn();
-				const valuePair = getValueByLabel(0.5, instance.get().values);
+				const valuePair = getValueByLabel(0.5, (await instance.get()).values);
 				expect(valuePair.value).toEqual(1);
 				jest.useRealTimers();
 			});
@@ -116,14 +125,19 @@ describe('histogram', () => {
 				expect(fn).toThrowErrorMatchingSnapshot();
 			});
 
-			it('should allow custom labels', () => {
+			it('should allow custom labels', async () => {
 				const i = new Histogram({
 					name: 'histo',
 					help: 'help',
 					labelNames: ['code'],
 				});
 				i.observe({ code: 'test' }, 1);
-				const pair = getValueByLeAndLabel(1, 'code', 'test', i.get().values);
+				const pair = getValueByLeAndLabel(
+					1,
+					'code',
+					'test',
+					(await i.get()).values,
+				);
 				expect(pair.value).toEqual(1);
 			});
 
@@ -134,30 +148,30 @@ describe('histogram', () => {
 				expect(fn).toThrowErrorMatchingSnapshot();
 			});
 
-			it('should observe value if outside most upper bound', () => {
+			it('should observe value if outside most upper bound', async () => {
 				instance.observe(100000);
-				const values = instance.get().values;
+				const values = (await instance.get()).values;
 				const count = getValueByLabel('+Inf', values, 'le');
 				expect(count.value).toEqual(1);
 			});
 
-			it('should allow to be reset itself', () => {
+			it('should allow to be reset itself', async () => {
 				instance.observe(0.5);
 				let valuePair = getValueByName(
 					'test_histogram_count',
-					instance.get().values,
+					(await instance.get()).values,
 				);
 				expect(valuePair.value).toEqual(1);
 				instance.reset();
 				valuePair = getValueByName(
 					'test_histogram_count',
-					instance.get().values,
+					(await instance.get()).values,
 				);
 				expect(valuePair.value).toEqual(undefined);
 			});
 
-			it('should init to 0', () => {
-				instance.get().values.forEach(bucket => {
+			it('should init to 0', async () => {
+				(await instance.get()).values.forEach(bucket => {
 					expect(bucket.value).toEqual(0);
 				});
 			});
@@ -171,13 +185,13 @@ describe('histogram', () => {
 					});
 				});
 
-				it('should observe', () => {
+				it('should observe', async () => {
 					instance.labels('get').observe(4);
 					const res = getValueByLeAndLabel(
 						5,
 						'method',
 						'get',
-						instance.get().values,
+						(await instance.get()).values,
 					);
 					expect(res.value).toEqual(1);
 				});
@@ -189,7 +203,7 @@ describe('histogram', () => {
 					expect(fn).toThrowErrorMatchingSnapshot();
 				});
 
-				it('should start a timer', () => {
+				it('should start a timer', async () => {
 					jest.useFakeTimers('modern');
 					jest.setSystemTime(0);
 					const end = instance.labels('get').startTimer();
@@ -199,13 +213,13 @@ describe('histogram', () => {
 						0.5,
 						'method',
 						'get',
-						instance.get().values,
+						(await instance.get()).values,
 					);
 					expect(res.value).toEqual(1);
 					jest.useRealTimers();
 				});
 
-				it('should start a timer and set labels afterwards', () => {
+				it('should start a timer and set labels afterwards', async () => {
 					jest.useFakeTimers('modern');
 					jest.setSystemTime(0);
 					const end = instance.startTimer();
@@ -215,13 +229,13 @@ describe('histogram', () => {
 						0.5,
 						'method',
 						'get',
-						instance.get().values,
+						(await instance.get()).values,
 					);
 					expect(res.value).toEqual(1);
 					jest.useRealTimers();
 				});
 
-				it('should allow labels before and after timers', () => {
+				it('should allow labels before and after timers', async () => {
 					instance = new Histogram({
 						name: 'histogram_labels_2',
 						help: 'Histogram with labels fn',
@@ -236,13 +250,13 @@ describe('histogram', () => {
 						0.5,
 						'method',
 						'get',
-						instance.get().values,
+						(await instance.get()).values,
 					);
 					const res2 = getValueByLeAndLabel(
 						0.5,
 						'success',
 						'SUCCESS',
-						instance.get().values,
+						(await instance.get()).values,
 					);
 					expect(res1.value).toEqual(1);
 					expect(res2.value).toEqual(1);
@@ -266,7 +280,7 @@ describe('histogram', () => {
 					});
 				});
 
-				it('should remove matching label', () => {
+				it('should remove matching label', async () => {
 					instance.labels('POST').observe(3);
 					instance.labels('GET').observe(4);
 					instance.remove('POST');
@@ -275,18 +289,18 @@ describe('histogram', () => {
 						5,
 						'method',
 						'GET',
-						instance.get().values,
+						(await instance.get()).values,
 					);
 					expect(res.value).toEqual(1);
 				});
 
-				it('should remove all labels', () => {
+				it('should remove all labels', async () => {
 					instance.labels('POST').observe(3);
 					instance.labels('GET').observe(4);
 					instance.remove('POST');
 					instance.remove('GET');
 
-					expect(instance.get().values).toHaveLength(0);
+					expect((await instance.get()).values).toHaveLength(0);
 				});
 
 				it('should throw error if label lengths does not match', () => {
@@ -296,7 +310,7 @@ describe('histogram', () => {
 					expect(fn).toThrowErrorMatchingSnapshot();
 				});
 
-				it('should remove timer labels', () => {
+				it('should remove timer labels', async () => {
 					jest.useFakeTimers('modern');
 					jest.setSystemTime(0);
 					const getEnd = instance.labels('GET').startTimer();
@@ -309,24 +323,24 @@ describe('histogram', () => {
 						0.5,
 						'method',
 						'GET',
-						instance.get().values,
+						(await instance.get()).values,
 					);
 					expect(res.value).toEqual(1);
 					jest.useRealTimers();
 				});
 
-				it('should remove timer labels when labels are set afterwards', () => {
+				it('should remove timer labels when labels are set afterwards', async () => {
 					jest.useFakeTimers('modern');
 					jest.setSystemTime(0);
 					const end = instance.startTimer();
 					jest.advanceTimersByTime(500);
 					end({ method: 'GET' });
 					instance.remove('GET');
-					expect(instance.get().values).toHaveLength(0);
+					expect((await instance.get()).values).toHaveLength(0);
 					jest.useRealTimers();
 				});
 
-				it('should remove labels before and after timers', () => {
+				it('should remove labels before and after timers', async () => {
 					instance = new Histogram({
 						name: 'histogram_labels_2',
 						help: 'Histogram with labels fn',
@@ -338,7 +352,7 @@ describe('histogram', () => {
 					jest.advanceTimersByTime(500);
 					end({ success: 'SUCCESS' });
 					instance.remove('GET', 'SUCCESS');
-					expect(instance.get().values).toHaveLength(0);
+					expect((await instance.get()).values).toHaveLength(0);
 					jest.useRealTimers();
 				});
 			});
@@ -352,14 +366,14 @@ describe('histogram', () => {
 					registers: [],
 				});
 			});
-			it('should increase count', () => {
+			it('should increase count', async () => {
 				instance.observe(0.5);
 				const valuePair = getValueByName(
 					'test_histogram_count',
-					instance.get().values,
+					(await instance.get()).values,
 				);
 				expect(valuePair.value).toEqual(1);
-				expect(globalRegistry.getMetricsAsJSON().length).toEqual(0);
+				expect((await globalRegistry.getMetricsAsJSON()).length).toEqual(0);
 			});
 		});
 		describe('registry instance', () => {
@@ -372,15 +386,15 @@ describe('histogram', () => {
 					registers: [registryInstance],
 				});
 			});
-			it('should increment counter', () => {
+			it('should increment counter', async () => {
 				instance.observe(0.5);
 				const valuePair = getValueByName(
 					'test_histogram_count',
-					instance.get().values,
+					(await instance.get()).values,
 				);
 				expect(valuePair.value).toEqual(1);
-				expect(globalRegistry.getMetricsAsJSON().length).toEqual(0);
-				expect(registryInstance.getMetricsAsJSON().length).toEqual(1);
+				expect((await globalRegistry.getMetricsAsJSON()).length).toEqual(0);
+				expect((await registryInstance.getMetricsAsJSON()).length).toEqual(1);
 			});
 		});
 	});

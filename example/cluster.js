@@ -11,12 +11,15 @@ if (cluster.isMaster) {
 		cluster.fork();
 	}
 
-	metricsServer.get('/cluster_metrics', (req, res) => {
-		aggregatorRegistry.clusterMetrics((err, metrics) => {
-			if (err) console.log(err);
+	metricsServer.get('/cluster_metrics', async (req, res) => {
+		try {
+			const metrics = await aggregatorRegistry.clusterMetrics();
 			res.set('Content-Type', aggregatorRegistry.contentType);
 			res.send(metrics);
-		});
+		} catch (ex) {
+			res.statusCode = 500;
+			res.send(ex);
+		}
 	});
 
 	metricsServer.listen(3001);

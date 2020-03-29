@@ -27,23 +27,22 @@ describe('version', () => {
 		register.clear();
 	});
 
-	it('should add metric to the registry', () => {
-		expect(register.getMetricsAsJSON()).toHaveLength(0);
+	it('should add metric to the registry', async () => {
+		expect(await register.getMetricsAsJSON()).toHaveLength(0);
 		expect(typeof versionSegments[0]).toEqual('number');
 		expect(typeof versionSegments[1]).toEqual('number');
 		expect(typeof versionSegments[2]).toEqual('number');
 
-		version()();
+		version();
 
-		const metrics = register.getMetricsAsJSON();
+		const metrics = await register.getMetricsAsJSON();
 		expectVersionMetrics(metrics);
 	});
 
-	it('should still be present after resetting the registry #238', () => {
+	it('should still be present after resetting the registry #238', async () => {
 		const collector = version();
-		register.registerCollector(collector);
-		expectVersionMetrics(register.getMetricsAsJSON());
+		expectVersionMetrics(await register.getMetricsAsJSON());
 		register.resetMetrics();
-		expectVersionMetrics(register.getMetricsAsJSON());
+		expectVersionMetrics(await register.getMetricsAsJSON());
 	});
 });
