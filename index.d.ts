@@ -81,7 +81,13 @@ export class Registry {
 	 * @param registers The registers you want to merge together
 	 */
 	static merge(registers: Registry[]): Registry;
+	
+	/**
+	 * Global registry
+	 */
+	globalRegistry: Registry;
 }
+
 export type Collector = () => void;
 
 /**
