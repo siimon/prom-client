@@ -85,7 +85,7 @@ export class Registry {
 	/**
 	 * Global registry
 	 */
-	globalRegistry: Registry;
+	static globalRegistry: Registry;
 }
 
 export type Collector = () => void;
