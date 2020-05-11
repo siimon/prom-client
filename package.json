@@ -32,7 +32,6 @@
 	"homepage": "https://github.com/siimon/prom-client",
 	"devDependencies": {
 		"@clevernature/benchmark-regression": "^1.0.0",
-		"@sinonjs/fake-timers": "^6.0.1",
 		"eslint": "^6.8.0",
 		"eslint-config-prettier": "^6.10.0",
 		"eslint-plugin-node": "^11.0.0",

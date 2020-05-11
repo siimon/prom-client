@@ -4,7 +4,6 @@ describe('summary', () => {
 	const Summary = require('../index').Summary;
 	const Registry = require('../index').Registry;
 	const globalRegistry = require('../index').register;
-	const lolex = require('@sinonjs/fake-timers');
 	let instance;
 
 	describe('global registry', () => {
@@ -192,9 +191,10 @@ describe('summary', () => {
 				});
 
 				it('should start a timer', () => {
-					const clock = lolex.install();
+					jest.useFakeTimers('modern');
+					jest.setSystemTime(0);
 					const end = instance.labels('GET', '/test').startTimer();
-					clock.tick(1000);
+					jest.advanceTimersByTime(1000);
 					end();
 					const values = instance.get().values;
 					expect(values).toHaveLength(3);
@@ -213,13 +213,14 @@ describe('summary', () => {
 					expect(values[2].labels.endpoint).toEqual('/test');
 					expect(values[2].value).toEqual(1);
 
-					clock.uninstall();
+					jest.useRealTimers();
 				});
 
 				it('should start a timer and set labels afterwards', () => {
-					const clock = lolex.install();
+					jest.useFakeTimers('modern');
+					jest.setSystemTime(0);
 					const end = instance.startTimer();
-					clock.tick(1000);
+					jest.advanceTimersByTime(1000);
 					end({ method: 'GET', endpoint: '/test' });
 					const values = instance.get().values;
 					expect(values).toHaveLength(3);
@@ -238,13 +239,14 @@ describe('summary', () => {
 					expect(values[2].labels.endpoint).toEqual('/test');
 					expect(values[2].value).toEqual(1);
 
-					clock.uninstall();
+					jest.useRealTimers();
 				});
 
 				it('should allow labels before and after timers', () => {
-					const clock = lolex.install();
+					jest.useFakeTimers('modern');
+					jest.setSystemTime(0);
 					const end = instance.startTimer({ method: 'GET' });
-					clock.tick(1000);
+					jest.advanceTimersByTime(1000);
 					end({ endpoint: '/test' });
 					const values = instance.get().values;
 					expect(values).toHaveLength(3);
@@ -263,7 +265,7 @@ describe('summary', () => {
 					expect(values[2].labels.endpoint).toEqual('/test');
 					expect(values[2].value).toEqual(1);
 
-					clock.uninstall();
+					jest.useRealTimers();
 				});
 
 				it('should not mutate passed startLabels', () => {
@@ -324,9 +326,10 @@ describe('summary', () => {
 				});
 
 				it('should remove timer values', () => {
-					const clock = lolex.install();
+					jest.useFakeTimers('modern');
+					jest.setSystemTime(0);
 					const end = instance.labels('GET', '/test').startTimer();
-					clock.tick(1000);
+					jest.advanceTimersByTime(1000);
 					end();
 					instance.remove('GET', '/test');
 
@@ -347,13 +350,14 @@ describe('summary', () => {
 					expect(values[2].labels.endpoint).toEqual('/test');
 					expect(values[2].value).toEqual(1);
 
-					clock.uninstall();
+					jest.useRealTimers();
 				});
 
 				it('should remove timer values when labels are set afterwards', () => {
-					const clock = lolex.install();
+					jest.useFakeTimers('modern');
+					jest.setSystemTime(0);
 					const end = instance.startTimer();
-					clock.tick(1000);
+					jest.advanceTimersByTime(1000);
 					end({ method: 'GET', endpoint: '/test' });
 					instance.remove('GET', '/test');
 
@@ -374,13 +378,14 @@ describe('summary', () => {
 					expect(values[2].labels.endpoint).toEqual('/test');
 					expect(values[2].value).toEqual(1);
 
-					clock.uninstall();
+					jest.useRealTimers();
 				});
 
 				it('should remove timer values with before and after labels', () => {
-					const clock = lolex.install();
+					jest.useFakeTimers('modern');
+					jest.setSystemTime(0);
 					const end = instance.startTimer({ method: 'GET' });
-					clock.tick(1000);
+					jest.advanceTimersByTime(1000);
 					end({ endpoint: '/test' });
 					instance.remove('GET', '/test');
 
@@ -401,7 +406,7 @@ describe('summary', () => {
 					expect(values[2].labels.endpoint).toEqual('/test');
 					expect(values[2].value).toEqual(1);
 
-					clock.uninstall();
+					jest.useRealTimers();
 				});
 			});
 		});
@@ -451,7 +456,8 @@ describe('summary', () => {
 		let clock;
 		beforeEach(() => {
 			globalRegistry.clear();
-			clock = lolex.install();
+			jest.useFakeTimers('modern');
+			jest.setSystemTime(0);
 		});
 
 		it('should slide when maxAgeSeconds and ageBuckets are set', () => {
@@ -475,7 +481,7 @@ describe('summary', () => {
 					'summary_test_count',
 				);
 				expect(localInstance.get().values[8].value).toEqual(1);
-				clock.tick(1001);
+				jest.advanceTimersByTime(1001);
 			}
 
 			expect(localInstance.get().values[0].labels.quantile).toEqual(0.01);
@@ -500,7 +506,7 @@ describe('summary', () => {
 					'summary_test_count',
 				);
 				expect(localInstance.get().values[8].value).toEqual(1);
-				clock.tick(1001);
+				jest.advanceTimersByTime(1001);
 			}
 
 			expect(localInstance.get().values[0].labels.quantile).toEqual(0.01);

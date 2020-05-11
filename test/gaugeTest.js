@@ -4,7 +4,6 @@ describe('gauge', () => {
 	const Gauge = require('../index').Gauge;
 	const Registry = require('../index').Registry;
 	const globalRegistry = require('../index').register;
-	const lolex = require('@sinonjs/fake-timers');
 	let instance;
 
 	describe('global registry', () => {
@@ -43,19 +42,21 @@ describe('gauge', () => {
 			});
 
 			it('should start a timer and set a gauge to elapsed in seconds', () => {
-				const clock = lolex.install();
+				jest.useFakeTimers('modern');
+				jest.setSystemTime(0);
 				const doneFn = instance.startTimer();
-				clock.tick(500);
+				jest.advanceTimersByTime(500);
 				doneFn();
 				expectValue(0.5);
-				clock.uninstall();
+				jest.useRealTimers();
 			});
 
 			it('should set to current time', () => {
-				const clock = lolex.install();
+				jest.useFakeTimers('modern');
+				jest.setSystemTime(0);
 				instance.setToCurrentTime();
 				expectValue(Date.now());
-				clock.uninstall();
+				jest.useRealTimers();
 			});
 
 			it('should not allow non numbers', () => {
@@ -95,26 +96,29 @@ describe('gauge', () => {
 					expectValue(500);
 				});
 				it('should be able to set value to current time', () => {
-					const clock = lolex.install();
+					jest.useFakeTimers('modern');
+					jest.setSystemTime(0);
 					instance.labels('200').setToCurrentTime();
 					expectValue(Date.now());
-					clock.uninstall();
+					jest.useRealTimers();
 				});
 				it('should be able to start a timer', () => {
-					const clock = lolex.install();
+					jest.useFakeTimers('modern');
+					jest.setSystemTime(0);
 					const end = instance.labels('200').startTimer();
-					clock.tick(1000);
+					jest.advanceTimersByTime(1000);
 					end();
 					expectValue(1);
-					clock.uninstall();
+					jest.useRealTimers();
 				});
 				it('should be able to start a timer and set labels afterwards', () => {
-					const clock = lolex.install();
+					jest.useFakeTimers('modern');
+					jest.setSystemTime(0);
 					const end = instance.startTimer();
-					clock.tick(1000);
+					jest.advanceTimersByTime(1000);
 					end({ code: 200 });
 					expectValue(1);
-					clock.uninstall();
+					jest.useRealTimers();
 				});
 				it('should allow labels before and after timers', () => {
 					instance = new Gauge({
@@ -122,12 +126,13 @@ describe('gauge', () => {
 						help: 'help',
 						labelNames: ['code', 'success'],
 					});
-					const clock = lolex.install();
+					jest.useFakeTimers('modern');
+					jest.setSystemTime(0);
 					const end = instance.startTimer({ code: 200 });
-					clock.tick(1000);
+					jest.advanceTimersByTime(1000);
 					end({ success: 'SUCCESS' });
 					expectValue(1);
-					clock.uninstall();
+					jest.useRealTimers();
 				});
 				it('should not mutate passed startLabels', () => {
 					const startLabels = { code: '200' };

@@ -2,12 +2,12 @@
 
 describe('timeWindowQuantiles', () => {
 	const TimeWindowQuantiles = require('../lib/timeWindowQuantiles');
-	const lolex = require('@sinonjs/fake-timers');
 	let instance;
 	let clock;
 
 	beforeEach(() => {
-		clock = lolex.install();
+		jest.useFakeTimers('modern');
+		jest.setSystemTime(0);
 		instance = new TimeWindowQuantiles(5, 5);
 	});
 
@@ -54,19 +54,19 @@ describe('timeWindowQuantiles', () => {
 		it('should rotate', () => {
 			instance.push(1);
 			expect(instance.currentBuffer).toEqual(0);
-			clock.tick(1001);
+			jest.advanceTimersByTime(1001);
 			instance.percentile(0.5);
 			expect(instance.currentBuffer).toEqual(1);
-			clock.tick(1001);
+			jest.advanceTimersByTime(1001);
 			instance.percentile(0.5);
 			expect(instance.currentBuffer).toEqual(2);
-			clock.tick(1001);
+			jest.advanceTimersByTime(1001);
 			instance.percentile(0.5);
 			expect(instance.currentBuffer).toEqual(3);
-			clock.tick(1001);
+			jest.advanceTimersByTime(1001);
 			instance.percentile(0.5);
 			expect(instance.currentBuffer).toEqual(4);
-			clock.tick(1001);
+			jest.advanceTimersByTime(1001);
 			instance.percentile(0.5);
 			expect(instance.currentBuffer).toEqual(0);
 
