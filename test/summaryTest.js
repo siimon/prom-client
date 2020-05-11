@@ -4,7 +4,7 @@ describe('summary', () => {
 	const Summary = require('../index').Summary;
 	const Registry = require('../index').Registry;
 	const globalRegistry = require('../index').register;
-	const lolex = require('lolex');
+	const lolex = require('@sinonjs/fake-timers');
 	let instance;
 
 	describe('global registry', () => {

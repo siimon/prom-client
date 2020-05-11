@@ -32,16 +32,16 @@
 	"homepage": "https://github.com/siimon/prom-client",
 	"devDependencies": {
 		"@clevernature/benchmark-regression": "^1.0.0",
+		"@sinonjs/fake-timers": "^6.0.1",
 		"eslint": "^6.8.0",
 		"eslint-config-prettier": "^6.10.0",
 		"eslint-plugin-node": "^11.0.0",
 		"eslint-plugin-prettier": "^3.0.1",
 		"express": "^4.13.3",
 		"husky": "^4.2.1",
-		"jest": "^25.1.0",
+		"jest": "^26.0.1",
 		"lint-staged": "^10.0.4",
-		"lolex": "^5.1.2",
-		"prettier": "2.0.2",
+		"prettier": "2.0.5",
 		"typescript": "^3.0.3"
 	},
 	"dependencies": {

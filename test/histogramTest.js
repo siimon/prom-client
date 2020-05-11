@@ -4,7 +4,7 @@ describe('histogram', () => {
 	const Histogram = require('../index').Histogram;
 	const Registry = require('../index').Registry;
 	const globalRegistry = require('../index').register;
-	const lolex = require('lolex');
+	const lolex = require('@sinonjs/fake-timers');
 	let instance;
 
 	afterEach(() => {

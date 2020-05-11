@@ -2,7 +2,7 @@
 
 describe('timeWindowQuantiles', () => {
 	const TimeWindowQuantiles = require('../lib/timeWindowQuantiles');
-	const lolex = require('lolex');
+	const lolex = require('@sinonjs/fake-timers');
 	let instance;
 	let clock;
 
