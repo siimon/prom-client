@@ -4,7 +4,6 @@ describe('histogram', () => {
 	const Histogram = require('../index').Histogram;
 	const Registry = require('../index').Registry;
 	const globalRegistry = require('../index').register;
-	const lolex = require('@sinonjs/fake-timers');
 	let instance;
 
 	afterEach(() => {
@@ -90,22 +89,24 @@ describe('histogram', () => {
 			});
 
 			it('should time requests', () => {
-				const clock = lolex.install();
+				jest.useFakeTimers('modern');
+				jest.setSystemTime(0);
 				const doneFn = instance.startTimer();
-				clock.tick(500);
+				jest.advanceTimersByTime(500);
 				doneFn();
 				const valuePair = getValueByLabel(0.5, instance.get().values);
 				expect(valuePair.value).toEqual(1);
-				clock.uninstall();
+				jest.useRealTimers();
 			});
 
 			it('should time requests, end function should return time spent value', () => {
-				const clock = lolex.install();
+				jest.useFakeTimers('modern');
+				jest.setSystemTime(0);
 				const doneFn = instance.startTimer();
-				clock.tick(500);
+				jest.advanceTimersByTime(500);
 				const value = doneFn();
 				expect(value).toEqual(0.5);
-				clock.uninstall();
+				jest.useRealTimers();
 			});
 
 			it('should not allow non numbers', () => {
@@ -189,9 +190,10 @@ describe('histogram', () => {
 				});
 
 				it('should start a timer', () => {
-					const clock = lolex.install();
+					jest.useFakeTimers('modern');
+					jest.setSystemTime(0);
 					const end = instance.labels('get').startTimer();
-					clock.tick(500);
+					jest.advanceTimersByTime(500);
 					end();
 					const res = getValueByLeAndLabel(
 						0.5,
@@ -200,13 +202,14 @@ describe('histogram', () => {
 						instance.get().values,
 					);
 					expect(res.value).toEqual(1);
-					clock.uninstall();
+					jest.useRealTimers();
 				});
 
 				it('should start a timer and set labels afterwards', () => {
-					const clock = lolex.install();
+					jest.useFakeTimers('modern');
+					jest.setSystemTime(0);
 					const end = instance.startTimer();
-					clock.tick(500);
+					jest.advanceTimersByTime(500);
 					end({ method: 'get' });
 					const res = getValueByLeAndLabel(
 						0.5,
@@ -215,7 +218,7 @@ describe('histogram', () => {
 						instance.get().values,
 					);
 					expect(res.value).toEqual(1);
-					clock.uninstall();
+					jest.useRealTimers();
 				});
 
 				it('should allow labels before and after timers', () => {
@@ -224,9 +227,10 @@ describe('histogram', () => {
 						help: 'Histogram with labels fn',
 						labelNames: ['method', 'success'],
 					});
-					const clock = lolex.install();
+					jest.useFakeTimers('modern');
+					jest.setSystemTime(0);
 					const end = instance.startTimer({ method: 'get' });
-					clock.tick(500);
+					jest.advanceTimersByTime(500);
 					end({ success: 'SUCCESS' });
 					const res1 = getValueByLeAndLabel(
 						0.5,
@@ -242,7 +246,7 @@ describe('histogram', () => {
 					);
 					expect(res1.value).toEqual(1);
 					expect(res2.value).toEqual(1);
-					clock.uninstall();
+					jest.useRealTimers();
 				});
 
 				it('should not mutate passed startLabels', () => {
@@ -293,10 +297,11 @@ describe('histogram', () => {
 				});
 
 				it('should remove timer labels', () => {
-					const clock = lolex.install();
+					jest.useFakeTimers('modern');
+					jest.setSystemTime(0);
 					const getEnd = instance.labels('GET').startTimer();
 					const postEnd = instance.labels('POST').startTimer();
-					clock.tick(500);
+					jest.advanceTimersByTime(500);
 					postEnd();
 					getEnd();
 					instance.remove('POST');
@@ -307,17 +312,18 @@ describe('histogram', () => {
 						instance.get().values,
 					);
 					expect(res.value).toEqual(1);
-					clock.uninstall();
+					jest.useRealTimers();
 				});
 
 				it('should remove timer labels when labels are set afterwards', () => {
-					const clock = lolex.install();
+					jest.useFakeTimers('modern');
+					jest.setSystemTime(0);
 					const end = instance.startTimer();
-					clock.tick(500);
+					jest.advanceTimersByTime(500);
 					end({ method: 'GET' });
 					instance.remove('GET');
 					expect(instance.get().values).toHaveLength(0);
-					clock.uninstall();
+					jest.useRealTimers();
 				});
 
 				it('should remove labels before and after timers', () => {
@@ -326,13 +332,14 @@ describe('histogram', () => {
 						help: 'Histogram with labels fn',
 						labelNames: ['method', 'success'],
 					});
-					const clock = lolex.install();
+					jest.useFakeTimers('modern');
+					jest.setSystemTime(0);
 					const end = instance.startTimer({ method: 'GET' });
-					clock.tick(500);
+					jest.advanceTimersByTime(500);
 					end({ success: 'SUCCESS' });
 					instance.remove('GET', 'SUCCESS');
 					expect(instance.get().values).toHaveLength(0);
-					clock.uninstall();
+					jest.useRealTimers();
 				});
 			});
 		});
