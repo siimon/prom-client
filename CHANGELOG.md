@@ -16,6 +16,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - chore: refactor metrics to reduce code duplication
 - chore: replace `utils.getPropertiesFromObj` with `Object.values`
 - chore: remove unused `catch` bindings
+- chore: improve performance of `registry.metrics()`
 
 ### Added
 
