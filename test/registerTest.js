@@ -103,6 +103,32 @@ describe('register', () => {
 		expect(output).toEqual('test_metric{testLabel="testValue"} 1');
 	});
 
+	it('should handle a metric with default labels with value 0', () => {
+		register.setDefaultLabels({ testLabel: 0 });
+		const counter = new Counter({
+			name: 'test_metric',
+			help: 'A test metric',
+		});
+		counter.inc(1);
+		register.registerMetric(counter);
+
+		const output = register.metrics().split('\n')[2];
+		expect(output).toEqual('test_metric{testLabel="0"} 1');
+	});
+
+	it('should handle a metrics with labels subset', () => {
+		const gauge = new Gauge({
+			name: 'test_metric',
+			help: 'help',
+			labelNames: ['code', 'success'],
+		});
+		gauge.inc({ code: '200' }, 10);
+		register.registerMetric(gauge);
+
+		const output = register.metrics().split('\n')[2];
+		expect(output).toEqual('test_metric{code="200"} 10');
+	});
+
 	it('labeled metrics should take precidence over defaulted', () => {
 		register.setDefaultLabels({ testLabel: 'testValue' });
 		const counter = new Counter({
