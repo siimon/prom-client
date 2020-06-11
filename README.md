@@ -80,6 +80,16 @@ const prefix = 'my_application_';
 collectDefaultMetrics({ prefix });
 ```
 
+To apply generic labels to all default metrics, pass an object to the `labels` property (useful if you're working in a clustered environment):
+
+```js
+const client = require('prom-client');
+const collectDefaultMetrics = client.collectDefaultMetrics;
+collectDefaultMetrics({
+  labels: { NODE_APP_INSTANCE: process.env.NODE_APP_INSTANCE },
+});
+```
+
 You can get the full list of metrics by inspecting
 `client.collectDefaultMetrics.metricsList`.
 
