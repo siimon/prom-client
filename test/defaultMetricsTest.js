@@ -82,6 +82,7 @@ describe('collectDefaultMetrics', () => {
 				expect(metricValue.labels).toMatchObject(labels);
 			});
 		});
+		expect.assertions(45);
 	});
 
 	describe('disabling', () => {
