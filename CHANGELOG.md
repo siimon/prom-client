@@ -9,13 +9,38 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Breaking
 
+- changed: The following functions are now async (return a promise):
+  `registry.metrics()`
+  `registry.getMetricsAsJSON()`
+  `registry.getMetricsAsArray()`
+  `registry.getSingleMetricAsString()`
+
+  If your metrics server has a line like `res.send(register.metrics())`, you
+  should change it to `res.send(await register.metrics())`.
+
+  Additionally, all metric types now accept an optional `collect` function,
+  which is called when the metric's value should be collected and within which
+  you should set the metric's value. You should provide a `collect` function for
+  point-in-time metrics (e.g. current memory usage, as opposed to HTTP request
+  durations that are continuously logged in a histogram).
+
+- changed: `register.clusterMetrics()` no longer accepts a callback; it only
+  returns a promise.
+
+- removed: v12.0.0 added the undocumented functions `registry.registerCollector`
+  and `registry.collectors()`. These have been removed. If you were using them,
+  you should instead provide a `collect` function as described above.
+
 ### Changed
 
-- fix: provide nodejs_version_info metrics after calling `registry.resetMetrics()` (#238)
+- fix: provide nodejs_version_info metric value after calling `registry.resetMetrics()` (#238)
+- fix: provide process_max_fds metric value after calling `registry.resetMetrics()`
+- fix: provide process_start_time_seconds metric value after calling `registry.resetMetrics()`
 - chore: improve performance of `registry.getMetricAsPrometheusString`
 - chore: refactor metrics to reduce code duplication
 - chore: replace `utils.getPropertiesFromObj` with `Object.values`
 - chore: remove unused `catch` bindings
+- chore: upgrade Prettier to 2.x
 - fix: startTimer returns `number` in typescript instead of `void`
 
 ### Added

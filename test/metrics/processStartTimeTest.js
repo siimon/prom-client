@@ -12,12 +12,12 @@ describe('processStartTime', () => {
 		register.clear();
 	});
 
-	it('should add metric to the registry', () => {
-		expect(register.getMetricsAsJSON()).toHaveLength(0);
+	it('should add metric to the registry', async () => {
+		expect(await register.getMetricsAsJSON()).toHaveLength(0);
 
-		op()();
+		op();
 
-		const metrics = register.getMetricsAsJSON();
+		const metrics = await register.getMetricsAsJSON();
 		const startTime = Math.ceil(Date.now() / 1000 - process.uptime());
 
 		expect(metrics).toHaveLength(1);

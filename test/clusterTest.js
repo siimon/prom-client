@@ -18,19 +18,11 @@ describe('AggregatorRegistry', () => {
 	});
 
 	describe('aggregatorRegistry.clusterMetrics()', () => {
-		it('works properly if there are no cluster workers', done => {
+		it('works properly if there are no cluster workers', async () => {
 			const AggregatorRegistry = require('../lib/cluster');
 			const ar = new AggregatorRegistry();
-			let tickElapsed = false;
-			process.nextTick(() => {
-				tickElapsed = true;
-			});
-			ar.clusterMetrics((err, metrics) => {
-				expect(tickElapsed).toBe(true);
-				expect(err).toBeNull();
-				expect(metrics).toEqual('');
-				done();
-			});
+			const metrics = await ar.clusterMetrics();
+			expect(metrics).toEqual('');
 		});
 	});
 
@@ -154,7 +146,7 @@ describe('AggregatorRegistry', () => {
 
 		const aggregated = Registry.aggregate([metricsArr1, metricsArr2]);
 
-		it('defaults to summation, preserves histogram bins', () => {
+		it('defaults to summation, preserves histogram bins', async () => {
 			const histogram = aggregated.getSingleMetric('test_histogram').get();
 			expect(histogram).toEqual({
 				name: 'test_histogram',

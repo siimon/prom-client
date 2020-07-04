@@ -13,9 +13,9 @@ describe('register', () => {
 
 	describe('should output a counter metric', () => {
 		let output;
-		beforeEach(() => {
+		beforeEach(async () => {
 			register.registerMetric(getMetric());
-			output = register.metrics().split('\n');
+			output = (await register.metrics()).split('\n');
 		});
 
 		it('with help as first item', () => {
@@ -42,9 +42,9 @@ describe('register', () => {
 		);
 	});
 
-	it('should handle and output a metric with a NaN value', () => {
+	it('should handle and output a metric with a NaN value', async () => {
 		register.registerMetric({
-			get() {
+			async get() {
 				return {
 					name: 'test_metric',
 					type: 'gauge',
@@ -57,14 +57,14 @@ describe('register', () => {
 				};
 			},
 		});
-		const lines = register.metrics().split('\n');
+		const lines = (await register.metrics()).split('\n');
 		expect(lines).toHaveLength(4);
 		expect(lines[2]).toEqual('test_metric Nan');
 	});
 
-	it('should handle and output a metric with an +Infinity value', () => {
+	it('should handle and output a metric with an +Infinity value', async () => {
 		register.registerMetric({
-			get() {
+			async get() {
 				return {
 					name: 'test_metric',
 					type: 'gauge',
@@ -77,14 +77,14 @@ describe('register', () => {
 				};
 			},
 		});
-		const lines = register.metrics().split('\n');
+		const lines = (await register.metrics()).split('\n');
 		expect(lines).toHaveLength(4);
 		expect(lines[2]).toEqual('test_metric +Inf');
 	});
 
-	it('should handle and output a metric with an -Infinity value', () => {
+	it('should handle and output a metric with an -Infinity value', async () => {
 		register.registerMetric({
-			get() {
+			async get() {
 				return {
 					name: 'test_metric',
 					type: 'gauge',
@@ -97,14 +97,14 @@ describe('register', () => {
 				};
 			},
 		});
-		const lines = register.metrics().split('\n');
+		const lines = (await register.metrics()).split('\n');
 		expect(lines).toHaveLength(4);
 		expect(lines[2]).toEqual('test_metric -Inf');
 	});
 
-	it('should handle a metric without labels', () => {
+	it('should handle a metric without labels', async () => {
 		register.registerMetric({
-			get() {
+			async get() {
 				return {
 					name: 'test_metric',
 					type: 'counter',
@@ -117,13 +117,13 @@ describe('register', () => {
 				};
 			},
 		});
-		expect(register.metrics().split('\n')).toHaveLength(4);
+		expect((await register.metrics()).split('\n')).toHaveLength(4);
 	});
 
-	it('should handle a metric with default labels', () => {
+	it('should handle a metric with default labels', async () => {
 		register.setDefaultLabels({ testLabel: 'testValue' });
 		register.registerMetric({
-			get() {
+			async get() {
 				return {
 					name: 'test_metric',
 					type: 'counter',
@@ -133,14 +133,14 @@ describe('register', () => {
 			},
 		});
 
-		const output = register.metrics().split('\n')[2];
+		const output = (await register.metrics()).split('\n')[2];
 		expect(output).toEqual('test_metric{testLabel="testValue"} 1');
 	});
 
-	it('labeled metrics should take precidence over defaulted', () => {
+	it('labeled metrics should take precidence over defaulted', async () => {
 		register.setDefaultLabels({ testLabel: 'testValue' });
 		register.registerMetric({
-			get() {
+			async get() {
 				return {
 					name: 'test_metric',
 					type: 'counter',
@@ -158,34 +158,34 @@ describe('register', () => {
 			},
 		});
 
-		expect(register.metrics().split('\n')[2]).toEqual(
+		expect((await register.metrics()).split('\n')[2]).toEqual(
 			'test_metric{testLabel="overlapped",anotherLabel="value123"} 1',
 		);
 	});
 
-	it('should output all initialized metrics at value 0', () => {
+	it('should output all initialized metrics at value 0', async () => {
 		new Counter({ name: 'counter', help: 'help' });
 		new Gauge({ name: 'gauge', help: 'help' });
 		new Histogram({ name: 'histogram', help: 'help' });
 		new Summary({ name: 'summary', help: 'help' });
 
-		expect(register.metrics()).toMatchSnapshot();
+		expect(await register.metrics()).toMatchSnapshot();
 	});
 
-	it('should not output all initialized metrics at value 0 if labels', () => {
+	it('should not output all initialized metrics at value 0 if labels', async () => {
 		new Counter({ name: 'counter', help: 'help', labelNames: ['label'] });
 		new Gauge({ name: 'gauge', help: 'help', labelNames: ['label'] });
 		new Histogram({ name: 'histogram', help: 'help', labelNames: ['label'] });
 		new Summary({ name: 'summary', help: 'help', labelNames: ['label'] });
 
-		expect(register.metrics()).toMatchSnapshot();
+		expect(await register.metrics()).toMatchSnapshot();
 	});
 
 	describe('should escape', () => {
 		let escapedResult;
-		beforeEach(() => {
+		beforeEach(async () => {
 			register.registerMetric({
-				get() {
+				async get() {
 					return {
 						name: 'test_"_\\_\n_metric',
 						help: 'help_help',
@@ -193,7 +193,7 @@ describe('register', () => {
 					};
 				},
 			});
-			escapedResult = register.metrics();
+			escapedResult = await register.metrics();
 		});
 		it('backslash to \\\\', () => {
 			expect(escapedResult).toMatch(/\\\\/);
@@ -203,9 +203,9 @@ describe('register', () => {
 		});
 	});
 
-	it('should escape " in label values', () => {
+	it('should escape " in label values', async () => {
 		register.registerMetric({
-			get() {
+			async get() {
 				return {
 					name: 'test_metric',
 					type: 'counter',
@@ -222,14 +222,14 @@ describe('register', () => {
 				};
 			},
 		});
-		const escapedResult = register.metrics();
+		const escapedResult = await register.metrics();
 		expect(escapedResult).toMatch(/\\"/);
 	});
 
 	describe('should output metrics as JSON', () => {
-		it('should output metrics as JSON', () => {
+		it('should output metrics as JSON', async () => {
 			register.registerMetric(getMetric());
-			const output = register.getMetricsAsJSON();
+			const output = await register.getMetricsAsJSON();
 
 			expect(output.length).toEqual(1);
 			expect(output[0].name).toEqual('test_metric');
@@ -238,12 +238,12 @@ describe('register', () => {
 			expect(output[0].values.length).toEqual(2);
 		});
 
-		it('should add default labels to JSON', () => {
+		it('should add default labels to JSON', async () => {
 			register.registerMetric(getMetric());
 			register.setDefaultLabels({
 				defaultRegistryLabel: 'testValue',
 			});
-			const output = register.getMetricsAsJSON();
+			const output = await register.getMetricsAsJSON();
 
 			expect(output.length).toEqual(1);
 			expect(output[0].name).toEqual('test_metric');
@@ -258,16 +258,16 @@ describe('register', () => {
 		});
 	});
 
-	it('should allow removing single metrics', () => {
+	it('should allow removing single metrics', async () => {
 		register.registerMetric(getMetric());
 		register.registerMetric(getMetric('some other name'));
 
-		let output = register.getMetricsAsJSON();
+		let output = await register.getMetricsAsJSON();
 		expect(output.length).toEqual(2);
 
 		register.removeSingleMetric('test_metric');
 
-		output = register.getMetricsAsJSON();
+		output = await register.getMetricsAsJSON();
 
 		expect(output.length).toEqual(1);
 		expect(output[0].name).toEqual('some other name');
@@ -281,10 +281,10 @@ describe('register', () => {
 		expect(output).toEqual(metric);
 	});
 
-	it('should allow gettings metrics', () => {
+	it('should allow gettings metrics', async () => {
 		const metric = getMetric();
 		register.registerMetric(metric);
-		const metrics = register.metrics();
+		const metrics = await register.metrics();
 
 		expect(metrics.split('\n')[3]).toEqual(
 			'test_metric{label="bye",code="404"} 34',
@@ -292,7 +292,7 @@ describe('register', () => {
 	});
 
 	describe('resetting', () => {
-		it('should allow resetting all metrics', () => {
+		it('should allow resetting all metrics', async () => {
 			const counter = new Counter({
 				name: 'test_counter',
 				help: 'test metric',
@@ -325,16 +325,16 @@ describe('register', () => {
 			register.resetMetrics();
 
 			const same_counter = register.getSingleMetric('test_counter');
-			expect(same_counter.get().values).toEqual([]);
+			expect((await same_counter.get()).values).toEqual([]);
 
 			const same_gauge = register.getSingleMetric('test_gauge');
-			expect(same_gauge.get().values).toEqual([]);
+			expect((await same_gauge.get()).values).toEqual([]);
 
 			const same_histo = register.getSingleMetric('test_histo');
-			expect(histo.get().values).toEqual([]);
+			expect((await same_histo.get()).values).toEqual([]);
 
 			const same_summ = register.getSingleMetric('test_summ');
-			expect(same_summ.get().values[0].value).toEqual(0);
+			expect((await same_summ.get()).values[0].value).toEqual(0);
 		});
 	});
 
@@ -343,7 +343,7 @@ describe('register', () => {
 
 		describe('mutation tests', () => {
 			describe('registry.metrics()', () => {
-				it('should not throw with default labels (counter)', () => {
+				it('should not throw with default labels (counter)', async () => {
 					const r = new Registry();
 					r.setDefaultLabels({
 						env: 'development',
@@ -360,7 +360,7 @@ describe('register', () => {
 
 					myCounter.inc();
 
-					const metrics = r.metrics();
+					const metrics = await r.metrics();
 					const lines = metrics.split('\n');
 					expect(lines).toContain(
 						'my_counter{type="myType",env="development"} 1',
@@ -368,14 +368,14 @@ describe('register', () => {
 
 					myCounter.inc();
 
-					const metrics2 = r.metrics();
+					const metrics2 = await r.metrics();
 					const lines2 = metrics2.split('\n');
 					expect(lines2).toContain(
 						'my_counter{type="myType",env="development"} 2',
 					);
 				});
 
-				it('should not throw with default labels (gauge)', () => {
+				it('should not throw with default labels (gauge)', async () => {
 					const r = new Registry();
 					r.setDefaultLabels({
 						env: 'development',
@@ -392,7 +392,7 @@ describe('register', () => {
 
 					myGauge.inc(1);
 
-					const metrics = r.metrics();
+					const metrics = await r.metrics();
 					const lines = metrics.split('\n');
 					expect(lines).toContain(
 						'my_gauge{type="myType",env="development"} 1',
@@ -400,14 +400,14 @@ describe('register', () => {
 
 					myGauge.inc(2);
 
-					const metrics2 = r.metrics();
+					const metrics2 = await r.metrics();
 					const lines2 = metrics2.split('\n');
 					expect(lines2).toContain(
 						'my_gauge{type="myType",env="development"} 3',
 					);
 				});
 
-				it('should not throw with default labels (histogram)', () => {
+				it('should not throw with default labels (histogram)', async () => {
 					const r = new Registry();
 					r.setDefaultLabels({
 						env: 'development',
@@ -424,7 +424,7 @@ describe('register', () => {
 
 					myHist.observe(1);
 
-					const metrics = r.metrics();
+					const metrics = await r.metrics();
 					const lines = metrics.split('\n');
 					expect(lines).toContain(
 						'my_histogram_bucket{le="1",type="myType",env="development"} 1',
@@ -432,7 +432,7 @@ describe('register', () => {
 
 					myHist.observe(1);
 
-					const metrics2 = r.metrics();
+					const metrics2 = await r.metrics();
 					const lines2 = metrics2.split('\n');
 					expect(lines2).toContain(
 						'my_histogram_bucket{le="1",type="myType",env="development"} 2',
@@ -441,7 +441,7 @@ describe('register', () => {
 			});
 
 			describe('registry.getMetricsAsJSON()', () => {
-				it('should not throw with default labels (counter)', () => {
+				it('should not throw with default labels (counter)', async () => {
 					const r = new Registry();
 					r.setDefaultLabels({
 						env: 'development',
@@ -458,7 +458,7 @@ describe('register', () => {
 
 					myCounter.inc();
 
-					const metrics = r.getMetricsAsJSON();
+					const metrics = await r.getMetricsAsJSON();
 					expect(metrics).toContainEqual({
 						aggregator: 'sum',
 						help: 'my counter',
@@ -474,7 +474,7 @@ describe('register', () => {
 
 					myCounter.inc();
 
-					const metrics2 = r.getMetricsAsJSON();
+					const metrics2 = await r.getMetricsAsJSON();
 					expect(metrics2).toContainEqual({
 						aggregator: 'sum',
 						help: 'my counter',
@@ -489,7 +489,7 @@ describe('register', () => {
 					});
 				});
 
-				it('should not throw with default labels (gauge)', () => {
+				it('should not throw with default labels (gauge)', async () => {
 					const r = new Registry();
 					r.setDefaultLabels({
 						env: 'development',
@@ -506,7 +506,7 @@ describe('register', () => {
 
 					myGauge.inc(1);
 
-					const metrics = r.getMetricsAsJSON();
+					const metrics = await r.getMetricsAsJSON();
 					expect(metrics).toContainEqual({
 						aggregator: 'sum',
 						help: 'my gauge',
@@ -522,7 +522,7 @@ describe('register', () => {
 
 					myGauge.inc(2);
 
-					const metrics2 = r.getMetricsAsJSON();
+					const metrics2 = await r.getMetricsAsJSON();
 					expect(metrics2).toContainEqual({
 						aggregator: 'sum',
 						help: 'my gauge',
@@ -537,7 +537,7 @@ describe('register', () => {
 					});
 				});
 
-				it('should not throw with default labels (histogram)', () => {
+				it('should not throw with default labels (histogram)', async () => {
 					const r = new Registry();
 					r.setDefaultLabels({
 						env: 'development',
@@ -554,7 +554,7 @@ describe('register', () => {
 
 					myHist.observe(1);
 
-					const metrics = r.getMetricsAsJSON();
+					const metrics = await r.getMetricsAsJSON();
 					// NOTE: at this test we don't need to check exacte JSON schema
 					expect(metrics[0].values).toContainEqual({
 						labels: { env: 'development', le: 1, type: 'myType' },
@@ -564,7 +564,7 @@ describe('register', () => {
 
 					myHist.observe(1);
 
-					const metrics2 = r.getMetricsAsJSON();
+					const metrics2 = await r.getMetricsAsJSON();
 					// NOTE: at this test we don't need to check exacte JSON schema
 					expect(metrics2[0].values).toContainEqual({
 						labels: { env: 'development', le: 1, type: 'myType' },
@@ -586,11 +586,11 @@ describe('register', () => {
 			registryTwo = new Registry();
 		});
 
-		it('should merge all provided registers', () => {
+		it('should merge all provided registers', async () => {
 			registryOne.registerMetric(getMetric('one'));
 			registryTwo.registerMetric(getMetric('two'));
 
-			const merged = Registry.merge([
+			const merged = await Registry.merge([
 				registryOne,
 				registryTwo,
 			]).getMetricsAsJSON();
@@ -613,7 +613,7 @@ describe('register', () => {
 		name = name || 'test_metric';
 		return {
 			name,
-			get() {
+			async get() {
 				return {
 					name,
 					type: 'counter',
