@@ -69,15 +69,16 @@ describe('collectDefaultMetrics', () => {
 		}
 	});
 
-	it('should apply labels to metrics when configured', () => {
+	it('should apply labels to metrics when configured', async () => {
 		const labels = {
 			NODE_APP_INSTANCE: 0,
 		};
-		interval = collectDefaultMetrics({
+		collectDefaultMetrics({
 			labels,
 		});
-		expect(register.getMetricsAsJSON()).not.toHaveLength(0);
-		register.getMetricsAsJSON().forEach(metric => {
+		const metrics = await register.getMetricsAsJSON();
+		expect(metrics).not.toHaveLength(0);
+		metrics.forEach(metric => {
 			metric.values.forEach(metricValue => {
 				expect(metricValue.labels).toMatchObject(labels);
 			});
