@@ -1,6 +1,6 @@
 'use strict';
 
-const client = require('prom-client');
+const client = require('../index');
 
 function run() {
 	const Registry = client.Registry;
