@@ -1,6 +1,6 @@
 const client = require('prom-client');
 
-function hello() {
+function run() {
     const Registry = client.Registry;
     const register = new Registry();
     let gateway = new client.Pushgateway('http://127.0.0.1:9091',  [], register);
@@ -21,4 +21,4 @@ function hello() {
     });
 }
 
-hello()
+run()
