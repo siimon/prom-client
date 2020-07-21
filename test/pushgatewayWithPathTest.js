@@ -13,6 +13,7 @@ const mockHttp = jest.fn().mockReturnValue({
 jest.mock('http', () => {
 	return {
 		request: mockHttp,
+		Agent: jest.fn(),
 	};
 });
 

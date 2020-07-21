@@ -41,6 +41,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - chore: replace `utils.getPropertiesFromObj` with `Object.values`
 - chore: remove unused `catch` bindings
 - chore: upgrade Prettier to 2.x
+- chore: add keep-alive support to client requests in pushgateway
 
 ### Added
 
