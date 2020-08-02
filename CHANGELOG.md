@@ -41,12 +41,12 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - chore: replace `utils.getPropertiesFromObj` with `Object.values`
 - chore: remove unused `catch` bindings
 - chore: upgrade Prettier to 2.x
-- chore: add keep-alive support to client requests in pushgateway
 
 ### Added
 
 - feat: exposed `registry.registerCollector()` and `registry.collectors()` methods in TypeScript declaration
 - Added CHANGELOG reminder
+- chore: add keep-alive support to client requests in pushgateway
 
 ## [12.0.0] - 2020-02-20
 

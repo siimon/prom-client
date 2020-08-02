@@ -449,6 +449,12 @@ gateway.pushAdd({ jobName: 'test', groupings: { key: 'value' } }, function (
 
 //It's possible to extend the Pushgateway with request options from nodes core http/https library
 gateway = new client.Pushgateway('http://127.0.0.1:9091', { timeout: 5000 }); //Set the request timeout to 5000ms
+
+// It is possible to change default nodejs core http agent configuration in options. You can refer https://nodejs.org/api/http.html#http_new_agent_options for more info on this topic
+const http = require('http');
+const httpAgent = new http.Agent({ keepAlive: false });
+
+gateway = new client.Pushgateway('http://127.0.0.1:9091', { agent: httpAgent }); // disable keepAlive support for http requests
 ```
 
 ### Bucket Generators
