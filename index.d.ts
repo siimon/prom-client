@@ -356,7 +356,7 @@ export class Histogram<T extends string> {
 	 * @param labels Object with label keys and values
 	 * @return Function to invoke when timer should be stopped
 	 */
-	startTimer(labels?: LabelValues<T>): (labels?: LabelValues<T>) => void;
+	startTimer(labels?: LabelValues<T>): (labels?: LabelValues<T>) => number;
 
 	/**
 	 * Reset histogram values
