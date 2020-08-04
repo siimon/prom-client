@@ -326,6 +326,24 @@ xhrRequest(function (err, res) {
 });
 ```
 
+#### Zeroing metrics with Labels
+
+Metrics with labels can not be exported before they have been observed at least
+once since the possible label values are not known before they're observed.
+
+For histograms, this can be solved by explicitly zeroing all expected label values:
+
+```js
+const histogram = new client.Histogram({
+  name: 'metric_name',
+  help: 'metric_help',
+  buckets: [0.1, 5, 15, 50, 100, 500],
+  labels: ['method'],
+});
+histogram.zero({ method: 'GET' });
+histogram.zero({ method: 'POST' });
+```
+
 #### Strongly typed Labels
 
 Typescript can also enforce label names using `as const`

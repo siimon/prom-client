@@ -13,6 +13,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- feat: added `zero()` to `Histogram` for setting the metrics for a given label combination to zero
+
 ## [13.1.0] - 2021-01-24
 
 ### Changed
