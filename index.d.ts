@@ -390,6 +390,11 @@ export class Histogram<T extends string> {
 	reset(): void;
 
 	/**
+	 * Initialize the metrics for the given combination of labels to zero
+	 */
+	zero(labels: LabelValues<T>): void;
+
+	/**
 	 * Return the child for given labels
 	 * @param values Label values
 	 * @return Configured histogram with given labels

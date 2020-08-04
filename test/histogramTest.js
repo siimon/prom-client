@@ -279,6 +279,48 @@ describe('histogram', () => {
 				});
 			});
 
+			describe('zero', () => {
+				beforeEach(() => {
+					instance = new Histogram({
+						name: 'histogram_labels',
+						help: 'Histogram with labels fn',
+						labelNames: ['method'],
+					});
+				});
+
+				it('should zero the given label', async () => {
+					instance.zero({ method: 'POST' });
+					const values = getValuesByLabel(
+						'POST',
+						(await instance.get()).values,
+						'method',
+					);
+					values.forEach(bucket => {
+						expect(bucket.value).toEqual(0);
+					});
+				});
+
+				it('should export the metric after zeroing', async () => {
+					instance.zero({ method: 'POST' });
+					const values = getValuesByLabel(
+						'POST',
+						(await instance.get()).values,
+						'method',
+					);
+					expect(values).not.toHaveLength(0);
+				});
+
+				it('should not duplicate the metric', async () => {
+					instance.zero({ method: 'POST' });
+					instance.observe({ method: 'POST' }, 1);
+					const values = getValuesByName(
+						'histogram_labels_count',
+						(await instance.get()).values,
+					);
+					expect(values).toHaveLength(1);
+				});
+			});
+
 			describe('remove', () => {
 				beforeEach(() => {
 					instance = new Histogram({
@@ -422,6 +464,14 @@ describe('histogram', () => {
 				return acc;
 			})
 		);
+	}
+	function getValuesByName(name, values) {
+		return values.reduce((acc, val) => {
+			if (val.metricName === name) {
+				acc.push(val);
+			}
+			return acc;
+		}, []);
 	}
 	function getValueByLeAndLabel(le, key, label, values) {
 		return values.reduce((acc, val) => {
