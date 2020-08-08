@@ -140,6 +140,13 @@ describe('gauge', () => {
 					end({ code: '400' });
 					expect(startLabels).toEqual({ code: '200' });
 				});
+				it('should handle labels provided as an object', async () => {
+					instance.labels({ code: '200' }).inc();
+
+					const values = (await instance.get()).values;
+					expect(values).toHaveLength(1);
+					expect(values[0].labels).toEqual({ code: '200' });
+				});
 			});
 
 			describe('with remove', () => {
@@ -157,6 +164,13 @@ describe('gauge', () => {
 					const values = (await instance.get()).values;
 					expect(values.length).toEqual(1);
 					expect(values[0].labels.code).toEqual('400');
+					expect(values[0].value).toEqual(0);
+				});
+				it('should remove by labels object', async () => {
+					instance.remove({ code: '200' });
+					const values = (await instance.get()).values;
+					expect(values).toHaveLength(1);
+					expect(values[0].labels).toEqual({ code: '400' });
 					expect(values[0].value).toEqual(0);
 				});
 				it('should be able to remove all labels', async () => {

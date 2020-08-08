@@ -274,6 +274,14 @@ describe('summary', () => {
 					end({ endpoint: '/test' });
 					expect(startLabels).toEqual({ method: 'GET' });
 				});
+
+				it('should handle labels provided as an object', async () => {
+					instance.labels({ method: 'GET' }).startTimer()();
+					const values = (await instance.get()).values;
+					values.forEach(value => {
+						expect(value.labels.method).toBe('GET');
+					});
+				});
 			});
 
 			describe('remove', () => {
@@ -407,6 +415,15 @@ describe('summary', () => {
 					expect(values[2].value).toEqual(1);
 
 					jest.useRealTimers();
+				});
+
+				it('should remove by labels object', async () => {
+					instance.observe({ endpoint: '/test' }, 1);
+					instance.remove({ endpoint: '/test' });
+					const values = (await instance.get()).values;
+					values.forEach(value => {
+						expect(value.labels).not.toEqual({ endpoint: '/test' });
+					});
 				});
 			});
 		});

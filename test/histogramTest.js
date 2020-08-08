@@ -269,6 +269,14 @@ describe('histogram', () => {
 					end({ method: 'POST' });
 					expect(startLabels).toEqual({ method: 'GET' });
 				});
+
+				it('should handle labels provided as an object', async () => {
+					instance.labels({ method: 'GET' }).startTimer()();
+					const values = (await instance.get()).values;
+					values.forEach(value => {
+						expect(value.labels.method).toBe('GET');
+					});
+				});
 			});
 
 			describe('remove', () => {
@@ -354,6 +362,12 @@ describe('histogram', () => {
 					instance.remove('GET', 'SUCCESS');
 					expect((await instance.get()).values).toHaveLength(0);
 					jest.useRealTimers();
+				});
+
+				it('should remove by labels object', async () => {
+					instance.observe({ method: 'GET' }, 1);
+					instance.remove({ method: 'GET' });
+					expect((await instance.get()).values).toHaveLength(0);
 				});
 			});
 		});
