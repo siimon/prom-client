@@ -16,6 +16,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- feat: added the ability to pass labels as an object to `labels()` and `remove()`
+
 ## [13.0.0] - 2020-12-16
 
 ### Breaking

@@ -65,19 +65,22 @@ describe('counter', () => {
 				expect(values).toHaveLength(2);
 			});
 
+			it('should handle labels provided as an object', async () => {
+				instance.labels({ method: 'POST', endpoint: '/test' }).inc();
+				const values = (await instance.get()).values;
+				expect(values).toHaveLength(1);
+				expect(values[0].labels).toEqual({
+					method: 'POST',
+					endpoint: '/test',
+				});
+			});
+
 			it('should handle labels which are provided as arguments to inc()', async () => {
 				instance.inc({ method: 'GET', endpoint: '/test' });
 				instance.inc({ method: 'POST', endpoint: '/test' });
 
 				const values = (await instance.get()).values;
 				expect(values).toHaveLength(2);
-			});
-
-			it('should throw error if label lengths does not match', () => {
-				const fn = function () {
-					instance.labels('GET').inc();
-				};
-				expect(fn).toThrowErrorMatchingSnapshot();
 			});
 
 			it('should throw error if label lengths does not match', () => {
@@ -119,6 +122,17 @@ describe('counter', () => {
 			expect(values[0].labels.method).toEqual('GET');
 			expect(values[0].labels.endpoint).toEqual('/test');
 			expect(values[0].timestamp).toEqual(undefined);
+		});
+
+		it('should remove by labels object', async () => {
+			instance.remove({ method: 'POST', endpoint: '/test' });
+
+			const values = (await instance.get()).values;
+			expect(values).toHaveLength(1);
+			expect(values[0].labels).toEqual({
+				method: 'GET',
+				endpoint: '/test',
+			});
 		});
 
 		it('should remove all labels', async () => {
