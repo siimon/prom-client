@@ -42,6 +42,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - chore: remove unused `catch` bindings
 - chore: upgrade Prettier to 2.x
 - fix: startTimer returns `number` in typescript instead of `void`
+- fix: incorrect typings of `registry.getSingleMetric' (#388)
 
 ### Added
 
