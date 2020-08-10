@@ -46,7 +46,7 @@ export class Registry {
 	 * Get a single metric
 	 * @param name The name of the metric
 	 */
-	getSingleMetric<T extends string>(name: string): Metric<T>;
+	getSingleMetric<T extends string>(name: string): Metric<T> | undefined;
 
 	/**
 	 * Set static labels to every metric emitted by this registry
