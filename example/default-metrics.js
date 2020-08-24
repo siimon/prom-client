@@ -1,8 +1,8 @@
 'use strict';
 
-const register = require('..').register;
+const { collectDefaultMetrics, register } = require('..');
 
-require('..').collectDefaultMetrics({
+collectDefaultMetrics({
 	timeout: 10000,
 	gcDurationBuckets: [0.001, 0.01, 0.1, 1, 2, 5] // These are the default buckets.
 });
