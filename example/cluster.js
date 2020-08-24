@@ -18,7 +18,7 @@ if (cluster.isMaster) {
 			res.send(metrics);
 		} catch (ex) {
 			res.statusCode = 500;
-			res.send(ex);
+			res.send(ex.message);
 		}
 	});
 

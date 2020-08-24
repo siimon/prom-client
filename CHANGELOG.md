@@ -43,12 +43,13 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - chore: upgrade Prettier to 2.x
 - fix: startTimer returns `number` in typescript instead of `void`
 - fix: incorrect typings of `registry.getSingleMetric' (#388)
-- feat: added the ability to pass labels as an object to `labels()` and `remove()`
-
+- chore: stop testing node v13 on CI
 
 ### Added
 
 - feat: exposed `registry.registerCollector()` and `registry.collectors()` methods in TypeScript declaration
+- Added: complete working example of a pushgateway push in `example/pushgateway.js`
+- feat: added the ability to pass labels as an object to `labels()` and `remove()`
 - Added CHANGELOG reminder
 
 ## [12.0.0] - 2020-02-20
