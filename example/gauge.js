@@ -4,9 +4,7 @@
 // Single Label
 // Multiple Values
 
-const register = require('..').register;
-
-const Gauge = require('../').Gauge;
+const { Gauge, register } = require('..');
 const g = new Gauge({
 	name: 'test_gauge',
 	help: 'Example of a gauge',
