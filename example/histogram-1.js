@@ -4,9 +4,8 @@
 // Single Label
 // Single Value
 
-const register = require('..').register;
+const { register, Histogram } = require('..');
 
-const Histogram = require('..').Histogram;
 const h = new Histogram({
 	name: 'test_histogram',
 	help: 'Example of a histogram',
