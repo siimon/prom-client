@@ -46,7 +46,7 @@ export class Registry {
 	 * Get a single metric
 	 * @param name The name of the metric
 	 */
-	getSingleMetric<T extends string>(name: string): Metric<T>;
+	getSingleMetric<T extends string>(name: string): Metric<T> | undefined;
 
 	/**
 	 * Set static labels to every metric emitted by this registry
@@ -356,7 +356,7 @@ export class Histogram<T extends string> {
 	 * @param labels Object with label keys and values
 	 * @return Function to invoke when timer should be stopped
 	 */
-	startTimer(labels?: LabelValues<T>): (labels?: LabelValues<T>) => void;
+	startTimer(labels?: LabelValues<T>): (labels?: LabelValues<T>) => number;
 
 	/**
 	 * Reset histogram values

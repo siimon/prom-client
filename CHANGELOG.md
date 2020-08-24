@@ -41,11 +41,15 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - chore: replace `utils.getPropertiesFromObj` with `Object.values`
 - chore: remove unused `catch` bindings
 - chore: upgrade Prettier to 2.x
-- feat: added support for adding labels to default metrics (#374)
+- fix: startTimer returns `number` in typescript instead of `void`
+- fix: incorrect typings of `registry.getSingleMetric' (#388)
+- chore: stop testing node v13 on CI
 
 ### Added
 
 - feat: exposed `registry.registerCollector()` and `registry.collectors()` methods in TypeScript declaration
+- Added: complete working example of a pushgateway push in `example/pushgateway.js`
+- feat: added support for adding labels to default metrics (#374)
 - Added CHANGELOG reminder
 
 ## [12.0.0] - 2020-02-20
