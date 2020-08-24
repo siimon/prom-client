@@ -44,6 +44,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - fix: startTimer returns `number` in typescript instead of `void`
 - fix: incorrect typings of `registry.getSingleMetric' (#388)
 - chore: stop testing node v13 on CI
+- fix(pushgateway): use async gather metrics in pushgateway (#390)
 
 ### Added
 
