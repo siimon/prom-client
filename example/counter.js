@@ -8,7 +8,7 @@ const { Counter, register } = require('..');
 const c = new Counter({
 	name: 'test_counter',
 	help: 'Example of a counter',
-	labelNames: ['code']
+	labelNames: ['code'],
 });
 
 c.inc({ code: 200 });

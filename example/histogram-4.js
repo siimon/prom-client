@@ -10,7 +10,7 @@ const Histogram = require('..').Histogram;
 const h = new Histogram({
 	name: 'test_histogram',
 	help: 'Example of a histogram',
-	labelNames: ['code', 'color']
+	labelNames: ['code', 'color'],
 });
 
 h.labels('200', 'blue').observe(0.4);

@@ -8,7 +8,7 @@ const { Gauge, register } = require('..');
 const g = new Gauge({
 	name: 'test_gauge',
 	help: 'Example of a gauge',
-	labelNames: ['code']
+	labelNames: ['code'],
 });
 
 g.set({ code: 200 }, 5);
