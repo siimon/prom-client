@@ -70,18 +70,26 @@ describe('collectDefaultMetrics', () => {
 	});
 
 	it('should apply labels to metrics when configured', async () => {
-		const labels = {
-			NODE_APP_INSTANCE: 0,
-		};
-		collectDefaultMetrics({
-			labels,
-		});
+		expect(await register.getMetricsAsJSON()).toHaveLength(0);
+
+		const labels = { NODE_APP_INSTANCE: 0 };
+		collectDefaultMetrics({ labels });
+
 		const metrics = await register.getMetricsAsJSON();
-		expect(metrics).not.toHaveLength(0);
-		metrics.forEach(metric => {
-			metric.values.forEach(metricValue => {
-				expect(metricValue.labels).toMatchObject(labels);
-			});
+
+		// flatten metric values into a single array
+		const allMetricValues = metrics.reduce(
+			(previous, metric) => previous.concat(metric.values),
+			[],
+		);
+
+		// this varies between 45 and 47 depending on node handles - we just wanna
+		// assert there's at least one so we know the assertions in the loop below
+		// are executed
+		expect(allMetricValues.length).toBeGreaterThan(0);
+
+		allMetricValues.forEach(metricValue => {
+			expect(metricValue.labels).toMatchObject(labels);
 		});
 	});
 
