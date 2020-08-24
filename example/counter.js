@@ -4,9 +4,7 @@
 // Single Label
 // Multiple Values
 
-const register = require('..').register;
-
-const Counter = require('..').Counter;
+const { Counter, register } = require('..');
 const c = new Counter({
 	name: 'test_counter',
 	help: 'Example of a counter',
