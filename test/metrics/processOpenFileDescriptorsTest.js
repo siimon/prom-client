@@ -18,12 +18,12 @@ describe('processOpenFileDescriptors', () => {
 		register.clear();
 	});
 
-	it('should add metric to the registry', () => {
-		expect(register.getMetricsAsJSON()).toHaveLength(0);
+	it('should add metric to the registry', async () => {
+		expect(await register.getMetricsAsJSON()).toHaveLength(0);
 
-		processOpenFileDescriptors()();
+		processOpenFileDescriptors();
 
-		const metrics = register.getMetricsAsJSON();
+		const metrics = await register.getMetricsAsJSON();
 
 		expect(metrics).toHaveLength(1);
 		expect(metrics[0].help).toEqual('Number of open file descriptors.');

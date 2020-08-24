@@ -5,6 +5,14 @@ const cluster = require('cluster');
 const server = express();
 const register = require('../').register;
 
+// Enable collection of default metrics
+
+require('../').collectDefaultMetrics({
+	gcDurationBuckets: [0.001, 0.01, 0.1, 1, 2, 5], // These are the default buckets.
+});
+
+// Create custom metrics
+
 const Histogram = require('../').Histogram;
 const h = new Histogram({
 	name: 'test_histogram',
@@ -19,12 +27,23 @@ const c = new Counter({
 	labelNames: ['code'],
 });
 
+new Counter({
+	name: 'scrape_counter',
+	help: 'Number of scrapes (example of a counter with a collect fn)',
+	collect() {
+		// collect is invoked each time `register.metrics()` is called.
+		this.inc();
+	},
+});
+
 const Gauge = require('../').Gauge;
 const g = new Gauge({
 	name: 'test_gauge',
 	help: 'Example of a gauge',
 	labelNames: ['method', 'code'],
 });
+
+// Set metric values to some random values for demonstration
 
 setTimeout(() => {
 	h.labels('200').observe(Math.random());
@@ -56,7 +75,6 @@ if (cluster.isWorker) {
 	}, 2000);
 }
 
-// Generate some garbage
 const t = [];
 setInterval(() => {
 	for (let i = 0; i < 100; i++) {
@@ -69,20 +87,24 @@ setInterval(() => {
 	}
 });
 
-server.get('/metrics', (req, res) => {
-	res.set('Content-Type', register.contentType);
-	res.end(register.metrics());
+// Setup server to Prometheus scrapes:
+
+server.get('/metrics', async (req, res) => {
+	try {
+		res.set('Content-Type', register.contentType);
+		res.end(await register.metrics());
+	} catch (ex) {
+		res.status(500).end(ex);
+	}
 });
 
-server.get('/metrics/counter', (req, res) => {
-	res.set('Content-Type', register.contentType);
-	res.end(register.getSingleMetricAsString('test_counter'));
-});
-
-// Enable collection of default metrics
-require('../').collectDefaultMetrics({
-	timeout: 10000,
-	gcDurationBuckets: [0.001, 0.01, 0.1, 1, 2, 5], // These are the default buckets.
+server.get('/metrics/counter', async (req, res) => {
+	try {
+		res.set('Content-Type', register.contentType);
+		res.end(await register.getSingleMetricAsString('test_counter'));
+	} catch (ex) {
+		res.status(500).end(ex);
+	}
 });
 
 const port = process.env.PORT || 3000;

@@ -8,7 +8,7 @@ export class Registry {
 	/**
 	 * Get string representation for all metrics
 	 */
-	metrics(): string;
+	metrics(): Promise<string>;
 
 	/**
 	 * Remove all metrics from the registry
@@ -27,24 +27,14 @@ export class Registry {
 	registerMetric<T extends string>(metric: Metric<T>): void;
 
 	/**
-	 * Add metric collector, which is invoked on scrape
+	 * Get all metrics as objects
 	 */
-	registerCollector(collectorFn: Collector): void;
-
-	/**
-	 * Get all registered collector functions
-	 */
-	collectors(): Collector[];
+	getMetricsAsJSON(): Promise<metric[]>;
 
 	/**
 	 * Get all metrics as objects
 	 */
-	getMetricsAsJSON(): metric[];
-
-	/**
-	 * Get all metrics as objects
-	 */
-	getMetricsAsArray(): metric[];
+	getMetricsAsArray(): Promise<metric[]>;
 
 	/**
 	 * Remove a single metric
@@ -56,7 +46,7 @@ export class Registry {
 	 * Get a single metric
 	 * @param name The name of the metric
 	 */
-	getSingleMetric<T extends string>(name: string): Metric<T>;
+	getSingleMetric<T extends string>(name: string): Metric<T> | undefined;
 
 	/**
 	 * Set static labels to every metric emitted by this registry
@@ -69,7 +59,7 @@ export class Registry {
 	 * Get a string representation of a single metric by name
 	 * @param name The name of the metric
 	 */
-	getSingleMetricAsString(name: string): string;
+	getSingleMetricAsString(name: string): Promise<string>;
 
 	/**
 	 * Gets the Content-Type of the metrics for use in the response headers.
@@ -91,15 +81,11 @@ export const register: Registry;
 
 export class AggregatorRegistry extends Registry {
 	/**
-	 * Gets aggregated metrics for all workers. The optional callback and
-	 * returned Promise resolve with the same value; either may be used.
-	 * @param {Function?} cb (err, metrics) => any
+	 * Gets aggregated metrics for all workers.
 	 * @return {Promise<string>} Promise that resolves with the aggregated
-	 *   metrics.
+	 * metrics.
 	 */
-	clusterMetrics(
-		cb?: (err: Error | null, metrics?: string) => any,
-	): Promise<string>;
+	clusterMetrics(): Promise<string>;
 
 	/**
 	 * Creates a new Registry instance from an array of metrics that were
@@ -110,7 +96,7 @@ export class AggregatorRegistry extends Registry {
 	 *   `registry.getMetricsAsJSON()`.
 	 * @return {Registry} aggregated registry.
 	 */
-	static aggregate(metricsArr: Array<Object>): Registry;
+	static aggregate(metricsArr: Array<Object>): Registry; // TODO Promise?
 
 	/**
 	 * Sets the registry or registries to be aggregated. Call from workers to
@@ -143,11 +129,14 @@ export enum MetricType {
 	Summary,
 }
 
+type CollectFunction<T> = (this: T) => void | Promise<void>;
+
 interface metric {
 	name: string;
 	help: string;
 	type: MetricType;
 	aggregator: Aggregator;
+	collect: CollectFunction<any>;
 }
 
 type LabelValues<T extends string> = Partial<Record<T, string | number>>;
@@ -158,10 +147,13 @@ interface MetricConfiguration<T extends string> {
 	labelNames?: T[];
 	registers?: Registry[];
 	aggregator?: Aggregator;
+	collect?: CollectFunction<any>;
 }
 
 export interface CounterConfiguration<T extends string>
-	extends MetricConfiguration<T> {}
+	extends MetricConfiguration<T> {
+	collect?: CollectFunction<Counter<T>>;
+}
 
 /**
  * A counter is a cumulative metric that represents a single numerical value that only ever goes up
@@ -215,7 +207,9 @@ export namespace Counter {
 }
 
 export interface GaugeConfiguration<T extends string>
-	extends MetricConfiguration<T> {}
+	extends MetricConfiguration<T> {
+	collect?: CollectFunction<Gauge<T>>;
+}
 
 /**
  * A gauge is a metric that represents a single numerical value that can arbitrarily go up and down.
@@ -333,6 +327,7 @@ export namespace Gauge {
 export interface HistogramConfiguration<T extends string>
 	extends MetricConfiguration<T> {
 	buckets?: number[];
+	collect?: CollectFunction<Histogram<T>>;
 }
 
 /**
@@ -361,7 +356,7 @@ export class Histogram<T extends string> {
 	 * @param labels Object with label keys and values
 	 * @return Function to invoke when timer should be stopped
 	 */
-	startTimer(labels?: LabelValues<T>): (labels?: LabelValues<T>) => void;
+	startTimer(labels?: LabelValues<T>): (labels?: LabelValues<T>) => number;
 
 	/**
 	 * Reset histogram values
@@ -412,6 +407,7 @@ export interface SummaryConfiguration<T extends string>
 	maxAgeSeconds?: number;
 	ageBuckets?: number;
 	compressCount?: number;
+	collect?: CollectFunction<Summary<T>>;
 }
 
 /**

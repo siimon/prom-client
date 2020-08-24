@@ -12,12 +12,12 @@ describe('processRequests', () => {
 		register.clear();
 	});
 
-	it('should add metric to the registry', () => {
-		expect(register.getMetricsAsJSON()).toHaveLength(0);
+	it('should add metric to the registry', async () => {
+		expect(await register.getMetricsAsJSON()).toHaveLength(0);
 
-		processRequests()();
+		processRequests();
 
-		const metrics = register.getMetricsAsJSON();
+		const metrics = await register.getMetricsAsJSON();
 
 		expect(metrics).toHaveLength(2);
 		expect(metrics[0].help).toEqual(
