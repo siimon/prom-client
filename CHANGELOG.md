@@ -51,7 +51,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - Added: complete working example of a pushgateway push in `example/pushgateway.js`
 - feat: added the ability to pass labels as an object to `labels()` and `remove()`
 - feat: added support for adding labels to default metrics (#374)
-
+- Added CHANGELOG reminder
 
 ## [12.0.0] - 2020-02-20
 
