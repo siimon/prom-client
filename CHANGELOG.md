@@ -50,7 +50,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - feat: exposed `registry.registerCollector()` and `registry.collectors()` methods in TypeScript declaration
 - Added: complete working example of a pushgateway push in `example/pushgateway.js`
 - feat: added the ability to pass labels as an object to `labels()` and `remove()`
-- Added CHANGELOG reminder
+- feat: added support for adding labels to default metrics (#374)
+
 
 ## [12.0.0] - 2020-02-20
 
