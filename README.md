@@ -298,6 +298,8 @@ const gauge = new client.Gauge({
 gauge.set({ method: 'GET', statusCode: '200' }, 100);
 // 2nd version: Same effect as above
 gauge.labels({ method: 'GET', statusCode: '200' }).set(100);
+// 3nd version: And again the same effect as above
+gauge.labels('GET', '200').set(100);
 ```
 
 It is also possible to use timers with labels, both before and after the timer
