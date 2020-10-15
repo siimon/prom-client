@@ -23,6 +23,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - Support for OpenMetrics and Exemplars
+- Support aggregating metrics across workers in a Node.js `worker_threads`
 
 ## [14.2.0] - 2023-03-06
 
