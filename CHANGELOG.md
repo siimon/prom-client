@@ -7,6 +7,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+- Added: More examples with commented output
+
 ### Breaking
 
 - changed: The following functions are now async (return a promise):
