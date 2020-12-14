@@ -44,6 +44,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - fix: startTimer returns `number` in typescript instead of `void`
 - fix: incorrect typings of `registry.getSingleMetric' (#388)
 - chore: stop testing node v13 on CI
+- types: improve type checking of labels
 
 ### Added
 
