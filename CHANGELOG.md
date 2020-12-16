@@ -9,6 +9,14 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Breaking
 
+### Changed
+
+### Added
+
+## [13.0.0] - 2020-12-16
+
+### Breaking
+
 - changed: The following functions are now async (return a promise):
   `registry.metrics()`
   `registry.getMetricsAsJSON()`
