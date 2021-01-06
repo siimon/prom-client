@@ -16,11 +16,15 @@ function run() {
 	register.registerMetric(test);
 	test.inc(10);
 
-	gateway.push({ jobName: prefix }, (err, resp, body) => {
-		console.log(`Error: ${err}`);
-		console.log(`Body: ${body}`);
-		console.log(`Response status: ${resp.statusCode}`);
-	});
+	return gateway
+		.push({ jobName: prefix })
+		.then(({ resp, body }) => {
+			console.log(`Body: ${body}`);
+			console.log(`Response status: ${resp.statusCode}`);
+		})
+		.catch(err => {
+			console.log(`Error: ${err}`);
+		});
 }
 
 run();

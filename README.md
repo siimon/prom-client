@@ -490,16 +490,36 @@ It is possible to push metrics via a
 const client = require('prom-client');
 let gateway = new client.Pushgateway('http://127.0.0.1:9091');
 
-gateway.pushAdd({ jobName: 'test' }, function (err, resp, body) {}); //Add metric and overwrite old ones
-gateway.push({ jobName: 'test' }, function (err, resp, body) {}); //Overwrite all metrics (use PUT)
-gateway.delete({ jobName: 'test' }, function (err, resp, body) {}); //Delete all metrics for jobName
+gateway.pushAdd({ jobName: 'test' })
+	.then({resp, body} => {
+		/* ... */
+	})
+	.catch(err => {
+		/* ... */
+	})); //Add metric and overwrite old ones
+gateway.push({ jobName: 'test' })
+	.then({resp, body} => {
+		/* ... */
+	})
+	.catch(err => {
+		/* ... */
+	})); //Overwrite all metrics (use PUT)
+gateway.delete({ jobName: 'test' })
+	.then({resp, body} => {
+		/* ... */
+	})
+	.catch(err => {
+		/* ... */
+	})); //Delete all metrics for jobName
 
 //All gateway requests can have groupings on it
-gateway.pushAdd({ jobName: 'test', groupings: { key: 'value' } }, function (
-  err,
-  resp,
-  body,
-) {});
+gateway.pushAdd({ jobName: 'test', groupings: { key: 'value' } })
+	.then({resp, body} => {
+		/* ... */
+	})
+	.catch(err => {
+		/* ... */
+	}));
 
 // It's possible to extend the Pushgateway with request options from nodes core
 // http/https library. In particular, you might want to provide an agent so that
