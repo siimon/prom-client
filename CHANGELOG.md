@@ -14,6 +14,21 @@ project adheres to [Semantic Versioning](http://semver.org/).
   Fewer bucket bounds will be affected by rounding errors. Histogram bucket
   labels may change.
 
+- changed: The push gateway methods `pushAdd()`, `push()` and `delete()` now
+  return Promises instead of accepting a callback:
+
+  ```js
+  // Old:
+  gateway.pushAdd({ jobName: 'test' }, (err, resp, body) => {});
+  // New:
+  gateway
+    .pushAdd({ jobName: 'test' })
+    .then(({ resp, body }) => {})
+    .catch(err => {});
+  // or
+  const { resp, body } = await gateway.pushAdd({ jobName: 'test' });
+  ```
+
 ### Changed
 
 ### Added
