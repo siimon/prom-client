@@ -11,6 +11,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- fix: push client attempting to write Promise
+
 ### Added
 
 ## [13.0.0] - 2020-12-16
