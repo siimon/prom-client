@@ -1,16 +1,22 @@
 'use strict';
 
-const mockHttp = jest.fn().mockReturnValue({
+const httpMocks = {
 	on: jest.fn(),
 	end: jest.fn(),
 	write: jest.fn(),
-});
+};
+const mockHttp = jest.fn().mockReturnValue(httpMocks);
 
 jest.mock('http', () => {
 	return {
 		request: mockHttp,
 	};
 });
+
+const payload = `# HELP test test
+# TYPE test counter
+test 100
+`;
 
 describe('pushgateway', () => {
 	const Pushgateway = require('../index').Pushgateway;
@@ -47,6 +53,16 @@ describe('pushgateway', () => {
 				expect(invocation.method).toEqual('POST');
 				expect(invocation.path).toEqual('/metrics/job/testJob/key/va%26lue');
 			});
+
+			it('should write the payload', () => {
+				instance.pushAdd({ jobName: 'testJob' });
+
+				return instance.registry.metrics().then(() => {
+					expect(httpMocks.write).toBeCalledTimes(1);
+					expect(httpMocks.end).toBeCalledTimes(1);
+					expect(httpMocks.write).toHaveBeenCalledWith(payload);
+				});
+			});
 		});
 
 		describe('push', () => {
@@ -67,6 +83,16 @@ describe('pushgateway', () => {
 				expect(invocation.method).toEqual('PUT');
 				expect(invocation.path).toEqual('/metrics/job/test%26Job');
 			});
+
+			it('should write the payload', () => {
+				instance.push({ jobName: 'test&Job' });
+
+				return instance.registry.metrics().then(() => {
+					expect(httpMocks.write).toBeCalledTimes(1);
+					expect(httpMocks.end).toBeCalledTimes(1);
+					expect(httpMocks.write).toHaveBeenCalledWith(payload);
+				});
+			});
 		});
 
 		describe('delete', () => {
@@ -77,6 +103,13 @@ describe('pushgateway', () => {
 				const invocation = mockHttp.mock.calls[0][0];
 				expect(invocation.method).toEqual('DELETE');
 				expect(invocation.path).toEqual('/metrics/job/testJob');
+			});
+
+			it('should not write a payload', () => {
+				instance.delete({ jobName: 'testJob' });
+
+				expect(httpMocks.end).toBeCalledTimes(1);
+				expect(httpMocks.write).toBeCalledTimes(0);
 			});
 		});
 
@@ -145,6 +178,8 @@ describe('pushgateway', () => {
 			register.clear();
 		});
 		beforeEach(() => {
+			httpMocks.write.mockClear();
+			httpMocks.end.mockClear();
 			registry = undefined;
 			instance = new Pushgateway('http://192.168.99.100:9091');
 			const promClient = require('../index');
@@ -158,6 +193,8 @@ describe('pushgateway', () => {
 			mockHttp.mockClear();
 		});
 		beforeEach(() => {
+			httpMocks.write.mockClear();
+			httpMocks.end.mockClear();
 			registry = new Registry();
 			instance = new Pushgateway('http://192.168.99.100:9091', null, registry);
 			const promeClient = require('../index');
