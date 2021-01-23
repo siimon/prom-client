@@ -17,10 +17,12 @@ will only reveal that individual worker's metrics, which is generally
 undesirable. To solve this, you can aggregate all of the workers' metrics in the
 master process. See `example/cluster.js` for an example.
 
-Default metrics use sensible aggregation methods. Custom metrics are summed
-across workers by default. To use a different aggregation method, set the
-`aggregator` property in the metric config to one of 'sum', 'first', 'min',
-'max', 'average' or 'omit'. (See `lib/metrics/version.js` for an example.)
+Default metrics use sensible aggregation methods. (Note, however, that the event
+loop lag mean and percentiles are averaged, which is not perfectly accurate.)
+Custom metrics are summed across workers by default. To use a different
+aggregation method, set the `aggregator` property in the metric config to one of
+'sum', 'first', 'min', 'max', 'average' or 'omit'. (See `lib/metrics/version.js`
+for an example.)
 
 If you need to expose metrics about an individual worker, you can include a
 value that is unique to the worker (such as the worker ID or process ID) in a
