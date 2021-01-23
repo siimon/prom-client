@@ -457,8 +457,17 @@ gateway.pushAdd({ jobName: 'test', groupings: { key: 'value' } }, function (
   body,
 ) {});
 
-//It's possible to extend the Pushgateway with request options from nodes core http/https library
-gateway = new client.Pushgateway('http://127.0.0.1:9091', { timeout: 5000 }); //Set the request timeout to 5000ms
+// It's possible to extend the Pushgateway with request options from nodes core
+// http/https library. In particular, you might want to provide an agent so that
+// TCP connections are reused.
+gateway = new client.Pushgateway('http://127.0.0.1:9091', {
+  timeout: 5000, //Set the request timeout to 5000ms
+  agent: new http.Agent({
+    keepAlive: true,
+    keepAliveMsec: 10000,
+    maxSockets: 5,
+  }),
+});
 ```
 
 ### Bucket Generators
