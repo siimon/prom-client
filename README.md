@@ -324,6 +324,28 @@ xhrRequest(function (err, res) {
 });
 ```
 
+#### Strongly typed Labels
+
+Typescript can also enforce label names using `as const`
+
+```typescript
+import * as client from 'prom-client';
+
+const gauge = new client.Counter({
+  name: 'metric_name',
+  help: 'metric_help',
+  // add `as const` here to enforce label names
+  labelNames: ['method'] as const,
+});
+
+// Ok
+gauge.inc({ method: 1 });
+
+// this is an error since `'methods'` is not a valid `labelName`
+// @ts-expect-error
+gauge.inc({ methods: 1 });
+```
+
 #### Default Labels (segmented by registry)
 
 Static labels may be applied to every metric emitted by a registry:

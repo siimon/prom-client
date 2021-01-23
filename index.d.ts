@@ -144,7 +144,7 @@ type LabelValues<T extends string> = Partial<Record<T, string | number>>;
 interface MetricConfiguration<T extends string> {
 	name: string;
 	help: string;
-	labelNames?: T[];
+	labelNames?: T[] | readonly T[];
 	registers?: Registry[];
 	aggregator?: Aggregator;
 	collect?: CollectFunction<any>;

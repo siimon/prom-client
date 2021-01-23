@@ -12,6 +12,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 - fix: push client attempting to write Promise
+- types: improve type checking of labels
 
 ### Added
 
