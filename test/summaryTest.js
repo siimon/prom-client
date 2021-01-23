@@ -32,6 +32,18 @@ describe('summary', () => {
 				expect((await instance.get()).values[8].value).toEqual(1);
 			});
 
+			it('should validate labels when observing', async () => {
+				const summary = new Summary({
+					name: 'foobar',
+					help: 'Foo Bar',
+					labelNames: ['foo'],
+				});
+
+				expect(() => {
+					summary.observe({ foo: 'bar', baz: 'qaz' }, 10);
+				}).toThrowErrorMatchingSnapshot();
+			});
+
 			it('should correctly calculate percentiles when more values are added to the summary', async () => {
 				instance.observe(100);
 				instance.observe(100);
