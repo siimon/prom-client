@@ -104,6 +104,22 @@ const collectDefaultMetrics = client.collectDefaultMetrics;
 collectDefaultMetrics();
 ```
 
+### Custom Metrics
+
+All metric types have two mandatory parameters: `name` and `help`. Refer to
+<https://prometheus.io/docs/practices/naming/> for guidance on naming metrics.
+
+For metrics based on point-in-time observations (e.g. current memory usage, as
+opposed to HTTP request durations observed continuously in a histogram), you
+should provide a `collect()` function, which will be invoked when Prometheus
+scrapes your metrics endpoint. `collect()` can either be synchronous or return a
+promise. See **Gauge** below for an example. (Note that you should not update
+metric values in a `setInterval` callback; do so in this `collect` function
+instead.)
+
+See [**Labels**](#labels) for information on how to configure labels for all
+metric types.
+
 #### Counter
 
 Counters go up, and reset when the process restarts.
