@@ -7,19 +7,24 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-- Added: More examples with commented output
-
 ### Breaking
 
 ### Changed
 
-- fix: push client attempting to write Promise
+### Added
+
+## [13.1.0] - 2021-01-24
+
+### Changed
+
+- fix: push client attempting to write Promise (fixes [#390](https://github.com/siimon/prom-client/issues/390))
 - types: improve type checking of labels
 - fix: Summary#observe should throw when adding additional labels to labelset (fixes [#262](https://github.com/siimon/prom-client/issues/262))
 
 ### Added
 
 - feat: added the ability to pass labels as an object to `labels()` and `remove()`
+- Added: More examples with commented output
 
 ## [13.0.0] - 2020-12-16
 
