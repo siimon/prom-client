@@ -31,6 +31,28 @@ describe('AggregatorRegistry', () => {
 		// These mimic the output of `getMetricsAsJSON`.
 		const metricsArr1 = [
 			{
+				name: 'test_summary',
+				help: 'Example of a summary',
+				type: 'summary',
+				values: [
+					{
+						labels: { quantile: 0.5 },
+						value: 4,
+					},
+					{
+						metricName: 'test_summary_sum',
+						labels: {},
+						value: 10,
+					},
+					{
+						metricName: 'test_summary_count',
+						labels: {},
+						value: 3,
+					},
+				],
+				aggregator: 'average',
+			},
+			{
 				name: 'test_histogram',
 				help: 'Example of a histogram',
 				type: 'histogram',
@@ -87,6 +109,28 @@ describe('AggregatorRegistry', () => {
 			},
 		];
 		const metricsArr2 = [
+			{
+				name: 'test_summary',
+				help: 'Example of a summary',
+				type: 'summary',
+				values: [
+					{
+						labels: { quantile: 0.5 },
+						value: 6,
+					},
+					{
+						metricName: 'test_summary_sum',
+						labels: {},
+						value: 20,
+					},
+					{
+						metricName: 'test_summary_count',
+						labels: {},
+						value: 2,
+					},
+				],
+				aggregator: 'average',
+			},
 			{
 				name: 'test_histogram',
 				help: 'Example of a histogram',
@@ -229,6 +273,32 @@ describe('AggregatorRegistry', () => {
 					},
 				],
 				aggregator: 'first',
+			});
+		});
+
+		it('uses `aggregate` method defined for test_summary and summation for `count` & `sum`', async () => {
+			const summary = aggregated.getSingleMetric('test_summary').get();
+			expect(summary).toEqual({
+				name: 'test_summary',
+				help: 'Example of a summary',
+				type: 'summary',
+				values: [
+					{
+						labels: { quantile: 0.5 },
+						value: 5,
+					},
+					{
+						labels: {},
+						value: 30,
+						metricName: 'test_summary_sum',
+					},
+					{
+						labels: {},
+						value: 5,
+						metricName: 'test_summary_count',
+					},
+				],
+				aggregator: 'average',
 			});
 		});
 	});

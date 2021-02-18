@@ -11,6 +11,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- fix: always using sum aggregator for sum & count in histogram & summary
+
 ### Added
 
 - feat: added `zero()` to `Histogram` for setting the metrics for a given label combination to zero
