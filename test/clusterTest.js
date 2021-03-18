@@ -6,20 +6,20 @@ describe('AggregatorRegistry', () => {
 	it('requiring the cluster should not add any listeners', () => {
 		const originalListenerCount = cluster.listenerCount('message');
 
-		require('../lib/cluster');
+		require('../lib/aggregatorRegistry');
 
 		expect(cluster.listenerCount('message')).toBe(originalListenerCount);
 
 		jest.resetModules();
 
-		require('../lib/cluster');
+		require('../lib/aggregatorRegistry');
 
 		expect(cluster.listenerCount('message')).toBe(originalListenerCount);
 	});
 
 	describe('aggregatorRegistry.clusterMetrics()', () => {
 		it('works properly if there are no cluster workers', async () => {
-			const AggregatorRegistry = require('../lib/cluster');
+			const AggregatorRegistry = require('../lib/aggregatorRegistry');
 			const ar = new AggregatorRegistry();
 			const metrics = await ar.clusterMetrics();
 			expect(metrics).toEqual('');
@@ -27,7 +27,7 @@ describe('AggregatorRegistry', () => {
 	});
 
 	describe('AggregatorRegistry.aggregate()', () => {
-		const Registry = require('../lib/cluster');
+		const Registry = require('../lib/aggregatorRegistry');
 		// These mimic the output of `getMetricsAsJSON`.
 		const metricsArr1 = [
 			{
