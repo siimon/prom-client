@@ -62,7 +62,7 @@ export class Registry {
 	getSingleMetricAsString(name: string): Promise<string>;
 
 	/**
-	 * Gets the Content-Type of the metrics for use in the response headers.
+	 * Gets or Sets the Content-Type of the metrics for use in the response headers.
 	 */
 	contentType: string;
 
