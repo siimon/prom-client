@@ -7,14 +7,20 @@ describe('aggregators', () => {
 			help: 'metric_help',
 			name: 'metric_name',
 			type: 'does not matter',
-			values: [{ labels: [], value: 1 }, { labels: ['label1'], value: 2 }]
+			values: [
+				{ labels: [], value: 1 },
+				{ labels: ['label1'], value: 2 },
+			],
 		},
 		{
 			help: 'metric_help',
 			name: 'metric_name',
 			type: 'does not matter',
-			values: [{ labels: [], value: 3 }, { labels: ['label1'], value: 4 }]
-		}
+			values: [
+				{ labels: [], value: 3 },
+				{ labels: ['label1'], value: 4 },
+			],
+		},
 	];
 
 	describe('sum', () => {
@@ -25,7 +31,7 @@ describe('aggregators', () => {
 			expect(result.type).toBe('does not matter');
 			expect(result.values).toEqual([
 				{ value: 4, labels: [] },
-				{ value: 6, labels: ['label1'] }
+				{ value: 6, labels: ['label1'] },
 			]);
 		});
 	});
@@ -38,7 +44,7 @@ describe('aggregators', () => {
 			expect(result.type).toBe('does not matter');
 			expect(result.values).toEqual([
 				{ value: 1, labels: [] },
-				{ value: 2, labels: ['label1'] }
+				{ value: 2, labels: ['label1'] },
 			]);
 		});
 	});
@@ -58,7 +64,7 @@ describe('aggregators', () => {
 			expect(result.type).toBe('does not matter');
 			expect(result.values).toEqual([
 				{ value: 2, labels: [] },
-				{ value: 3, labels: ['label1'] }
+				{ value: 3, labels: ['label1'] },
 			]);
 		});
 	});
@@ -71,7 +77,7 @@ describe('aggregators', () => {
 			expect(result.type).toBe('does not matter');
 			expect(result.values).toEqual([
 				{ value: 1, labels: [] },
-				{ value: 2, labels: ['label1'] }
+				{ value: 2, labels: ['label1'] },
 			]);
 		});
 	});
@@ -84,7 +90,7 @@ describe('aggregators', () => {
 			expect(result.type).toBe('does not matter');
 			expect(result.values).toEqual([
 				{ value: 3, labels: [] },
-				{ value: 4, labels: ['label1'] }
+				{ value: 4, labels: ['label1'] },
 			]);
 		});
 	});
@@ -96,25 +102,25 @@ describe('aggregators', () => {
 					help: 'metric_help',
 					name: 'metric_name',
 					type: 'does not matter',
-					values: [{ labels: [], value: 1, metricName: 'abc' }]
+					values: [{ labels: [], value: 1, metricName: 'abc' }],
 				},
 				{
 					help: 'metric_help',
 					name: 'metric_name',
 					type: 'does not matter',
-					values: [{ labels: [], value: 3, metricName: 'abc' }]
+					values: [{ labels: [], value: 3, metricName: 'abc' }],
 				},
 				{
 					help: 'metric_help',
 					name: 'metric_name',
 					type: 'does not matter',
-					values: [{ labels: [], value: 5, metricName: 'def' }]
-				}
+					values: [{ labels: [], value: 5, metricName: 'def' }],
+				},
 			];
 			const result = aggregators.sum(metrics2);
 			expect(result.values).toEqual([
 				{ value: 4, labels: [], metricName: 'abc' },
-				{ value: 5, labels: [], metricName: 'def' }
+				{ value: 5, labels: [], metricName: 'def' },
 			]);
 		});
 	});

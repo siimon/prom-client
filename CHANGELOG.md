@@ -9,16 +9,101 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Breaking
 
-- Dropped support for Node.js v6
+### Changed
+
+### Added
+
+- feat: added `zero()` to `Histogram` for setting the metrics for a given label combination to zero
+
+## [13.1.0] - 2021-01-24
 
 ### Changed
 
+- fix: push client attempting to write Promise (fixes [#390](https://github.com/siimon/prom-client/issues/390))
+- types: improve type checking of labels
+- fix: Summary#observe should throw when adding additional labels to labelset (fixes [#262](https://github.com/siimon/prom-client/issues/262))
+
+### Added
+
+- feat: added the ability to pass labels as an object to `labels()` and `remove()`
+- Added: More examples with commented output
+
+## [13.0.0] - 2020-12-16
+
+### Breaking
+
+- changed: The following functions are now async (return a promise):
+  `registry.metrics()`
+  `registry.getMetricsAsJSON()`
+  `registry.getMetricsAsArray()`
+  `registry.getSingleMetricAsString()`
+
+  If your metrics server has a line like `res.send(register.metrics())`, you
+  should change it to `res.send(await register.metrics())`.
+
+  Additionally, all metric types now accept an optional `collect` function,
+  which is called when the metric's value should be collected and within which
+  you should set the metric's value. You should provide a `collect` function for
+  point-in-time metrics (e.g. current memory usage, as opposed to HTTP request
+  durations that are continuously logged in a histogram).
+
+- changed: `register.clusterMetrics()` no longer accepts a callback; it only
+  returns a promise.
+
+- removed: v12.0.0 added the undocumented functions `registry.registerCollector`
+  and `registry.collectors()`. These have been removed. If you were using them,
+  you should instead provide a `collect` function as described above.
+
+### Changed
+
+- fix: provide nodejs_version_info metric value after calling `registry.resetMetrics()` (#238)
+- fix: provide process_max_fds metric value after calling `registry.resetMetrics()`
+- fix: provide process_start_time_seconds metric value after calling `registry.resetMetrics()`
+- chore: improve performance of `registry.getMetricAsPrometheusString`
+- chore: refactor metrics to reduce code duplication
+- chore: replace `utils.getPropertiesFromObj` with `Object.values`
+- chore: remove unused `catch` bindings
+- chore: upgrade Prettier to 2.x
+- fix: startTimer returns `number` in typescript instead of `void`
+- fix: incorrect typings of `registry.getSingleMetric' (#388)
+- chore: stop testing node v13 on CI
+
+### Added
+
+- feat: exposed `registry.registerCollector()` and `registry.collectors()` methods in TypeScript declaration
+- Added: complete working example of a pushgateway push in `example/pushgateway.js`
+- feat: added support for adding labels to default metrics (#374)
+- Added CHANGELOG reminder
+
+## [12.0.0] - 2020-02-20
+
+### Breaking
+
+- Dropped support for end-of-life Node.js versions 6.x and 8.x
+- Dropped the previously deprecated support for positional parameters in
+  constructors, only the config object forms remain.
+- Default metrics are collected on scrape of metrics endpoint, not on an
+  interval. The `timeout` option to `collectDefaultMetrics(conf)` is no longer
+  supported or needed, and the function no longer returns a `Timeout` object.
+
+### Changed
+
+- chore: remove ignored package-lock.json
+- fix: `process_max_fds` is process limit, not OS (#314)
 - Changed `Metric` labelNames & labelValues in TypeScript declaration to a generic type `T extends string`, instead of `string`
 - Lazy-load Node.js Cluster module to fix Passenger support (#293)
 - fix: avoid mutation bug in `registry.getMetricsAsJSON()`
 - fix: improve performance of `registry.getMetrics*`
+- End function of histogram `startTimer`, when invoked returns the number of seconds
+- chore: reindent package.json
+- chore: correct var name in processStartTime
+- chore: add test for `process_start_time_seconds`
+- chore: spelling corrections in README
 
 ### Added
+
+- feat: implement GC metrics collection without native(C++) modules.
+- feat: implement advanced event loop monitoring
 
 ## [11.5.3] - 2019-06-27
 

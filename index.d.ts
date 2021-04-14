@@ -2,23 +2,13 @@
 // Definitions by: Simon Nyberg http://twitter.com/siimon_nyberg
 
 /**
- * Options pass to Registry.metrics()
- */
-export interface MetricsOpts {
-	/**
-	 * Whether to include timestamps in the output, defaults to true
-	 */
-	timestamps?: boolean;
-}
-
-/**
  * Container for all registered metrics
  */
 export class Registry {
 	/**
 	 * Get string representation for all metrics
 	 */
-	metrics(opts?: MetricsOpts): string;
+	metrics(): Promise<string>;
 
 	/**
 	 * Remove all metrics from the registry
@@ -39,12 +29,12 @@ export class Registry {
 	/**
 	 * Get all metrics as objects
 	 */
-	getMetricsAsJSON(): metric[];
+	getMetricsAsJSON(): Promise<metric[]>;
 
 	/**
 	 * Get all metrics as objects
 	 */
-	getMetricsAsArray(): metric[];
+	getMetricsAsArray(): Promise<metric[]>;
 
 	/**
 	 * Remove a single metric
@@ -56,7 +46,7 @@ export class Registry {
 	 * Get a single metric
 	 * @param name The name of the metric
 	 */
-	getSingleMetric<T extends string>(name: string): Metric<T>;
+	getSingleMetric<T extends string>(name: string): Metric<T> | undefined;
 
 	/**
 	 * Set static labels to every metric emitted by this registry
@@ -69,7 +59,7 @@ export class Registry {
 	 * Get a string representation of a single metric by name
 	 * @param name The name of the metric
 	 */
-	getSingleMetricAsString(name: string): string;
+	getSingleMetricAsString(name: string): Promise<string>;
 
 	/**
 	 * Gets the Content-Type of the metrics for use in the response headers.
@@ -82,6 +72,7 @@ export class Registry {
 	 */
 	static merge(registers: Registry[]): Registry;
 }
+export type Collector = () => void;
 
 /**
  * The register that contains all metrics
@@ -90,15 +81,11 @@ export const register: Registry;
 
 export class AggregatorRegistry extends Registry {
 	/**
-	 * Gets aggregated metrics for all workers. The optional callback and
-	 * returned Promise resolve with the same value; either may be used.
-	 * @param {Function?} cb (err, metrics) => any
+	 * Gets aggregated metrics for all workers.
 	 * @return {Promise<string>} Promise that resolves with the aggregated
-	 *   metrics.
+	 * metrics.
 	 */
-	clusterMetrics(
-		cb?: (err: Error | null, metrics?: string) => any
-	): Promise<string>;
+	clusterMetrics(): Promise<string>;
 
 	/**
 	 * Creates a new Registry instance from an array of metrics that were
@@ -109,7 +96,7 @@ export class AggregatorRegistry extends Registry {
 	 *   `registry.getMetricsAsJSON()`.
 	 * @return {Registry} aggregated registry.
 	 */
-	static aggregate(metricsArr: Array<Object>): Registry;
+	static aggregate(metricsArr: Array<Object>): Registry; // TODO Promise?
 
 	/**
 	 * Sets the registry or registries to be aggregated. Call from workers to
@@ -139,24 +126,33 @@ export enum MetricType {
 	Counter,
 	Gauge,
 	Histogram,
-	Summary
+	Summary,
 }
+
+type CollectFunction<T> = (this: T) => void | Promise<void>;
 
 interface metric {
 	name: string;
 	help: string;
 	type: MetricType;
 	aggregator: Aggregator;
+	collect: CollectFunction<any>;
 }
 
 type LabelValues<T extends string> = Partial<Record<T, string | number>>;
 
-export interface CounterConfiguration<T extends string> {
+interface MetricConfiguration<T extends string> {
 	name: string;
 	help: string;
-	labelNames?: T[];
+	labelNames?: T[] | readonly T[];
 	registers?: Registry[];
 	aggregator?: Aggregator;
+	collect?: CollectFunction<any>;
+}
+
+export interface CounterConfiguration<T extends string>
+	extends MetricConfiguration<T> {
+	collect?: CollectFunction<Counter<T>>;
 }
 
 /**
@@ -169,27 +165,17 @@ export class Counter<T extends string> {
 	constructor(configuration: CounterConfiguration<T>);
 
 	/**
-	 * @param name The name of the metric
-	 * @param help Help description
-	 * @param labels Label keys
-	 * @deprecated
-	 */
-	constructor(name: string, help: string, labels?: T[]);
-
-	/**
 	 * Increment for given labels
 	 * @param labels Object with label keys and values
 	 * @param value The number to increment with
-	 * @param timestamp Timestamp to associate the time series with
 	 */
-	inc(labels: LabelValues<T>, value?: number, timestamp?: number | Date): void;
+	inc(labels: LabelValues<T>, value?: number): void;
 
 	/**
 	 * Increment with value
 	 * @param value The value to increment with
-	 * @param timestamp Timestamp to associate the time series with
 	 */
-	inc(value?: number, timestamp?: number | Date): void;
+	inc(value?: number): void;
 
 	/**
 	 * Return the child for given labels
@@ -197,6 +183,13 @@ export class Counter<T extends string> {
 	 * @return Configured counter with given labels
 	 */
 	labels(...values: string[]): Counter.Internal;
+
+	/**
+	 * Return the child for given labels
+	 * @param labels Object with label keys and values
+	 * @return Configured counter with given labels
+	 */
+	labels(labels: LabelValues<T>): Counter.Internal;
 
 	/**
 	 * Reset counter values
@@ -208,6 +201,12 @@ export class Counter<T extends string> {
 	 * @param values Label values
 	 */
 	remove(...values: string[]): void;
+
+	/**
+	 * Remove metrics for the given label values
+	 * @param labels Object with label keys and values
+	 */
+	remove(labels: LabelValues<T>): void;
 }
 
 export namespace Counter {
@@ -215,18 +214,14 @@ export namespace Counter {
 		/**
 		 * Increment with value
 		 * @param value The value to increment with
-		 * @param timestamp Timestamp to associate the time series with
 		 */
-		inc(value?: number, timestamp?: number | Date): void;
+		inc(value?: number): void;
 	}
 }
 
-export interface GaugeConfiguration<T extends string> {
-	name: string;
-	help: string;
-	labelNames?: T[];
-	registers?: Registry[];
-	aggregator?: Aggregator;
+export interface GaugeConfiguration<T extends string>
+	extends MetricConfiguration<T> {
+	collect?: CollectFunction<Gauge<T>>;
 }
 
 /**
@@ -239,57 +234,43 @@ export class Gauge<T extends string> {
 	constructor(configuration: GaugeConfiguration<T>);
 
 	/**
-	 * @param name The name of the metric
-	 * @param help Help description
-	 * @param labels Label keys
-	 * @deprecated
-	 */
-	constructor(name: string, help: string, labels?: T[]);
-
-	/**
 	 * Increment gauge for given labels
 	 * @param labels Object with label keys and values
 	 * @param value The value to increment with
-	 * @param timestamp Timestamp to associate the time series with
 	 */
-	inc(labels: LabelValues<T>, value?: number, timestamp?: number | Date): void;
+	inc(labels: LabelValues<T>, value?: number): void;
 
 	/**
 	 * Increment gauge
 	 * @param value The value to increment with
-	 * @param timestamp Timestamp to associate the time series with
 	 */
-	inc(value?: number, timestamp?: number | Date): void;
+	inc(value?: number): void;
 
 	/**
 	 * Decrement gauge
 	 * @param labels Object with label keys and values
 	 * @param value Value to decrement with
-	 * @param timestamp Timestamp to associate the time series with
 	 */
-	dec(labels: LabelValues<T>, value?: number, timestamp?: number | Date): void;
+	dec(labels: LabelValues<T>, value?: number): void;
 
 	/**
 	 * Decrement gauge
 	 * @param value The value to decrement with
-	 * @param timestamp Timestamp to associate the time series with
 	 */
-	dec(value?: number, timestamp?: number | Date): void;
+	dec(value?: number): void;
 
 	/**
 	 * Set gauge value for labels
 	 * @param labels Object with label keys and values
 	 * @param value The value to set
-	 * @param timestamp Timestamp to associate the time series with
 	 */
-	set(labels: LabelValues<T>, value: number, timestamp?: number | Date): void;
+	set(labels: LabelValues<T>, value: number): void;
 
 	/**
 	 * Set gauge value
 	 * @param value The value to set
-	 * @param timestamp Timestamp to associate the time series with
 	 */
-	set(value: number, timestamp?: number | Date): void;
+	set(value: number): void;
 
 	/**
 	 * Set gauge value to current epoch time in ms
@@ -312,6 +293,13 @@ export class Gauge<T extends string> {
 	labels(...values: string[]): Gauge.Internal<T>;
 
 	/**
+	 * Return the child for given labels
+	 * @param labels Object with label keys and values
+	 * @return Configured counter with given labels
+	 */
+	labels(labels: LabelValues<T>): Gauge.Internal<T>;
+
+	/**
 	 * Reset gauge values
 	 */
 	reset(): void;
@@ -321,6 +309,12 @@ export class Gauge<T extends string> {
 	 * @param values Label values
 	 */
 	remove(...values: string[]): void;
+
+	/**
+	 * Remove metrics for the given label values
+	 * @param labels Object with label keys and values
+	 */
+	remove(labels: LabelValues<T>): void;
 }
 
 export namespace Gauge {
@@ -328,23 +322,20 @@ export namespace Gauge {
 		/**
 		 * Increment gauge with value
 		 * @param value The value to increment with
-		 * @param timestamp Timestamp to associate the time series with
 		 */
-		inc(value?: number, timestamp?: number | Date): void;
+		inc(value?: number): void;
 
 		/**
 		 * Decrement with value
 		 * @param value The value to decrement with
-		 * @param timestamp Timestamp to associate the time series with
 		 */
-		dec(value?: number, timestamp?: number | Date): void;
+		dec(value?: number): void;
 
 		/**
 		 * Set gauges value
 		 * @param value The value to set
-		 * @param timestamp Timestamp to associate the time series with
 		 */
-		set(value: number, timestamp?: number | Date): void;
+		set(value: number): void;
 
 		/**
 		 * Set gauge value to current epoch time in ms
@@ -359,13 +350,10 @@ export namespace Gauge {
 	}
 }
 
-export interface HistogramConfiguration<T extends string> {
-	name: string;
-	help: string;
-	labelNames?: T[];
+export interface HistogramConfiguration<T extends string>
+	extends MetricConfiguration<T> {
 	buckets?: number[];
-	registers?: Registry[];
-	aggregator?: Aggregator;
+	collect?: CollectFunction<Histogram<T>>;
 }
 
 /**
@@ -376,26 +364,6 @@ export class Histogram<T extends string> {
 	 * @param configuration Configuration when creating the Histogram. Name and Help is mandatory
 	 */
 	constructor(configuration: HistogramConfiguration<T>);
-
-	/**
-	 * @param name The name of metric
-	 * @param help Help description
-	 * @param labels Label keys
-	 * @param config Configuration object for Histograms
-	 */
-	constructor(
-		name: string,
-		help: string,
-		labels?: T[],
-		config?: Histogram.Config
-	);
-	/**
-	 * @param name The name of metric
-	 * @param help Help description
-	 * @param config Configuration object for Histograms
-	 * @deprecated
-	 */
-	constructor(name: string, help: string, config: Histogram.Config);
 
 	/**
 	 * Observe value
@@ -414,12 +382,17 @@ export class Histogram<T extends string> {
 	 * @param labels Object with label keys and values
 	 * @return Function to invoke when timer should be stopped
 	 */
-	startTimer(labels?: LabelValues<T>): (labels?: LabelValues<T>) => void;
+	startTimer(labels?: LabelValues<T>): (labels?: LabelValues<T>) => number;
 
 	/**
 	 * Reset histogram values
 	 */
 	reset(): void;
+
+	/**
+	 * Initialize the metrics for the given combination of labels to zero
+	 */
+	zero(labels: LabelValues<T>): void;
 
 	/**
 	 * Return the child for given labels
@@ -429,10 +402,23 @@ export class Histogram<T extends string> {
 	labels(...values: string[]): Histogram.Internal<T>;
 
 	/**
+	 * Return the child for given labels
+	 * @param labels Object with label keys and values
+	 * @return Configured counter with given labels
+	 */
+	labels(labels: LabelValues<T>): Histogram.Internal<T>;
+
+	/**
 	 * Remove metrics for the given label values
 	 * @param values Label values
 	 */
 	remove(...values: string[]): void;
+
+	/**
+	 * Remove metrics for the given label values
+	 * @param labels Object with label keys and values
+	 */
+	remove(labels: LabelValues<T>): void;
 }
 
 export namespace Histogram {
@@ -459,16 +445,13 @@ export namespace Histogram {
 	}
 }
 
-export interface SummaryConfiguration<T extends string> {
-	name: string;
-	help: string;
-	labelNames?: T[];
+export interface SummaryConfiguration<T extends string>
+	extends MetricConfiguration<T> {
 	percentiles?: number[];
-	registers?: Registry[];
-	aggregator?: Aggregator;
 	maxAgeSeconds?: number;
 	ageBuckets?: number;
 	compressCount?: number;
+	collect?: CollectFunction<Summary<T>>;
 }
 
 /**
@@ -479,26 +462,6 @@ export class Summary<T extends string> {
 	 * @param configuration Configuration when creating Summary metric. Name and Help is mandatory
 	 */
 	constructor(configuration: SummaryConfiguration<T>);
-
-	/**
-	 * @param name The name of the metric
-	 * @param help Help description
-	 * @param labels Label keys
-	 * @param config Configuration object
-	 */
-	constructor(
-		name: string,
-		help: string,
-		labels?: T[],
-		config?: Summary.Config
-	);
-	/**
-	 * @param name The name of the metric
-	 * @param help Help description
-	 * @param config Configuration object
-	 * @deprecated
-	 */
-	constructor(name: string, help: string, config: Summary.Config);
 
 	/**
 	 * Observe value in summary
@@ -532,10 +495,23 @@ export class Summary<T extends string> {
 	labels(...values: string[]): Summary.Internal<T>;
 
 	/**
+	 * Return the child for given labels
+	 * @param labels Object with label keys and values
+	 * @return Configured counter with given labels
+	 */
+	labels(labels: LabelValues<T>): Summary.Internal<T>;
+
+	/**
 	 * Remove metrics for the given label values
 	 * @param values Label values
 	 */
 	remove(...values: string[]): void;
+
+	/**
+	 * Remove metrics for the given label values
+	 * @param labels Object with label keys and values
+	 */
+	remove(labels: LabelValues<T>): void;
 }
 
 export namespace Summary {
@@ -580,7 +556,7 @@ export class Pushgateway {
 	 */
 	pushAdd(
 		params: Pushgateway.Parameters,
-		callback: (error?: Error, httpResponse?: any, body?: any) => void
+		callback: (error?: Error, httpResponse?: any, body?: any) => void,
 	): void;
 
 	/**
@@ -590,7 +566,7 @@ export class Pushgateway {
 	 */
 	push(
 		params: Pushgateway.Parameters,
-		callback: (error?: Error, httpResponse?: any, body?: any) => void
+		callback: (error?: Error, httpResponse?: any, body?: any) => void,
 	): void;
 
 	/**
@@ -600,7 +576,7 @@ export class Pushgateway {
 	 */
 	delete(
 		params: Pushgateway.Parameters,
-		callback: (error?: Error, httpResponse?: any, body?: any) => void
+		callback: (error?: Error, httpResponse?: any, body?: any) => void,
 	): void;
 }
 
@@ -629,7 +605,7 @@ export namespace Pushgateway {
 export function linearBuckets(
 	start: number,
 	width: number,
-	count: number
+	count: number,
 ): number[];
 
 /**
@@ -642,32 +618,24 @@ export function linearBuckets(
 export function exponentialBuckets(
 	start: number,
 	factor: number,
-	count: number
+	count: number,
 ): number[];
 
 export interface DefaultMetricsCollectorConfiguration {
-	timeout?: number;
-	timestamps?: boolean;
 	register?: Registry;
 	prefix?: string;
+	gcDurationBuckets?: number[];
+	eventLoopMonitoringPrecision?: number;
+	labels?: Object;
 }
 
 /**
  * Configure default metrics
  * @param config Configuration object for default metrics collector
- * @return The setInterval number
  */
 export function collectDefaultMetrics(
-	config?: DefaultMetricsCollectorConfiguration
-): ReturnType<typeof setInterval>;
-
-/**
- * Configure default metrics
- * @param timeout The interval how often the default metrics should be probed
- * @deprecated A number to defaultMetrics is deprecated, please use \`collectDefaultMetrics({ timeout: ${timeout} })\`.
- * @return The setInterval number
- */
-export function collectDefaultMetrics(timeout: number): number;
+	config?: DefaultMetricsCollectorConfiguration,
+): void;
 
 export interface defaultMetrics {
 	/**

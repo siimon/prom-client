@@ -9,38 +9,38 @@ jest.mock('v8', () => {
 					space_size: 100,
 					space_used_size: 50,
 					space_available_size: 500,
-					physical_space_size: 100
+					physical_space_size: 100,
 				},
 				{
 					space_name: 'old_space',
 					space_size: 100,
 					space_used_size: 50,
 					space_available_size: 500,
-					physical_space_size: 100
+					physical_space_size: 100,
 				},
 				{
 					space_name: 'code_space',
 					space_size: 100,
 					space_used_size: 50,
 					space_available_size: 500,
-					physical_space_size: 100
+					physical_space_size: 100,
 				},
 				{
 					space_name: 'map_space',
 					space_size: 100,
 					space_used_size: 50,
 					space_available_size: 500,
-					physical_space_size: 100
+					physical_space_size: 100,
 				},
 				{
 					space_name: 'large_object_space',
 					space_size: 100,
 					space_used_size: 50,
 					space_available_size: 500,
-					physical_space_size: 100
-				}
+					physical_space_size: 100,
+				},
 			];
-		}
+		},
 	};
 });
 
@@ -56,13 +56,38 @@ describe('heapSpacesSizeAndUsed', () => {
 		globalRegistry.clear();
 	});
 
-	it('should set total heap spaces size gauges with from v8', () => {
-		const expectedObj = {
-			total: { new: 100, old: 100, code: 100, map: 100, large_object: 100 },
-			used: { new: 50, old: 50, code: 50, map: 50, large_object: 50 },
-			available: { new: 500, old: 500, code: 500, map: 500, large_object: 500 }
-		};
+	it('should set total heap spaces size gauges with values from v8', async () => {
+		expect(await globalRegistry.getMetricsAsJSON()).toHaveLength(0);
 
-		expect(heapSpacesSizeAndUsed()()).toEqual(expectedObj);
+		heapSpacesSizeAndUsed();
+
+		const metrics = await globalRegistry.getMetricsAsJSON();
+
+		expect(metrics[0].name).toEqual('nodejs_heap_space_size_total_bytes');
+		expect(metrics[0].values).toEqual([
+			{ labels: { space: 'new' }, value: 100 },
+			{ labels: { space: 'old' }, value: 100 },
+			{ labels: { space: 'code' }, value: 100 },
+			{ labels: { space: 'map' }, value: 100 },
+			{ labels: { space: 'large_object' }, value: 100 },
+		]);
+
+		expect(metrics[1].name).toEqual('nodejs_heap_space_size_used_bytes');
+		expect(metrics[1].values).toEqual([
+			{ labels: { space: 'new' }, value: 50 },
+			{ labels: { space: 'old' }, value: 50 },
+			{ labels: { space: 'code' }, value: 50 },
+			{ labels: { space: 'map' }, value: 50 },
+			{ labels: { space: 'large_object' }, value: 50 },
+		]);
+
+		expect(metrics[2].name).toEqual('nodejs_heap_space_size_available_bytes');
+		expect(metrics[2].values).toEqual([
+			{ labels: { space: 'new' }, value: 500 },
+			{ labels: { space: 'old' }, value: 500 },
+			{ labels: { space: 'code' }, value: 500 },
+			{ labels: { space: 'map' }, value: 500 },
+			{ labels: { space: 'large_object' }, value: 500 },
+		]);
 	});
 });

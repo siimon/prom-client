@@ -12,17 +12,17 @@ describe('processHandles', () => {
 		register.clear();
 	});
 
-	it('should add metric to the registry', () => {
-		expect(register.getMetricsAsJSON()).toHaveLength(0);
+	it('should add metric to the registry', async () => {
+		expect(await register.getMetricsAsJSON()).toHaveLength(0);
 
-		processHandles()();
+		processHandles();
 
-		const metrics = register.getMetricsAsJSON();
+		const metrics = await register.getMetricsAsJSON();
 
 		expect(metrics).toHaveLength(2);
 
 		expect(metrics[0].help).toEqual(
-			'Number of active libuv handles grouped by handle type. Every handle type is C++ class name.'
+			'Number of active libuv handles grouped by handle type. Every handle type is C++ class name.',
 		);
 		expect(metrics[0].type).toEqual('gauge');
 		expect(metrics[0].name).toEqual('nodejs_active_handles');

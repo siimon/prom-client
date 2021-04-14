@@ -10,32 +10,28 @@ describe('heapSizeAndUsed', () => {
 		globalRegistry.clear();
 	});
 
-	it('should return an empty function if memoryUsed does not exist', () => {
-		process.memoryUsage = null;
-		expect(heapSizeAndUsed()()).toBeUndefined();
-	});
-
-	it('should set total heap size gauge with total from memoryUsage', () => {
-		process.memoryUsage = function() {
+	it('should set gauge values from memoryUsage', async () => {
+		process.memoryUsage = function () {
 			return { heapTotal: 1000, heapUsed: 500, external: 100 };
 		};
-		const totalGauge = heapSizeAndUsed()().total.get();
-		expect(totalGauge.values[0].value).toEqual(1000);
-	});
 
-	it('should set used gauge with used from memoryUsage', () => {
-		process.memoryUsage = function() {
-			return { heapTotal: 1000, heapUsed: 500, external: 100 };
-		};
-		const gauge = heapSizeAndUsed()().used.get();
-		expect(gauge.values[0].value).toEqual(500);
-	});
+		heapSizeAndUsed();
+		// Note: these three gauges' values are set by the _total gauge's
+		// "collect" function.
 
-	it('should set external gauge with external from memoryUsage', () => {
-		process.memoryUsage = function() {
-			return { heapTotal: 1000, heapUsed: 500, external: 100 };
-		};
-		const gauge = heapSizeAndUsed()().external.get();
-		expect(gauge.values[0].value).toEqual(100);
+		const totalGauge = globalRegistry.getSingleMetric(
+			'nodejs_heap_size_total_bytes',
+		);
+		expect((await totalGauge.get()).values[0].value).toEqual(1000);
+
+		const usedGauge = globalRegistry.getSingleMetric(
+			'nodejs_heap_size_used_bytes',
+		);
+		expect((await usedGauge.get()).values[0].value).toEqual(500);
+
+		const externalGauge = globalRegistry.getSingleMetric(
+			'nodejs_external_memory_bytes',
+		);
+		expect((await externalGauge.get()).values[0].value).toEqual(100);
 	});
 });

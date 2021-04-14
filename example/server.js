@@ -5,26 +5,45 @@ const cluster = require('cluster');
 const server = express();
 const register = require('../').register;
 
+// Enable collection of default metrics
+
+require('../').collectDefaultMetrics({
+	gcDurationBuckets: [0.001, 0.01, 0.1, 1, 2, 5], // These are the default buckets.
+});
+
+// Create custom metrics
+
 const Histogram = require('../').Histogram;
 const h = new Histogram({
 	name: 'test_histogram',
 	help: 'Example of a histogram',
-	labelNames: ['code']
+	labelNames: ['code'],
 });
 
 const Counter = require('../').Counter;
 const c = new Counter({
 	name: 'test_counter',
 	help: 'Example of a counter',
-	labelNames: ['code']
+	labelNames: ['code'],
+});
+
+new Counter({
+	name: 'scrape_counter',
+	help: 'Number of scrapes (example of a counter with a collect fn)',
+	collect() {
+		// collect is invoked each time `register.metrics()` is called.
+		this.inc();
+	},
 });
 
 const Gauge = require('../').Gauge;
 const g = new Gauge({
 	name: 'test_gauge',
 	help: 'Example of a gauge',
-	labelNames: ['method', 'code']
+	labelNames: ['method', 'code'],
 });
+
+// Set metric values to some random values for demonstration
 
 setTimeout(() => {
 	h.labels('200').observe(Math.random());
@@ -56,18 +75,40 @@ if (cluster.isWorker) {
 	}, 2000);
 }
 
-server.get('/metrics', (req, res) => {
-	res.set('Content-Type', register.contentType);
-	res.end(register.metrics());
+const t = [];
+setInterval(() => {
+	for (let i = 0; i < 100; i++) {
+		t.push(new Date());
+	}
+}, 10);
+setInterval(() => {
+	while (t.length > 0) {
+		t.pop();
+	}
 });
 
-server.get('/metrics/counter', (req, res) => {
-	res.set('Content-Type', register.contentType);
-	res.end(register.getSingleMetricAsString('test_counter'));
+// Setup server to Prometheus scrapes:
+
+server.get('/metrics', async (req, res) => {
+	try {
+		res.set('Content-Type', register.contentType);
+		res.end(await register.metrics());
+	} catch (ex) {
+		res.status(500).end(ex);
+	}
 });
 
-//Enable collection of default metrics
-require('../').collectDefaultMetrics();
+server.get('/metrics/counter', async (req, res) => {
+	try {
+		res.set('Content-Type', register.contentType);
+		res.end(await register.getSingleMetricAsString('test_counter'));
+	} catch (ex) {
+		res.status(500).end(ex);
+	}
+});
 
-console.log('Server listening to 3000, metrics exposed on /metrics endpoint');
-server.listen(3000);
+const port = process.env.PORT || 3000;
+console.log(
+	`Server listening to ${port}, metrics exposed on /metrics endpoint`,
+);
+server.listen(port);

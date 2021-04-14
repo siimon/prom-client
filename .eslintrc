@@ -10,7 +10,7 @@
 		"es6": true
 	},
 	"parserOptions": {
-		"ecmaVersion": 2015
+		"ecmaVersion": 2019
 	},
 	"rules": {
 		"no-underscore-dangle": "off",

@@ -6,24 +6,23 @@ describe('collectDefaultMetrics', () => {
 	const collectDefaultMetrics = require('../index').collectDefaultMetrics;
 	let platform;
 	let cpuUsage;
-	let interval;
 
 	beforeAll(() => {
 		platform = process.platform;
 		cpuUsage = process.cpuUsage;
 
 		Object.defineProperty(process, 'platform', {
-			value: 'my-bogus-platform'
+			value: 'my-bogus-platform',
 		});
 
 		if (cpuUsage) {
 			Object.defineProperty(process, 'cpuUsage', {
 				value() {
 					return { user: 1000, system: 10 };
-				}
+				},
 			});
 		} else {
-			process.cpuUsage = function() {
+			process.cpuUsage = function () {
 				return { user: 1000, system: 10 };
 			};
 		}
@@ -33,12 +32,12 @@ describe('collectDefaultMetrics', () => {
 
 	afterAll(() => {
 		Object.defineProperty(process, 'platform', {
-			value: platform
+			value: platform,
 		});
 
 		if (cpuUsage) {
 			Object.defineProperty(process, 'cpuUsage', {
-				value: cpuUsage
+				value: cpuUsage,
 			});
 		} else {
 			delete process.cpuUsage;
@@ -47,56 +46,56 @@ describe('collectDefaultMetrics', () => {
 
 	afterEach(() => {
 		register.clear();
-		clearInterval(interval);
 	});
 
-	it('should add metrics to the registry', () => {
-		expect(register.getMetricsAsJSON()).toHaveLength(0);
-		interval = collectDefaultMetrics();
-		expect(register.getMetricsAsJSON()).not.toHaveLength(0);
+	it('should add metrics to the registry', async () => {
+		expect(await register.getMetricsAsJSON()).toHaveLength(0);
+		collectDefaultMetrics();
+		expect(await register.getMetricsAsJSON()).not.toHaveLength(0);
 	});
 
-	it('should allow blacklisting all metrics', () => {
-		expect(register.getMetricsAsJSON()).toHaveLength(0);
+	it('should allow blacklisting all metrics', async () => {
+		expect(await register.getMetricsAsJSON()).toHaveLength(0);
 		clearInterval(collectDefaultMetrics());
 		register.clear();
-		expect(register.getMetricsAsJSON()).toHaveLength(0);
+		expect(await register.getMetricsAsJSON()).toHaveLength(0);
 	});
 
-	it('should prefix metric names when configured', () => {
-		interval = collectDefaultMetrics({ prefix: 'some_prefix_' });
-		expect(register.getMetricsAsJSON()).not.toHaveLength(0);
-		register.getMetricsAsJSON().forEach(metric => {
+	it('should prefix metric names when configured', async () => {
+		collectDefaultMetrics({ prefix: 'some_prefix_' });
+		expect(await register.getMetricsAsJSON()).not.toHaveLength(0);
+		for (const metric of await register.getMetricsAsJSON()) {
 			expect(metric.name.substring(0, 12)).toEqual('some_prefix_');
-		});
+		}
 	});
 
-	it('should omit timestamp in certain metrics', () => {
-		const metricsWithToggableTimestamp = [
-			'nodejs_active_handles_total',
-			'nodejs_external_memory_bytes',
-			'nodejs_heap_size_total_bytes',
-			'nodejs_heap_size_used_bytes'
-		];
-		interval = collectDefaultMetrics({ timestamps: false });
-		expect(register.getMetricsAsJSON()).not.toHaveLength(0);
-		const testableMetrics = register
-			.getMetricsAsJSON()
-			.filter(
-				metrics => metricsWithToggableTimestamp.indexOf(metrics.name) !== -1
-			);
-		testableMetrics.forEach(metric => {
-			expect(metric.values).not.toHaveLength(0);
-			expect(metric.values[0].timestamp).not.toBeDefined();
+	it('should apply labels to metrics when configured', async () => {
+		expect(await register.getMetricsAsJSON()).toHaveLength(0);
+
+		const labels = { NODE_APP_INSTANCE: 0 };
+		collectDefaultMetrics({ labels });
+
+		const metrics = await register.getMetricsAsJSON();
+
+		// flatten metric values into a single array
+		const allMetricValues = metrics.reduce(
+			(previous, metric) => previous.concat(metric.values),
+			[],
+		);
+
+		// this varies between 45 and 47 depending on node handles - we just wanna
+		// assert there's at least one so we know the assertions in the loop below
+		// are executed
+		expect(allMetricValues.length).toBeGreaterThan(0);
+
+		allMetricValues.forEach(metricValue => {
+			expect(metricValue.labels).toMatchObject(labels);
 		});
 	});
 
 	describe('disabling', () => {
 		it('should not throw error', () => {
-			const fn = function() {
-				delete require.cache[require.resolve('../index')];
-				const client = require('../index');
-				clearInterval(client.collectDefaultMetrics());
+			const fn = function () {
 				register.clear();
 			};
 
@@ -105,16 +104,21 @@ describe('collectDefaultMetrics', () => {
 	});
 
 	describe('custom registry', () => {
-		it('should allow to register metrics to custom registry', () => {
+		it('should allow to register metrics to custom registry', async () => {
 			const registry = new Registry();
 
-			expect(register.getMetricsAsJSON()).toHaveLength(0);
-			expect(registry.getMetricsAsJSON()).toHaveLength(0);
+			expect(await register.getMetricsAsJSON()).toHaveLength(0);
+			expect(await registry.getMetricsAsJSON()).toHaveLength(0);
 
-			interval = collectDefaultMetrics({ register: registry });
+			collectDefaultMetrics();
 
-			expect(register.getMetricsAsJSON()).toHaveLength(0);
-			expect(registry.getMetricsAsJSON()).not.toHaveLength(0);
+			expect(await register.getMetricsAsJSON()).not.toHaveLength(0);
+			expect(await registry.getMetricsAsJSON()).toHaveLength(0);
+
+			collectDefaultMetrics({ register: registry });
+
+			expect(await register.getMetricsAsJSON()).not.toHaveLength(0);
+			expect(await registry.getMetricsAsJSON()).not.toHaveLength(0);
 		});
 	});
 });

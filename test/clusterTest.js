@@ -18,19 +18,11 @@ describe('AggregatorRegistry', () => {
 	});
 
 	describe('aggregatorRegistry.clusterMetrics()', () => {
-		it('works properly if there are no cluster workers', done => {
+		it('works properly if there are no cluster workers', async () => {
 			const AggregatorRegistry = require('../lib/cluster');
 			const ar = new AggregatorRegistry();
-			let tickElapsed = false;
-			process.nextTick(() => {
-				tickElapsed = true;
-			});
-			ar.clusterMetrics((err, metrics) => {
-				expect(tickElapsed).toBe(true);
-				expect(err).toBeNull();
-				expect(metrics).toEqual('');
-				done();
-			});
+			const metrics = await ar.clusterMetrics();
+			expect(metrics).toEqual('');
 		});
 	});
 
@@ -46,15 +38,15 @@ describe('AggregatorRegistry', () => {
 					{
 						labels: { le: 0.1, code: '300' },
 						value: 0,
-						metricName: 'test_histogram_bucket'
+						metricName: 'test_histogram_bucket',
 					},
 					{
 						labels: { le: 10, code: '300' },
 						value: 1.6486727018068046,
-						metricName: 'test_histogram_bucket'
-					}
+						metricName: 'test_histogram_bucket',
+					},
 				],
-				aggregator: 'sum'
+				aggregator: 'sum',
 			},
 			{
 				help: 'Example of a gauge',
@@ -63,23 +55,23 @@ describe('AggregatorRegistry', () => {
 				values: [
 					{ value: 0.47, labels: { method: 'get', code: 200 } },
 					{ value: 0.64, labels: {} },
-					{ value: 23, labels: { method: 'post', code: '300' } }
+					{ value: 23, labels: { method: 'post', code: '300' } },
 				],
-				aggregator: 'sum'
+				aggregator: 'sum',
 			},
 			{
 				help: 'Start time of the process since unix epoch in seconds.',
 				name: 'process_start_time_seconds',
 				type: 'gauge',
 				values: [{ value: 1502075832, labels: {} }],
-				aggregator: 'omit'
+				aggregator: 'omit',
 			},
 			{
 				help: 'Lag of event loop in seconds.',
 				name: 'nodejs_eventloop_lag_seconds',
 				type: 'gauge',
-				values: [{ value: 0.009, labels: {}, timestamp: 1502075832298 }],
-				aggregator: 'average'
+				values: [{ value: 0.009, labels: {} }],
+				aggregator: 'average',
 			},
 			{
 				help: 'Node.js version info.',
@@ -88,11 +80,11 @@ describe('AggregatorRegistry', () => {
 				values: [
 					{
 						value: 1,
-						labels: { version: 'v6.11.1', major: 6, minor: 11, patch: 1 }
-					}
+						labels: { version: 'v6.11.1', major: 6, minor: 11, patch: 1 },
+					},
 				],
-				aggregator: 'first'
-			}
+				aggregator: 'first',
+			},
 		];
 		const metricsArr2 = [
 			{
@@ -103,15 +95,15 @@ describe('AggregatorRegistry', () => {
 					{
 						labels: { le: 0.1, code: '300' },
 						value: 0.235151,
-						metricName: 'test_histogram_bucket'
+						metricName: 'test_histogram_bucket',
 					},
 					{
 						labels: { le: 10, code: '300' },
 						value: 1.192591,
-						metricName: 'test_histogram_bucket'
-					}
+						metricName: 'test_histogram_bucket',
+					},
 				],
-				aggregator: 'sum'
+				aggregator: 'sum',
 			},
 			{
 				help: 'Example of a gauge',
@@ -120,23 +112,23 @@ describe('AggregatorRegistry', () => {
 				values: [
 					{ value: 0.02, labels: { method: 'get', code: 200 } },
 					{ value: 0.24, labels: {} },
-					{ value: 51, labels: { method: 'post', code: '300' } }
+					{ value: 51, labels: { method: 'post', code: '300' } },
 				],
-				aggregator: 'sum'
+				aggregator: 'sum',
 			},
 			{
 				help: 'Start time of the process since unix epoch in seconds.',
 				name: 'process_start_time_seconds',
 				type: 'gauge',
 				values: [{ value: 1502075849, labels: {} }],
-				aggregator: 'omit'
+				aggregator: 'omit',
 			},
 			{
 				help: 'Lag of event loop in seconds.',
 				name: 'nodejs_eventloop_lag_seconds',
 				type: 'gauge',
-				values: [{ value: 0.008, labels: {}, timestamp: 1502075832321 }],
-				aggregator: 'average'
+				values: [{ value: 0.008, labels: {} }],
+				aggregator: 'average',
 			},
 			{
 				help: 'Node.js version info.',
@@ -145,16 +137,16 @@ describe('AggregatorRegistry', () => {
 				values: [
 					{
 						value: 1,
-						labels: { version: 'v6.11.1', major: 6, minor: 11, patch: 1 }
-					}
+						labels: { version: 'v6.11.1', major: 6, minor: 11, patch: 1 },
+					},
 				],
-				aggregator: 'first'
-			}
+				aggregator: 'first',
+			},
 		];
 
 		const aggregated = Registry.aggregate([metricsArr1, metricsArr2]);
 
-		it('defaults to summation, preserves histogram bins', () => {
+		it('defaults to summation, preserves histogram bins', async () => {
 			const histogram = aggregated.getSingleMetric('test_histogram').get();
 			expect(histogram).toEqual({
 				name: 'test_histogram',
@@ -164,15 +156,15 @@ describe('AggregatorRegistry', () => {
 					{
 						labels: { le: 0.1, code: '300' },
 						value: 0.235151,
-						metricName: 'test_histogram_bucket'
+						metricName: 'test_histogram_bucket',
 					},
 					{
 						labels: { le: 10, code: '300' },
 						value: 2.8412637018068043,
-						metricName: 'test_histogram_bucket'
-					}
+						metricName: 'test_histogram_bucket',
+					},
 				],
-				aggregator: 'sum'
+				aggregator: 'sum',
 			});
 		});
 
@@ -185,15 +177,15 @@ describe('AggregatorRegistry', () => {
 				values: [
 					{ value: 0.49, labels: { method: 'get', code: 200 } },
 					{ value: 0.88, labels: {} },
-					{ value: 74, labels: { method: 'post', code: '300' } }
+					{ value: 74, labels: { method: 'post', code: '300' } },
 				],
-				aggregator: 'sum'
+				aggregator: 'sum',
 			});
 		});
 
 		it('uses `aggregate` method defined for process_start_time', () => {
 			const procStartTime = aggregated.getSingleMetric(
-				'process_start_time_seconds'
+				'process_start_time_seconds',
 			);
 			expect(procStartTime).toBeUndefined();
 		});
@@ -207,7 +199,7 @@ describe('AggregatorRegistry', () => {
 				name: 'nodejs_eventloop_lag_seconds',
 				type: 'gauge',
 				values: [{ value: 0.0085, labels: {} }],
-				aggregator: 'average'
+				aggregator: 'average',
 			});
 		});
 
@@ -220,7 +212,7 @@ describe('AggregatorRegistry', () => {
 				name: 'nodejs_eventloop_lag_seconds',
 				type: 'gauge',
 				values: [{ value: 0.0085, labels: {} }],
-				aggregator: 'average'
+				aggregator: 'average',
 			});
 		});
 
@@ -233,10 +225,10 @@ describe('AggregatorRegistry', () => {
 				values: [
 					{
 						value: 1,
-						labels: { version: 'v6.11.1', major: 6, minor: 11, patch: 1 }
-					}
+						labels: { version: 'v6.11.1', major: 6, minor: 11, patch: 1 },
+					},
 				],
-				aggregator: 'first'
+				aggregator: 'first',
 			});
 		});
 	});
