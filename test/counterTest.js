@@ -95,6 +95,122 @@ describe('counter', () => {
 				const values = (await instance.get()).values;
 				expect(values[0].value).toEqual(100);
 			});
+
+			it('should not have exemplars if they are not provided', async () => {
+				instance.labels('GET', '/test').inc();
+				const values = (await instance.get()).values;
+				expect(values[0].exemplars).toEqual(undefined);
+				expect(values[0].exemplarValue).toEqual(undefined);
+			});
+		});
+
+		describe('exemplars', () => {
+			beforeEach(() => {
+				instance = new Counter({
+					name: 'gauge_test_2',
+					help: 'help',
+					exemplarNames: ['traceId', 'spanId'],
+					labelNames: ['method', 'endpoint'],
+				});
+			});
+
+			it('should handle 1 value per exemplar', async () => {
+				instance.exemplars('12345', '67890').inc();
+				instance.exemplars('54321', '09876').inc();
+
+				const values = (await instance.get()).values;
+				expect(values).toHaveLength(2);
+			});
+
+			it('should handle exemplars provided as an object', async () => {
+				instance.exemplars({ traceId: '12345', spanId: '67890' }).inc();
+				const values = (await instance.get()).values;
+				expect(values).toHaveLength(1);
+				expect(values[0].exemplars).toEqual({
+					traceId: '12345',
+					spanId: '67890',
+				});
+				expect(values[0].exemplarValue).toEqual(1);
+			});
+
+			it('should handle exemplars which are provided as arguments to inc()', async () => {
+				instance.inc(
+					{ method: 'GET', endpoint: '/test' },
+					1,
+					{
+						traceId: '12345',
+						spanId: '67890',
+					},
+					1,
+				);
+				instance.inc(
+					{ method: 'POST', endpoint: '/test' },
+					1,
+					{
+						traceId: '54321',
+						spanId: '09876',
+					},
+					1,
+				);
+
+				const values = (await instance.get()).values;
+				expect(values).toHaveLength(2);
+				expect(values[0].exemplarValue).toEqual(1);
+				expect(values[1].exemplarValue).toEqual(1);
+			});
+
+			it('should throw error if exemplar lengths does not match', () => {
+				const fn = function () {
+					instance.exemplars('12345').inc();
+				};
+				expect(fn).toThrowErrorMatchingSnapshot();
+			});
+
+			it('should increment exemplar value with provided value', async () => {
+				instance.exemplars('12345', '67890').inc(100);
+				const values = (await instance.get()).values;
+				expect(values[0].value).toEqual(100);
+			});
+
+			it('should set exemplar value', async () => {
+				instance.inc(
+					{ method: 'GET', endpoint: '/test' },
+					1,
+					{
+						traceId: '12345',
+						spanId: '67890',
+					},
+					2,
+				);
+				const values = (await instance.get()).values;
+				expect(values).toHaveLength(1);
+				expect(values[0].exemplarValue).toEqual(2);
+			});
+
+			it('should be able to create exemplars with an empty exemplar label set', async () => {
+				instance.inc({ method: 'GET', endpoint: '/test' }, 1, {}, 0.74);
+				const values = (await instance.get()).values;
+				expect(values).toHaveLength(1);
+				expect(values[0].exemplars).toEqual({});
+				expect(values[0].exemplarValue).toEqual(0.74);
+			});
+
+			it('should throw error when exemplar and exemplar value combined is longer than 128 chars', async () => {
+				const fn = function () {
+					instance.inc(
+						{ method: 'GET', endpoint: '/test' },
+						1,
+						{
+							traceId:
+								'93iefj93eijf93eijf39ejf93eji9fjeijf93ejfosdjff9ij9sdfsdf',
+							spanId:
+								'bfiodia03irjokdnbdofigi03ijgoajsfbvb0dfijgigoadib78sdfsdf',
+						},
+						100000000,
+					);
+				};
+				expect(fn).toThrowErrorMatchingSnapshot();
+			});
 		});
 	});
 
@@ -207,6 +323,7 @@ describe('counter', () => {
 				name: 'test_metric',
 				help: 'Another test metric',
 				labelNames: ['serial', 'active'],
+				exemplarNames: ['traceId', 'spanId'],
 			});
 
 			instance.inc({ serial: '12345', active: 'yes' }, 12);
@@ -218,7 +335,10 @@ describe('counter', () => {
 
 			expect((await instance.get()).values).toEqual([]);
 
-			instance.inc({ serial: '12345', active: 'no' }, 10);
+			instance.inc({ serial: '12345', active: 'no' }, 10, {
+				traceId: '12345',
+				spanId: '67890',
+			});
 			expect((await instance.get()).values[0].value).toEqual(10);
 			expect((await instance.get()).values[0].labels.serial).toEqual('12345');
 			expect((await instance.get()).values[0].labels.active).toEqual('no');

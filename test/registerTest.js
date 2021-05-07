@@ -32,6 +32,35 @@ describe('register', () => {
 		});
 	});
 
+	describe('should output a counter metric in extended exposition format', () => {
+		let output;
+		beforeEach(async () => {
+			register.contentType = 'application/openmetrics-text';
+			register.registerMetric(getOpenMetrics());
+			output = (await register.metrics()).split('\n');
+		});
+
+		it('with help as first item', () => {
+			expect(output[0]).toEqual('# HELP test_metric A test metric');
+		});
+		it('with type as second item', () => {
+			expect(output[1]).toEqual('# TYPE test_metric counter');
+		});
+		it('with first value of the metric as third item', () => {
+			expect(output[2]).toEqual(
+				'test_metric{label="hello",code="303"} 12 # {traceId="12345"} 1',
+			);
+		});
+		it('with second value of the metric as fourth item', () => {
+			expect(output[3]).toEqual(
+				'test_metric{label="bye",code="404"} 34 # {traceId="67890"} 2',
+			);
+		});
+		it('with eof as last item', () => {
+			expect(output[4]).toEqual('# EOF');
+		});
+	});
+
 	it('should throw on more than one metric', () => {
 		register.registerMetric(getMetric());
 
@@ -459,6 +488,9 @@ describe('register', () => {
 					myCounter.inc();
 
 					const metrics = await r.getMetricsAsJSON();
+					expect(r.contentType).toEqual(
+						'text/plain; version=0.0.4; charset=utf-8',
+					);
 					expect(metrics).toContainEqual({
 						aggregator: 'sum',
 						help: 'my counter',
@@ -468,6 +500,8 @@ describe('register', () => {
 							{
 								labels: { env: 'development', type: 'myType' },
 								value: 1,
+								// exemplars: {},
+								// exemplarValue: undefined,
 							},
 						],
 					});
@@ -475,6 +509,9 @@ describe('register', () => {
 					myCounter.inc();
 
 					const metrics2 = await r.getMetricsAsJSON();
+					expect(r.contentType).toEqual(
+						'text/plain; version=0.0.4; charset=utf-8',
+					);
 					expect(metrics2).toContainEqual({
 						aggregator: 'sum',
 						help: 'my counter',
@@ -484,6 +521,8 @@ describe('register', () => {
 							{
 								labels: { env: 'development', type: 'myType' },
 								value: 2,
+								// exemplars: {},
+								// exemplarValue: 1,
 							},
 						],
 					});
@@ -632,6 +671,44 @@ describe('register', () => {
 								label: 'bye',
 								code: '404',
 							},
+						},
+					],
+				};
+			},
+		};
+	}
+
+	function getOpenMetrics(name) {
+		name = name || 'test_metric';
+		return {
+			name,
+			async get() {
+				return {
+					name,
+					type: 'counter',
+					help: 'A test metric',
+					values: [
+						{
+							value: 12,
+							labels: {
+								label: 'hello',
+								code: '303',
+							},
+							exemplars: {
+								traceId: '12345',
+							},
+							exemplarValue: 1,
+						},
+						{
+							value: 34,
+							labels: {
+								label: 'bye',
+								code: '404',
+							},
+							exemplars: {
+								traceId: '67890',
+							},
+							exemplarValue: 2,
 						},
 					],
 				};

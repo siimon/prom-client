@@ -2,6 +2,10 @@
 
 exports[`counter remove should throw error if label lengths does not match 1`] = `"Invalid number of arguments"`;
 
+exports[`counter with params as object exemplars should throw error if exemplar lengths does not match 1`] = `"Invalid number of arguments"`;
+
+exports[`counter with params as object exemplars should throw error when exemplar and exemplar value combined is longer than 128 chars 1`] = `"Exemplar label set cannot exceed 128 UTF-8 characters: current label set has undefined characters"`;
+
 exports[`counter with params as object labels should throw error if label lengths does not match 1`] = `"Invalid number of arguments"`;
 
 exports[`counter with params as object should not be possible to decrease a counter 1`] = `"It is not possible to decrease a counter"`;
