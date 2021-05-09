@@ -22,6 +22,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - fix: push client attempting to write Promise (fixes [#390](https://github.com/siimon/prom-client/issues/390))
 - types: improve type checking of labels
 - fix: Summary#observe should throw when adding additional labels to labelset (fixes [#262](https://github.com/siimon/prom-client/issues/262))
+- fix: Set aggregation mode for newer event loop metrics. (Fixes [#418](https://github.com/siimon/prom-client/issues/418))
 
 ### Added
 
