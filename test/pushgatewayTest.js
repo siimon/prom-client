@@ -1,22 +1,6 @@
 'use strict';
 
-const httpMocks = {
-	on: jest.fn(),
-	end: jest.fn(),
-	write: jest.fn(),
-};
-const mockHttp = jest.fn().mockReturnValue(httpMocks);
-
-jest.mock('http', () => {
-	return {
-		request: mockHttp,
-	};
-});
-
-const payload = `# HELP test test
-# TYPE test counter
-test 100
-`;
+const nock = require('nock');
 
 describe('pushgateway', () => {
 	const Pushgateway = require('../index').Pushgateway;
@@ -28,88 +12,92 @@ describe('pushgateway', () => {
 	const tests = function () {
 		describe('pushAdd', () => {
 			it('should push metrics', () => {
-				instance.pushAdd({ jobName: 'testJob' });
+				const mockHttp = nock('http://192.168.99.100:9091')
+					.post(
+						'/metrics/job/testJob',
+						'# HELP test test\n# TYPE test counter\ntest 100\n',
+					)
+					.reply(200);
 
-				expect(mockHttp).toHaveBeenCalledTimes(1);
-				const invocation = mockHttp.mock.calls[0][0];
-				expect(invocation.method).toEqual('POST');
-				expect(invocation.path).toEqual('/metrics/job/testJob');
+				return instance.pushAdd({ jobName: 'testJob' }).then(() => {
+					expect(mockHttp.isDone());
+				});
 			});
 
 			it('should use groupings', () => {
-				instance.pushAdd({ jobName: 'testJob', groupings: { key: 'value' } });
+				const mockHttp = nock('http://192.168.99.100:9091')
+					.post(
+						'/metrics/job/testJob/key/value',
+						'# HELP test test\n# TYPE test counter\ntest 100\n',
+					)
+					.reply(200);
 
-				expect(mockHttp).toHaveBeenCalledTimes(1);
-				const invocation = mockHttp.mock.calls[0][0];
-				expect(invocation.method).toEqual('POST');
-				expect(invocation.path).toEqual('/metrics/job/testJob/key/value');
+				return instance
+					.pushAdd({
+						jobName: 'testJob',
+						groupings: { key: 'value' },
+					})
+					.then(() => {
+						expect(mockHttp.isDone());
+					});
 			});
 
 			it('should escape groupings', () => {
-				instance.pushAdd({ jobName: 'testJob', groupings: { key: 'va&lue' } });
+				const mockHttp = nock('http://192.168.99.100:9091')
+					.post(
+						'/metrics/job/testJob/key/va%26lue',
+						'# HELP test test\n# TYPE test counter\ntest 100\n',
+					)
+					.reply(200);
 
-				expect(mockHttp).toHaveBeenCalledTimes(1);
-				const invocation = mockHttp.mock.calls[0][0];
-				expect(invocation.method).toEqual('POST');
-				expect(invocation.path).toEqual('/metrics/job/testJob/key/va%26lue');
-			});
-
-			it('should write the payload', () => {
-				instance.pushAdd({ jobName: 'testJob' });
-
-				return instance.registry.metrics().then(() => {
-					expect(httpMocks.write).toBeCalledTimes(1);
-					expect(httpMocks.end).toBeCalledTimes(1);
-					expect(httpMocks.write).toHaveBeenCalledWith(payload);
-				});
+				return instance
+					.pushAdd({
+						jobName: 'testJob',
+						groupings: { key: 'va&lue' },
+					})
+					.then(() => {
+						expect(mockHttp.isDone());
+					});
 			});
 		});
 
 		describe('push', () => {
 			it('should push with PUT', () => {
-				instance.push({ jobName: 'testJob' });
+				const mockHttp = nock('http://192.168.99.100:9091')
+					.put(
+						'/metrics/job/testJob',
+						'# HELP test test\n# TYPE test counter\ntest 100\n',
+					)
+					.reply(200);
 
-				expect(mockHttp).toHaveBeenCalledTimes(1);
-				const invocation = mockHttp.mock.calls[0][0];
-				expect(invocation.method).toEqual('PUT');
-				expect(invocation.path).toEqual('/metrics/job/testJob');
+				return instance.push({ jobName: 'testJob' }).then(() => {
+					expect(mockHttp.isDone());
+				});
 			});
 
 			it('should uri encode url', () => {
-				instance.push({ jobName: 'test&Job' });
+				const mockHttp = nock('http://192.168.99.100:9091')
+					.put(
+						'/metrics/job/test%26Job',
+						'# HELP test test\n# TYPE test counter\ntest 100\n',
+					)
+					.reply(200);
 
-				expect(mockHttp).toHaveBeenCalledTimes(1);
-				const invocation = mockHttp.mock.calls[0][0];
-				expect(invocation.method).toEqual('PUT');
-				expect(invocation.path).toEqual('/metrics/job/test%26Job');
-			});
-
-			it('should write the payload', () => {
-				instance.push({ jobName: 'test&Job' });
-
-				return instance.registry.metrics().then(() => {
-					expect(httpMocks.write).toBeCalledTimes(1);
-					expect(httpMocks.end).toBeCalledTimes(1);
-					expect(httpMocks.write).toHaveBeenCalledWith(payload);
+				return instance.push({ jobName: 'test&Job' }).then(() => {
+					expect(mockHttp.isDone());
 				});
 			});
 		});
 
 		describe('delete', () => {
 			it('should push delete with no body', () => {
-				instance.delete({ jobName: 'testJob' });
+				const mockHttp = nock('http://192.168.99.100:9091')
+					.delete('/metrics/job/testJob')
+					.reply(200);
 
-				expect(mockHttp).toHaveBeenCalledTimes(1);
-				const invocation = mockHttp.mock.calls[0][0];
-				expect(invocation.method).toEqual('DELETE');
-				expect(invocation.path).toEqual('/metrics/job/testJob');
-			});
-
-			it('should not write a payload', () => {
-				instance.delete({ jobName: 'testJob' });
-
-				expect(httpMocks.end).toBeCalledTimes(1);
-				expect(httpMocks.write).toBeCalledTimes(0);
+				return instance.delete({ jobName: 'testJob' }).then(() => {
+					expect(mockHttp.isDone());
+				});
 			});
 		});
 
@@ -127,34 +115,54 @@ describe('pushgateway', () => {
 			});
 
 			it('pushAdd should send POST request with basic auth data', () => {
-				instance.pushAdd({ jobName: 'testJob' });
+				const mockHttp = nock(`http://${auth}@192.168.99.100:9091`)
+					.post(
+						'/metrics/job/testJob',
+						'# HELP test test\n# TYPE test counter\ntest 100\n',
+					)
+					.reply(200);
 
-				expect(mockHttp).toHaveBeenCalledTimes(1);
-				const invocation = mockHttp.mock.calls[0][0];
-				expect(invocation.method).toEqual('POST');
-				expect(invocation.auth).toEqual(auth);
+				return instance.pushAdd({ jobName: 'testJob' }).then(() => {
+					expect(mockHttp.isDone());
+				});
 			});
 
 			it('push should send PUT request with basic auth data', () => {
-				instance.push({ jobName: 'testJob' });
+				const mockHttp = nock(`http://${auth}@192.168.99.100:9091`)
+					.put(
+						'/metrics/job/testJob',
+						'# HELP test test\n# TYPE test counter\ntest 100\n',
+					)
+					.reply(200);
 
-				expect(mockHttp).toHaveBeenCalledTimes(1);
-				const invocation = mockHttp.mock.calls[0][0];
-				expect(invocation.method).toEqual('PUT');
-				expect(invocation.auth).toEqual(auth);
+				return instance.push({ jobName: 'testJob' }).then(() => {
+					expect(mockHttp.isDone());
+				});
 			});
 
 			it('delete should send DELETE request with basic auth data', () => {
-				instance.delete({ jobName: 'testJob' });
+				const mockHttp = nock(`http://${auth}@192.168.99.100:9091`)
+					.delete('/metrics/job/testJob')
+					.reply(200);
 
-				expect(mockHttp).toHaveBeenCalledTimes(1);
-				const invocation = mockHttp.mock.calls[0][0];
-				expect(invocation.method).toEqual('DELETE');
-				expect(invocation.auth).toEqual(auth);
+				return instance.delete({ jobName: 'testJob' }).then(() => {
+					expect(mockHttp.isDone());
+				});
 			});
 		});
 
 		it('should be possible to extend http/s requests with options', () => {
+			const mockHttp = nock('http://192.168.99.100:9091', {
+				reqheaders: {
+					'unit-test': '1',
+				},
+			})
+				.put(
+					'/metrics/job/testJob',
+					'# HELP test test\n# TYPE test counter\ntest 100\n',
+				)
+				.reply(200);
+
 			instance = new Pushgateway(
 				'http://192.168.99.100:9091',
 				{
@@ -165,36 +173,34 @@ describe('pushgateway', () => {
 				registry,
 			);
 
-			instance.push({ jobName: 'testJob' });
-
-			expect(mockHttp).toHaveBeenCalledTimes(1);
-			const invocation = mockHttp.mock.calls[0][0];
-			expect(invocation.headers).toEqual({ 'unit-test': '1' });
+			return instance.push({ jobName: 'testJob' }).then(() => {
+				expect(mockHttp.isDone());
+			});
 		});
 	};
+
 	describe('global registry', () => {
 		afterEach(() => {
-			mockHttp.mockClear();
 			register.clear();
 		});
+
 		beforeEach(() => {
-			httpMocks.write.mockClear();
-			httpMocks.end.mockClear();
 			registry = undefined;
 			instance = new Pushgateway('http://192.168.99.100:9091');
 			const promClient = require('../index');
 			const cnt = new promClient.Counter({ name: 'test', help: 'test' });
 			cnt.inc(100);
 		});
+
 		tests();
 	});
+
 	describe('registry instance', () => {
 		afterEach(() => {
-			mockHttp.mockClear();
+			register.clear();
 		});
+
 		beforeEach(() => {
-			httpMocks.write.mockClear();
-			httpMocks.end.mockClear();
 			registry = new Registry();
 			instance = new Pushgateway('http://192.168.99.100:9091', null, registry);
 			const promeClient = require('../index');
@@ -205,6 +211,7 @@ describe('pushgateway', () => {
 			});
 			cnt.inc(100);
 		});
+
 		tests();
 	});
 });
