@@ -13,6 +13,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 - Don't add event listener to `process` if cluster module is not used.
 - fix: set labels for default memory metrics on linux
+- fix: fix DEP0152 deprecation warning in Node.js v16+
 
 ### Added
 
