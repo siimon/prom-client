@@ -30,7 +30,7 @@ label. (See `example/server.js` for an example using
 Metrics are aggregated from the global registry by default. To use a different
 registry, call
 `client.AggregatorRegistry.setRegistries(registryOrArrayOfRegistries)` from the
-worker processes.
+master or worker processes.
 
 ## API
 
