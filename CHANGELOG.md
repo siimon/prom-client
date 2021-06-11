@@ -12,6 +12,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 - Don't add event listener to `process` if cluster module is not used.
+- fix: set labels for default memory metrics on linux
 
 ### Added
 
