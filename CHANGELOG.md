@@ -11,6 +11,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- fix: set labels for default memory metrics on linux
+
 ### Added
 
 - feat: added `zero()` to `Histogram` for setting the metrics for a given label combination to zero
