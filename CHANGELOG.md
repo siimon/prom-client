@@ -19,6 +19,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - feat: added `zero()` to `Histogram` for setting the metrics for a given label combination to zero
+- fix: allow `Gauge.inc/dec(0)` without defaulting to 1
 
 ## [13.1.0] - 2021-01-24
 
