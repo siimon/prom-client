@@ -4,16 +4,10 @@ describe('collectDefaultMetrics', () => {
 	const register = require('../index').register;
 	const Registry = require('../index').Registry;
 	const collectDefaultMetrics = require('../index').collectDefaultMetrics;
-	let platform;
 	let cpuUsage;
 
 	beforeAll(() => {
-		platform = process.platform;
 		cpuUsage = process.cpuUsage;
-
-		Object.defineProperty(process, 'platform', {
-			value: 'my-bogus-platform',
-		});
 
 		if (cpuUsage) {
 			Object.defineProperty(process, 'cpuUsage', {
@@ -31,10 +25,6 @@ describe('collectDefaultMetrics', () => {
 	});
 
 	afterAll(() => {
-		Object.defineProperty(process, 'platform', {
-			value: platform,
-		});
-
 		if (cpuUsage) {
 			Object.defineProperty(process, 'cpuUsage', {
 				value: cpuUsage,
