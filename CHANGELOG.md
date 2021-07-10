@@ -11,6 +11,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Don't add event listener to `process` if cluster module is not used.
+
 ### Added
 
 - feat: added `zero()` to `Histogram` for setting the metrics for a given label combination to zero
