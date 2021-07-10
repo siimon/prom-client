@@ -1,9 +1,10 @@
 'use strict';
 
 const cluster = require('cluster');
+const process = require('process');
 
 describe('AggregatorRegistry', () => {
-	it('requiring the cluster should not add any listeners', () => {
+	it('requiring the cluster should not add any listeners on the cluster module', () => {
 		const originalListenerCount = cluster.listenerCount('message');
 
 		require('../lib/cluster');
@@ -15,6 +16,20 @@ describe('AggregatorRegistry', () => {
 		require('../lib/cluster');
 
 		expect(cluster.listenerCount('message')).toBe(originalListenerCount);
+	});
+
+	it('requiring the cluster should not add any listeners on the process module', () => {
+		const originalListenerCount = process.listenerCount('message');
+
+		require('../lib/cluster');
+
+		expect(process.listenerCount('message')).toBe(originalListenerCount);
+
+		jest.resetModules();
+
+		require('../lib/cluster');
+
+		expect(process.listenerCount('message')).toBe(originalListenerCount);
 	});
 
 	describe('aggregatorRegistry.clusterMetrics()', () => {
