@@ -12,9 +12,10 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 - Don't add event listener to `process` if cluster module is not used.
-- fix: set labels for default memory metrics on linux
-- fix: fix DEP0152 deprecation warning in Node.js v16+
+- fix: set labels for default memory metrics on linux.
+- fix: fix DEP0152 deprecation warning in Node.js v16+.
 - fix: Set aggregation mode for newer event loop metrics. (Fixes [#418](https://github.com/siimon/prom-client/issues/418))
+- Improve performance of/reduce memory allocations in Gauge.
 
 ### Added
 
