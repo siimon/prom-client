@@ -51,7 +51,7 @@ available on Linux.
 `collectDefaultMetrics` optionally accepts a config object with following entries:
 
 - `prefix` an optional prefix for metric names. Default: no prefix.
-- `registry` to which metrics should be registered. Default: the global default registry.
+- `register` to which metrics should be registered. Default: the global default registry.
 - `gcDurationBuckets` with custom buckets for GC duration histogram. Default buckets of GC duration histogram are `[0.001, 0.01, 0.1, 1, 2, 5]` (in seconds).
 - `eventLoopMonitoringPrecision` with sampling rate in milliseconds. Must be greater than zero. Default: 10.
 
