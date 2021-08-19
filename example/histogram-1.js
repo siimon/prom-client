@@ -15,7 +15,7 @@ const h = new Histogram({
 h.labels('200').observe(0.4);
 h.labels('200').observe(0.6);
 
-h.obsever({ code: '200' }, 0.4);
+h.observe({ code: '200' }, 0.4);
 
 console.log(register.metrics());
 
