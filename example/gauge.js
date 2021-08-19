@@ -54,3 +54,10 @@ console.log(register.metrics());
 test_gauge{code="200"} 6
 test_gauge 22
  */
+
+g.reset();
+console.log(register.metrics());
+/*
+# HELP test_gauge Example of a gauge
+# TYPE test_gauge gauge
+ */
