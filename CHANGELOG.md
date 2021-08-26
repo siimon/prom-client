@@ -13,6 +13,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- fix: add type declaration for `client.contentType`
+
 ## [13.2.0] - 2021-08-08
 
 ### Changed
