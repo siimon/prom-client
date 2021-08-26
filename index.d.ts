@@ -79,6 +79,11 @@ export type Collector = () => void;
  */
 export const register: Registry;
 
+/**
+ * The Content-Type of the metrics for use in the response headers.
+ */
+export const contentType: string;
+
 export class AggregatorRegistry extends Registry {
 	/**
 	 * Gets aggregated metrics for all workers.
