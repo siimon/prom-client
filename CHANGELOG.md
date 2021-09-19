@@ -29,6 +29,11 @@ project adheres to [Semantic Versioning](http://semver.org/).
   const { resp, body } = await gateway.pushAdd({ jobName: 'test' });
   ```
 
+- changed: The default `nodejs_eventloop_lag_*` metrics are now reset every time
+  they are observed. This prevents these metrics from "stabilizing" over a long
+  period of time and becoming insensitive to small changes. For more info, see
+  [#370](https://github.com/siimon/prom-client/issues/370).
+
 ### Changed
 
 ### Added
