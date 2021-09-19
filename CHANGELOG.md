@@ -9,10 +9,18 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Breaking
 
+### Changed
+
+### Added
+
+## [14.0.0] - 2021-09-18
+
+### Breaking
+
 - changed: `linearBuckets` does not propagate rounding errors anymore.
 
   Fewer bucket bounds will be affected by rounding errors. Histogram bucket
-  labels may change.
+  labels may change. [`6f1f3b2`](https://github.com/siimon/prom-client/commit/6f1f3b24c9c21311ff33e7d4b987b40c6b304e04)
 
 - changed: The push gateway methods `pushAdd()`, `push()` and `delete()` now
   return Promises instead of accepting a callback:
@@ -29,16 +37,18 @@ project adheres to [Semantic Versioning](http://semver.org/).
   const { resp, body } = await gateway.pushAdd({ jobName: 'test' });
   ```
 
+  [`f177b1f`](https://github.com/siimon/prom-client/commit/f177b1fd3d4db5fc48fcb1ec02d94069fffcf144)
+
 - changed: The default `nodejs_eventloop_lag_*` metrics are now reset every time
   they are observed. This prevents these metrics from "stabilizing" over a long
   period of time and becoming insensitive to small changes. For more info, see
-  [#370](https://github.com/siimon/prom-client/issues/370).
+  [#370](https://github.com/siimon/prom-client/issues/370). [`0f444cd`](https://github.com/siimon/prom-client/commit/0f444cd38e4c7074991270106c270f731bafddb8)
 
 ### Changed
 
-### Added
-
-- fix: add type declaration for `client.contentType`
+- Add missing `await`/`then`s to examples. [`074f339`](https://github.com/siimon/prom-client/commit/074f339914e5d71b5829cd4a949affae23dbc409)
+- Add missing type declaration for `client.contentType`. [`3b66641`](https://github.com/siimon/prom-client/commit/3b6664160bdd1555045b03d8f4c421022f30e1db)
+- Modernize some label processing code. [`c9bf1d8`](https://github.com/siimon/prom-client/commit/c9bf1d8e3db3b5fb97faf2df9ca9b9af670288f3)
 
 ## [13.2.0] - 2021-08-08
 
