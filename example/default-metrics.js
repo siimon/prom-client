@@ -7,7 +7,7 @@ collectDefaultMetrics({
 	gcDurationBuckets: [0.001, 0.01, 0.1, 1, 2, 5], // These are the default buckets.
 });
 
-console.log(register.metrics());
+register.metrics().then(str => console.log(str));
 
 /*
 Output from metrics():

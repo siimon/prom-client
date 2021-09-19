@@ -5,73 +5,71 @@
 // Multiple Values
 
 const { Counter, register } = require('..');
-const c = new Counter({
-	name: 'test_counter',
-	help: 'Example of a counter',
-	labelNames: ['code'],
-});
 
-c.inc({ code: 200 });
-console.log(register.metrics());
+async function main() {
+	const c = new Counter({
+		name: 'test_counter',
+		help: 'Example of a counter',
+		labelNames: ['code'],
+	});
 
-/*
-# HELP test_counter Example of a counter
-# TYPE test_counter counter
-test_counter{code="200"} 1
-*/
+	c.inc({ code: 200 });
+	console.log(await register.metrics());
+	/*
+	# HELP test_counter Example of a counter
+	# TYPE test_counter counter
+	test_counter{code="200"} 1
+	*/
 
-c.inc({ code: 200 });
-console.log(register.metrics());
+	c.inc({ code: 200 });
+	console.log(await register.metrics());
+	/*
+	# HELP test_counter Example of a counter
+	# TYPE test_counter counter
+	test_counter{code="200"} 2
+	*/
 
-/*
-# HELP test_counter Example of a counter
-# TYPE test_counter counter
-test_counter{code="200"} 2
-*/
+	c.inc();
+	console.log(await register.metrics());
+	/*
+	# HELP test_counter Example of a counter
+	# TYPE test_counter counter
+	test_counter{code="200"} 2
+	test_counter 1
+	*/
 
-c.inc();
-console.log(register.metrics());
+	c.reset();
+	console.log(await register.metrics());
+	/*
+	# HELP test_counter Example of a counter
+	# TYPE test_counter counter
+	*/
 
-/*
-# HELP test_counter Example of a counter
-# TYPE test_counter counter
-test_counter{code="200"} 2
-test_counter 1
-*/
+	c.inc(15);
+	console.log(await register.metrics());
+	/*
+	# HELP test_counter Example of a counter
+	# TYPE test_counter counter
+	test_counter 15
+	*/
 
-c.reset();
-console.log(register.metrics());
+	c.inc({ code: 200 }, 12);
+	console.log(await register.metrics());
+	/*
+	# HELP test_counter Example of a counter
+	# TYPE test_counter counter
+	test_counter 15
+	test_counter{code="200"} 12
+	*/
 
-/*
-# HELP test_counter Example of a counter
-# TYPE test_counter counter
-*/
+	c.labels('200').inc(12);
+	console.log(await register.metrics());
+	/*
+	# HELP test_counter Example of a counter
+	# TYPE test_counter counter
+	test_counter 15
+	test_counter{code="200"} 24
+	*/
+}
 
-c.inc(15);
-console.log(register.metrics());
-
-/*
-# HELP test_counter Example of a counter
-# TYPE test_counter counter
-test_counter 15
-*/
-
-c.inc({ code: 200 }, 12);
-console.log(register.metrics());
-
-/*
-# HELP test_counter Example of a counter
-# TYPE test_counter counter
-test_counter 15
-test_counter{code="200"} 12
-*/
-
-c.labels('200').inc(12);
-console.log(register.metrics());
-
-/*
-# HELP test_counter Example of a counter
-# TYPE test_counter counter
-test_counter 15
-test_counter{code="200"} 24
-*/
+main();
