@@ -481,6 +481,8 @@ register
   });
 ```
 
+Note that you must call `client.setupClusterWorker()` in each worker.
+
 ### Pushgateway
 
 It is possible to push metrics via a

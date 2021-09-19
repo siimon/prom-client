@@ -9,6 +9,17 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Breaking
 
+- When using the cluster module, you must now call
+  `promclient.setupClusterWorker()` from each cluster worker.
+
+  Long explanation: v13.2.0 introduced a change from v13.1.0 that broke cluster
+  metrics if an `AggregatorRegistry` was not instantiated on each cluster
+  worker. The example in `examples/cluster.js` shows instantiation of an
+  `AggregatorRegistry` in the workers, so users following that example were not
+  affected by this change. However, the example was not written as intended:
+  `new AggregatorRegistry()` should only be called on the cluster master.
+  `examples/cluster.js` has been updated to show the full, correct usage.
+
 ### Changed
 
 ### Added
