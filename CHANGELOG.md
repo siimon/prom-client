@@ -11,6 +11,10 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- The `done()` functions returned by `gauge.startTimer()` and
+  `summary.startTimer()` now return the timed duration. Histograms already had
+  this behavior.
+
 ### Added
 
 ## [14.0.0] - 2021-09-18

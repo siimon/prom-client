@@ -56,8 +56,9 @@ describe('gauge', () => {
 				jest.setSystemTime(0);
 				const doneFn = instance.startTimer();
 				jest.advanceTimersByTime(500);
-				doneFn();
+				const dur = doneFn();
 				await expectValue(0.5);
+				expect(dur).toEqual(0.5);
 				jest.useRealTimers();
 			});
 
