@@ -11,7 +11,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-- changes: typedef for pushgateway to reflect js implementation.
+- changed: typedef for pushgateway to reflect js implementation.
 
   Pushgateway's typedef were missing promise return type. That was
   causing vscode to think that push/pushAdd and delete didn't promise
