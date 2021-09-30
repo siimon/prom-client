@@ -562,7 +562,7 @@ export class Pushgateway {
 	pushAdd(
 		params: Pushgateway.Parameters,
 		callback: (error?: Error, httpResponse?: any, body?: any) => void,
-	): void;
+	): Promise<{ resp: any, body: any }>;
 
 	/**
 	 * Overwrite all metric (using PUT to Pushgateway)
@@ -572,7 +572,7 @@ export class Pushgateway {
 	push(
 		params: Pushgateway.Parameters,
 		callback: (error?: Error, httpResponse?: any, body?: any) => void,
-	): void;
+	): Promise<{ resp: any, body: any }>;
 
 	/**
 	 * Delete all metrics for jobName
@@ -582,7 +582,7 @@ export class Pushgateway {
 	delete(
 		params: Pushgateway.Parameters,
 		callback: (error?: Error, httpResponse?: any, body?: any) => void,
-	): void;
+	): Promise<{ resp: any, body: any }>;
 }
 
 export namespace Pushgateway {
