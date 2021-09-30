@@ -45,7 +45,8 @@
 		"typescript": "^4.0.2"
 	},
 	"dependencies": {
-		"tdigest": "^0.1.1"
+		"tdigest": "^0.1.1",
+		"tsd-check": "^0.6.0"
 	},
 	"types": "./index.d.ts",
 	"jest": {
