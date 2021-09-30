@@ -562,7 +562,7 @@ export class Pushgateway {
 	pushAdd(
 		params: Pushgateway.Parameters,
 		callback: (error?: Error, httpResponse?: any, body?: any) => void,
-	): Promise<{ resp: any, body: any }>;
+	): Promise<{ httpResponse?: any, body?: any }>;
 
 	/**
 	 * Overwrite all metric (using PUT to Pushgateway)
