@@ -41,6 +41,24 @@ describe('AggregatorRegistry', () => {
 		});
 	});
 
+	describe('aggregatorRegistry.getClusterMetricsAsJSON()', () => {
+		it('works properly if there are no cluster workers', async () => {
+			const AggregatorRegistry = require('../lib/cluster');
+			const ar = new AggregatorRegistry();
+			const metrics = await ar.getClusterMetricsAsJSON();
+			expect(metrics).toEqual([]);
+		});
+	});
+
+	describe('aggregatorRegistry.getClusterMetricsAsArray()', () => {
+		it('works properly if there are no cluster workers', async () => {
+			const AggregatorRegistry = require('../lib/cluster');
+			const ar = new AggregatorRegistry();
+			const metrics = await ar.getClusterMetricsAsArray();
+			expect(metrics).toEqual([]);
+		});
+	});
+
 	describe('AggregatorRegistry.aggregate()', () => {
 		const Registry = require('../lib/cluster');
 		// These mimic the output of `getMetricsAsJSON`.

@@ -93,6 +93,20 @@ export class AggregatorRegistry extends Registry {
 	clusterMetrics(): Promise<string>;
 
 	/**
+	 * Gets aggregated metrics for all workers as objects
+	 * @return {Promise<metric[]>} Promise that resolves with the aggregated
+	 * metrics.
+	 */
+	getClusterMetricsAsJSON(): Promise<metric[]>;
+
+	/**
+	 * Gets aggregated metrics for all workers as objects
+	 * @return {Promise<metric[]>} Promise that resolves with the aggregated
+	 * metrics.
+	 */
+	getClusterMetricsAsArray(): Promise<metric[]>;
+
+	/**
 	 * Creates a new Registry instance from an array of metrics that were
 	 * created by `registry.getMetricsAsJSON()`. Metrics are aggregated using
 	 * the method specified by their `aggregator` property, or by summation if
@@ -560,7 +574,7 @@ export class Pushgateway {
 	 */
 	pushAdd(
 		params: Pushgateway.Parameters,
-	): Promise<{ resp?: unknown, body?: unknown }>;
+	): Promise<{ resp?: unknown; body?: unknown }>;
 
 	/**
 	 * Overwrite all metric (using PUT to Pushgateway)
@@ -568,7 +582,7 @@ export class Pushgateway {
 	 */
 	push(
 		params: Pushgateway.Parameters,
-	): Promise<{ resp?: unknown, body?: unknown }>;
+	): Promise<{ resp?: unknown; body?: unknown }>;
 
 	/**
 	 * Delete all metrics for jobName
@@ -576,7 +590,7 @@ export class Pushgateway {
 	 */
 	delete(
 		params: Pushgateway.Parameters,
-	): Promise<{ resp?: unknown, body?: unknown }>;
+	): Promise<{ resp?: unknown; body?: unknown }>;
 }
 
 export namespace Pushgateway {
