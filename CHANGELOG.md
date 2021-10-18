@@ -19,6 +19,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- Added: `nodejs_eventloop_idle_seconds_total` metric to 'collectDefaultMetrics()`.
+
 ## [14.0.0] - 2021-09-18
 
 ### Breaking
