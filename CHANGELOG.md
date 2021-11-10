@@ -23,6 +23,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Breaking
 
+- types: fixed type for `registry.getMetricsAsArray()`
+
 - changed: `linearBuckets` does not propagate rounding errors anymore.
 
   Fewer bucket bounds will be affected by rounding errors. Histogram bucket
