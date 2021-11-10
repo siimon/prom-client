@@ -34,7 +34,7 @@ export class Registry {
 	/**
 	 * Get all metrics as objects
 	 */
-	getMetricsAsArray(): Promise<metric[]>;
+	getMetricsAsArray(): metric[];
 
 	/**
 	 * Remove a single metric
