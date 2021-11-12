@@ -3,12 +3,20 @@
 const nock = require('nock');
 const { gzipSync } = require('zlib');
 
-describe('pushgateway', () => {
+const Registry = require('../index').Registry;
+
+describe.each([
+	{ tag: 'Prometheus', regType: Registry.PROMETHEUS_CONTENT_TYPE },
+	// { tag: 'OpenMetrics', regType: Registry.OPENMETRICS_CONTENT_TYPE },
+])('pushgateway with $tag registry', ({ tag, regType }) => {
 	const Pushgateway = require('../index').Pushgateway;
 	const register = require('../index').register;
-	const Registry = require('../index').Registry;
 	let instance;
 	let registry = undefined;
+
+	beforeEach(() => {
+		register.setContentType(regType);
+	});
 
 	const tests = function () {
 		describe('pushAdd', () => {
@@ -229,7 +237,7 @@ describe('pushgateway', () => {
 		});
 
 		beforeEach(() => {
-			registry = new Registry();
+			registry = new Registry(regType);
 			instance = new Pushgateway('http://192.168.99.100:9091', null, registry);
 			const promeClient = require('../index');
 			const cnt = new promeClient.Counter({

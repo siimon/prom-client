@@ -1,7 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`summary global registry with param as object labels should throw error if label lengths does not match 1`] = `"Invalid number of arguments"`;
+exports[`summary with $tag registry global registry with param as object labels should throw error if label lengths does not match 1`] = `"Invalid number of arguments"`;
 
-exports[`summary global registry with param as object remove should throw error if label lengths does not match 1`] = `"Invalid number of arguments"`;
+exports[`summary with $tag registry global registry with param as object labels should throw error if label lengths does not match 2`] = `"Invalid number of arguments"`;
 
-exports[`summary global registry with param as object should validate labels when observing 1`] = `"Added label \\"baz\\" is not included in initial labelset: [ 'foo' ]"`;
+exports[`summary with $tag registry global registry with param as object remove should throw error if label lengths does not match 1`] = `"Invalid number of arguments"`;
+
+exports[`summary with $tag registry global registry with param as object remove should throw error if label lengths does not match 2`] = `"Invalid number of arguments"`;
+
+exports[`summary with $tag registry global registry with param as object should validate labels when observing 1`] = `"Added label \\"baz\\" is not included in initial labelset: [ 'foo' ]"`;
+
+exports[`summary with $tag registry global registry with param as object should validate labels when observing 2`] = `"Added label \\"baz\\" is not included in initial labelset: [ 'foo' ]"`;
