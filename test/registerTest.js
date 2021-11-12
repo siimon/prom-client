@@ -1,6 +1,11 @@
 'use strict';
 
-describe('register', () => {
+const Registry = require('../index').Registry;
+
+describe.each([
+	{ tag: 'Prometheus', regType: Registry.PROMETHEUS_CONTENT_TYPE },
+	{ tag: 'OpenMetrics', regType: Registry.OPENMETRICS_CONTENT_TYPE },
+])('$tag register', ({ tag, regType }) => {
 	const register = require('../index').register;
 	const Counter = require('../index').Counter;
 	const Gauge = require('../index').Gauge;
@@ -8,6 +13,7 @@ describe('register', () => {
 	const Summary = require('../index').Summary;
 
 	beforeEach(() => {
+		register.setContentType(regType);
 		register.clear();
 	});
 
@@ -25,10 +31,22 @@ describe('register', () => {
 			expect(output[1]).toEqual('# TYPE test_metric counter');
 		});
 		it('with first value of the metric as third item', () => {
-			expect(output[2]).toEqual('test_metric{label="hello",code="303"} 12');
+			if (register.contentType === Registry.OPENMETRICS_CONTENT_TYPE) {
+				expect(output[2]).toEqual(
+					'test_metric_total{label="hello",code="303"} 12',
+				);
+			} else {
+				expect(output[2]).toEqual('test_metric{label="hello",code="303"} 12');
+			}
 		});
 		it('with second value of the metric as fourth item', () => {
-			expect(output[3]).toEqual('test_metric{label="bye",code="404"} 34');
+			if (register.contentType === Registry.OPENMETRICS_CONTENT_TYPE) {
+				expect(output[3]).toEqual(
+					'test_metric_total{label="bye",code="404"} 34',
+				);
+			} else {
+				expect(output[3]).toEqual('test_metric{label="bye",code="404"} 34');
+			}
 		});
 	});
 
@@ -58,7 +76,11 @@ describe('register', () => {
 			},
 		});
 		const lines = (await register.metrics()).split('\n');
-		expect(lines).toHaveLength(4);
+		if (regType === Registry.OPENMETRICS_CONTENT_TYPE) {
+			expect(lines).toHaveLength(5);
+		} else {
+			expect(lines).toHaveLength(4);
+		}
 		expect(lines[2]).toEqual('test_metric Nan');
 	});
 
@@ -78,7 +100,11 @@ describe('register', () => {
 			},
 		});
 		const lines = (await register.metrics()).split('\n');
-		expect(lines).toHaveLength(4);
+		if (regType === Registry.OPENMETRICS_CONTENT_TYPE) {
+			expect(lines).toHaveLength(5);
+		} else {
+			expect(lines).toHaveLength(4);
+		}
 		expect(lines[2]).toEqual('test_metric +Inf');
 	});
 
@@ -98,7 +124,11 @@ describe('register', () => {
 			},
 		});
 		const lines = (await register.metrics()).split('\n');
-		expect(lines).toHaveLength(4);
+		if (regType === Registry.OPENMETRICS_CONTENT_TYPE) {
+			expect(lines).toHaveLength(5);
+		} else {
+			expect(lines).toHaveLength(4);
+		}
 		expect(lines[2]).toEqual('test_metric -Inf');
 	});
 
@@ -117,7 +147,11 @@ describe('register', () => {
 				};
 			},
 		});
-		expect((await register.metrics()).split('\n')).toHaveLength(4);
+		if (regType === Registry.OPENMETRICS_CONTENT_TYPE) {
+			expect((await register.metrics()).split('\n')).toHaveLength(5);
+		} else {
+			expect((await register.metrics()).split('\n')).toHaveLength(4);
+		}
 	});
 
 	it('should handle a metric with default labels', async () => {
@@ -134,7 +168,11 @@ describe('register', () => {
 		});
 
 		const output = (await register.metrics()).split('\n')[2];
-		expect(output).toEqual('test_metric{testLabel="testValue"} 1');
+		if (regType === Registry.OPENMETRICS_CONTENT_TYPE) {
+			expect(output).toEqual('test_metric_total{testLabel="testValue"} 1');
+		} else {
+			expect(output).toEqual('test_metric{testLabel="testValue"} 1');
+		}
 	});
 
 	it('labeled metrics should take precidence over defaulted', async () => {
@@ -158,9 +196,15 @@ describe('register', () => {
 			},
 		});
 
-		expect((await register.metrics()).split('\n')[2]).toEqual(
-			'test_metric{testLabel="overlapped",anotherLabel="value123"} 1',
-		);
+		if (regType === Registry.OPENMETRICS_CONTENT_TYPE) {
+			expect((await register.metrics()).split('\n')[2]).toEqual(
+				'test_metric_total{testLabel="overlapped",anotherLabel="value123"} 1',
+			);
+		} else {
+			expect((await register.metrics()).split('\n')[2]).toEqual(
+				'test_metric{testLabel="overlapped",anotherLabel="value123"} 1',
+			);
+		}
 	});
 
 	it('should output all initialized metrics at value 0', async () => {
@@ -281,14 +325,20 @@ describe('register', () => {
 		expect(output).toEqual(metric);
 	});
 
-	it('should allow gettings metrics', async () => {
+	it('should allow getting metrics', async () => {
 		const metric = getMetric();
 		register.registerMetric(metric);
 		const metrics = await register.metrics();
 
-		expect(metrics.split('\n')[3]).toEqual(
-			'test_metric{label="bye",code="404"} 34',
-		);
+		if (regType === Registry.OPENMETRICS_CONTENT_TYPE) {
+			expect(metrics.split('\n')[3]).toEqual(
+				'test_metric_total{label="bye",code="404"} 34',
+			);
+		} else {
+			expect(metrics.split('\n')[3]).toEqual(
+				'test_metric{label="bye",code="404"} 34',
+			);
+		}
 	});
 
 	describe('resetting', () => {
@@ -344,7 +394,7 @@ describe('register', () => {
 		describe('mutation tests', () => {
 			describe('registry.metrics()', () => {
 				it('should not throw with default labels (counter)', async () => {
-					const r = new Registry();
+					const r = new Registry(regType);
 					r.setDefaultLabels({
 						env: 'development',
 					});
@@ -362,21 +412,33 @@ describe('register', () => {
 
 					const metrics = await r.metrics();
 					const lines = metrics.split('\n');
-					expect(lines).toContain(
-						'my_counter{type="myType",env="development"} 1',
-					);
+					if (regType === Registry.OPENMETRICS_CONTENT_TYPE) {
+						expect(lines).toContain(
+							'my_counter_total{type="myType",env="development"} 1',
+						);
+					} else {
+						expect(lines).toContain(
+							'my_counter{type="myType",env="development"} 1',
+						);
+					}
 
 					myCounter.inc();
 
 					const metrics2 = await r.metrics();
 					const lines2 = metrics2.split('\n');
-					expect(lines2).toContain(
-						'my_counter{type="myType",env="development"} 2',
-					);
+					if (regType === Registry.OPENMETRICS_CONTENT_TYPE) {
+						expect(lines2).toContain(
+							'my_counter_total{type="myType",env="development"} 2',
+						);
+					} else {
+						expect(lines2).toContain(
+							'my_counter{type="myType",env="development"} 2',
+						);
+					}
 				});
 
 				it('should not throw with default labels (gauge)', async () => {
-					const r = new Registry();
+					const r = new Registry(regType);
 					r.setDefaultLabels({
 						env: 'development',
 					});
@@ -408,7 +470,7 @@ describe('register', () => {
 				});
 
 				it('should not throw with default labels (histogram)', async () => {
-					const r = new Registry();
+					const r = new Registry(regType);
 					r.setDefaultLabels({
 						env: 'development',
 					});
@@ -442,7 +504,7 @@ describe('register', () => {
 
 			describe('registry.getMetricsAsJSON()', () => {
 				it('should not throw with default labels (counter)', async () => {
-					const r = new Registry();
+					const r = new Registry(regType);
 					r.setDefaultLabels({
 						env: 'development',
 					});
@@ -490,7 +552,7 @@ describe('register', () => {
 				});
 
 				it('should not throw with default labels (gauge)', async () => {
-					const r = new Registry();
+					const r = new Registry(regType);
 					r.setDefaultLabels({
 						env: 'development',
 					});
@@ -538,7 +600,7 @@ describe('register', () => {
 				});
 
 				it('should not throw with default labels (histogram)', async () => {
-					const r = new Registry();
+					const r = new Registry(regType);
 					r.setDefaultLabels({
 						env: 'development',
 					});
@@ -555,8 +617,9 @@ describe('register', () => {
 					myHist.observe(1);
 
 					const metrics = await r.getMetricsAsJSON();
-					// NOTE: at this test we don't need to check exacte JSON schema
+					// NOTE: at this test we don't need to check exact JSON schema
 					expect(metrics[0].values).toContainEqual({
+						exemplar: null,
 						labels: { env: 'development', le: 1, type: 'myType' },
 						metricName: 'my_histogram_bucket',
 						value: 1,
@@ -565,8 +628,9 @@ describe('register', () => {
 					myHist.observe(1);
 
 					const metrics2 = await r.getMetricsAsJSON();
-					// NOTE: at this test we don't need to check exacte JSON schema
+					// NOTE: at this test we don't need to check exact JSON schema
 					expect(metrics2[0].values).toContainEqual({
+						exemplar: null,
 						labels: { env: 'development', le: 1, type: 'myType' },
 						metricName: 'my_histogram_bucket',
 						value: 2,
@@ -582,8 +646,8 @@ describe('register', () => {
 		let registryTwo;
 
 		beforeEach(() => {
-			registryOne = new Registry();
-			registryTwo = new Registry();
+			registryOne = new Registry(regType);
+			registryTwo = new Registry(regType);
 		});
 
 		it('should merge all provided registers', async () => {
@@ -607,11 +671,6 @@ describe('register', () => {
 
 			expect(fn).toThrowError(Error);
 		});
-	});
-
-	it('should have the same contentType as the module', () => {
-		const moduleWideContentType = require('../').contentType;
-		expect(register.contentType).toEqual(moduleWideContentType);
 	});
 
 	function getMetric(name) {

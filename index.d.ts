@@ -3,6 +3,10 @@
 
 /**
  * Container for all registered metrics
+ * @property {string} PROMETHEUS_CONTENT_TYPE - Content-Type of Prometheus
+ * registry type
+ * @property {string} OPENMETRICS_CONTENT_TYPE - Content-Type of OpenMetrics
+ * registry type.
  */
 export class Registry {
 	/**
@@ -67,6 +71,13 @@ export class Registry {
 	contentType: string;
 
 	/**
+	 * Set the content type of a registry. Used to change between Prometheus and
+	 * OpenMetrics versions.
+	 * @param contentType The type of the registry
+	 */
+	setContentType(contentType: string): void;
+
+	/**
 	 * Merge registers
 	 * @param registers The registers you want to merge together
 	 */
@@ -80,9 +91,20 @@ export type Collector = () => void;
 export const register: Registry;
 
 /**
- * The Content-Type of the metrics for use in the response headers.
+ * HTTP Content-Type for metrics response headers, defaults to Prometheus text
+ * format.
  */
 export const contentType: string;
+
+/**
+ * HTTP Prometheus Content-Type for metrics response headers.
+ */
+export const prometheusContentType: string;
+
+/**
+ * HTTP OpenMetrics Content-Type for metrics response headers.
+ */
+export const openMetricsContentType: string;
 
 export class AggregatorRegistry extends Registry {
 	/**

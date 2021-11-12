@@ -16,12 +16,20 @@ jest.mock('http', () => {
 	};
 });
 
-describe('pushgateway with path', () => {
+const Registry = require('../index').Registry;
+
+describe.each([
+	{ tag: 'Prometheus', regType: Registry.PROMETHEUS_CONTENT_TYPE },
+	{ tag: 'OpenMetrics', regType: Registry.OPENMETRICS_CONTENT_TYPE },
+])('pushgateway with path and $tag registry', ({ tag, regType }) => {
 	const Pushgateway = require('../index').Pushgateway;
 	const register = require('../index').register;
-	const Registry = require('../index').Registry;
 	let instance;
 	let registry = undefined;
+
+	beforeEach(() => {
+		register.setContentType(regType);
+	});
 
 	const tests = function () {
 		describe('pushAdd', () => {
@@ -164,7 +172,7 @@ describe('pushgateway with path', () => {
 			mockHttp.mockClear();
 		});
 		beforeEach(() => {
-			registry = new Registry();
+			registry = new Registry(regType);
 			instance = new Pushgateway(pushGatewayFullURL, null, registry);
 			const promClient = require('../index');
 			const cnt = new promClient.Counter({
