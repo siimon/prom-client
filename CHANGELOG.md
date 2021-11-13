@@ -11,6 +11,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- types: fixed type for `registry.getMetricsAsArray()`
+
 - changed: typedef for pushgateway to reflect js implementation.
 
   Pushgateway's typedef were missing promise return type. That was
