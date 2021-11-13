@@ -34,7 +34,7 @@ export class Registry {
 	/**
 	 * Get all metrics as objects
 	 */
-	getMetricsAsArray(): Promise<metric[]>;
+	getMetricsAsArray(): metric[];
 
 	/**
 	 * Remove a single metric
@@ -568,32 +568,26 @@ export class Pushgateway {
 	/**
 	 * Add metric and overwrite old ones
 	 * @param params Push parameters
-	 * @param callback Callback when request is complete
 	 */
 	pushAdd(
 		params: Pushgateway.Parameters,
-		callback: (error?: Error, httpResponse?: any, body?: any) => void,
-	): void;
+	): Promise<{ resp?: unknown, body?: unknown }>;
 
 	/**
 	 * Overwrite all metric (using PUT to Pushgateway)
 	 * @param params Push parameters
-	 * @param callback Callback when request is complete
 	 */
 	push(
 		params: Pushgateway.Parameters,
-		callback: (error?: Error, httpResponse?: any, body?: any) => void,
-	): void;
+	): Promise<{ resp?: unknown, body?: unknown }>;
 
 	/**
 	 * Delete all metrics for jobName
 	 * @param params Push parameters
-	 * @param callback Callback when request is complete
 	 */
 	delete(
 		params: Pushgateway.Parameters,
-		callback: (error?: Error, httpResponse?: any, body?: any) => void,
-	): void;
+	): Promise<{ resp?: unknown, body?: unknown }>;
 }
 
 export namespace Pushgateway {

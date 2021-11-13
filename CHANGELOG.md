@@ -15,6 +15,14 @@ project adheres to [Semantic Versioning](http://semver.org/).
   `summary.startTimer()` now return the timed duration. Histograms already had
   this behavior.
 
+- types: fixed type for `registry.getMetricsAsArray()`
+
+- changed: typedef for pushgateway to reflect js implementation.
+
+  Pushgateway's typedef were missing promise return type. That was
+  causing vscode to think that push/pushAdd and delete didn't promise
+  resulting in incorrect behavior.
+
 ### Added
 
 ## [14.0.0] - 2021-09-18
