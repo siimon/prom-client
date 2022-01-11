@@ -207,7 +207,8 @@ describe('summary', () => {
 					jest.setSystemTime(0);
 					const end = instance.labels('GET', '/test').startTimer();
 					jest.advanceTimersByTime(1000);
-					end();
+					const duration = end();
+					expect(duration).toEqual(1);
 					const { values } = await instance.get();
 					expect(values).toHaveLength(3);
 					expect(values[0].labels.method).toEqual('GET');

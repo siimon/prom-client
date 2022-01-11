@@ -27,6 +27,11 @@ describe('bucketGenerators', () => {
 			};
 			expect(fn).toThrowError(Error);
 		});
+
+		it('should not propagate rounding errors', () => {
+			result = linearBuckets(0.1, 0.1, 10);
+			expect(result[9]).toEqual(1);
+		});
 	});
 
 	describe('exponential buckets', () => {

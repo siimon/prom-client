@@ -17,7 +17,7 @@ h.labels('300', 'red').observe(0.6);
 h.labels('300', 'blue').observe(0.4);
 h.labels('200', 'red').observe(0.6);
 
-console.log(register.metrics());
+register.metrics().then(str => console.log(str));
 
 /*
 Output from metrics():

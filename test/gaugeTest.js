@@ -41,13 +41,24 @@ describe('gauge', () => {
 				await expectValue(5);
 			});
 
+			it('should set to exactly zero without defaulting to 1', async () => {
+				instance.set(0);
+				await expectValue(0);
+			});
+
+			it('should inc by zero without defaulting to 1', async () => {
+				instance.inc(0);
+				await expectValue(10);
+			});
+
 			it('should start a timer and set a gauge to elapsed in seconds', async () => {
 				jest.useFakeTimers('modern');
 				jest.setSystemTime(0);
 				const doneFn = instance.startTimer();
 				jest.advanceTimersByTime(500);
-				doneFn();
+				const dur = doneFn();
 				await expectValue(0.5);
+				expect(dur).toEqual(0.5);
 				jest.useRealTimers();
 			});
 

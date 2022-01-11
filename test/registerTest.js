@@ -609,6 +609,11 @@ describe('register', () => {
 		});
 	});
 
+	it('should have the same contentType as the module', () => {
+		const moduleWideContentType = require('../').contentType;
+		expect(register.contentType).toEqual(moduleWideContentType);
+	});
+
 	function getMetric(name) {
 		name = name || 'test_metric';
 		return {

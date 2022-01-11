@@ -9,6 +9,7 @@ const benchmarks = createRegressionBenchmark(currentClient, [
 
 benchmarks.suite('registry', require('./registry'));
 benchmarks.suite('histogram', require('./histogram'));
+benchmarks.suite('gauge', require('./gauge'));
 benchmarks.suite('summary', require('./summary'));
 benchmarks.run().catch(err => {
 	console.error(err.stack);

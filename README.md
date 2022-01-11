@@ -17,10 +17,12 @@ will only reveal that individual worker's metrics, which is generally
 undesirable. To solve this, you can aggregate all of the workers' metrics in the
 master process. See `example/cluster.js` for an example.
 
-Default metrics use sensible aggregation methods. Custom metrics are summed
-across workers by default. To use a different aggregation method, set the
-`aggregator` property in the metric config to one of 'sum', 'first', 'min',
-'max', 'average' or 'omit'. (See `lib/metrics/version.js` for an example.)
+Default metrics use sensible aggregation methods. (Note, however, that the event
+loop lag mean and percentiles are averaged, which is not perfectly accurate.)
+Custom metrics are summed across workers by default. To use a different
+aggregation method, set the `aggregator` property in the metric config to one of
+'sum', 'first', 'min', 'max', 'average' or 'omit'. (See `lib/metrics/version.js`
+for an example.)
 
 If you need to expose metrics about an individual worker, you can include a
 value that is unique to the worker (such as the worker ID or process ID) in a
@@ -49,7 +51,7 @@ available on Linux.
 `collectDefaultMetrics` optionally accepts a config object with following entries:
 
 - `prefix` an optional prefix for metric names. Default: no prefix.
-- `registry` to which metrics should be registered. Default: the global default registry.
+- `register` to which metrics should be registered. Default: the global default registry.
 - `gcDurationBuckets` with custom buckets for GC duration histogram. Default buckets of GC duration histogram are `[0.001, 0.01, 0.1, 1, 2, 5]` (in seconds).
 - `eventLoopMonitoringPrecision` with sampling rate in milliseconds. Must be greater than zero. Default: 10.
 
@@ -308,7 +310,7 @@ const gauge = new client.Gauge({
 gauge.set({ method: 'GET', statusCode: '200' }, 100);
 // 2nd version: Same effect as above
 gauge.labels({ method: 'GET', statusCode: '200' }).set(100);
-// 3nd version: And again the same effect as above
+// 3rd version: And again the same effect as above
 gauge.labels('GET', '200').set(100);
 ```
 
@@ -488,16 +490,36 @@ It is possible to push metrics via a
 const client = require('prom-client');
 let gateway = new client.Pushgateway('http://127.0.0.1:9091');
 
-gateway.pushAdd({ jobName: 'test' }, function (err, resp, body) {}); //Add metric and overwrite old ones
-gateway.push({ jobName: 'test' }, function (err, resp, body) {}); //Overwrite all metrics (use PUT)
-gateway.delete({ jobName: 'test' }, function (err, resp, body) {}); //Delete all metrics for jobName
+gateway.pushAdd({ jobName: 'test' })
+	.then({resp, body} => {
+		/* ... */
+	})
+	.catch(err => {
+		/* ... */
+	})); //Add metric and overwrite old ones
+gateway.push({ jobName: 'test' })
+	.then({resp, body} => {
+		/* ... */
+	})
+	.catch(err => {
+		/* ... */
+	})); //Overwrite all metrics (use PUT)
+gateway.delete({ jobName: 'test' })
+	.then({resp, body} => {
+		/* ... */
+	})
+	.catch(err => {
+		/* ... */
+	})); //Delete all metrics for jobName
 
 //All gateway requests can have groupings on it
-gateway.pushAdd({ jobName: 'test', groupings: { key: 'value' } }, function (
-  err,
-  resp,
-  body,
-) {});
+gateway.pushAdd({ jobName: 'test', groupings: { key: 'value' } })
+	.then({resp, body} => {
+		/* ... */
+	})
+	.catch(err => {
+		/* ... */
+	}));
 
 // It's possible to extend the Pushgateway with request options from nodes core
 // http/https library. In particular, you might want to provide an agent so that

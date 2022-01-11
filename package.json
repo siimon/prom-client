@@ -1,6 +1,6 @@
 {
 	"name": "prom-client",
-	"version": "13.1.0",
+	"version": "14.0.1",
 	"description": "Client for prometheus",
 	"main": "index.js",
 	"files": [
@@ -40,6 +40,7 @@
 		"husky": "^4.2.1",
 		"jest": "^26.0.1",
 		"lint-staged": "^10.0.4",
+		"nock": "^13.0.5",
 		"prettier": "2.0.5",
 		"typescript": "^4.0.2"
 	},

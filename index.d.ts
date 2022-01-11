@@ -34,7 +34,7 @@ export class Registry {
 	/**
 	 * Get all metrics as objects
 	 */
-	getMetricsAsArray(): Promise<metric[]>;
+	getMetricsAsArray(): metric[];
 
 	/**
 	 * Remove a single metric
@@ -78,6 +78,11 @@ export type Collector = () => void;
  * The register that contains all metrics
  */
 export const register: Registry;
+
+/**
+ * The Content-Type of the metrics for use in the response headers.
+ */
+export const contentType: string;
 
 export class AggregatorRegistry extends Registry {
 	/**
@@ -279,11 +284,13 @@ export class Gauge<T extends string> {
 	setToCurrentTime(labels?: LabelValues<T>): void;
 
 	/**
-	 * Start a timer where the gauges value will be the duration in seconds
+	 * Start a timer. Calling the returned function will set the gauge's value
+	 * to the observed duration in seconds.
 	 * @param labels Object with label keys and values
-	 * @return Function to invoke when timer should be stopped
+	 * @return Function to invoke when timer should be stopped. The value it
+	 * returns is the timed duration.
 	 */
-	startTimer(labels?: LabelValues<T>): (labels?: LabelValues<T>) => void;
+	startTimer(labels?: LabelValues<T>): (labels?: LabelValues<T>) => number;
 
 	/**
 	 * Return the child for given labels
@@ -343,10 +350,12 @@ export namespace Gauge {
 		setToCurrentTime(): void;
 
 		/**
-		 * Start a timer where the gauges value will be the duration in seconds
-		 * @return Function to invoke when timer should be stopped
+		 * Start a timer. Calling the returned function will set the gauge's value
+		 * to the observed duration in seconds.
+		 * @return Function to invoke when timer should be stopped. The value it
+		 * returns is the timed duration.
 		 */
-		startTimer(): (labels?: LabelValues<T>) => void;
+		startTimer(): (labels?: LabelValues<T>) => number;
 	}
 }
 
@@ -378,9 +387,11 @@ export class Histogram<T extends string> {
 	observe(labels: LabelValues<T>, value: number): void;
 
 	/**
-	 * Start a timer where the value in seconds will observed
+	 * Start a timer. Calling the returned function will observe the duration in
+	 * seconds in the histogram.
 	 * @param labels Object with label keys and values
-	 * @return Function to invoke when timer should be stopped
+	 * @return Function to invoke when timer should be stopped. The value it
+	 * returns is the timed duration.
 	 */
 	startTimer(labels?: LabelValues<T>): (labels?: LabelValues<T>) => number;
 
@@ -430,9 +441,11 @@ export namespace Histogram {
 		observe(value: number): void;
 
 		/**
-		 * Start a timer where the value in seconds will observed
+		 * Start a timer. Calling the returned function will observe the
+		 * duration in seconds in the histogram.
 		 * @param labels Object with label keys and values
-		 * @return Function to invoke when timer should be stopped
+		 * @return Function to invoke when timer should be stopped. The value it
+		 * returns is the timed duration.
 		 */
 		startTimer(): (labels?: LabelValues<T>) => void;
 	}
@@ -476,11 +489,12 @@ export class Summary<T extends string> {
 	observe(labels: LabelValues<T>, value: number): void;
 
 	/**
-	 * Start a timer where the value in seconds will observed
+	 * Start a timer. Calling the returned function will observe the duration in
+	 * seconds in the summary.
 	 * @param labels Object with label keys and values
 	 * @return Function to invoke when timer should be stopped
 	 */
-	startTimer(labels?: LabelValues<T>): (labels?: LabelValues<T>) => void;
+	startTimer(labels?: LabelValues<T>): (labels?: LabelValues<T>) => number;
 
 	/**
 	 * Reset all values in the summary
@@ -523,11 +537,13 @@ export namespace Summary {
 		observe(value: number): void;
 
 		/**
-		 * Start a timer where the value in seconds will observed
+		 * Start a timer. Calling the returned function will observe the
+		 * duration in seconds in the summary.
 		 * @param labels Object with label keys and values
-		 * @return Function to invoke when timer should be stopped
+		 * @return Function to invoke when timer should be stopped. The value it
+		 * returns is the timed duration.
 		 */
-		startTimer(): (labels?: LabelValues<T>) => void;
+		startTimer(): (labels?: LabelValues<T>) => number;
 	}
 
 	interface Config {
@@ -552,32 +568,26 @@ export class Pushgateway {
 	/**
 	 * Add metric and overwrite old ones
 	 * @param params Push parameters
-	 * @param callback Callback when request is complete
 	 */
 	pushAdd(
 		params: Pushgateway.Parameters,
-		callback: (error?: Error, httpResponse?: any, body?: any) => void,
-	): void;
+	): Promise<{ resp?: unknown, body?: unknown }>;
 
 	/**
 	 * Overwrite all metric (using PUT to Pushgateway)
 	 * @param params Push parameters
-	 * @param callback Callback when request is complete
 	 */
 	push(
 		params: Pushgateway.Parameters,
-		callback: (error?: Error, httpResponse?: any, body?: any) => void,
-	): void;
+	): Promise<{ resp?: unknown, body?: unknown }>;
 
 	/**
 	 * Delete all metrics for jobName
 	 * @param params Push parameters
-	 * @param callback Callback when request is complete
 	 */
 	delete(
 		params: Pushgateway.Parameters,
-		callback: (error?: Error, httpResponse?: any, body?: any) => void,
-	): void;
+	): Promise<{ resp?: unknown, body?: unknown }>;
 }
 
 export namespace Pushgateway {

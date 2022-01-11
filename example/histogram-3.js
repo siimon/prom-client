@@ -15,7 +15,9 @@ const h = new Histogram({
 h.labels('200', 'blue').observe(0.4);
 h.labels('200', 'blue').observe(0.6);
 
-console.log(register.metrics());
+h.observe({ code: '200', color: 'blue' }, 0.4);
+
+register.metrics().then(str => console.log(str));
 
 /*
 Output from metrics():
@@ -28,13 +30,13 @@ test_histogram_bucket{le="0.025",code="200",color="blue"} 0
 test_histogram_bucket{le="0.05",code="200",color="blue"} 0
 test_histogram_bucket{le="0.1",code="200",color="blue"} 0
 test_histogram_bucket{le="0.25",code="200",color="blue"} 0
-test_histogram_bucket{le="0.5",code="200",color="blue"} 1
-test_histogram_bucket{le="1",code="200",color="blue"} 2
-test_histogram_bucket{le="2.5",code="200",color="blue"} 2
-test_histogram_bucket{le="5",code="200",color="blue"} 2
-test_histogram_bucket{le="10",code="200",color="blue"} 2
-test_histogram_bucket{le="+Inf",code="200",color="blue"} 2
-test_histogram_sum{code="200",color="blue"} 1
-test_histogram_count{code="200",color="blue"} 2
+test_histogram_bucket{le="0.5",code="200",color="blue"} 2
+test_histogram_bucket{le="1",code="200",color="blue"} 3
+test_histogram_bucket{le="2.5",code="200",color="blue"} 3
+test_histogram_bucket{le="5",code="200",color="blue"} 3
+test_histogram_bucket{le="10",code="200",color="blue"} 3
+test_histogram_bucket{le="+Inf",code="200",color="blue"} 3
+test_histogram_sum{code="200",color="blue"} 1.4
+test_histogram_count{code="200",color="blue"} 3
 
 */
