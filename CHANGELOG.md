@@ -23,14 +23,16 @@ project adheres to [Semantic Versioning](http://semver.org/).
   causing vscode to think that push/pushAdd and delete didn't promise
   resulting in incorrect behavior.
 
-- The `processHandles` and `processRequests` metrics were replaced by the more
-  advanced `processResources` metric, which keeps a track of all sorts of active
-  resources. It consists of the following gauges:
+### Added
+
+- The `processResources` metric was added, which keeps a track of all sorts of
+  active resources. It consists of the following gauges:
   - `nodejs_active_resources` - Number of active resources that are currently
     keeping the event loop alive, grouped by async resource type.
   - `nodejs_active_resources_total` - Total number of active resources.
-
-### Added
+    It is supposed to provide the combined result of the `processHandles` and
+    `processRequests` metrics along with information about any other types of
+    async resources that these metrics do not keep a track of (like timers).
 
 ## [14.0.0] - 2021-09-18
 
