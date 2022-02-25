@@ -3,6 +3,7 @@
 describe('eventLoopLag', () => {
 	const register = require('../../index').register;
 	const eventLoopLag = require('../../lib/metrics/eventLoopLag');
+	let handle = { stop: () => {} };
 
 	beforeAll(() => {
 		register.clear();
@@ -12,11 +13,21 @@ describe('eventLoopLag', () => {
 		register.clear();
 	});
 
-	it('should add metric to the registry', async done => {
+	it('should have no metrics before the event loop is started', async () => {
 		expect(await register.getMetricsAsJSON()).toHaveLength(0);
-		eventLoopLag();
+	});
 
-		setTimeout(async () => {
+	describe('with event loop lag', () => {
+		beforeEach(() => {
+			handle = eventLoopLag();
+		});
+
+		afterEach(() => {
+			handle.stop();
+		});
+
+		it('should add metric to the registry', async () => {
+			await sleep(5);
 			const metrics = await register.getMetricsAsJSON();
 			expect(metrics).toHaveLength(8);
 
@@ -61,8 +72,14 @@ describe('eventLoopLag', () => {
 			);
 			expect(metrics[7].type).toEqual('gauge');
 			expect(metrics[7].name).toEqual('nodejs_eventloop_lag_p99_seconds');
-
-			done();
-		}, 5);
+		});
 	});
 });
+
+function sleep(ms) {
+	return new Promise((resolve, _reject) => {
+		setTimeout(() => {
+			resolve();
+		}, ms);
+	});
+}
