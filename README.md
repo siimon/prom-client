@@ -106,6 +106,15 @@ const collectDefaultMetrics = client.collectDefaultMetrics;
 collectDefaultMetrics();
 ```
 
+Collection of default metrics can be stopped by calling the
+stop function on the return value.
+
+```js
+const { collectDefaultMetrics } = require('prom-client');
+const { stop } = collectDefaultMetrics();
+stop();
+```
+
 ### Custom Metrics
 
 All metric types have two mandatory parameters: `name` and `help`. Refer to
