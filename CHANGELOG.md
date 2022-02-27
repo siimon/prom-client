@@ -36,7 +36,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
     async resources that these metrics do not keep a track of (like timers).
 
 - Added an async `wait` function which can be used in asynchronous methods
-  instead of setTimeout. Updated a test so failed expects would get
+  instead of `setTimeout`. Updated a test so failed expects would get
   propagated correctly.
 
 ## [14.0.0] - 2021-09-18
