@@ -3,7 +3,6 @@
 describe('eventLoopLag', () => {
 	const register = require('../../index').register;
 	const eventLoopLag = require('../../lib/metrics/eventLoopLag');
-	const { wait } = require('../../lib/util');
 
 	beforeAll(() => {
 		register.clear();
@@ -67,3 +66,7 @@ describe('eventLoopLag', () => {
 		done();
 	});
 });
+
+async function wait(ms) {
+	await new Promise(resolve => setTimeout(resolve, ms));
+}
