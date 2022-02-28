@@ -27,7 +27,7 @@ describe('eventLoopLag', () => {
 		});
 
 		it('should add metric to the registry', async () => {
-			await sleep(5);
+			await wait(5);
 			const metrics = await register.getMetricsAsJSON();
 			expect(metrics).toHaveLength(8);
 
@@ -76,10 +76,6 @@ describe('eventLoopLag', () => {
 	});
 });
 
-function sleep(ms) {
-	return new Promise((resolve, _reject) => {
-		setTimeout(() => {
-			resolve();
-		}, ms);
-	});
+async function wait(ms) {
+	await new Promise(resolve => setTimeout(resolve, ms));
 }
