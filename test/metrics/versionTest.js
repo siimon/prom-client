@@ -17,9 +17,9 @@ function expectVersionMetrics(metrics) {
 }
 
 describe.each([
-	{ tag: 'Prometheus', regType: Registry.PROMETHEUS_CONTENT_TYPE },
-	{ tag: 'OpenMetrics', regType: Registry.OPENMETRICS_CONTENT_TYPE },
-])('version with $tag registry', ({ tag, regType }) => {
+	['Prometheus', Registry.PROMETHEUS_CONTENT_TYPE],
+	['OpenMetrics', Registry.OPENMETRICS_CONTENT_TYPE],
+])('version with %s registry', (tag, regType) => {
 	const register = require('../../index').register;
 	const version = require('../../lib/metrics/version');
 
@@ -35,7 +35,7 @@ describe.each([
 		register.clear();
 	});
 
-	it('should add metric to the $tag registry', async () => {
+	it(`should add metric to the ${tag} registry`, async () => {
 		expect(await register.getMetricsAsJSON()).toHaveLength(0);
 		expect(typeof versionSegments[0]).toEqual('number');
 		expect(typeof versionSegments[1]).toEqual('number');
@@ -47,7 +47,7 @@ describe.each([
 		expectVersionMetrics(metrics);
 	});
 
-	it('should still be present after resetting the $tag registry #238', async () => {
+	it(`should still be present after resetting the ${tag} registry #238`, async () => {
 		const collector = version();
 		expectVersionMetrics(await register.getMetricsAsJSON());
 		register.resetMetrics();

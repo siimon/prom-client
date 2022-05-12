@@ -5,9 +5,9 @@ const process = require('process');
 const Registry = require('../lib/cluster');
 
 describe.each([
-	{ tag: 'Prometheus', regType: Registry.PROMETHEUS_CONTENT_TYPE },
-	{ tag: 'OpenMetrics', regType: Registry.OPENMETRICS_CONTENT_TYPE },
-])('$tag AggregatorRegistry', ({ tag, regType }) => {
+	['Prometheus', Registry.PROMETHEUS_CONTENT_TYPE],
+	['OpenMetrics', Registry.OPENMETRICS_CONTENT_TYPE],
+])('%s AggregatorRegistry', (tag, regType) => {
 	beforeEach(() => {
 		Registry.globalRegistry.setContentType(regType);
 	});

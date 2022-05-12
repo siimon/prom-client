@@ -3,9 +3,9 @@
 const Registry = require('../../index').Registry;
 
 describe.each([
-	{ tag: 'Prometheus', regType: Registry.PROMETHEUS_CONTENT_TYPE },
-	{ tag: 'OpenMetrics', regType: Registry.OPENMETRICS_CONTENT_TYPE },
-])('heapSizeAndUsed with $tag registry', ({ tag, regType }) => {
+	['Prometheus', Registry.PROMETHEUS_CONTENT_TYPE],
+	['OpenMetrics', Registry.OPENMETRICS_CONTENT_TYPE],
+])('heapSizeAndUsed with %s registry', (tag, regType) => {
 	const heapSizeAndUsed = require('../../lib/metrics/heapSizeAndUsed');
 	const globalRegistry = require('../../lib/registry').globalRegistry;
 	const memoryUsedFn = process.memoryUsage;

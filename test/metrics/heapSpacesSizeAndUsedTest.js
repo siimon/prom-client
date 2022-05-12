@@ -47,9 +47,9 @@ jest.mock('v8', () => {
 });
 
 describe.each([
-	{ tag: 'Prometheus', regType: Registry.PROMETHEUS_CONTENT_TYPE },
-	{ tag: 'OpenMetrics', regType: Registry.OPENMETRICS_CONTENT_TYPE },
-])('heapSpacesSizeAndUsed with $tag registry', ({ tag, regType }) => {
+	['Prometheus', Registry.PROMETHEUS_CONTENT_TYPE],
+	['OpenMetrics', Registry.OPENMETRICS_CONTENT_TYPE],
+])('heapSpacesSizeAndUsed with %s registry', (tag, regType) => {
 	let heapSpacesSizeAndUsed;
 	const globalRegistry = require('../../lib/registry').globalRegistry;
 
@@ -62,7 +62,7 @@ describe.each([
 		globalRegistry.clear();
 	});
 
-	it('should set total heap spaces size gauges with values from v8 with $tag registry', async () => {
+	it(`should set total heap spaces size gauges with values from v8 with ${tag} registry`, async () => {
 		expect(await globalRegistry.getMetricsAsJSON()).toHaveLength(0);
 
 		heapSpacesSizeAndUsed();
