@@ -3,9 +3,9 @@
 const Registry = require('../index').Registry;
 
 describe.each([
-	{ tag: 'Prometheus', regType: Registry.PROMETHEUS_CONTENT_TYPE },
-	{ tag: 'OpenMetrics', regType: Registry.OPENMETRICS_CONTENT_TYPE },
-])('histogram with $tag registry', ({ tag, regType }) => {
+	['Prometheus', Registry.PROMETHEUS_CONTENT_TYPE],
+	['OpenMetrics', Registry.OPENMETRICS_CONTENT_TYPE],
+])('histogram with %s registry', (tag, regType) => {
 	const Histogram = require('../index').Histogram;
 	const globalRegistry = require('../index').register;
 	let instance;

@@ -402,7 +402,7 @@ enabled. They get a single object with the format
 `{labels, value, exemplarLabels}`.
 
 When using exemplars, the registry used for metrics should be set to OpenMetrics
-type (including the global or default registry).
+type (including the global or default registry if no registries are specified).
 
 ### Registy type
 

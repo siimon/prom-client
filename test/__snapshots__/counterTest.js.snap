@@ -1,17 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`counter with $tag registry remove should throw error if label lengths does not match 1`] = `"Invalid number of arguments"`;
+exports[`counter with OpenMetrics registry remove should throw error if label lengths does not match 1`] = `"Invalid number of arguments"`;
 
-exports[`counter with $tag registry remove should throw error if label lengths does not match 2`] = `"Invalid number of arguments"`;
+exports[`counter with OpenMetrics registry with params as object labels should throw error if label lengths does not match 1`] = `"Invalid number of arguments"`;
 
-exports[`counter with $tag registry with params as object labels should throw error if label lengths does not match 1`] = `"Invalid number of arguments"`;
+exports[`counter with OpenMetrics registry with params as object should not be possible to decrease a counter 1`] = `"It is not possible to decrease a counter"`;
 
-exports[`counter with $tag registry with params as object labels should throw error if label lengths does not match 2`] = `"Invalid number of arguments"`;
+exports[`counter with OpenMetrics registry with params as object should throw an error when the value is not a number 1`] = `"Value is not a valid number: 3ms"`;
 
-exports[`counter with $tag registry with params as object should not be possible to decrease a counter 1`] = `"It is not possible to decrease a counter"`;
+exports[`counter with Prometheus registry remove should throw error if label lengths does not match 1`] = `"Invalid number of arguments"`;
 
-exports[`counter with $tag registry with params as object should not be possible to decrease a counter 2`] = `"It is not possible to decrease a counter"`;
+exports[`counter with Prometheus registry with params as object labels should throw error if label lengths does not match 1`] = `"Invalid number of arguments"`;
 
-exports[`counter with $tag registry with params as object should throw an error when the value is not a number 1`] = `"Value is not a valid number: 3ms"`;
+exports[`counter with Prometheus registry with params as object should not be possible to decrease a counter 1`] = `"It is not possible to decrease a counter"`;
 
-exports[`counter with $tag registry with params as object should throw an error when the value is not a number 2`] = `"Value is not a valid number: 3ms"`;
+exports[`counter with Prometheus registry with params as object should throw an error when the value is not a number 1`] = `"Value is not a valid number: 3ms"`;

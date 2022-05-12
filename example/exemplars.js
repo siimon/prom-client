@@ -62,13 +62,28 @@ async function makeHistograms() {
 }
 
 async function main() {
-	// should only use exemplars with OpenMetrics registry types
+	// exemplars will be shown only by OpenMetrics registry types
 	register.setContentType(Registry.OPENMETRICS_CONTENT_TYPE);
 
 	makeCounters();
 	makeHistograms();
 
 	console.log(await register.metrics());
+	console.log('---');
+
+	// if you dont want to set the default registry to OpenMetrics type then you need to create a new registry and assign it to the metric
+
+	register.setContentType(Registry.PROMETHEUS_CONTENT_TYPE);
+	const omReg = new Registry(Registry.OPENMETRICS_CONTENT_TYPE);
+	const c = new Counter({
+		name: 'counter_with_exemplar',
+		help: 'Example of a counter',
+		labelNames: ['code'],
+		registers: [omReg],
+		enableExemplars: true,
+	});
+	c.inc({ labels: { code: '200' }, exemplarLabels: { traceId: 'traceA' } });
+	console.log(await omReg.metrics());
 }
 
 main();

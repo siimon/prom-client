@@ -1,14 +1,27 @@
 // Type definitions for prom-client
 // Definitions by: Simon Nyberg http://twitter.com/siimon_nyberg
 
+export type Charset = 'utf-8';
+
+export type PrometheusMIME = 'text/plain';
+export type PrometheusMetricsVersion = '0.0.4';
+
+export type OpenMetricsMIME = 'application/openmetrics-text';
+export type OpenMetricsVersion = '1.0.0';
+
+export type PrometheusContentType =
+	`${OpenMetricsMIME}; version=${OpenMetricsVersion}; charset=${Charset}`;
+export type OpenMetricsContentType =
+	`${PrometheusMIME}; version=${PrometheusMetricsVersion}; charset=${Charset}`;
+
+export type RegistryContentType =
+	| PrometheusContentType
+	| OpenMetricsContentType;
+
 /**
  * Container for all registered metrics
- * @property {string} PROMETHEUS_CONTENT_TYPE - Content-Type of Prometheus
- * registry type
- * @property {string} OPENMETRICS_CONTENT_TYPE - Content-Type of OpenMetrics
- * registry type.
  */
-export class Registry {
+export class Registry<RegistryContentType = PrometheusContentType> {
 	/**
 	 * Get string representation for all metrics
 	 */
@@ -68,14 +81,14 @@ export class Registry {
 	/**
 	 * Gets the Content-Type of the metrics for use in the response headers.
 	 */
-	contentType: string;
+	contentType: RegistryContentType;
 
 	/**
 	 * Set the content type of a registry. Used to change between Prometheus and
 	 * OpenMetrics versions.
 	 * @param contentType The type of the registry
 	 */
-	setContentType(contentType: string): void;
+	setContentType(contentType: RegistryContentType): void;
 
 	/**
 	 * Merge registers
@@ -94,17 +107,17 @@ export const register: Registry;
  * HTTP Content-Type for metrics response headers, defaults to Prometheus text
  * format.
  */
-export const contentType: string;
+export const contentType: RegistryContentType;
 
 /**
  * HTTP Prometheus Content-Type for metrics response headers.
  */
-export const prometheusContentType: string;
+export const prometheusContentType: PrometheusContentType;
 
 /**
  * HTTP OpenMetrics Content-Type for metrics response headers.
  */
-export const openMetricsContentType: string;
+export const openMetricsContentType: OpenMetricsContentType;
 
 export class AggregatorRegistry extends Registry {
 	/**
@@ -172,14 +185,27 @@ interface MetricConfiguration<T extends string> {
 	name: string;
 	help: string;
 	labelNames?: T[] | readonly T[];
-	registers?: Registry[];
+	registers?: Registry<PrometheusContentType | OpenMetricsContentType>[];
 	aggregator?: Aggregator;
 	collect?: CollectFunction<any>;
+	enableExemplars?: boolean;
 }
 
 export interface CounterConfiguration<T extends string>
 	extends MetricConfiguration<T> {
 	collect?: CollectFunction<Counter<T>>;
+}
+
+export interface IncreaseDataWithExemplar<T extends string> {
+	value?: number;
+	labels?: LabelValues<T>;
+	exemplarLabels?: LabelValues<T>;
+}
+
+export interface ObserveDataWithExemplar<T extends string> {
+	value: number;
+	labels?: LabelValues<T>;
+	exemplarLabels?: LabelValues<T>;
 }
 
 /**
@@ -203,6 +229,12 @@ export class Counter<T extends string = string> {
 	 * @param value The value to increment with
 	 */
 	inc(value?: number): void;
+
+	/**
+	 * Increment with exemplars
+	 * @param incData Object with labels, value and exemplars for an increase
+	 */
+	inc(incData: IncreaseDataWithExemplar<T>): void;
 
 	/**
 	 * Return the child for given labels
@@ -407,6 +439,12 @@ export class Histogram<T extends string = string> {
 	 * @param value The value to observe
 	 */
 	observe(labels: LabelValues<T>, value: number): void;
+
+	/**
+	 * Observe with exemplars
+	 * @param observeData Object with labels, value and exemplars for an observation
+	 */
+	observe(observeData: ObserveDataWithExemplar<T>): void;
 
 	/**
 	 * Start a timer. Calling the returned function will observe the duration in

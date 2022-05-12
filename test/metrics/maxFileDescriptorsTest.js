@@ -4,9 +4,9 @@ const exec = require('child_process').execSync;
 const Registry = require('../../index').Registry;
 
 describe.each([
-	{ tag: 'Prometheus', regType: Registry.PROMETHEUS_CONTENT_TYPE },
-	{ tag: 'OpenMetrics', regType: Registry.OPENMETRICS_CONTENT_TYPE },
-])('processMaxFileDescriptors with $tag registry', ({ tag, regType }) => {
+	['Prometheus', Registry.PROMETHEUS_CONTENT_TYPE],
+	['OpenMetrics', Registry.OPENMETRICS_CONTENT_TYPE],
+])('processMaxFileDescriptors with %s registry', (tag, regType) => {
 	const register = require('../../index').register;
 	const processMaxFileDescriptors = require('../../lib/metrics/processMaxFileDescriptors');
 
@@ -23,7 +23,7 @@ describe.each([
 	});
 
 	if (process.platform !== 'linux') {
-		it('should not add metric to the $tag registry', async () => {
+		it(`should not add metric to the ${tag} registry`, async () => {
 			expect(await register.getMetricsAsJSON()).toHaveLength(0);
 
 			processMaxFileDescriptors();
@@ -31,7 +31,7 @@ describe.each([
 			expect(await register.getMetricsAsJSON()).toHaveLength(0);
 		});
 	} else {
-		it('should add metric to the $tag registry', async () => {
+		it(`should add metric to the ${tag} registry`, async () => {
 			expect(await register.getMetricsAsJSON()).toHaveLength(0);
 
 			processMaxFileDescriptors();
@@ -47,7 +47,7 @@ describe.each([
 			expect(metrics[0].values).toHaveLength(1);
 		});
 
-		it('should have a reasonable metric value with $tag registry', async () => {
+		it(`should have a reasonable metric value with ${tag} registry`, async () => {
 			const maxFiles = Number(exec('ulimit -Hn', { encoding: 'utf8' }));
 
 			expect(await register.getMetricsAsJSON()).toHaveLength(0);

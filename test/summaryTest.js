@@ -3,9 +3,9 @@
 const Registry = require('../index').Registry;
 
 describe.each([
-	{ tag: 'Prometheus', regType: Registry.PROMETHEUS_CONTENT_TYPE },
-	{ tag: 'OpenMetrics', regType: Registry.OPENMETRICS_CONTENT_TYPE },
-])('summary with $tag registry', ({ tag, regType }) => {
+	['Prometheus', Registry.PROMETHEUS_CONTENT_TYPE],
+	['OpenMetrics', Registry.OPENMETRICS_CONTENT_TYPE],
+])('summary with %s registry', (tag, regType) => {
 	const Summary = require('../index').Summary;
 	const globalRegistry = require('../index').register;
 	let instance;

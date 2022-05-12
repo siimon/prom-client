@@ -3,9 +3,9 @@
 const Registry = require('../index').Registry;
 
 describe.each([
-	{ tag: 'Prometheus', regType: Registry.PROMETHEUS_CONTENT_TYPE },
-	{ tag: 'OpenMetrics', regType: Registry.OPENMETRICS_CONTENT_TYPE },
-])('collectDefaultMetrics with $tag registry', ({ tag, regType }) => {
+	['Prometheus', Registry.PROMETHEUS_CONTENT_TYPE],
+	['OpenMetrics', Registry.OPENMETRICS_CONTENT_TYPE],
+])('collectDefaultMetrics with %s registry', (tag, regType) => {
 	const register = require('../index').register;
 	const collectDefaultMetrics = require('../index').collectDefaultMetrics;
 	let cpuUsage;

@@ -8,9 +8,9 @@ jest.mock(
 );
 
 describe.each([
-	{ tag: 'Prometheus', regType: Registry.PROMETHEUS_CONTENT_TYPE },
-	{ tag: 'OpenMetrics', regType: Registry.OPENMETRICS_CONTENT_TYPE },
-])('processOpenFileDescriptors with $tag registry', ({ tag, regType }) => {
+	['Prometheus', Registry.PROMETHEUS_CONTENT_TYPE],
+	['OpenMetrics', Registry.OPENMETRICS_CONTENT_TYPE],
+])('processOpenFileDescriptors with %s registry', (tag, regType) => {
 	const register = require('../../index').register;
 	const processOpenFileDescriptors = require('../../lib/metrics/processOpenFileDescriptors');
 
@@ -26,7 +26,7 @@ describe.each([
 		register.clear();
 	});
 
-	it('should add metric to the $tag registry', async () => {
+	it(`should add metric to the ${tag} registry`, async () => {
 		expect(await register.getMetricsAsJSON()).toHaveLength(0);
 
 		processOpenFileDescriptors();
