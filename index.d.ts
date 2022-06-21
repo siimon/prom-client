@@ -116,7 +116,7 @@ export class AggregatorRegistry extends Registry {
 /**
  * General metric type
  */
-export type Metric<T extends string> =
+export type Metric<T extends string = string> =
 	| Counter<T>
 	| Gauge<T>
 	| Summary<T>
@@ -163,7 +163,7 @@ export interface CounterConfiguration<T extends string>
 /**
  * A counter is a cumulative metric that represents a single numerical value that only ever goes up
  */
-export class Counter<T extends string> {
+export class Counter<T extends string = string> {
 	/**
 	 * @param configuration Configuration when creating a Counter metric. Name and Help is required.
 	 */
@@ -232,7 +232,7 @@ export interface GaugeConfiguration<T extends string>
 /**
  * A gauge is a metric that represents a single numerical value that can arbitrarily go up and down.
  */
-export class Gauge<T extends string> {
+export class Gauge<T extends string = string> {
 	/**
 	 * @param configuration Configuration when creating a Gauge metric. Name and Help is mandatory
 	 */
@@ -368,7 +368,7 @@ export interface HistogramConfiguration<T extends string>
 /**
  * A histogram samples observations (usually things like request durations or response sizes) and counts them in configurable buckets
  */
-export class Histogram<T extends string> {
+export class Histogram<T extends string = string> {
 	/**
 	 * @param configuration Configuration when creating the Histogram. Name and Help is mandatory
 	 */
@@ -470,7 +470,7 @@ export interface SummaryConfiguration<T extends string>
 /**
  * A summary samples observations
  */
-export class Summary<T extends string> {
+export class Summary<T extends string = string> {
 	/**
 	 * @param configuration Configuration when creating Summary metric. Name and Help is mandatory
 	 */
@@ -571,7 +571,7 @@ export class Pushgateway {
 	 */
 	pushAdd(
 		params: Pushgateway.Parameters,
-	): Promise<{ resp?: unknown, body?: unknown }>;
+	): Promise<{ resp?: unknown; body?: unknown }>;
 
 	/**
 	 * Overwrite all metric (using PUT to Pushgateway)
@@ -579,7 +579,7 @@ export class Pushgateway {
 	 */
 	push(
 		params: Pushgateway.Parameters,
-	): Promise<{ resp?: unknown, body?: unknown }>;
+	): Promise<{ resp?: unknown; body?: unknown }>;
 
 	/**
 	 * Delete all metrics for jobName
@@ -587,7 +587,7 @@ export class Pushgateway {
 	 */
 	delete(
 		params: Pushgateway.Parameters,
-	): Promise<{ resp?: unknown, body?: unknown }>;
+	): Promise<{ resp?: unknown; body?: unknown }>;
 }
 
 export namespace Pushgateway {
