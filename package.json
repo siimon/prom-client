@@ -9,7 +9,7 @@
 		"index.d.ts"
 	],
 	"engines": {
-		"node": ">=10"
+		"node": ">=12.3.0"
 	},
 	"scripts": {
 		"benchmarks": "node ./benchmarks/index.js",
