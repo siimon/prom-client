@@ -11,6 +11,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- types: converted all the generic Metric types to be optional
+
 - The `done()` functions returned by `gauge.startTimer()` and
   `summary.startTimer()` now return the timed duration. Histograms already had
   this behavior.
