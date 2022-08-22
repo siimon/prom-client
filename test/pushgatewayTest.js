@@ -1,6 +1,7 @@
 'use strict';
 
 const nock = require('nock');
+const { gzipSync } = require('zlib');
 
 describe('pushgateway', () => {
 	const Pushgateway = require('../index').Pushgateway;
@@ -174,6 +175,33 @@ describe('pushgateway', () => {
 			);
 
 			return instance.push({ jobName: 'testJob' }).then(() => {
+				expect(mockHttp.isDone());
+			});
+		});
+
+		it('should use gzip request', () => {
+			const mockHttp = nock('http://192.168.99.100:9091', {
+				reqheaders: {
+					'Content-Encoding': 'gzip',
+				},
+			})
+				.post(
+					'/metrics/job/testJob',
+					gzipSync('# HELP test test\n# TYPE test counter\ntest 100\n'),
+				)
+				.reply(200);
+
+			instance = new Pushgateway(
+				'http://192.168.99.100:9091',
+				{
+					headers: {
+						'Content-Encoding': 'gzip',
+					},
+				},
+				registry,
+			);
+
+			return instance.pushAdd({ jobName: 'testJob' }).then(() => {
 				expect(mockHttp.isDone());
 			});
 		});
