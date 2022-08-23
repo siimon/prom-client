@@ -64,6 +64,7 @@
 		"useTabs": true,
 		"arrowParens": "avoid",
 		"trailingComma": "all",
+		"endOfLine": "auto",
 		"overrides": [
 			{
 				"files": "*.md",
