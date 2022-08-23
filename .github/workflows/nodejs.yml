@@ -32,9 +32,9 @@ jobs:
         id: cache
         with:
           path: node_modules
-          key: ${{ matrix.os }}-{{ matrix.node-version }}-node_modules-${{ hashFiles('**/package.json') }}
+          key: ${{ matrix.os }}-${{ matrix.node-version }}-node_modules-${{ hashFiles('**/package.json') }}
           restore-keys: |
-            ${{ matrix.os }}-{{ matrix.node-version }}-node_modules-
+            ${{ matrix.os }}-${{ matrix.node-version }}-node_modules-
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm i
