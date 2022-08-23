@@ -11,13 +11,15 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- types: converted all the generic Metric types to be optional
+
 - The `done()` functions returned by `gauge.startTimer()` and
   `summary.startTimer()` now return the timed duration. Histograms already had
   this behavior.
 
 - types: fixed type for `registry.getMetricsAsArray()`
 
-- changed: typedef for pushgateway to reflect js implementation.
+- Improve performance of `gague.inc()` and `gauge.dec()` by calling `hashObject()` once.
 
   Pushgateway's typedef were missing promise return type. That was
   causing vscode to think that push/pushAdd and delete didn't promise
@@ -35,6 +37,12 @@ project adheres to [Semantic Versioning](http://semver.org/).
     async resources that these metrics do not keep a track of (like timers).
 
 - Support gzipped pushgateway requests
+
+## [14.0.1] - 2021-11-02
+
+### Changed
+
+- changed: typedef for pushgateway to reflect js implementation.
 
 ## [14.0.0] - 2021-09-18
 
