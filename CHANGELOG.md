@@ -36,6 +36,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
     `processRequests` metrics along with information about any other types of
     async resources that these metrics do not keep a track of (like timers).
 
+- Support gzipped pushgateway requests
+
 ## [14.0.1] - 2021-11-02
 
 ### Changed
