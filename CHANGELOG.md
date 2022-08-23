@@ -19,8 +19,6 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 - types: fixed type for `registry.getMetricsAsArray()`
 
-- changed: typedef for pushgateway to reflect js implementation.
-
 - Improve performance of `gague.inc()` and `gauge.dec()` by calling `hashObject()` once.
 
   Pushgateway's typedef were missing promise return type. That was
@@ -37,6 +35,12 @@ project adheres to [Semantic Versioning](http://semver.org/).
     It is supposed to provide the combined result of the `processHandles` and
     `processRequests` metrics along with information about any other types of
     async resources that these metrics do not keep a track of (like timers).
+
+## [14.0.1] - 2021-11-02
+
+### Changed
+
+- changed: typedef for pushgateway to reflect js implementation.
 
 ## [14.0.0] - 2021-09-18
 
