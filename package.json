@@ -16,7 +16,7 @@
 		"test": "npm run lint && npm run check-prettier && npm run compile-typescript && npm run test-unit",
 		"lint": "eslint .",
 		"test-unit": "jest",
-		"run-prettier": "prettier '**/*.{ts,json,md}'",
+		"run-prettier": "prettier '**/*.{ts,json,md}' .eslintrc",
 		"check-prettier": "npm run run-prettier -- --check",
 		"compile-typescript": "tsc --project ."
 	},
