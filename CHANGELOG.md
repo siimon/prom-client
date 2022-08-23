@@ -21,6 +21,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 - changed: typedef for pushgateway to reflect js implementation.
 
+- Improve performance of `gague.inc()` and `gauge.dec()` by calling `hashObject()` once.
+
   Pushgateway's typedef were missing promise return type. That was
   causing vscode to think that push/pushAdd and delete didn't promise
   resulting in incorrect behavior.
