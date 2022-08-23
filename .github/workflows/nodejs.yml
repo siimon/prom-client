@@ -22,21 +22,15 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
+        id: setup
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Restore dependencies cache
-        uses: actions/cache@v2
-        id: cache
-        with:
-          path: node_modules
-          key: ${{ matrix.os }}-{{ matrix.node-version }}-node_modules-${{ hashFiles('**/package.json') }}
-          restore-keys: |
-            ${{ matrix.os }}-{{ matrix.node-version }}-node_modules-
+          cache: npm
       - name: Install Dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: steps.setup.outputs.cache-hit != 'true'
         run: npm i
       - name: Test
         run: npm run test
