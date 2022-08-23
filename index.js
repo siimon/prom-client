@@ -17,7 +17,8 @@ exports.Summary = require('./lib/summary');
 exports.Pushgateway = require('./lib/pushgateway');
 
 exports.linearBuckets = require('./lib/bucketGenerators').linearBuckets;
-exports.exponentialBuckets = require('./lib/bucketGenerators').exponentialBuckets;
+exports.exponentialBuckets =
+	require('./lib/bucketGenerators').exponentialBuckets;
 
 exports.collectDefaultMetrics = require('./lib/defaultMetrics');
 

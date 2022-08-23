@@ -13,9 +13,11 @@
 	},
 	"scripts": {
 		"benchmarks": "node ./benchmarks/index.js",
-		"test": "npm run lint && npm run compile-typescript && npm run test-unit",
+		"test": "npm run lint && npm run check-prettier && npm run compile-typescript && npm run test-unit",
 		"lint": "eslint .",
 		"test-unit": "jest",
+		"run-prettier": "prettier . .eslintrc",
+		"check-prettier": "npm run run-prettier -- --check",
 		"compile-typescript": "tsc --project ."
 	},
 	"repository": {
@@ -41,7 +43,7 @@
 		"jest": "^26.0.1",
 		"lint-staged": "^10.0.4",
 		"nock": "^13.0.5",
-		"prettier": "2.0.5",
+		"prettier": "2.7.1",
 		"typescript": "^4.0.2"
 	},
 	"dependencies": {
@@ -62,6 +64,7 @@
 		"useTabs": true,
 		"arrowParens": "avoid",
 		"trailingComma": "all",
+		"endOfLine": "auto",
 		"overrides": [
 			{
 				"files": "*.md",
