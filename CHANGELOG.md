@@ -11,6 +11,12 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+### Added
+
+## [14.1.0] - 2022-08-23
+
+### Changed
+
 - types: converted all the generic Metric types to be optional
 
 - The `done()` functions returned by `gauge.startTimer()` and
@@ -21,14 +27,11 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 - Improve performance of `gague.inc()` and `gauge.dec()` by calling `hashObject()` once.
 
-  Pushgateway's typedef were missing promise return type. That was
-  causing vscode to think that push/pushAdd and delete didn't promise
-  resulting in incorrect behavior.
-
 ### Added
 
 - The `processResources` metric was added, which keeps a track of all sorts of
   active resources. It consists of the following gauges:
+
   - `nodejs_active_resources` - Number of active resources that are currently
     keeping the event loop alive, grouped by async resource type.
   - `nodejs_active_resources_total` - Total number of active resources.
