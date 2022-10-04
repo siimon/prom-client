@@ -636,6 +636,7 @@ export interface DefaultMetricsCollectorConfiguration {
 	prefix?: string;
 	gcDurationBuckets?: number[];
 	eventLoopMonitoringPrecision?: number;
+	eventLoopUtilizationTimeout?: number;
 	labels?: Object;
 }
 

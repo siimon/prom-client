@@ -54,6 +54,7 @@ available on Linux.
 - `register` to which metrics should be registered. Default: the global default registry.
 - `gcDurationBuckets` with custom buckets for GC duration histogram. Default buckets of GC duration histogram are `[0.001, 0.01, 0.1, 1, 2, 5]` (in seconds).
 - `eventLoopMonitoringPrecision` with sampling rate in milliseconds. Must be greater than zero. Default: 10.
+- `eventLoopUtilizationTimeout` measurement duration in milliseconds. Must be greater than zero. Default: 100.
 
 To register metrics to another registry, pass it in as `register`:
 
