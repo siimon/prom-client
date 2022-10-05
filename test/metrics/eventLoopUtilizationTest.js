@@ -16,6 +16,8 @@ describe('eventLoopUtilization', () => {
 	it('should add metric to the registry', async () => {
 		expect(await register.getMetricsAsJSON()).toHaveLength(0);
 
+		if (!eventLoopUtilization) return;
+
 		elu(register, { eventLoopUtilizationTimeout: 1000 });
 
 		const eluStart = eventLoopUtilization();
@@ -42,8 +44,6 @@ describe('eventLoopUtilization', () => {
 
 		const expectedELU = eventLoopUtilization(eluEnd, eluStart).utilization;
 		expect(eluValue).toBeCloseTo(expectedELU, 2);
-
-		console.log(eluValue, eventLoopUtilization(eluEnd, eluStart));
 	});
 });
 
