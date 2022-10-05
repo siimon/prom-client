@@ -13,6 +13,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- Added: `nodejs_eventloop_utilization` metric to 'collectDefaultMetrics()`.
+
 ## [14.1.0] - 2022-08-23
 
 ### Changed
