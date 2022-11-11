@@ -242,4 +242,44 @@ describe('pushgateway', () => {
 
 		tests();
 	});
+
+	describe('reset registry after push', () => {
+		afterEach(() => {
+			registry.clear();
+		});
+
+		beforeEach(() => {
+			registry = new Registry();
+			instance = new Pushgateway('http://192.168.99.100:9091', null, registry);
+			const promeClient = require('../index');
+			const cnt = new promeClient.Counter({
+				name: 'test',
+				help: 'test',
+				registers: [registry],
+			});
+			cnt.inc(100);
+		});
+
+		it('should push metrics', async () => {
+			const mockHttp = nock('http://192.168.99.100:9091')
+				.put(
+					'/metrics/job/testJob',
+					'# HELP test test\n# TYPE test counter\ntest 100\n',
+				)
+				.reply(200);
+
+			await registry
+				.getSingleMetric('test')
+				.get()
+				.then(({ values: [{ value }] }) => expect(value).toBe(100));
+
+			await instance.push({ jobName: 'testJob' }).then(() => {
+				expect(mockHttp.isDone());
+			});
+			return registry
+				.getSingleMetric('test')
+				.get()
+				.then(({ values: [{ value }] }) => expect(value).toBe(0));
+		});
+	});
 });
