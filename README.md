@@ -491,21 +491,21 @@ const client = require('prom-client');
 let gateway = new client.Pushgateway('http://127.0.0.1:9091');
 
 gateway.pushAdd({ jobName: 'test' })
-	.then({resp, body} => {
+	.then(({resp, body}) => {
 		/* ... */
 	})
 	.catch(err => {
 		/* ... */
 	})); //Add metric and overwrite old ones
 gateway.push({ jobName: 'test' })
-	.then({resp, body} => {
+	.then(({resp, body}) => {
 		/* ... */
 	})
 	.catch(err => {
 		/* ... */
 	})); //Overwrite all metrics (use PUT)
 gateway.delete({ jobName: 'test' })
-	.then({resp, body} => {
+	.then(({resp, body}) => {
 		/* ... */
 	})
 	.catch(err => {
@@ -514,7 +514,7 @@ gateway.delete({ jobName: 'test' })
 
 //All gateway requests can have groupings on it
 gateway.pushAdd({ jobName: 'test', groupings: { key: 'value' } })
-	.then({resp, body} => {
+	.then(({resp, body}) => {
 		/* ... */
 	})
 	.catch(err => {
