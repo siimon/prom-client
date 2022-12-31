@@ -11,6 +11,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Increase compatibility with external build system such as `rollup` by making perf_hooks optional in gc.js
+
 ### Added
 
 ## [14.1.0] - 2022-08-23
