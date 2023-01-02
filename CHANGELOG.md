@@ -11,6 +11,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- changed: updated the sample output in `example/default-metrics.js`
+
 ### Added
 
 ## [14.1.1] - 2022-12-31

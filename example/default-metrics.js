@@ -14,35 +14,35 @@ Output from metrics():
 
 # HELP process_cpu_user_seconds_total Total user CPU time spent in seconds.
 # TYPE process_cpu_user_seconds_total counter
-process_cpu_user_seconds_total 0.004261
+process_cpu_user_seconds_total 0.001801
 
 # HELP process_cpu_system_seconds_total Total system CPU time spent in seconds.
 # TYPE process_cpu_system_seconds_total counter
-process_cpu_system_seconds_total 0.000547
+process_cpu_system_seconds_total 0
 
 # HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
 # TYPE process_cpu_seconds_total counter
-process_cpu_seconds_total 0.004808
+process_cpu_seconds_total 0.001801
 
 # HELP process_start_time_seconds Start time of the process since unix epoch in seconds.
 # TYPE process_start_time_seconds gauge
-process_start_time_seconds 1585092233
+process_start_time_seconds 1672637532
 
 # HELP process_resident_memory_bytes Resident memory size in bytes.
 # TYPE process_resident_memory_bytes gauge
-process_resident_memory_bytes 37072896
+process_resident_memory_bytes 49655808
 
 # HELP process_virtual_memory_bytes Virtual memory size in bytes.
 # TYPE process_virtual_memory_bytes gauge
-process_virtual_memory_bytes 576438272
+process_virtual_memory_bytes 607793152
 
 # HELP process_heap_bytes Process heap size in bytes.
 # TYPE process_heap_bytes gauge
-process_heap_bytes 50720768
+process_heap_bytes 56893440
 
 # HELP process_open_fds Number of open file descriptors.
 # TYPE process_open_fds gauge
-process_open_fds 98
+process_open_fds 20
 
 # HELP process_max_fds Maximum number of open file descriptors.
 # TYPE process_max_fds gauge
@@ -80,12 +80,23 @@ nodejs_eventloop_lag_p90_seconds 0
 # TYPE nodejs_eventloop_lag_p99_seconds gauge
 nodejs_eventloop_lag_p99_seconds 0
 
+# HELP nodejs_active_resources Number of active resources that are currently keeping the event loop alive, grouped by async resource type.
+# TYPE nodejs_active_resources gauge
+nodejs_active_resources{type="TTYWrap"} 2
+nodejs_active_resources{type="Immediate"} 1
+
+# HELP nodejs_active_resources_total Total number of active resources.
+# TYPE nodejs_active_resources_total gauge
+nodejs_active_resources_total 3
+
 # HELP nodejs_active_handles Number of active libuv handles grouped by handle type. Every handle type is C++ class name.
 # TYPE nodejs_active_handles gauge
+nodejs_active_handles{type="ReadStream"} 1
+nodejs_active_handles{type="WriteStream"} 1
 
 # HELP nodejs_active_handles_total Total number of active handles.
 # TYPE nodejs_active_handles_total gauge
-nodejs_active_handles_total 0
+nodejs_active_handles_total 2
 
 # HELP nodejs_active_requests Number of active libuv requests grouped by request type. Every request type is C++ class name.
 # TYPE nodejs_active_requests gauge
@@ -96,52 +107,52 @@ nodejs_active_requests_total 0
 
 # HELP nodejs_heap_size_total_bytes Process heap size from Node.js in bytes.
 # TYPE nodejs_heap_size_total_bytes gauge
-nodejs_heap_size_total_bytes 5746688
+nodejs_heap_size_total_bytes 8425472
 
 # HELP nodejs_heap_size_used_bytes Process heap size used from Node.js in bytes.
 # TYPE nodejs_heap_size_used_bytes gauge
-nodejs_heap_size_used_bytes 3870560
+nodejs_heap_size_used_bytes 6379336
 
 # HELP nodejs_external_memory_bytes Node.js external memory size in bytes.
 # TYPE nodejs_external_memory_bytes gauge
-nodejs_external_memory_bytes 1221803
+nodejs_external_memory_bytes 746074
 
 # HELP nodejs_heap_space_size_total_bytes Process heap space size total from Node.js in bytes.
 # TYPE nodejs_heap_space_size_total_bytes gauge
-nodejs_heap_space_size_total_bytes{space="read_only"} 262144
-nodejs_heap_space_size_total_bytes{space="new"} 2097152
-nodejs_heap_space_size_total_bytes{space="old"} 2244608
-nodejs_heap_space_size_total_bytes{space="code"} 430080
-nodejs_heap_space_size_total_bytes{space="map"} 528384
-nodejs_heap_space_size_total_bytes{space="large_object"} 135168
-nodejs_heap_space_size_total_bytes{space="code_large_object"} 49152
+nodejs_heap_space_size_total_bytes{space="read_only"} 0
+nodejs_heap_space_size_total_bytes{space="old"} 5054464
+nodejs_heap_space_size_total_bytes{space="code"} 471040
+nodejs_heap_space_size_total_bytes{space="map"} 532480
+nodejs_heap_space_size_total_bytes{space="large_object"} 270336
+nodejs_heap_space_size_total_bytes{space="code_large_object"} 0
 nodejs_heap_space_size_total_bytes{space="new_large_object"} 0
+nodejs_heap_space_size_total_bytes{space="new"} 2097152
 
 # HELP nodejs_heap_space_size_used_bytes Process heap space size used from Node.js in bytes.
 # TYPE nodejs_heap_space_size_used_bytes gauge
-nodejs_heap_space_size_used_bytes{space="read_only"} 32808
-nodejs_heap_space_size_used_bytes{space="new"} 955440
-nodejs_heap_space_size_used_bytes{space="old"} 2231120
-nodejs_heap_space_size_used_bytes{space="code"} 165472
-nodejs_heap_space_size_used_bytes{space="map"} 353760
-nodejs_heap_space_size_used_bytes{space="large_object"} 131112
-nodejs_heap_space_size_used_bytes{space="code_large_object"} 2784
+nodejs_heap_space_size_used_bytes{space="read_only"} 0
+nodejs_heap_space_size_used_bytes{space="old"} 4884592
+nodejs_heap_space_size_used_bytes{space="code"} 434368
+nodejs_heap_space_size_used_bytes{space="map"} 515576
+nodejs_heap_space_size_used_bytes{space="large_object"} 262160
+nodejs_heap_space_size_used_bytes{space="code_large_object"} 0
 nodejs_heap_space_size_used_bytes{space="new_large_object"} 0
+nodejs_heap_space_size_used_bytes{space="new"} 290952
 
 # HELP nodejs_heap_space_size_available_bytes Process heap space size available from Node.js in bytes.
 # TYPE nodejs_heap_space_size_available_bytes gauge
 nodejs_heap_space_size_available_bytes{space="read_only"} 0
-nodejs_heap_space_size_available_bytes{space="new"} 92016
-nodejs_heap_space_size_available_bytes{space="old"} 3608
+nodejs_heap_space_size_available_bytes{space="old"} 80456
 nodejs_heap_space_size_available_bytes{space="code"} 0
-nodejs_heap_space_size_available_bytes{space="map"} 0
+nodejs_heap_space_size_available_bytes{space="map"} 56
 nodejs_heap_space_size_available_bytes{space="large_object"} 0
 nodejs_heap_space_size_available_bytes{space="code_large_object"} 0
-nodejs_heap_space_size_available_bytes{space="new_large_object"} 1047456
+nodejs_heap_space_size_available_bytes{space="new_large_object"} 1030976
+nodejs_heap_space_size_available_bytes{space="new"} 740024
 
 # HELP nodejs_version_info Node.js version info.
 # TYPE nodejs_version_info gauge
-nodejs_version_info{version="v12.16.1",major="12",minor="16",patch="1"} 1
+nodejs_version_info{version="v18.12.1",major="18",minor="12",patch="1"} 1
 
 # HELP nodejs_gc_duration_seconds Garbage collection duration by kind, one of major, minor, incremental or weakcb.
 # TYPE nodejs_gc_duration_seconds histogram
