@@ -182,8 +182,26 @@ new client.Gauge({
 });
 ```
 
-Note that you should not use arrow functions for `collect` because arrow
-functions will not have the correct value for `this`.
+If you want `this` to point to you object instead of the metric, you can pass arrow function as `collect`:
+
+```js
+const client = require('prom-client');
+class Foo {
+  constructor() {
+    this.gauge_value = 0;
+    this.gauge = new client.Gauge({
+      name: 'metric_name',
+      help: 'metric_help',
+      collect: (metric) => {
+        // Invoked when the registry collects its metrics' values.
+        // This can be synchronous or it can return a promise/be an async function.
+        metric.set(this.gauge_value);
+      },
+    });
+  }
+}
+
+```
 
 ##### Utility Functions
 
