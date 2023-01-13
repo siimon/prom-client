@@ -182,7 +182,7 @@ new client.Gauge({
 });
 ```
 
-If you want `this` to point to you object instead of the metric, you can pass arrow function as `collect`:
+If you want `this` to point to the outer scope instead of the metric, you can pass arrow function as `collect`:
 
 ```js
 const client = require('prom-client');
