@@ -9,6 +9,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Breaking
 
+- drop support for Node.js versions 10, 12 and 17
+
 ### Changed
 
 - changed: updated the sample output in `example/default-metrics.js`
