@@ -15,6 +15,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- Add `get` method to type definitions of metric classes
+
 ## [14.1.1] - 2022-12-31
 
 ### Changed
