@@ -12,7 +12,7 @@ describe('eventLoopLag', () => {
 		register.clear();
 	});
 
-	it('should add metric to the registry', async done => {
+	it('should add metric to the registry', async () => {
 		expect(await register.getMetricsAsJSON()).toHaveLength(0);
 		eventLoopLag();
 
@@ -62,8 +62,6 @@ describe('eventLoopLag', () => {
 		);
 		expect(metrics[7].type).toEqual('gauge');
 		expect(metrics[7].name).toEqual('nodejs_eventloop_lag_p99_seconds');
-
-		done();
 	});
 });
 
