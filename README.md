@@ -265,12 +265,15 @@ new client.Summary({
   help: 'metric_help',
   maxAgeSeconds: 600,
   ageBuckets: 5,
+  pruneAgedBuckets: false,
 });
 ```
 
 The `maxAgeSeconds` will tell how old a bucket can be before it is reset and
 `ageBuckets` configures how many buckets we will have in our sliding window for
-the summary.
+the summary. If `pruneAgedBuckets` is `false` (default), the metric value will
+always be present, even when empty (its percentile values will be `0`). Set
+`pruneAgedBuckets` to `true` if you don't want to export it when it is empty.
 
 ##### Examples
 
