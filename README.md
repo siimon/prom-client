@@ -447,7 +447,7 @@ return a string for Prometheus to consume.
 #### Getting a single metric
 
 If you need to get a reference to a previously registered metric, you can use
-`await register.getSingleMetric(*name of metric*)`.
+`register.getSingleMetric(*name of metric*)`.
 
 #### Removing metrics
 
