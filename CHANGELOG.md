@@ -12,6 +12,9 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 - changed: updated the sample output in `example/default-metrics.js`
+- `summary` metrics now has a `pruneAgedBuckets` config parameter
+  to remove entries without any new values in the last `maxAgeSeconds`.
+  Default is `false` (old behavior)
 
 ### Added
 
