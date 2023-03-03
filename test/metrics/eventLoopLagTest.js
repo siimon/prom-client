@@ -22,6 +22,7 @@ describe.each([
 	});
 
 	it(`should add metric to the ${tag} registry`, async () => {
+
 		expect(await register.getMetricsAsJSON()).toHaveLength(0);
 		eventLoopLag();
 
