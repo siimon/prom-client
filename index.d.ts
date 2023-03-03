@@ -185,7 +185,10 @@ interface MetricConfiguration<T extends string> {
 	name: string;
 	help: string;
 	labelNames?: T[] | readonly T[];
-	registers?: Registry<PrometheusContentType | OpenMetricsContentType>[];
+	registers?: (
+		| Registry<PrometheusContentType>
+		| Registry<OpenMetricsContentType>
+	)[];
 	aggregator?: Aggregator;
 	collect?: CollectFunction<any>;
 	enableExemplars?: boolean;

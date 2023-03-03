@@ -176,10 +176,7 @@ describe.each([
 					'Content-Encoding': 'gzip',
 				},
 			})
-				.post(
-					'/metrics/job/testJob',
-					gzipSync('# HELP test test\n# TYPE test counter\ntest 100\n'),
-				)
+				.post('/metrics/job/testJob', gzipSync(body))
 				.reply(200);
 
 			instance = new Pushgateway(

@@ -4,20 +4,19 @@ const Registry = require('../index').Registry;
 const register = require('../index').register;
 
 describe('Register', () => {
+	const contentTypeTestStr =
+		'application/openmetrics-text; version=42.0.0; charset=utf-8';
+	const expectedContentTypeErrStr = `Content type ${contentTypeTestStr} is unsupported`;
 	it('should throw if set to an unsupported type', () => {
 		expect(() => {
-			register.setContentType(
-				'application/openmetrics-text; version=42.0.0; charset=utf-8',
-			);
-		}).toThrowError('Content type unsupported');
+			register.setContentType(contentTypeTestStr);
+		}).toThrowError(expectedContentTypeErrStr);
 	});
 
 	it('should throw if created with an unsupported type', () => {
 		expect(() => {
-			new Registry(
-				'application/openmetrics-text; version=42.0.0; charset=utf-8',
-			);
-		}).toThrowError('Content type unsupported');
+			new Registry(contentTypeTestStr);
+		}).toThrowError(expectedContentTypeErrStr);
 	});
 
 	describe.each([

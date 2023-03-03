@@ -21,7 +21,7 @@ describe.each([
 		register.clear();
 	});
 
-	it(`should add metric to the ${tag} registry`, async done => {
+	it(`should add metric to the ${tag} registry`, async () => {
 		expect(await register.getMetricsAsJSON()).toHaveLength(0);
 		eventLoopLag();
 
@@ -71,8 +71,6 @@ describe.each([
 		);
 		expect(metrics[7].type).toEqual('gauge');
 		expect(metrics[7].name).toEqual('nodejs_eventloop_lag_p99_seconds');
-
-		done();
 	});
 });
 
