@@ -11,6 +11,9 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Refactor `getMetricAsPrometheusString` method in the `Registry` class to use `Array.prototype.join`
+  instead of loop of string concatenations.
+- Also use `Array.prototype.map`, and object spread instead of an explicit `for` loop
 - changed: updated the sample output in `example/default-metrics.js`
 
 ### Added
