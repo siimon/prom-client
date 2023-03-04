@@ -15,6 +15,9 @@ project adheres to [Semantic Versioning](http://semver.org/).
   instead of loop of string concatenations.
 - Also use `Array.prototype.map`, and object spread instead of an explicit `for` loop
 - changed: updated the sample output in `example/default-metrics.js`
+- `summary` metrics now has a `pruneAgedBuckets` config parameter
+  to remove entries without any new values in the last `maxAgeSeconds`.
+  Default is `false` (old behavior)
 
 ### Added
 
