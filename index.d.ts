@@ -29,12 +29,12 @@ export class Registry {
 	/**
 	 * Get all metrics as objects
 	 */
-	getMetricsAsJSON(): Promise<metric[]>;
+	getMetricsAsJSON(): Promise<MetricObjectWithValues<MetricValue<string>>[]>;
 
 	/**
 	 * Get all metrics as objects
 	 */
-	getMetricsAsArray(): metric[];
+	getMetricsAsArray(): MetricObject[];
 
 	/**
 	 * Remove a single metric
@@ -136,13 +136,27 @@ export enum MetricType {
 
 type CollectFunction<T> = (this: T) => void | Promise<void>;
 
-interface metric {
+interface MetricObject {
 	name: string;
 	help: string;
 	type: MetricType;
 	aggregator: Aggregator;
 	collect: CollectFunction<any>;
 }
+
+interface MetricObjectWithValues<T extends MetricValue<string>>
+	extends MetricObject {
+	values: T[];
+}
+
+type MetricValue<T extends string> = {
+	value: number;
+	labels: LabelValues<T>;
+};
+
+type MetricValueWithName<T extends string> = MetricValue<T> & {
+	metricName?: string;
+};
 
 type LabelValues<T extends string> = Partial<Record<T, string | number>>;
 
@@ -181,6 +195,11 @@ export class Counter<T extends string = string> {
 	 * @param value The value to increment with
 	 */
 	inc(value?: number): void;
+
+	/**
+	 * Get counter metric object
+	 */
+	get(): Promise<MetricObjectWithValues<MetricValue<T>>>;
 
 	/**
 	 * Return the child for given labels
@@ -276,6 +295,11 @@ export class Gauge<T extends string = string> {
 	 * @param value The value to set
 	 */
 	set(value: number): void;
+
+	/**
+	 * Get gauge metric object
+	 */
+	get(): Promise<MetricObjectWithValues<MetricValue<T>>>;
 
 	/**
 	 * Set gauge value to current epoch time in ms
@@ -387,6 +411,11 @@ export class Histogram<T extends string = string> {
 	observe(labels: LabelValues<T>, value: number): void;
 
 	/**
+	 * Get histogram metric object
+	 */
+	get(): Promise<MetricObjectWithValues<MetricValueWithName<T>>>;
+
+	/**
 	 * Start a timer. Calling the returned function will observe the duration in
 	 * seconds in the histogram.
 	 * @param labels Object with label keys and values
@@ -487,6 +516,11 @@ export class Summary<T extends string = string> {
 	 * @param value Value to observe
 	 */
 	observe(labels: LabelValues<T>, value: number): void;
+
+	/**
+	 * Get summary metric object
+	 */
+	get(): Promise<MetricObjectWithValues<MetricValueWithName<T>>>;
 
 	/**
 	 * Start a timer. Calling the returned function will observe the duration in
