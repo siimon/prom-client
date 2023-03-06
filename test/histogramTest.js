@@ -1,10 +1,18 @@
 'use strict';
 
-describe('histogram', () => {
+const Registry = require('../index').Registry;
+
+describe.each([
+	['Prometheus', Registry.PROMETHEUS_CONTENT_TYPE],
+	['OpenMetrics', Registry.OPENMETRICS_CONTENT_TYPE],
+])('histogram with %s registry', (tag, regType) => {
 	const Histogram = require('../index').Histogram;
-	const Registry = require('../index').Registry;
 	const globalRegistry = require('../index').register;
 	let instance;
+
+	beforeEach(() => {
+		globalRegistry.setContentType(regType);
+	});
 
 	afterEach(() => {
 		instance = null;
@@ -435,7 +443,7 @@ describe('histogram', () => {
 		describe('registry instance', () => {
 			let registryInstance;
 			beforeEach(() => {
-				registryInstance = new Registry();
+				registryInstance = new Registry(regType);
 				instance = new Histogram({
 					name: 'test_histogram',
 					help: 'test',

@@ -1,5 +1,7 @@
 'use strict';
 
+const Registry = require('../../index').Registry;
+
 jest.mock('v8', () => {
 	return {
 		getHeapSpaceStatistics() {
@@ -44,19 +46,23 @@ jest.mock('v8', () => {
 	};
 });
 
-describe('heapSpacesSizeAndUsed', () => {
+describe.each([
+	['Prometheus', Registry.PROMETHEUS_CONTENT_TYPE],
+	['OpenMetrics', Registry.OPENMETRICS_CONTENT_TYPE],
+])('heapSpacesSizeAndUsed with %s registry', (tag, regType) => {
 	let heapSpacesSizeAndUsed;
 	const globalRegistry = require('../../lib/registry').globalRegistry;
 
 	beforeEach(() => {
 		heapSpacesSizeAndUsed = require('../../lib/metrics/heapSpacesSizeAndUsed');
+		globalRegistry.setContentType(regType);
 	});
 
 	afterEach(() => {
 		globalRegistry.clear();
 	});
 
-	it('should set total heap spaces size gauges with values from v8', async () => {
+	it(`should set total heap spaces size gauges with values from v8 with ${tag} registry`, async () => {
 		expect(await globalRegistry.getMetricsAsJSON()).toHaveLength(0);
 
 		heapSpacesSizeAndUsed();

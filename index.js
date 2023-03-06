@@ -8,6 +8,10 @@
 exports.register = require('./lib/registry').globalRegistry;
 exports.Registry = require('./lib/registry');
 exports.contentType = require('./lib/registry').globalRegistry.contentType;
+exports.prometheusContentType =
+	require('./lib/registry').PROMETHEUS_CONTENT_TYPE;
+exports.openMetricsContentType =
+	require('./lib/registry').OPENMETRICS_CONTENT_TYPE;
 exports.validateMetricName = require('./lib/validation').validateMetricName;
 
 exports.Counter = require('./lib/counter');
