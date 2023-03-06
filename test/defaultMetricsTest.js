@@ -1,8 +1,12 @@
 'use strict';
 
-describe('collectDefaultMetrics', () => {
+const Registry = require('../index').Registry;
+
+describe.each([
+	['Prometheus', Registry.PROMETHEUS_CONTENT_TYPE],
+	['OpenMetrics', Registry.OPENMETRICS_CONTENT_TYPE],
+])('collectDefaultMetrics with %s registry', (tag, regType) => {
 	const register = require('../index').register;
-	const Registry = require('../index').Registry;
 	const collectDefaultMetrics = require('../index').collectDefaultMetrics;
 	let cpuUsage;
 
@@ -32,6 +36,10 @@ describe('collectDefaultMetrics', () => {
 		} else {
 			delete process.cpuUsage;
 		}
+	});
+
+	beforeEach(() => {
+		register.setContentType(regType);
 	});
 
 	afterEach(() => {
@@ -95,7 +103,7 @@ describe('collectDefaultMetrics', () => {
 
 	describe('custom registry', () => {
 		it('should allow to register metrics to custom registry', async () => {
-			const registry = new Registry();
+			const registry = new Registry(regType);
 
 			expect(await register.getMetricsAsJSON()).toHaveLength(0);
 			expect(await registry.getMetricsAsJSON()).toHaveLength(0);

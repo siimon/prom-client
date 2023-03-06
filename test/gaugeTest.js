@@ -1,10 +1,18 @@
 'use strict';
 
-describe('gauge', () => {
+const Registry = require('../index').Registry;
+
+describe.each([
+	['Prometheus', Registry.PROMETHEUS_CONTENT_TYPE],
+	['OpenMetrics', Registry.OPENMETRICS_CONTENT_TYPE],
+])('gauge with %s registry', (tag, regType) => {
 	const Gauge = require('../index').Gauge;
-	const Registry = require('../index').Registry;
 	const globalRegistry = require('../index').register;
 	let instance;
+
+	beforeEach(() => {
+		globalRegistry.setContentType(regType);
+	});
 
 	describe('global registry', () => {
 		afterEach(() => {
@@ -208,7 +216,7 @@ describe('gauge', () => {
 	describe('registry instance', () => {
 		let registryInstance;
 		beforeEach(() => {
-			registryInstance = new Registry();
+			registryInstance = new Registry(regType);
 			instance = new Gauge({
 				name: 'gauge_test',
 				help: 'help',

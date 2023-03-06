@@ -2,8 +2,16 @@
 
 const cluster = require('cluster');
 const process = require('process');
+const Registry = require('../lib/cluster');
 
-describe('AggregatorRegistry', () => {
+describe.each([
+	['Prometheus', Registry.PROMETHEUS_CONTENT_TYPE],
+	['OpenMetrics', Registry.OPENMETRICS_CONTENT_TYPE],
+])('%s AggregatorRegistry', (tag, regType) => {
+	beforeEach(() => {
+		Registry.globalRegistry.setContentType(regType);
+	});
+
 	it('requiring the cluster should not add any listeners on the cluster module', () => {
 		const originalListenerCount = cluster.listenerCount('message');
 
@@ -35,14 +43,13 @@ describe('AggregatorRegistry', () => {
 	describe('aggregatorRegistry.clusterMetrics()', () => {
 		it('works properly if there are no cluster workers', async () => {
 			const AggregatorRegistry = require('../lib/cluster');
-			const ar = new AggregatorRegistry();
+			const ar = new AggregatorRegistry(regType);
 			const metrics = await ar.clusterMetrics();
 			expect(metrics).toEqual('');
 		});
 	});
 
 	describe('AggregatorRegistry.aggregate()', () => {
-		const Registry = require('../lib/cluster');
 		// These mimic the output of `getMetricsAsJSON`.
 		const metricsArr1 = [
 			{
@@ -159,7 +166,7 @@ describe('AggregatorRegistry', () => {
 			},
 		];
 
-		const aggregated = Registry.aggregate([metricsArr1, metricsArr2]);
+		const aggregated = Registry.aggregate([metricsArr1, metricsArr2], regType);
 
 		it('defaults to summation, preserves histogram bins', async () => {
 			const histogram = aggregated.getSingleMetric('test_histogram').get();

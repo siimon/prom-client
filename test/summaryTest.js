@@ -1,10 +1,22 @@
 'use strict';
 
-describe('summary', () => {
+const Registry = require('../index').Registry;
+
+describe.each([
+	['Prometheus', Registry.PROMETHEUS_CONTENT_TYPE],
+	['OpenMetrics', Registry.OPENMETRICS_CONTENT_TYPE],
+])('summary with %s registry', (tag, regType) => {
 	const Summary = require('../index').Summary;
-	const Registry = require('../index').Registry;
 	const globalRegistry = require('../index').register;
 	let instance;
+
+	beforeEach(() => {
+		globalRegistry.setContentType(regType);
+	});
+
+	afterEach(() => {
+		globalRegistry.clear();
+	});
 
 	describe('global registry', () => {
 		afterEach(() => {
@@ -464,7 +476,7 @@ describe('summary', () => {
 	describe('registry instance', () => {
 		let registryInstance;
 		beforeEach(() => {
-			registryInstance = new Registry();
+			registryInstance = new Registry(regType);
 			instance = new Summary({
 				name: 'summary_test',
 				help: 'test',

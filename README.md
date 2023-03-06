@@ -390,6 +390,47 @@ Default labels will be overridden if there is a name conflict.
 
 `register.clear()` will clear default labels.
 
+### Exemplars
+
+The exemplars defined in the OpenMetrics specification can be enabled on Counter
+and Histogram metric types. The default metrics have support for OpenTelemetry,
+they will populate the exemplars with the labels `{traceId, spanId}` and their
+corresponding values.
+
+The format for `inc()` and `observe()` calls are different if exemplars are
+enabled. They get a single object with the format
+`{labels, value, exemplarLabels}`.
+
+When using exemplars, the registry used for metrics should be set to OpenMetrics
+type (including the global or default registry if no registries are specified).
+
+### Registy type
+
+The library supports both the old Prometheus format and the OpenMetrics format.
+The format can be set per registry. For default metrics:
+
+```js
+const Prometheus = require('prom-client');
+Prometheus.register.setContentType(
+  Prometheus.Registry.OPENMETRICS_CONTENT_TYPE,
+);
+```
+
+Currently available registry types are defined by the content types:
+
+**PROMETHEUS_CONTENT_TYPE** - version 0.0.4 of the original Prometheus metrics,
+this is currently the default registry type.
+
+**OPENMETRICS_CONTENT_TYPE** - defaults to version 1.0.0 of the
+[OpenMetrics standard](https://github.com/OpenObservability/OpenMetrics/blob/d99b705f611b75fec8f450b05e344e02eea6921d/specification/OpenMetrics.md).
+
+The HTTP Content-Type string for each registry type is exposed both at module
+level (`prometheusContentType` and `openMetricsContentType`) and as static
+properties on the `Registry` object.
+
+The `contentType` constant exposed by the module returns the default content
+type when creating a new registry, currently defaults to Prometheus type.
+
 ### Multiple registries
 
 By default, metrics are automatically registered to the global registry (located
@@ -403,6 +444,9 @@ pass an empty `registers` array and register it manually.
 Registry has a `merge` function that enables you to expose multiple registries
 on the same endpoint. If the same metric name exists in both registries, an
 error will be thrown.
+
+Merging registries of different types is undefined. The user needs to make sure
+all used registries have the same type (Prometheus or OpenMetrics versions).
 
 ```js
 const client = require('prom-client');
@@ -553,9 +597,6 @@ new client.Histogram({
   buckets: client.exponentialBuckets(1, 2, 5), //Create 5 buckets, starting on 1 and with a factor of 2
 });
 ```
-
-The content-type prometheus expects is also exported as a constant, both on the
-`register` and from the main file of this project, called `contentType`.
 
 ### Garbage Collection Metrics
 
