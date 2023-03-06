@@ -17,6 +17,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- Support for OpenMetrics and Exemplars
+
 ## [14.1.1] - 2022-12-31
 
 ### Changed
