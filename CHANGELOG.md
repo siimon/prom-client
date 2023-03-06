@@ -11,6 +11,12 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+### Added
+
+## [14.2.0] - 2023-03-06
+
+### Changed
+
 - Refactor `getMetricAsPrometheusString` method in the `Registry` class to use `Array.prototype.join`
   instead of loop of string concatenations.
 - Also use `Array.prototype.map`, and object spread instead of an explicit `for` loop
