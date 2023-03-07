@@ -114,6 +114,12 @@ export class AggregatorRegistry extends Registry {
 }
 
 /**
+ * Sets up the cluster worker for cluster aggregation. Idempotent (safe to call
+ * more than once).
+ */
+export function setupClusterWorker(): void;
+
+/**
  * General metric type
  */
 export type Metric<T extends string = string> =

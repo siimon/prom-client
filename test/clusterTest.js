@@ -34,7 +34,7 @@ describe('AggregatorRegistry', () => {
 
 	describe('aggregatorRegistry.clusterMetrics()', () => {
 		it('works properly if there are no cluster workers', async () => {
-			const AggregatorRegistry = require('../lib/cluster');
+			const { AggregatorRegistry } = require('../lib/cluster');
 			const ar = new AggregatorRegistry();
 			const metrics = await ar.clusterMetrics();
 			expect(metrics).toEqual('');
@@ -42,7 +42,7 @@ describe('AggregatorRegistry', () => {
 	});
 
 	describe('AggregatorRegistry.aggregate()', () => {
-		const Registry = require('../lib/cluster');
+		const { AggregatorRegistry } = require('../lib/cluster');
 		// These mimic the output of `getMetricsAsJSON`.
 		const metricsArr1 = [
 			{
@@ -159,7 +159,7 @@ describe('AggregatorRegistry', () => {
 			},
 		];
 
-		const aggregated = Registry.aggregate([metricsArr1, metricsArr2]);
+		const aggregated = AggregatorRegistry.aggregate([metricsArr1, metricsArr2]);
 
 		it('defaults to summation, preserves histogram bins', async () => {
 			const histogram = aggregated.getSingleMetric('test_histogram').get();
