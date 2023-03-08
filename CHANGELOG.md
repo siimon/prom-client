@@ -7,6 +7,12 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- In `next` refactor `getMetricAsString` method in the `Registry` class to use `Array.prototype.join`
+  instead of loop of string concatenations.
+- In `next` move local functions used by the `Registry` class to bottom of file
+
 ### Breaking
 
 - drop support for Node.js versions 10, 12 and 17
