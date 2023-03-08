@@ -10,6 +10,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ### Breaking
 
 ### Changed
+- Refactor `escapeString` helper in `lib/registry.js` to improve performance and
+  avoid an unnecessarily complex regex.
 
 ### Added
 
