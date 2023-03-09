@@ -13,6 +13,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Disable custom content encoding for pushgateway delete requests in order to
+  avoid failures from the server when using `Content-Encoding: gzip` header.
 - Refactor `escapeString` helper in `lib/registry.js` to improve performance and
   avoid an unnecessarily complex regex.
 
