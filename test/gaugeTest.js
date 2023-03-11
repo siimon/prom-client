@@ -166,6 +166,13 @@ describe.each([
 					expect(values).toHaveLength(1);
 					expect(values[0].labels).toEqual({ code: '200' });
 				});
+				it('should handle labels provided as an array', async () => {
+					instance.labels([200]).inc();
+
+					const values = (await instance.get()).values;
+					expect(values).toHaveLength(1);
+					expect(values[0].labels).toEqual({ code: '200' });
+				});
 			});
 
 			describe('with remove', () => {
