@@ -13,6 +13,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Refactor histogram internals and provide a fast path for rendering metrics to
+  Prometheus strings when there are many labels shared across different values.
 - Disable custom content encoding for pushgateway delete requests in order to
   avoid failures from the server when using `Content-Encoding: gzip` header.
 - Refactor `escapeString` helper in `lib/registry.js` to improve performance and

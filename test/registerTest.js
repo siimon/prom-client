@@ -505,7 +505,7 @@ describe('Register', () => {
 						const metrics = await r.metrics();
 						const lines = metrics.split('\n');
 						expect(lines).toContain(
-							'my_histogram_bucket{le="1",type="myType",env="development"} 1',
+							'my_histogram_bucket{le="1",env="development",type="myType"} 1',
 						);
 
 						myHist.observe(1);
@@ -513,7 +513,7 @@ describe('Register', () => {
 						const metrics2 = await r.metrics();
 						const lines2 = metrics2.split('\n');
 						expect(lines2).toContain(
-							'my_histogram_bucket{le="1",type="myType",env="development"} 2',
+							'my_histogram_bucket{le="1",env="development",type="myType"} 2',
 						);
 					});
 				});
