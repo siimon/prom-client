@@ -16,15 +16,23 @@ function setupRegistrySuite(suite) {
 	labelSetups.forEach(({ name, counts }) => {
 		suite.add(
 			`getMetricsAsJSON#${name}`,
-			(client, registry) => registry.getMetricsAsJSON(),
-			{ setup: setup(counts) },
+			(client, { registry }) => registry.getMetricsAsJSON(),
+			{ teardown, setup: setup(counts) },
 		);
 	});
 
 	labelSetups.forEach(({ name, counts }) => {
-		suite.add(`metrics#${name}`, (client, registry) => registry.metrics(), {
-			setup: setup(counts),
-		});
+		suite.add(
+			`metrics#${name}`,
+			(client, { registry, histogram, labelCombinations }) => {
+				labelCombinations.forEach(labels => histogram.observe(labels, 1));
+				registry.metrics();
+			},
+			{
+				setup: setup(counts),
+				teardown,
+			},
+		);
 	});
 }
 
@@ -43,6 +51,17 @@ function setup(labelCounts) {
 
 		labelCombinations.forEach(labels => histogram.observe(labels, 1));
 
-		return registry;
+		return {
+			registry,
+			histogram,
+			labelCombinations: labelCombinations.slice(
+				0,
+				labelCombinations.length / 8,
+			),
+		};
 	};
+}
+
+function teardown(client, { registry }) {
+	registry.clear();
 }
