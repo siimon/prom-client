@@ -13,6 +13,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Fix exemplar formating, improve test suite
 - Refactor `escapeString` helper in `lib/registry.js` to improve performance and
   avoid an unnecessarily complex regex.
 
