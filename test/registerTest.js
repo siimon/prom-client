@@ -223,23 +223,63 @@ describe('Register', () => {
 			}
 		});
 
-		it('should output all initialized metrics at value 0', async () => {
-			new Counter({ name: 'counter', help: 'help' });
-			new Gauge({ name: 'gauge', help: 'help' });
-			new Histogram({ name: 'histogram', help: 'help' });
-			new Summary({ name: 'summary', help: 'help' });
+		if (regType === Registry.OPENMETRICS_CONTENT_TYPE) {
+			it('should output all initialized metrics at value 0', async () => {
+				new Counter({ name: 'counter', help: 'help', enableExemplars: true });
+				new Gauge({ name: 'gauge', help: 'help' });
+				new Histogram({
+					name: 'histogram',
+					help: 'help',
+					enableExemplars: true,
+				});
+				new Summary({ name: 'summary', help: 'help' });
 
-			expect(await register.metrics()).toMatchSnapshot();
-		});
+				expect(await register.metrics()).toMatchSnapshot();
+			});
+		} else {
+			it('should output all initialized metrics at value 0', async () => {
+				new Counter({ name: 'counter', help: 'help' });
+				new Gauge({ name: 'gauge', help: 'help' });
+				new Histogram({ name: 'histogram', help: 'help' });
+				new Summary({ name: 'summary', help: 'help' });
+
+				expect(await register.metrics()).toMatchSnapshot();
+			});
+		}
 
 		it('should not output all initialized metrics at value 0 if labels', async () => {
 			new Counter({ name: 'counter', help: 'help', labelNames: ['label'] });
 			new Gauge({ name: 'gauge', help: 'help', labelNames: ['label'] });
-			new Histogram({ name: 'histogram', help: 'help', labelNames: ['label'] });
+			new Histogram({
+				name: 'histogram',
+				help: 'help',
+				labelNames: ['label'],
+			});
 			new Summary({ name: 'summary', help: 'help', labelNames: ['label'] });
 
 			expect(await register.metrics()).toMatchSnapshot();
 		});
+
+		if (regType === Registry.OPENMETRICS_CONTENT_TYPE) {
+			it('should not output all initialized metrics at value 0 if labels and exemplars enabled', async () => {
+				new Counter({
+					name: 'counter',
+					help: 'help',
+					labelNames: ['label'],
+					enableExemplars: true,
+				});
+				new Gauge({ name: 'gauge', help: 'help', labelNames: ['label'] });
+				new Histogram({
+					name: 'histogram',
+					help: 'help',
+					labelNames: ['label'],
+					enableExemplars: true,
+				});
+				new Summary({ name: 'summary', help: 'help', labelNames: ['label'] });
+
+				expect(await register.metrics()).toMatchSnapshot();
+			});
+		}
 
 		describe('should escape', () => {
 			let escapedResult;

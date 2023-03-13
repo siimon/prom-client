@@ -5,6 +5,8 @@ const globalRegistry = require('../index').register;
 const Histogram = require('../index').Histogram;
 const Counter = require('../index').Counter;
 
+Date.now = jest.fn(() => 1678654679000);
+
 describe('Exemplars', () => {
 	it('should throw when using with Prometheus registry', async () => {
 		globalRegistry.setContentType(Registry.PROMETHEUS_CONTENT_TYPE);
@@ -96,6 +98,8 @@ describe('Exemplars', () => {
 					getValuesByLabel('+Inf', vals)[0].exemplar.labelSet.traceId,
 				).toEqual('trace_id_test_3');
 				expect(getValuesByLabel('+Inf', vals)[0].exemplar.value).toEqual(11);
+
+				expect(await globalRegistry.metrics()).toMatchSnapshot();
 			});
 
 			it('should throw if exemplar is too long', async () => {

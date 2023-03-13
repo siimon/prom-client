@@ -13,6 +13,19 @@ exports[`Register with OpenMetrics type should not output all initialized metric
 "
 `;
 
+exports[`Register with OpenMetrics type should not output all initialized metrics at value 0 if labels and exemplars enabled 1`] = `
+"# HELP counter help
+# TYPE counter counter
+# HELP gauge help
+# TYPE gauge gauge
+# HELP histogram help
+# TYPE histogram histogram
+# HELP summary help
+# TYPE summary summary
+# EOF
+"
+`;
+
 exports[`Register with OpenMetrics type should output all initialized metrics at value 0 1`] = `
 "# HELP counter help
 # TYPE counter counter
