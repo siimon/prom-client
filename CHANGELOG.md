@@ -7,6 +7,10 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- Cleanup code and refactor to be more efficient
+
 ### Breaking
 
 - drop support for Node.js versions 10, 12 and 17
