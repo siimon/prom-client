@@ -407,7 +407,7 @@ enabled. They get a single object with the format
 When using exemplars, the registry used for metrics should be set to OpenMetrics
 type (including the global or default registry if no registries are specified).
 
-### Registy type
+### Registry type
 
 The library supports both the old Prometheus format and the OpenMetrics format.
 The format can be set per registry. For default metrics:
