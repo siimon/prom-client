@@ -315,6 +315,8 @@ gauge.set({ method: 'GET', statusCode: '200' }, 100);
 gauge.labels({ method: 'GET', statusCode: '200' }).set(100);
 // 3rd version: And again the same effect as above
 gauge.labels('GET', '200').set(100);
+// 4th version: And again the same effect as above
+gauge.labels(['GET', '200']).set(100);
 ```
 
 It is also possible to use timers with labels, both before and after the timer

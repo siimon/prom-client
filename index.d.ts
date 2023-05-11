@@ -263,6 +263,13 @@ export class Counter<T extends string = string> {
 	 * @param values Label values
 	 * @return Configured counter with given labels
 	 */
+	labels(values: string[]): Counter.Internal;
+
+	/**
+	 * Return the child for given labels
+	 * @param values Label values
+	 * @return Configured counter with given labels
+	 */
 	labels(...values: string[]): Counter.Internal;
 
 	/**
@@ -276,6 +283,12 @@ export class Counter<T extends string = string> {
 	 * Reset counter values
 	 */
 	reset(): void;
+
+	/**
+	 * Remove metrics for the given label values
+	 * @param values Label values
+	 */
+	remove(values: string[]): void;
 
 	/**
 	 * Remove metrics for the given label values
@@ -378,6 +391,13 @@ export class Gauge<T extends string = string> {
 	 * @param values Label values
 	 * @return Configured gauge with given labels
 	 */
+	labels(values: string[]): Gauge.Internal<T>;
+
+	/**
+	 * Return the child for given labels
+	 * @param values Label values
+	 * @return Configured gauge with given labels
+	 */
 	labels(...values: string[]): Gauge.Internal<T>;
 
 	/**
@@ -391,6 +411,12 @@ export class Gauge<T extends string = string> {
 	 * Reset gauge values
 	 */
 	reset(): void;
+
+	/**
+	 * Remove metrics for the given label values
+	 * @param values Label values
+	 */
+	remove(values: string[]): void;
 
 	/**
 	 * Remove metrics for the given label values
@@ -502,6 +528,13 @@ export class Histogram<T extends string = string> {
 	 * @param values Label values
 	 * @return Configured histogram with given labels
 	 */
+	labels(values: string[]): Histogram.Internal<T>;
+
+	/**
+	 * Return the child for given labels
+	 * @param values Label values
+	 * @return Configured histogram with given labels
+	 */
 	labels(...values: string[]): Histogram.Internal<T>;
 
 	/**
@@ -510,6 +543,12 @@ export class Histogram<T extends string = string> {
 	 * @return Configured counter with given labels
 	 */
 	labels(labels: LabelValues<T>): Histogram.Internal<T>;
+
+	/**
+	 * Remove metrics for the given label values
+	 * @param values Label values
+	 */
+	remove(values: string[]): void;
 
 	/**
 	 * Remove metrics for the given label values
@@ -604,6 +643,13 @@ export class Summary<T extends string = string> {
 	 * @param values Label values
 	 * @return Configured summary with given labels
 	 */
+	labels(values: string[]): Summary.Internal<T>;
+
+	/**
+	 * Return the child for given labels
+	 * @param values Label values
+	 * @return Configured summary with given labels
+	 */
 	labels(...values: string[]): Summary.Internal<T>;
 
 	/**
@@ -612,6 +658,12 @@ export class Summary<T extends string = string> {
 	 * @return Configured counter with given labels
 	 */
 	labels(labels: LabelValues<T>): Summary.Internal<T>;
+
+	/**
+	 * Remove metrics for the given label values
+	 * @param values Label values
+	 */
+	remove(values: string[]): void;
 
 	/**
 	 * Remove metrics for the given label values
