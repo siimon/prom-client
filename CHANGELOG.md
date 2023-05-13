@@ -7,10 +7,6 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-### Changed
-
-- Cleanup code and refactor to be more efficient
-
 ### Breaking
 
 - drop support for Node.js versions 10, 12 and 17
@@ -23,6 +19,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
   avoid failures from the server when using `Content-Encoding: gzip` header.
 - Refactor `escapeString` helper in `lib/registry.js` to improve performance and
   avoid an unnecessarily complex regex.
+- Cleanup code and refactor to be more efficient
+- Correct TS types for working with OpenMetrics
 
 ### Added
 
