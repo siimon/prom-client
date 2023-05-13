@@ -9,9 +9,9 @@ export type PrometheusMetricsVersion = '0.0.4';
 export type OpenMetricsMIME = 'application/openmetrics-text';
 export type OpenMetricsVersion = '1.0.0';
 
-export type PrometheusContentType =
-	`${OpenMetricsMIME}; version=${OpenMetricsVersion}; charset=${Charset}`;
 export type OpenMetricsContentType =
+	`${OpenMetricsMIME}; version=${OpenMetricsVersion}; charset=${Charset}`;
+export type PrometheusContentType =
 	`${PrometheusMIME}; version=${PrometheusMetricsVersion}; charset=${Charset}`;
 
 export type RegistryContentType =
