@@ -119,7 +119,7 @@ export const prometheusContentType: PrometheusContentType;
  */
 export const openMetricsContentType: OpenMetricsContentType;
 
-export class AggregatorRegistry extends Registry {
+export class AggregatorRegistry<T extends RegistryContentType> extends Registry<T>  {
 	/**
 	 * Gets aggregated metrics for all workers.
 	 * @return {Promise<string>} Promise that resolves with the aggregated
@@ -136,7 +136,7 @@ export class AggregatorRegistry extends Registry {
 	 *   `registry.getMetricsAsJSON()`.
 	 * @return {Registry} aggregated registry.
 	 */
-	static aggregate(metricsArr: Array<Object>): Registry; // TODO Promise?
+	static aggregate<T extends RegistryContentType>(metricsArr: Array<Object>): Registry<T>; // TODO Promise?
 
 	/**
 	 * Sets the registry or registries to be aggregated. Call from workers to
@@ -145,7 +145,10 @@ export class AggregatorRegistry extends Registry {
 	 *   aggregated.
 	 * @return {void}
 	 */
-	static setRegistries(regs: Array<Registry> | Registry): void;
+	static setRegistries(regs: 
+		| Array<Registry<PrometheusContentType> | Registry<OpenMetricsContentType>> 
+		| Registry<PrometheusContentType>
+		| Registry<OpenMetricsContentType>): void;
 }
 
 /**
@@ -655,13 +658,13 @@ export namespace Summary {
 /**
  * Push metrics to a Pushgateway
  */
-export class Pushgateway {
+export class Pushgateway<T extends RegistryContentType> {
 	/**
 	 * @param url Complete url to the Pushgateway. If port is needed append url with :port
 	 * @param options Options
 	 * @param registry Registry
 	 */
-	constructor(url: string, options?: any, registry?: Registry);
+	constructor(url: string, options?: any, registry?: Registry<T>);
 
 	/**
 	 * Add metric and overwrite old ones
@@ -729,8 +732,8 @@ export function exponentialBuckets(
 	count: number,
 ): number[];
 
-export interface DefaultMetricsCollectorConfiguration {
-	register?: Registry;
+export interface DefaultMetricsCollectorConfiguration<T extends RegistryContentType> {
+	register?: Registry<T>;
 	prefix?: string;
 	gcDurationBuckets?: number[];
 	eventLoopMonitoringPrecision?: number;
@@ -741,8 +744,8 @@ export interface DefaultMetricsCollectorConfiguration {
  * Configure default metrics
  * @param config Configuration object for default metrics collector
  */
-export function collectDefaultMetrics(
-	config?: DefaultMetricsCollectorConfiguration,
+export function collectDefaultMetrics<T extends RegistryContentType>(
+	config?: DefaultMetricsCollectorConfiguration<T>,
 ): void;
 
 export interface defaultMetrics {
