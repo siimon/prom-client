@@ -119,7 +119,9 @@ export const prometheusContentType: PrometheusContentType;
  */
 export const openMetricsContentType: OpenMetricsContentType;
 
-export class AggregatorRegistry<T extends RegistryContentType> extends Registry<T>  {
+export class AggregatorRegistry<
+	T extends RegistryContentType,
+> extends Registry<T> {
 	/**
 	 * Gets aggregated metrics for all workers.
 	 * @return {Promise<string>} Promise that resolves with the aggregated
@@ -136,7 +138,9 @@ export class AggregatorRegistry<T extends RegistryContentType> extends Registry<
 	 *   `registry.getMetricsAsJSON()`.
 	 * @return {Registry} aggregated registry.
 	 */
-	static aggregate<T extends RegistryContentType>(metricsArr: Array<Object>): Registry<T>; // TODO Promise?
+	static aggregate<T extends RegistryContentType>(
+		metricsArr: Array<Object>,
+	): Registry<T>; // TODO Promise?
 
 	/**
 	 * Sets the registry or registries to be aggregated. Call from workers to
@@ -145,10 +149,14 @@ export class AggregatorRegistry<T extends RegistryContentType> extends Registry<
 	 *   aggregated.
 	 * @return {void}
 	 */
-	static setRegistries(regs: 
-		| Array<Registry<PrometheusContentType> | Registry<OpenMetricsContentType>> 
-		| Registry<PrometheusContentType>
-		| Registry<OpenMetricsContentType>): void;
+	static setRegistries(
+		regs:
+			| Array<
+					Registry<PrometheusContentType> | Registry<OpenMetricsContentType>
+			  >
+			| Registry<PrometheusContentType>
+			| Registry<OpenMetricsContentType>,
+	): void;
 }
 
 /**
@@ -732,7 +740,9 @@ export function exponentialBuckets(
 	count: number,
 ): number[];
 
-export interface DefaultMetricsCollectorConfiguration<T extends RegistryContentType> {
+export interface DefaultMetricsCollectorConfiguration<
+	T extends RegistryContentType,
+> {
 	register?: Registry<T>;
 	prefix?: string;
 	gcDurationBuckets?: number[];
