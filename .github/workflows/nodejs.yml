@@ -27,16 +27,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Restore dependencies cache
-        uses: actions/cache@v3
-        id: cache
-        with:
-          path: node_modules
-          key: ${{ matrix.os }}-${{ matrix.node-version }}-node_modules-${{ hashFiles('**/package.json') }}
-          restore-keys: |
-            ${{ matrix.os }}-${{ matrix.node-version }}-node_modules-
+          cache: npm
       - name: Install Dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm i
+        run: npm install
       - name: Test
         run: npm run test
