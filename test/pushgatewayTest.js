@@ -66,6 +66,19 @@ describe.each([
 						expect(mockHttp.isDone());
 					});
 			});
+
+			it('should throw an error if the push failed', () => {
+				nock('http://192.168.99.100:9091')
+					.post('/metrics/job/testJob/key/value', body)
+					.reply(400);
+
+				return expect(
+					instance.pushAdd({
+						jobName: 'testJob',
+						groupings: { key: 'value' },
+					}),
+				).rejects.toThrow('push failed with status 400');
+			});
 		});
 
 		describe('push', () => {
@@ -88,6 +101,19 @@ describe.each([
 					expect(mockHttp.isDone());
 				});
 			});
+
+			it('should throw an error if the push failed', () => {
+				nock('http://192.168.99.100:9091')
+					.put('/metrics/job/testJob/key/value', body)
+					.reply(400);
+
+				return expect(
+					instance.push({
+						jobName: 'testJob',
+						groupings: { key: 'value' },
+					}),
+				).rejects.toThrow('push failed with status 400');
+			});
 		});
 
 		describe('delete', () => {
@@ -99,6 +125,16 @@ describe.each([
 				return instance.delete({ jobName: 'testJob' }).then(() => {
 					expect(mockHttp.isDone());
 				});
+			});
+
+			it('should throw an error if the push failed', () => {
+				nock('http://192.168.99.100:9091')
+					.delete('/metrics/job/testJob')
+					.reply(400);
+
+				return expect(instance.delete({ jobName: 'testJob' })).rejects.toThrow(
+					'push failed with status 400',
+				);
 			});
 		});
 
