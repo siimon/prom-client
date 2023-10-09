@@ -370,7 +370,7 @@ export class Gauge<T extends string = string> {
 	get(): Promise<MetricObjectWithValues<MetricValue<T>>>;
 
 	/**
-	 * Set gauge value to current epoch time in ms
+	 * Set gauge value to current epoch time in seconds
 	 * @param labels Object with label keys and values
 	 */
 	setToCurrentTime(labels?: LabelValues<T>): void;

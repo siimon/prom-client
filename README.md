@@ -188,7 +188,7 @@ functions will not have the correct value for `this`.
 ##### Utility Functions
 
 ```js
-// Set value to current time:
+// Set value to current time in seconds:
 gauge.setToCurrentTime();
 
 // Record durations:
