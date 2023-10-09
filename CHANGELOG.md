@@ -9,6 +9,14 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Breaking
 
+### Changed
+
+### Added
+
+## [15.0.0] - 2023-10-09
+
+### Breaking
+
 - drop support for Node.js versions 10, 12, 14, 17 and 19
 
 ### Changed
