@@ -23,6 +23,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - Correct TS types for working with OpenMetrics
 - Updated Typescript and Readme docs for `setToCurrentTime()` to reflect units as seconds.
 - Do not ignore error if request to pushgateway fails
+- Make sure to reject the request to pushgateway if it times out
 
 ### Added
 
