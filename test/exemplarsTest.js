@@ -122,6 +122,39 @@ describe('Exemplars', () => {
 				}).toThrowError('Label set size must be smaller than 128 UTF-8 chars');
 			});
 
+			it('should time request, with exemplar', async () => {
+				jest.useFakeTimers('modern');
+				jest.setSystemTime(0);
+				const histogramInstance = new Histogram({
+					name: 'histogram_start_timer_exemplar_test',
+					help: 'test',
+					labelNames: ['method', 'code'],
+					enableExemplars: true,
+				});
+				const end = histogramInstance.startTimer({
+					method: 'get',
+					code: '200',
+				});
+
+				jest.advanceTimersByTime(500);
+				end();
+
+				const valuePair = getValueByLabel(
+					0.5,
+					(await histogramInstance.get()).values,
+				);
+				expect(valuePair.value).toEqual(1);
+				jest.useRealTimers();
+			});
+
+			function getValueByLabel(label, values, key) {
+				return values.reduce((acc, val) => {
+					if (val.labels && val.labels[key || 'le'] === label) {
+						acc = val;
+					}
+					return acc;
+				}, {});
+			}
 			function getValuesByLabel(label, values, key) {
 				return values.reduce((acc, val) => {
 					if (val.labels && val.labels[key || 'le'] === label) {
