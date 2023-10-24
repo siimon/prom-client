@@ -499,6 +499,19 @@ export class Histogram<T extends string = string> {
 	startTimer(labels?: LabelValues<T>): (labels?: LabelValues<T>) => number;
 
 	/**
+	 * Start a timer with exemplar. Calling the returned function will observe the duration in
+	 * seconds in the histogram.
+	 * @param labels Object with label keys and values
+	 * @param exemplarLabels Object with label keys and values for exemplars
+	 * @return Function to invoke when timer should be stopped. The value it
+	 * returns is the timed duration.
+	 */
+	startTimer(
+		labels?: LabelValues<T>,
+		exemplarLabels?: LabelValues<T>,
+	): (labels?: LabelValues<T>, exemplarLabels?: LabelValues<T>) => number;
+
+	/**
 	 * Reset histogram values
 	 */
 	reset(): void;
