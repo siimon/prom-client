@@ -96,6 +96,23 @@ describe.each([
 						expect(err.message).toStrictEqual('Pushgateway request timed out');
 					});
 			});
+
+			it('should be possible to configure for gravel gateway integration (no job name required in path)', async () => {
+				const mockHttp = nock('http://192.168.99.100:9091')
+					.post('/metrics', body)
+					.reply(200);
+
+				instance = new Pushgateway(
+					'http://192.168.99.100:9091',
+					{
+						timeout: 10,
+						requireJobName: false,
+					},
+					registry,
+				);
+
+				return instance.pushAdd().then(() => expect(mockHttp.isDone()));
+			});
 		});
 
 		describe('push', () => {

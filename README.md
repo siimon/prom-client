@@ -581,6 +581,16 @@ gateway = new client.Pushgateway('http://127.0.0.1:9091', {
 });
 ```
 
+Some gateways such as [Gravel Gateway](https://github.com/sinkingpoint/prometheus-gravel-gateway) do not support grouping by job name, exposing a plain `/metrics` endpoint instead of `/metrics/job/<jobName>`. It's possible to configure a gateway instance to not require a jobName in the options argument.
+
+```js
+gravelGateway = new client.Pushgateway('http://127.0.0.1:9091', {
+  timeout: 5000,
+  requireJobName: false,
+});
+gravelGateway.pushAdd();
+```
+
 ### Bucket Generators
 
 For convenience, there are two bucket generator functions - linear and
