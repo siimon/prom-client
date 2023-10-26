@@ -11,6 +11,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- remove unnecessary loop from `osMemoryHeapLinux`
+
 ### Added
 
 ## [15.0.0] - 2023-10-09
