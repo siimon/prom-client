@@ -12,6 +12,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 - remove unnecessary loop from `osMemoryHeapLinux`
+- Improve performance of `hashObject` by using pre-sorted array of label names
 
 ### Added
 
