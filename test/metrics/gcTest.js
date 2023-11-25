@@ -33,8 +33,10 @@ describe.each([
 		try {
 			// eslint-disable-next-line
 			perf_hooks = require('perf_hooks');
+			new perf_hooks.PerformanceObserver();
 		} catch {
-			// node version is too old
+			// node version is too old, or Bun
+			perf_hooks = false;
 		}
 
 		if (perf_hooks) {
