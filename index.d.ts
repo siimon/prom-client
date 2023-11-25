@@ -750,20 +750,17 @@ export interface DefaultMetricsCollectorConfiguration<
 	labels?: Object;
 }
 
-/**
- * Configure default metrics
- * @param config Configuration object for default metrics collector
- */
-export function collectDefaultMetrics<T extends RegistryContentType>(
-	config?: DefaultMetricsCollectorConfiguration<T>,
-): void;
-
-export interface defaultMetrics {
+export const collectDefaultMetrics: {
 	/**
-	 * All available default metrics
+	 * Configure default metrics
+	 * @param config Configuration object for default metrics collector
 	 */
+	<T extends RegistryContentType>(
+		config?: DefaultMetricsCollectorConfiguration<T>,
+	): void;
+	/** All available default metrics */
 	metricsList: string[];
-}
+};
 
 /**
  * Validate a metric name
