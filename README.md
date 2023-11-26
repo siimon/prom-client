@@ -402,14 +402,14 @@ const counter = new client.Counter({
   name: 'metric_name',
   help: 'metric_help',
   labels: ['method', 'endpoint', 'protocol'],
-	defaultLabels: {
-		protocol: 'https',
-	},
+  defaultLabels: {
+    protocol: 'https',
+  },
 });
 
 // will be recorded with method: "GET", endpoint: "/test", protocol: "https"
-counter.labels({method: 'GET', endpoint: '/test' }).inc();
-counter.inc({method: 'GET', endpoint: '/test' });
+counter.labels({ method: 'GET', endpoint: '/test' }).inc();
+counter.inc({ method: 'GET', endpoint: '/test' });
 ```
 
 Default values can also be overridden when recording a value:
@@ -418,16 +418,18 @@ Default values can also be overridden when recording a value:
 // the following are all equivalent:
 counter.labels('GET', '/test', 'http').inc();
 
-counter.labels({
-	method: 'GET',
-	endpoint: '/test',
-	protocol: 'http'
-}).inc();
+counter
+  .labels({
+    method: 'GET',
+    endpoint: '/test',
+    protocol: 'http',
+  })
+  .inc();
 
 counter.inc({
-	method: 'GET',
-	endpoint: '/test',
-	protocol: 'http'
+  method: 'GET',
+  endpoint: '/test',
+  protocol: 'http',
 });
 ```
 
