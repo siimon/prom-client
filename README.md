@@ -393,6 +393,53 @@ Default labels will be overridden if there is a name conflict.
 
 `register.clear()` will clear default labels.
 
+##### Per-metric default label values
+
+Static labels values may also be applied per-metric:
+
+```js
+const counter = new client.Counter({
+  name: 'metric_name',
+  help: 'metric_help',
+  labels: ['method', 'endpoint', 'protocol'],
+	defaultLabels: {
+		protocol: 'https',
+	},
+});
+
+// will be recorded with method: "GET", endpoint: "/test", protocol: "https"
+counter.labels({method: 'GET', endpoint: '/test' }).inc();
+counter.inc({method: 'GET', endpoint: '/test' });
+```
+
+Default values can also be overridden when recording a value:
+
+```js
+// the following are all equivalent:
+counter.labels('GET', '/test', 'http').inc();
+
+counter.labels({
+	method: 'GET',
+	endpoint: '/test',
+	protocol: 'http'
+}).inc();
+
+counter.inc({
+	method: 'GET',
+	endpoint: '/test',
+	protocol: 'http'
+});
+```
+
+Note that the following shorthand _can't_ be used, unless all labels are specified, including labels with a default value:
+
+```js
+// this is good
+counter.labels('GET', '/test', 'https').inc();
+// this will throw an error
+counter.labels('GET', '/test').inc();
+```
+
 ### Exemplars
 
 The exemplars defined in the OpenMetrics specification can be enabled on Counter
