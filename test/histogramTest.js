@@ -8,6 +8,7 @@ describe.each([
 ])('histogram with %s registry', (tag, regType) => {
 	const Histogram = require('../index').Histogram;
 	const globalRegistry = require('../index').register;
+	/** @type {Histogram} */
 	let instance;
 
 	beforeEach(() => {
@@ -418,6 +419,167 @@ describe.each([
 					instance.observe({ method: 'GET' }, 1);
 					instance.remove({ method: 'GET' });
 					expect((await instance.get()).values).toHaveLength(0);
+				});
+			});
+		});
+
+		describe('default label values', () => {
+			beforeEach(() => {
+				instance = new Histogram({
+					name: 'histogram_test',
+					help: 'help',
+					labelNames: ['method', 'endpoint', 'protocol'],
+					defaultLabels: {
+						protocol: 'https',
+					},
+				});
+			});
+
+			it("then throws an error on construction if labels don't match up", () => {
+				expect.assertions(4);
+				try {
+					new Histogram({
+						name: 'histogram_test_2',
+						help: 'help',
+						labelNames: ['method', 'endpoint', 'protocol'],
+						defaultLabels: {
+							a_bad_label: 'oh noooo',
+						},
+					});
+				} catch (error) {
+					expect(error).toBeInstanceOf(Error);
+					expect(error.message).toEqual('Invalid default label values');
+					expect(error.cause).toBeInstanceOf(Error);
+					expect(error.cause.message).toEqual(
+						"Added label \"a_bad_label\" is not included in initial labelset: [ 'method', 'endpoint', 'protocol' ]",
+					);
+				}
+			});
+
+			describe('observe', () => {
+				it('should record label value with provided value plus any default labels', async () => {
+					instance.labels({ method: 'GET', endpoint: '/test' }).observe(1);
+					const res = getValueByLeAndLabel(
+						5,
+						'method',
+						'GET',
+						(await instance.get()).values,
+					);
+					expect(res.value).toEqual(1);
+					expect(res.labels).toEqual({
+						le: 5,
+						method: 'GET',
+						endpoint: '/test',
+						protocol: 'https',
+					});
+				});
+
+				it('allows specifying value for default label', async () => {
+					instance.labels('GET', '/test', 'http').observe(1);
+					const res = getValueByLeAndLabel(
+						5,
+						'method',
+						'GET',
+						(await instance.get()).values,
+					);
+					expect(res.value).toEqual(1);
+					expect(res.labels).toEqual({
+						le: 5,
+						method: 'GET',
+						endpoint: '/test',
+						protocol: 'http',
+					});
+				});
+			});
+
+			describe('remove', () => {
+				it('then removes without specifying default labels', async () => {
+					instance.labels({ method: 'GET', endpoint: '/test' }).observe(1);
+					instance.labels({ method: 'POST', endpoint: '/test' }).observe(1);
+
+					instance.remove({ method: 'POST', endpoint: '/test' });
+
+					const values = (await instance.get()).values;
+					const res = getValueByLeAndLabel(
+						5,
+						'method',
+						'GET',
+						(await instance.get()).values,
+					);
+					expect(res.value).toEqual(1);
+					expect(res.labels).toEqual({
+						le: 5,
+						method: 'GET',
+						endpoint: '/test',
+						protocol: 'https',
+					});
+				});
+
+				it('then removes with specifying default labels', async () => {
+					instance.labels({ method: 'GET', endpoint: '/test' }).observe(1);
+					instance.labels({ method: 'POST', endpoint: '/test' }).observe(1);
+
+					instance.remove('POST', '/test', 'https');
+
+					const values = (await instance.get()).values;
+					const res = getValueByLeAndLabel(
+						5,
+						'method',
+						'GET',
+						(await instance.get()).values,
+					);
+					expect(res.value).toEqual(1);
+					expect(res.labels).toEqual({
+						le: 5,
+						method: 'GET',
+						endpoint: '/test',
+						protocol: 'https',
+					});
+				});
+			});
+
+			describe('reset', () => {
+				it('should reset the histogram, incl default labels', async () => {
+					const instance = new Histogram({
+						name: 'test_metric',
+						help: 'Another test metric',
+						labelNames: ['serial', 'active', 'color'],
+						defaultLabels: { color: 'red' },
+					});
+
+					instance.observe({ serial: '12345', active: 'yes' }, 5);
+					instance.observe({ serial: '12345', active: 'yes' }, 3);
+					let res = getValueByLeAndLabel(
+						5,
+						'active',
+						'yes',
+						(await instance.get()).values,
+					);
+					expect(res.value).toEqual(2);
+					expect(res.labels).toEqual({
+						le: 5,
+						active: 'yes',
+						color: 'red',
+						serial: '12345',
+					});
+
+					instance.observe(
+						{ serial: '12345', active: 'yes', color: 'blue' },
+						4,
+					);
+					res = getValueByLeAndLabel(
+						5,
+						'color',
+						'blue',
+						(await instance.get()).values,
+					);
+					expect(res.value).toEqual(1);
+					expect(res.labels).toEqual({
+						le: 5,
+						active: 'yes',
+						color: 'blue',
+						serial: '12345',
+					});
 				});
 			});
 		});
