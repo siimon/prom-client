@@ -19,6 +19,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 - Allow Pushgateway to now require job names for compatibility with Gravel Gateway.
 - Allow `histogram.startTime()` to be used with exemplars.
+- added `defaultLabels` option to metric classes
 
 ## [15.0.0] - 2023-10-09
 
