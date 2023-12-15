@@ -11,6 +11,12 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+### Added
+
+## [15.1.0] - 2023-12-15
+
+### Changed
+
 - remove unnecessary loop from `osMemoryHeapLinux`
 - Improve performance of `hashObject` by using pre-sorted array of label names
 - Fix type of `collectDefaultMetrics.metricsList`
