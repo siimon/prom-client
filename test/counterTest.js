@@ -1,10 +1,18 @@
 'use strict';
 
-describe('counter', () => {
+const Registry = require('../index').Registry;
+
+describe.each([
+	['Prometheus', Registry.PROMETHEUS_CONTENT_TYPE],
+	['OpenMetrics', Registry.OPENMETRICS_CONTENT_TYPE],
+])('counter with %s registry', (tag, regType) => {
 	const Counter = require('../index').Counter;
-	const Registry = require('../index').Registry;
 	const globalRegistry = require('../index').register;
 	let instance;
+
+	beforeEach(() => {
+		globalRegistry.setContentType(regType);
+	});
 
 	describe('with params as object', () => {
 		beforeEach(() => {
@@ -168,7 +176,7 @@ describe('counter', () => {
 	describe('registry instance', () => {
 		let registryInstance;
 		beforeEach(() => {
-			registryInstance = new Registry();
+			registryInstance = new Registry(regType);
 			instance = new Counter({
 				name: 'gauge_test',
 				help: 'test',

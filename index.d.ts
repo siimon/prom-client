@@ -1,10 +1,27 @@
 // Type definitions for prom-client
 // Definitions by: Simon Nyberg http://twitter.com/siimon_nyberg
 
+export type Charset = 'utf-8';
+
+export type PrometheusMIME = 'text/plain';
+export type PrometheusMetricsVersion = '0.0.4';
+
+export type OpenMetricsMIME = 'application/openmetrics-text';
+export type OpenMetricsVersion = '1.0.0';
+
+export type OpenMetricsContentType =
+	`${OpenMetricsMIME}; version=${OpenMetricsVersion}; charset=${Charset}`;
+export type PrometheusContentType =
+	`${PrometheusMIME}; version=${PrometheusMetricsVersion}; charset=${Charset}`;
+
+export type RegistryContentType =
+	| PrometheusContentType
+	| OpenMetricsContentType;
+
 /**
  * Container for all registered metrics
  */
-export class Registry {
+export class Registry<RegistryContentType = PrometheusContentType> {
 	/**
 	 * Get string representation for all metrics
 	 */
@@ -29,12 +46,12 @@ export class Registry {
 	/**
 	 * Get all metrics as objects
 	 */
-	getMetricsAsJSON(): Promise<metric[]>;
+	getMetricsAsJSON(): Promise<MetricObjectWithValues<MetricValue<string>>[]>;
 
 	/**
 	 * Get all metrics as objects
 	 */
-	getMetricsAsArray(): metric[];
+	getMetricsAsArray(): MetricObject[];
 
 	/**
 	 * Remove a single metric
@@ -64,7 +81,14 @@ export class Registry {
 	/**
 	 * Gets the Content-Type of the metrics for use in the response headers.
 	 */
-	contentType: string;
+	contentType: RegistryContentType;
+
+	/**
+	 * Set the content type of a registry. Used to change between Prometheus and
+	 * OpenMetrics versions.
+	 * @param contentType The type of the registry
+	 */
+	setContentType(contentType: RegistryContentType): void;
 
 	/**
 	 * Merge registers
@@ -80,11 +104,24 @@ export type Collector = () => void;
 export const register: Registry;
 
 /**
- * The Content-Type of the metrics for use in the response headers.
+ * HTTP Content-Type for metrics response headers, defaults to Prometheus text
+ * format.
  */
-export const contentType: string;
+export const contentType: RegistryContentType;
 
-export class AggregatorRegistry extends Registry {
+/**
+ * HTTP Prometheus Content-Type for metrics response headers.
+ */
+export const prometheusContentType: PrometheusContentType;
+
+/**
+ * HTTP OpenMetrics Content-Type for metrics response headers.
+ */
+export const openMetricsContentType: OpenMetricsContentType;
+
+export class AggregatorRegistry<
+	T extends RegistryContentType,
+> extends Registry<T> {
 	/**
 	 * Gets aggregated metrics for all workers.
 	 * @return {Promise<string>} Promise that resolves with the aggregated
@@ -101,7 +138,9 @@ export class AggregatorRegistry extends Registry {
 	 *   `registry.getMetricsAsJSON()`.
 	 * @return {Registry} aggregated registry.
 	 */
-	static aggregate(metricsArr: Array<Object>): Registry; // TODO Promise?
+	static aggregate<T extends RegistryContentType>(
+		metricsArr: Array<Object>,
+	): Registry<T>; // TODO Promise?
 
 	/**
 	 * Sets the registry or registries to be aggregated. Call from workers to
@@ -110,7 +149,14 @@ export class AggregatorRegistry extends Registry {
 	 *   aggregated.
 	 * @return {void}
 	 */
-	static setRegistries(regs: Array<Registry> | Registry): void;
+	static setRegistries(
+		regs:
+			| Array<
+					Registry<PrometheusContentType> | Registry<OpenMetricsContentType>
+			  >
+			| Registry<PrometheusContentType>
+			| Registry<OpenMetricsContentType>,
+	): void;
 }
 
 /**
@@ -136,7 +182,7 @@ export enum MetricType {
 
 type CollectFunction<T> = (this: T) => void | Promise<void>;
 
-interface metric {
+interface MetricObject {
 	name: string;
 	help: string;
 	type: MetricType;
@@ -144,20 +190,50 @@ interface metric {
 	collect: CollectFunction<any>;
 }
 
+interface MetricObjectWithValues<T extends MetricValue<string>>
+	extends MetricObject {
+	values: T[];
+}
+
+type MetricValue<T extends string> = {
+	value: number;
+	labels: LabelValues<T>;
+};
+
+type MetricValueWithName<T extends string> = MetricValue<T> & {
+	metricName?: string;
+};
+
 type LabelValues<T extends string> = Partial<Record<T, string | number>>;
 
 interface MetricConfiguration<T extends string> {
 	name: string;
 	help: string;
 	labelNames?: T[] | readonly T[];
-	registers?: Registry[];
+	registers?: (
+		| Registry<PrometheusContentType>
+		| Registry<OpenMetricsContentType>
+	)[];
 	aggregator?: Aggregator;
 	collect?: CollectFunction<any>;
+	enableExemplars?: boolean;
 }
 
 export interface CounterConfiguration<T extends string>
 	extends MetricConfiguration<T> {
 	collect?: CollectFunction<Counter<T>>;
+}
+
+export interface IncreaseDataWithExemplar<T extends string> {
+	value?: number;
+	labels?: LabelValues<T>;
+	exemplarLabels?: LabelValues<T>;
+}
+
+export interface ObserveDataWithExemplar<T extends string> {
+	value: number;
+	labels?: LabelValues<T>;
+	exemplarLabels?: LabelValues<T>;
 }
 
 /**
@@ -181,6 +257,17 @@ export class Counter<T extends string = string> {
 	 * @param value The value to increment with
 	 */
 	inc(value?: number): void;
+
+	/**
+	 * Increment with exemplars
+	 * @param incData Object with labels, value and exemplars for an increase
+	 */
+	inc(incData: IncreaseDataWithExemplar<T>): void;
+
+	/**
+	 * Get counter metric object
+	 */
+	get(): Promise<MetricObjectWithValues<MetricValue<T>>>;
 
 	/**
 	 * Return the child for given labels
@@ -278,7 +365,12 @@ export class Gauge<T extends string = string> {
 	set(value: number): void;
 
 	/**
-	 * Set gauge value to current epoch time in ms
+	 * Get gauge metric object
+	 */
+	get(): Promise<MetricObjectWithValues<MetricValue<T>>>;
+
+	/**
+	 * Set gauge value to current epoch time in seconds
 	 * @param labels Object with label keys and values
 	 */
 	setToCurrentTime(labels?: LabelValues<T>): void;
@@ -387,6 +479,17 @@ export class Histogram<T extends string = string> {
 	observe(labels: LabelValues<T>, value: number): void;
 
 	/**
+	 * Observe with exemplars
+	 * @param observeData Object with labels, value and exemplars for an observation
+	 */
+	observe(observeData: ObserveDataWithExemplar<T>): void;
+
+	/**
+	 * Get histogram metric object
+	 */
+	get(): Promise<MetricObjectWithValues<MetricValueWithName<T>>>;
+
+	/**
 	 * Start a timer. Calling the returned function will observe the duration in
 	 * seconds in the histogram.
 	 * @param labels Object with label keys and values
@@ -394,6 +497,19 @@ export class Histogram<T extends string = string> {
 	 * returns is the timed duration.
 	 */
 	startTimer(labels?: LabelValues<T>): (labels?: LabelValues<T>) => number;
+
+	/**
+	 * Start a timer with exemplar. Calling the returned function will observe the duration in
+	 * seconds in the histogram.
+	 * @param labels Object with label keys and values
+	 * @param exemplarLabels Object with label keys and values for exemplars
+	 * @return Function to invoke when timer should be stopped. The value it
+	 * returns is the timed duration.
+	 */
+	startTimer(
+		labels?: LabelValues<T>,
+		exemplarLabels?: LabelValues<T>,
+	): (labels?: LabelValues<T>, exemplarLabels?: LabelValues<T>) => number;
 
 	/**
 	 * Reset histogram values
@@ -463,6 +579,7 @@ export interface SummaryConfiguration<T extends string>
 	percentiles?: number[];
 	maxAgeSeconds?: number;
 	ageBuckets?: number;
+	pruneAgedBuckets?: boolean;
 	compressCount?: number;
 	collect?: CollectFunction<Summary<T>>;
 }
@@ -487,6 +604,11 @@ export class Summary<T extends string = string> {
 	 * @param value Value to observe
 	 */
 	observe(labels: LabelValues<T>, value: number): void;
+
+	/**
+	 * Get summary metric object
+	 */
+	get(): Promise<MetricObjectWithValues<MetricValueWithName<T>>>;
 
 	/**
 	 * Start a timer. Calling the returned function will observe the duration in
@@ -557,13 +679,13 @@ export namespace Summary {
 /**
  * Push metrics to a Pushgateway
  */
-export class Pushgateway {
+export class Pushgateway<T extends RegistryContentType> {
 	/**
 	 * @param url Complete url to the Pushgateway. If port is needed append url with :port
 	 * @param options Options
 	 * @param registry Registry
 	 */
-	constructor(url: string, options?: any, registry?: Registry);
+	constructor(url: string, options?: any, registry?: Registry<T>);
 
 	/**
 	 * Add metric and overwrite old ones
@@ -631,8 +753,10 @@ export function exponentialBuckets(
 	count: number,
 ): number[];
 
-export interface DefaultMetricsCollectorConfiguration {
-	register?: Registry;
+export interface DefaultMetricsCollectorConfiguration<
+	T extends RegistryContentType,
+> {
+	register?: Registry<T>;
 	prefix?: string;
 	gcDurationBuckets?: number[];
 	eventLoopMonitoringPrecision?: number;
@@ -640,20 +764,17 @@ export interface DefaultMetricsCollectorConfiguration {
 	labels?: Object;
 }
 
-/**
- * Configure default metrics
- * @param config Configuration object for default metrics collector
- */
-export function collectDefaultMetrics(
-	config?: DefaultMetricsCollectorConfiguration,
-): void;
-
-export interface defaultMetrics {
+export const collectDefaultMetrics: {
 	/**
-	 * All available default metrics
+	 * Configure default metrics
+	 * @param config Configuration object for default metrics collector
 	 */
+	<T extends RegistryContentType>(
+		config?: DefaultMetricsCollectorConfiguration<T>,
+	): void;
+	/** All available default metrics */
 	metricsList: string[];
-}
+};
 
 /**
  * Validate a metric name

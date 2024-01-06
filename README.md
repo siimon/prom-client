@@ -51,7 +51,7 @@ available on Linux.
 `collectDefaultMetrics` optionally accepts a config object with following entries:
 
 - `prefix` an optional prefix for metric names. Default: no prefix.
-- `register` to which metrics should be registered. Default: the global default registry.
+- `register` to which registry the metrics should be registered. Default: the global default registry.
 - `gcDurationBuckets` with custom buckets for GC duration histogram. Default buckets of GC duration histogram are `[0.001, 0.01, 0.1, 1, 2, 5]` (in seconds).
 - `eventLoopMonitoringPrecision` with sampling rate in milliseconds. Must be greater than zero. Default: 10.
 - `eventLoopUtilizationTimeout` measurement duration in milliseconds. Must be greater than zero. Default: 100.
@@ -189,7 +189,7 @@ functions will not have the correct value for `this`.
 ##### Utility Functions
 
 ```js
-// Set value to current time:
+// Set value to current time in seconds:
 gauge.setToCurrentTime();
 
 // Record durations:
@@ -266,12 +266,15 @@ new client.Summary({
   help: 'metric_help',
   maxAgeSeconds: 600,
   ageBuckets: 5,
+  pruneAgedBuckets: false,
 });
 ```
 
 The `maxAgeSeconds` will tell how old a bucket can be before it is reset and
 `ageBuckets` configures how many buckets we will have in our sliding window for
-the summary.
+the summary. If `pruneAgedBuckets` is `false` (default), the metric value will
+always be present, even when empty (its percentile values will be `0`). Set
+`pruneAgedBuckets` to `true` if you don't want to export it when it is empty.
 
 ##### Examples
 
@@ -391,6 +394,47 @@ Default labels will be overridden if there is a name conflict.
 
 `register.clear()` will clear default labels.
 
+### Exemplars
+
+The exemplars defined in the OpenMetrics specification can be enabled on Counter
+and Histogram metric types. The default metrics have support for OpenTelemetry,
+they will populate the exemplars with the labels `{traceId, spanId}` and their
+corresponding values.
+
+The format for `inc()` and `observe()` calls are different if exemplars are
+enabled. They get a single object with the format
+`{labels, value, exemplarLabels}`.
+
+When using exemplars, the registry used for metrics should be set to OpenMetrics
+type (including the global or default registry if no registries are specified).
+
+### Registry type
+
+The library supports both the old Prometheus format and the OpenMetrics format.
+The format can be set per registry. For default metrics:
+
+```js
+const Prometheus = require('prom-client');
+Prometheus.register.setContentType(
+  Prometheus.Registry.OPENMETRICS_CONTENT_TYPE,
+);
+```
+
+Currently available registry types are defined by the content types:
+
+**PROMETHEUS_CONTENT_TYPE** - version 0.0.4 of the original Prometheus metrics,
+this is currently the default registry type.
+
+**OPENMETRICS_CONTENT_TYPE** - defaults to version 1.0.0 of the
+[OpenMetrics standard](https://github.com/OpenObservability/OpenMetrics/blob/d99b705f611b75fec8f450b05e344e02eea6921d/specification/OpenMetrics.md).
+
+The HTTP Content-Type string for each registry type is exposed both at module
+level (`prometheusContentType` and `openMetricsContentType`) and as static
+properties on the `Registry` object.
+
+The `contentType` constant exposed by the module returns the default content
+type when creating a new registry, currently defaults to Prometheus type.
+
 ### Multiple registries
 
 By default, metrics are automatically registered to the global registry (located
@@ -404,6 +448,9 @@ pass an empty `registers` array and register it manually.
 Registry has a `merge` function that enables you to expose multiple registries
 on the same endpoint. If the same metric name exists in both registries, an
 error will be thrown.
+
+Merging registries of different types is undefined. The user needs to make sure
+all used registries have the same type (Prometheus or OpenMetrics versions).
 
 ```js
 const client = require('prom-client');
@@ -448,7 +495,7 @@ return a string for Prometheus to consume.
 #### Getting a single metric
 
 If you need to get a reference to a previously registered metric, you can use
-`await register.getSingleMetric(*name of metric*)`.
+`register.getSingleMetric(*name of metric*)`.
 
 #### Removing metrics
 
@@ -492,21 +539,21 @@ const client = require('prom-client');
 let gateway = new client.Pushgateway('http://127.0.0.1:9091');
 
 gateway.pushAdd({ jobName: 'test' })
-	.then({resp, body} => {
+	.then(({resp, body}) => {
 		/* ... */
 	})
 	.catch(err => {
 		/* ... */
 	})); //Add metric and overwrite old ones
 gateway.push({ jobName: 'test' })
-	.then({resp, body} => {
+	.then(({resp, body}) => {
 		/* ... */
 	})
 	.catch(err => {
 		/* ... */
 	})); //Overwrite all metrics (use PUT)
 gateway.delete({ jobName: 'test' })
-	.then({resp, body} => {
+	.then(({resp, body}) => {
 		/* ... */
 	})
 	.catch(err => {
@@ -515,7 +562,7 @@ gateway.delete({ jobName: 'test' })
 
 //All gateway requests can have groupings on it
 gateway.pushAdd({ jobName: 'test', groupings: { key: 'value' } })
-	.then({resp, body} => {
+	.then(({resp, body}) => {
 		/* ... */
 	})
 	.catch(err => {
@@ -533,6 +580,16 @@ gateway = new client.Pushgateway('http://127.0.0.1:9091', {
     maxSockets: 5,
   }),
 });
+```
+
+Some gateways such as [Gravel Gateway](https://github.com/sinkingpoint/prometheus-gravel-gateway) do not support grouping by job name, exposing a plain `/metrics` endpoint instead of `/metrics/job/<jobName>`. It's possible to configure a gateway instance to not require a jobName in the options argument.
+
+```js
+gravelGateway = new client.Pushgateway('http://127.0.0.1:9091', {
+  timeout: 5000,
+  requireJobName: false,
+});
+gravelGateway.pushAdd();
 ```
 
 ### Bucket Generators
@@ -554,9 +611,6 @@ new client.Histogram({
   buckets: client.exponentialBuckets(1, 2, 5), //Create 5 buckets, starting on 1 and with a factor of 2
 });
 ```
-
-The content-type prometheus expects is also exported as a constant, both on the
-`register` and from the main file of this project, called `contentType`.
 
 ### Garbage Collection Metrics
 

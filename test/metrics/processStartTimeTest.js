@@ -1,6 +1,11 @@
 'use strict';
 
-describe('processStartTime', () => {
+const Registry = require('../../index').Registry;
+
+describe.each([
+	['Prometheus', Registry.PROMETHEUS_CONTENT_TYPE],
+	['OpenMetrics', Registry.OPENMETRICS_CONTENT_TYPE],
+])('processStartTime with %s registry', (tag, regType) => {
 	const register = require('../../index').register;
 	const op = require('../../lib/metrics/processStartTime');
 
@@ -8,11 +13,15 @@ describe('processStartTime', () => {
 		register.clear();
 	});
 
+	beforeEach(() => {
+		register.setContentType(regType);
+	});
+
 	afterEach(() => {
 		register.clear();
 	});
 
-	it('should add metric to the registry', async () => {
+	it(`should add metric to the ${tag} registry`, async () => {
 		expect(await register.getMetricsAsJSON()).toHaveLength(0);
 
 		op();

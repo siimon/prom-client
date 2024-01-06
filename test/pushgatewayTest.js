@@ -3,21 +3,33 @@
 const nock = require('nock');
 const { gzipSync } = require('zlib');
 
-describe('pushgateway', () => {
+const Registry = require('../index').Registry;
+
+describe.each([
+	['Prometheus', Registry.PROMETHEUS_CONTENT_TYPE],
+	['OpenMetrics', Registry.OPENMETRICS_CONTENT_TYPE],
+])('pushgateway with %s registry', (tag, regType) => {
 	const Pushgateway = require('../index').Pushgateway;
 	const register = require('../index').register;
-	const Registry = require('../index').Registry;
 	let instance;
 	let registry = undefined;
 
+	beforeEach(() => {
+		register.setContentType(regType);
+	});
+
 	const tests = function () {
+		let body;
+		if (regType === Registry.OPENMETRICS_CONTENT_TYPE) {
+			body = '# HELP test test\n# TYPE test counter\ntest_total 100\n# EOF\n';
+		} else {
+			body = '# HELP test test\n# TYPE test counter\ntest 100\n';
+		}
+
 		describe('pushAdd', () => {
 			it('should push metrics', () => {
 				const mockHttp = nock('http://192.168.99.100:9091')
-					.post(
-						'/metrics/job/testJob',
-						'# HELP test test\n# TYPE test counter\ntest 100\n',
-					)
+					.post('/metrics/job/testJob', body)
 					.reply(200);
 
 				return instance.pushAdd({ jobName: 'testJob' }).then(() => {
@@ -27,10 +39,7 @@ describe('pushgateway', () => {
 
 			it('should use groupings', () => {
 				const mockHttp = nock('http://192.168.99.100:9091')
-					.post(
-						'/metrics/job/testJob/key/value',
-						'# HELP test test\n# TYPE test counter\ntest 100\n',
-					)
+					.post('/metrics/job/testJob/key/value', body)
 					.reply(200);
 
 				return instance
@@ -45,10 +54,7 @@ describe('pushgateway', () => {
 
 			it('should escape groupings', () => {
 				const mockHttp = nock('http://192.168.99.100:9091')
-					.post(
-						'/metrics/job/testJob/key/va%26lue',
-						'# HELP test test\n# TYPE test counter\ntest 100\n',
-					)
+					.post('/metrics/job/testJob/key/va%26lue', body)
 					.reply(200);
 
 				return instance
@@ -60,15 +66,59 @@ describe('pushgateway', () => {
 						expect(mockHttp.isDone());
 					});
 			});
+
+			it('should throw an error if the push failed', () => {
+				nock('http://192.168.99.100:9091')
+					.post('/metrics/job/testJob/key/value', body)
+					.reply(400);
+
+				return expect(
+					instance.pushAdd({
+						jobName: 'testJob',
+						groupings: { key: 'value' },
+					}),
+				).rejects.toThrow('push failed with status 400');
+			});
+
+			it('should timeout when taking too long', () => {
+				const mockHttp = nock('http://192.168.99.100:9091')
+					.post('/metrics/job/testJob/key/va%26lue', body)
+					.delay(100)
+					.reply(200);
+
+				expect.assertions(1);
+				return instance
+					.pushAdd({
+						jobName: 'testJob',
+						groupings: { key: 'va&lue' },
+					})
+					.catch(err => {
+						expect(err.message).toStrictEqual('Pushgateway request timed out');
+					});
+			});
+
+			it('should be possible to configure for gravel gateway integration (no job name required in path)', async () => {
+				const mockHttp = nock('http://192.168.99.100:9091')
+					.post('/metrics', body)
+					.reply(200);
+
+				instance = new Pushgateway(
+					'http://192.168.99.100:9091',
+					{
+						timeout: 10,
+						requireJobName: false,
+					},
+					registry,
+				);
+
+				return instance.pushAdd().then(() => expect(mockHttp.isDone()));
+			});
 		});
 
 		describe('push', () => {
 			it('should push with PUT', () => {
 				const mockHttp = nock('http://192.168.99.100:9091')
-					.put(
-						'/metrics/job/testJob',
-						'# HELP test test\n# TYPE test counter\ntest 100\n',
-					)
+					.put('/metrics/job/testJob', body)
 					.reply(200);
 
 				return instance.push({ jobName: 'testJob' }).then(() => {
@@ -78,14 +128,36 @@ describe('pushgateway', () => {
 
 			it('should uri encode url', () => {
 				const mockHttp = nock('http://192.168.99.100:9091')
-					.put(
-						'/metrics/job/test%26Job',
-						'# HELP test test\n# TYPE test counter\ntest 100\n',
-					)
+					.put('/metrics/job/test%26Job', body)
 					.reply(200);
 
 				return instance.push({ jobName: 'test&Job' }).then(() => {
 					expect(mockHttp.isDone());
+				});
+			});
+
+			it('should throw an error if the push failed', () => {
+				nock('http://192.168.99.100:9091')
+					.put('/metrics/job/testJob/key/value', body)
+					.reply(400);
+
+				return expect(
+					instance.push({
+						jobName: 'testJob',
+						groupings: { key: 'value' },
+					}),
+				).rejects.toThrow('push failed with status 400');
+			});
+
+			it('should timeout when taking too long', () => {
+				const mockHttp = nock('http://192.168.99.100:9091')
+					.put('/metrics/job/test%26Job', body)
+					.delay(100)
+					.reply(200);
+
+				expect.assertions(1);
+				return instance.push({ jobName: 'test&Job' }).catch(err => {
+					expect(err.message).toStrictEqual('Pushgateway request timed out');
 				});
 			});
 		});
@@ -98,6 +170,28 @@ describe('pushgateway', () => {
 
 				return instance.delete({ jobName: 'testJob' }).then(() => {
 					expect(mockHttp.isDone());
+				});
+			});
+
+			it('should throw an error if the push failed', () => {
+				nock('http://192.168.99.100:9091')
+					.delete('/metrics/job/testJob')
+					.reply(400);
+
+				return expect(instance.delete({ jobName: 'testJob' })).rejects.toThrow(
+					'push failed with status 400',
+				);
+			});
+
+			it('should timeout when taking too long', () => {
+				const mockHttp = nock('http://192.168.99.100:9091')
+					.delete('/metrics/job/testJob')
+					.delay(100)
+					.reply(200);
+
+				expect.assertions(1);
+				return instance.delete({ jobName: 'testJob' }).catch(err => {
+					expect(err.message).toStrictEqual('Pushgateway request timed out');
 				});
 			});
 		});
@@ -117,10 +211,7 @@ describe('pushgateway', () => {
 
 			it('pushAdd should send POST request with basic auth data', () => {
 				const mockHttp = nock(`http://${auth}@192.168.99.100:9091`)
-					.post(
-						'/metrics/job/testJob',
-						'# HELP test test\n# TYPE test counter\ntest 100\n',
-					)
+					.post('/metrics/job/testJob', body)
 					.reply(200);
 
 				return instance.pushAdd({ jobName: 'testJob' }).then(() => {
@@ -130,10 +221,7 @@ describe('pushgateway', () => {
 
 			it('push should send PUT request with basic auth data', () => {
 				const mockHttp = nock(`http://${auth}@192.168.99.100:9091`)
-					.put(
-						'/metrics/job/testJob',
-						'# HELP test test\n# TYPE test counter\ntest 100\n',
-					)
+					.put('/metrics/job/testJob', body)
 					.reply(200);
 
 				return instance.push({ jobName: 'testJob' }).then(() => {
@@ -158,10 +246,7 @@ describe('pushgateway', () => {
 					'unit-test': '1',
 				},
 			})
-				.put(
-					'/metrics/job/testJob',
-					'# HELP test test\n# TYPE test counter\ntest 100\n',
-				)
+				.put('/metrics/job/testJob', body)
 				.reply(200);
 
 			instance = new Pushgateway(
@@ -185,10 +270,7 @@ describe('pushgateway', () => {
 					'Content-Encoding': 'gzip',
 				},
 			})
-				.post(
-					'/metrics/job/testJob',
-					gzipSync('# HELP test test\n# TYPE test counter\ntest 100\n'),
-				)
+				.post('/metrics/job/testJob', gzipSync(body))
 				.reply(200);
 
 			instance = new Pushgateway(
@@ -214,7 +296,7 @@ describe('pushgateway', () => {
 
 		beforeEach(() => {
 			registry = undefined;
-			instance = new Pushgateway('http://192.168.99.100:9091');
+			instance = new Pushgateway('http://192.168.99.100:9091', { timeout: 10 });
 			const promClient = require('../index');
 			const cnt = new promClient.Counter({ name: 'test', help: 'test' });
 			cnt.inc(100);
@@ -229,8 +311,12 @@ describe('pushgateway', () => {
 		});
 
 		beforeEach(() => {
-			registry = new Registry();
-			instance = new Pushgateway('http://192.168.99.100:9091', null, registry);
+			registry = new Registry(regType);
+			instance = new Pushgateway(
+				'http://192.168.99.100:9091',
+				{ timeout: 10 },
+				registry,
+			);
 			const promeClient = require('../index');
 			const cnt = new promeClient.Counter({
 				name: 'test',

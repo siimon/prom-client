@@ -1,9 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`histogram with object as params with global registry labels should not allow different number of labels 1`] = `"Invalid number of arguments"`;
+exports[`histogram with OpenMetrics registry with object as params with global registry labels should not allow different number of labels 1`] = `"Invalid number of arguments"`;
 
-exports[`histogram with object as params with global registry remove should throw error if label lengths does not match 1`] = `"Invalid number of arguments"`;
+exports[`histogram with OpenMetrics registry with object as params with global registry remove should throw error if label lengths does not match 1`] = `"Invalid number of arguments"`;
 
-exports[`histogram with object as params with global registry should not allow le as a custom label 1`] = `"le is a reserved label keyword"`;
+exports[`histogram with OpenMetrics registry with object as params with global registry should not allow le as a custom label 1`] = `"le is a reserved label keyword"`;
 
-exports[`histogram with object as params with global registry should not allow non numbers 1`] = `"Value is not a valid number: asd"`;
+exports[`histogram with OpenMetrics registry with object as params with global registry should not allow non numbers 1`] = `"Value is not a valid number: asd"`;
+
+exports[`histogram with Prometheus registry with object as params with global registry labels should not allow different number of labels 1`] = `"Invalid number of arguments"`;
+
+exports[`histogram with Prometheus registry with object as params with global registry remove should throw error if label lengths does not match 1`] = `"Invalid number of arguments"`;
+
+exports[`histogram with Prometheus registry with object as params with global registry should not allow le as a custom label 1`] = `"le is a reserved label keyword"`;
+
+exports[`histogram with Prometheus registry with object as params with global registry should not allow non numbers 1`] = `"Value is not a valid number: asd"`;

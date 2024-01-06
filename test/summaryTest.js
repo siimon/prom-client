@@ -1,10 +1,22 @@
 'use strict';
 
-describe('summary', () => {
+const Registry = require('../index').Registry;
+
+describe.each([
+	['Prometheus', Registry.PROMETHEUS_CONTENT_TYPE],
+	['OpenMetrics', Registry.OPENMETRICS_CONTENT_TYPE],
+])('summary with %s registry', (tag, regType) => {
 	const Summary = require('../index').Summary;
-	const Registry = require('../index').Registry;
 	const globalRegistry = require('../index').register;
 	let instance;
+
+	beforeEach(() => {
+		globalRegistry.setContentType(regType);
+	});
+
+	afterEach(() => {
+		globalRegistry.clear();
+	});
 
 	describe('global registry', () => {
 		afterEach(() => {
@@ -464,7 +476,7 @@ describe('summary', () => {
 	describe('registry instance', () => {
 		let registryInstance;
 		beforeEach(() => {
-			registryInstance = new Registry();
+			registryInstance = new Registry(regType);
 			instance = new Summary({
 				name: 'summary_test',
 				help: 'test',
@@ -492,7 +504,7 @@ describe('summary', () => {
 			jest.setSystemTime(0);
 		});
 
-		it('should slide when maxAgeSeconds and ageBuckets are set', async () => {
+		it('should present percentiles as zero when maxAgeSeconds and ageBuckets are set but not pruneAgedBuckets', async () => {
 			const localInstance = new Summary({
 				name: 'summary_test',
 				help: 'test',
@@ -516,6 +528,34 @@ describe('summary', () => {
 			const { values } = await localInstance.get();
 			expect(values[0].labels.quantile).toEqual(0.01);
 			expect(values[0].value).toEqual(0);
+			expect(values[7].value).toEqual(100);
+			expect(values[8].value).toEqual(1);
+		});
+
+		it('should prune expired buckets when pruneAgedBuckets are set with maxAgeSeconds and ageBuckets', async () => {
+			const localInstance = new Summary({
+				name: 'summary_test',
+				help: 'test',
+				maxAgeSeconds: 5,
+				ageBuckets: 5,
+				pruneAgedBuckets: true,
+			});
+
+			localInstance.observe(100);
+
+			for (let i = 0; i < 5; i++) {
+				const { values } = await localInstance.get();
+				expect(values[0].labels.quantile).toEqual(0.01);
+				expect(values[0].value).toEqual(100);
+				expect(values[7].metricName).toEqual('summary_test_sum');
+				expect(values[7].value).toEqual(100);
+				expect(values[8].metricName).toEqual('summary_test_count');
+				expect(values[8].value).toEqual(1);
+				jest.advanceTimersByTime(1001);
+			}
+
+			const { values } = await localInstance.get();
+			expect(values.length).toEqual(0);
 		});
 
 		it('should not slide when maxAgeSeconds and ageBuckets are not configured', async () => {
