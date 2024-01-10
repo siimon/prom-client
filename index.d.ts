@@ -761,6 +761,10 @@ export interface DefaultMetricsCollectorConfiguration<
 	gcDurationBuckets?: number[];
 	eventLoopMonitoringPrecision?: number;
 	eventLoopUtilizationTimeout?: number;
+	eventLoopUtilizationBuckets?: number[];
+	eventLoopUtilizationPercentiles?: number[];
+	eventLoopUtilizationAgeBuckets: number;
+	eventLoopUtilizationMaxAgeSeconds: number;
 	labels?: Object;
 }
 

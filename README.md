@@ -54,7 +54,11 @@ available on Linux.
 - `register` to which registry the metrics should be registered. Default: the global default registry.
 - `gcDurationBuckets` with custom buckets for GC duration histogram. Default buckets of GC duration histogram are `[0.001, 0.01, 0.1, 1, 2, 5]` (in seconds).
 - `eventLoopMonitoringPrecision` with sampling rate in milliseconds. Must be greater than zero. Default: 10.
-- `eventLoopUtilizationTimeout` measurement duration in milliseconds. Must be greater than zero. Default: 100.
+- `eventLoopUtilizationTimeout` interval in milliseconds to calculate event loop utilization. Must be greater than zero. Default: 100.
+- `eventLoopUtilizationBuckets` with custom buckets for event loop utilization histogram. Default buckets of event loop utilization histogram are `[0.01, 0.05, 0.1, 0.25, 0.5, 0.6, 0.7, 0.75, 0.8, 0.9, 0.95, 0.99, 1]` (in seconds).
+- `eventLoopUtilizationPercentiles` with custom percentiles for event loop utilization summary. Default percentiles of event loop utilization summary are `[0.01, 0.05, 0.5, 0.9, 0.95, 0.99, 0.999]`.
+- `eventLoopUtilizationMaxAgeSeconds` summary sliding window time in seconds. Must be greater than zero. Default: 60.
+- `eventLoopUtilizationAgeBuckets` summary sliding window buckets. Must be greater than zero. Default: 5.
 
 To register metrics to another registry, pass it in as `register`:
 
