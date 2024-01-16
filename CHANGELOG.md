@@ -11,6 +11,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Improve the memory usage of histograms when the `enableExemplars` option is disabled
+
 ### Added
 
 ## [15.1.0] - 2023-12-15
