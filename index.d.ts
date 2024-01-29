@@ -196,7 +196,7 @@ interface MetricObjectWithValues<T extends MetricValue<string>>
 }
 
 type MetricValue<T extends string> = {
-	value: number;
+	value: number | bigint;
 	labels: LabelValues<T>;
 };
 
@@ -204,7 +204,9 @@ type MetricValueWithName<T extends string> = MetricValue<T> & {
 	metricName?: string;
 };
 
-type LabelValues<T extends string> = Partial<Record<T, string | number>>;
+type LabelValues<T extends string> = Partial<
+	Record<T, string | number | bigint>
+>;
 
 interface MetricConfiguration<T extends string> {
 	name: string;
@@ -225,13 +227,13 @@ export interface CounterConfiguration<T extends string>
 }
 
 export interface IncreaseDataWithExemplar<T extends string> {
-	value?: number;
+	value?: number | bigint;
 	labels?: LabelValues<T>;
 	exemplarLabels?: LabelValues<T>;
 }
 
 export interface ObserveDataWithExemplar<T extends string> {
-	value: number;
+	value: number | bigint;
 	labels?: LabelValues<T>;
 	exemplarLabels?: LabelValues<T>;
 }
@@ -250,13 +252,13 @@ export class Counter<T extends string = string> {
 	 * @param labels Object with label keys and values
 	 * @param value The number to increment with
 	 */
-	inc(labels: LabelValues<T>, value?: number): void;
+	inc(labels: LabelValues<T>, value?: number | bigint): void;
 
 	/**
 	 * Increment with value
 	 * @param value The value to increment with
 	 */
-	inc(value?: number): void;
+	inc(value?: number | bigint): void;
 
 	/**
 	 * Increment with exemplars
@@ -307,7 +309,7 @@ export namespace Counter {
 		 * Increment with value
 		 * @param value The value to increment with
 		 */
-		inc(value?: number): void;
+		inc(value?: number | bigint): void;
 	}
 }
 
@@ -330,39 +332,39 @@ export class Gauge<T extends string = string> {
 	 * @param labels Object with label keys and values
 	 * @param value The value to increment with
 	 */
-	inc(labels: LabelValues<T>, value?: number): void;
+	inc(labels: LabelValues<T>, value?: number | bigint): void;
 
 	/**
 	 * Increment gauge
 	 * @param value The value to increment with
 	 */
-	inc(value?: number): void;
+	inc(value?: number | bigint): void;
 
 	/**
 	 * Decrement gauge
 	 * @param labels Object with label keys and values
 	 * @param value Value to decrement with
 	 */
-	dec(labels: LabelValues<T>, value?: number): void;
+	dec(labels: LabelValues<T>, value?: number | bigint): void;
 
 	/**
 	 * Decrement gauge
 	 * @param value The value to decrement with
 	 */
-	dec(value?: number): void;
+	dec(value?: number | bigint): void;
 
 	/**
 	 * Set gauge value for labels
 	 * @param labels Object with label keys and values
 	 * @param value The value to set
 	 */
-	set(labels: LabelValues<T>, value: number): void;
+	set(labels: LabelValues<T>, value: number | bigint): void;
 
 	/**
 	 * Set gauge value
 	 * @param value The value to set
 	 */
-	set(value: number): void;
+	set(value: number | bigint): void;
 
 	/**
 	 * Get gauge metric object
@@ -422,19 +424,19 @@ export namespace Gauge {
 		 * Increment gauge with value
 		 * @param value The value to increment with
 		 */
-		inc(value?: number): void;
+		inc(value?: number | bigint): void;
 
 		/**
 		 * Decrement with value
 		 * @param value The value to decrement with
 		 */
-		dec(value?: number): void;
+		dec(value?: number | bigint): void;
 
 		/**
 		 * Set gauges value
 		 * @param value The value to set
 		 */
-		set(value: number): void;
+		set(value: number | bigint): void;
 
 		/**
 		 * Set gauge value to current epoch time in ms
