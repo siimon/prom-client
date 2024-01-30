@@ -53,8 +53,7 @@
 	"types": "./index.d.ts",
 	"jest": {
 		"testEnvironment": "node",
-		"testRegex": ".*Test\\.js$",
-		"maxWorkers": 1
+		"testRegex": ".*Test\\.js$"
 	},
 	"lint-staged": {
 		"*.js": "eslint --fix",
