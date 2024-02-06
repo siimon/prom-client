@@ -11,6 +11,21 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Improve the memory usage of histograms by delaying allocation of bucket counters in `bucketValues` until their value is > 0
+  (Use a prototype of the initial counters)
+- Improve the memory usage of histograms by allocating empty `enableExemplars` instead of pre-filling with `null`
+- Minor performance improvements:
+  - Uvoid unneeded hash table updates
+  - Avoid hash table lookup for examplars
+
+### Added
+
+## [Unreleased]
+
+### Breaking
+
+### Changed
+
 - Improve the memory usage of histograms when the `enableExemplars` option is disabled
 
 ### Added
