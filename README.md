@@ -51,7 +51,7 @@ available on Linux.
 `collectDefaultMetrics` optionally accepts a config object with following entries:
 
 - `prefix` an optional prefix for metric names. Default: no prefix.
-- `register` to which metrics should be registered. Default: the global default registry.
+- `register` to which registry the metrics should be registered. Default: the global default registry.
 - `gcDurationBuckets` with custom buckets for GC duration histogram. Default buckets of GC duration histogram are `[0.001, 0.01, 0.1, 1, 2, 5]` (in seconds).
 - `eventLoopMonitoringPrecision` with sampling rate in milliseconds. Must be greater than zero. Default: 10.
 
@@ -188,7 +188,7 @@ functions will not have the correct value for `this`.
 ##### Utility Functions
 
 ```js
-// Set value to current time:
+// Set value to current time in seconds:
 gauge.setToCurrentTime();
 
 // Record durations:
@@ -407,7 +407,7 @@ enabled. They get a single object with the format
 When using exemplars, the registry used for metrics should be set to OpenMetrics
 type (including the global or default registry if no registries are specified).
 
-### Registy type
+### Registry type
 
 The library supports both the old Prometheus format and the OpenMetrics format.
 The format can be set per registry. For default metrics:
@@ -579,6 +579,16 @@ gateway = new client.Pushgateway('http://127.0.0.1:9091', {
     maxSockets: 5,
   }),
 });
+```
+
+Some gateways such as [Gravel Gateway](https://github.com/sinkingpoint/prometheus-gravel-gateway) do not support grouping by job name, exposing a plain `/metrics` endpoint instead of `/metrics/job/<jobName>`. It's possible to configure a gateway instance to not require a jobName in the options argument.
+
+```js
+gravelGateway = new client.Pushgateway('http://127.0.0.1:9091', {
+  timeout: 5000,
+  requireJobName: false,
+});
+gravelGateway.pushAdd();
 ```
 
 ### Bucket Generators

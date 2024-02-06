@@ -9,7 +9,30 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Breaking
 
-- drop support for Node.js versions 10, 12 and 17
+### Changed
+
+- Improve the memory usage of histograms when the `enableExemplars` option is disabled
+
+### Added
+
+## [15.1.0] - 2023-12-15
+
+### Changed
+
+- remove unnecessary loop from `osMemoryHeapLinux`
+- Improve performance of `hashObject` by using pre-sorted array of label names
+- Fix type of `collectDefaultMetrics.metricsList`
+
+### Added
+
+- Allow Pushgateway to now require job names for compatibility with Gravel Gateway.
+- Allow `histogram.startTime()` to be used with exemplars.
+
+## [15.0.0] - 2023-10-09
+
+### Breaking
+
+- drop support for Node.js versions 10, 12, 14, 17 and 19
 
 ### Changed
 
@@ -19,6 +42,11 @@ project adheres to [Semantic Versioning](http://semver.org/).
   avoid failures from the server when using `Content-Encoding: gzip` header.
 - Refactor `escapeString` helper in `lib/registry.js` to improve performance and
   avoid an unnecessarily complex regex.
+- Cleanup code and refactor to be more efficient
+- Correct TS types for working with OpenMetrics
+- Updated Typescript and Readme docs for `setToCurrentTime()` to reflect units as seconds.
+- Do not ignore error if request to pushgateway fails
+- Make sure to reject the request to pushgateway if it times out
 
 ### Added
 

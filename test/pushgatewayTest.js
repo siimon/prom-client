@@ -66,6 +66,53 @@ describe.each([
 						expect(mockHttp.isDone());
 					});
 			});
+
+			it('should throw an error if the push failed', () => {
+				nock('http://192.168.99.100:9091')
+					.post('/metrics/job/testJob/key/value', body)
+					.reply(400);
+
+				return expect(
+					instance.pushAdd({
+						jobName: 'testJob',
+						groupings: { key: 'value' },
+					}),
+				).rejects.toThrow('push failed with status 400');
+			});
+
+			it('should timeout when taking too long', () => {
+				const mockHttp = nock('http://192.168.99.100:9091')
+					.post('/metrics/job/testJob/key/va%26lue', body)
+					.delay(100)
+					.reply(200);
+
+				expect.assertions(1);
+				return instance
+					.pushAdd({
+						jobName: 'testJob',
+						groupings: { key: 'va&lue' },
+					})
+					.catch(err => {
+						expect(err.message).toStrictEqual('Pushgateway request timed out');
+					});
+			});
+
+			it('should be possible to configure for gravel gateway integration (no job name required in path)', async () => {
+				const mockHttp = nock('http://192.168.99.100:9091')
+					.post('/metrics', body)
+					.reply(200);
+
+				instance = new Pushgateway(
+					'http://192.168.99.100:9091',
+					{
+						timeout: 10,
+						requireJobName: false,
+					},
+					registry,
+				);
+
+				return instance.pushAdd().then(() => expect(mockHttp.isDone()));
+			});
 		});
 
 		describe('push', () => {
@@ -88,6 +135,31 @@ describe.each([
 					expect(mockHttp.isDone());
 				});
 			});
+
+			it('should throw an error if the push failed', () => {
+				nock('http://192.168.99.100:9091')
+					.put('/metrics/job/testJob/key/value', body)
+					.reply(400);
+
+				return expect(
+					instance.push({
+						jobName: 'testJob',
+						groupings: { key: 'value' },
+					}),
+				).rejects.toThrow('push failed with status 400');
+			});
+
+			it('should timeout when taking too long', () => {
+				const mockHttp = nock('http://192.168.99.100:9091')
+					.put('/metrics/job/test%26Job', body)
+					.delay(100)
+					.reply(200);
+
+				expect.assertions(1);
+				return instance.push({ jobName: 'test&Job' }).catch(err => {
+					expect(err.message).toStrictEqual('Pushgateway request timed out');
+				});
+			});
 		});
 
 		describe('delete', () => {
@@ -98,6 +170,28 @@ describe.each([
 
 				return instance.delete({ jobName: 'testJob' }).then(() => {
 					expect(mockHttp.isDone());
+				});
+			});
+
+			it('should throw an error if the push failed', () => {
+				nock('http://192.168.99.100:9091')
+					.delete('/metrics/job/testJob')
+					.reply(400);
+
+				return expect(instance.delete({ jobName: 'testJob' })).rejects.toThrow(
+					'push failed with status 400',
+				);
+			});
+
+			it('should timeout when taking too long', () => {
+				const mockHttp = nock('http://192.168.99.100:9091')
+					.delete('/metrics/job/testJob')
+					.delay(100)
+					.reply(200);
+
+				expect.assertions(1);
+				return instance.delete({ jobName: 'testJob' }).catch(err => {
+					expect(err.message).toStrictEqual('Pushgateway request timed out');
 				});
 			});
 		});
@@ -202,7 +296,7 @@ describe.each([
 
 		beforeEach(() => {
 			registry = undefined;
-			instance = new Pushgateway('http://192.168.99.100:9091');
+			instance = new Pushgateway('http://192.168.99.100:9091', { timeout: 10 });
 			const promClient = require('../index');
 			const cnt = new promClient.Counter({ name: 'test', help: 'test' });
 			cnt.inc(100);
@@ -218,7 +312,11 @@ describe.each([
 
 		beforeEach(() => {
 			registry = new Registry(regType);
-			instance = new Pushgateway('http://192.168.99.100:9091', null, registry);
+			instance = new Pushgateway(
+				'http://192.168.99.100:9091',
+				{ timeout: 10 },
+				registry,
+			);
 			const promeClient = require('../index');
 			const cnt = new promeClient.Counter({
 				name: 'test',

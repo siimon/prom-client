@@ -9,9 +9,9 @@ export type PrometheusMetricsVersion = '0.0.4';
 export type OpenMetricsMIME = 'application/openmetrics-text';
 export type OpenMetricsVersion = '1.0.0';
 
-export type PrometheusContentType =
-	`${OpenMetricsMIME}; version=${OpenMetricsVersion}; charset=${Charset}`;
 export type OpenMetricsContentType =
+	`${OpenMetricsMIME}; version=${OpenMetricsVersion}; charset=${Charset}`;
+export type PrometheusContentType =
 	`${PrometheusMIME}; version=${PrometheusMetricsVersion}; charset=${Charset}`;
 
 export type RegistryContentType =
@@ -119,7 +119,9 @@ export const prometheusContentType: PrometheusContentType;
  */
 export const openMetricsContentType: OpenMetricsContentType;
 
-export class AggregatorRegistry extends Registry {
+export class AggregatorRegistry<
+	T extends RegistryContentType,
+> extends Registry<T> {
 	/**
 	 * Gets aggregated metrics for all workers.
 	 * @return {Promise<string>} Promise that resolves with the aggregated
@@ -136,7 +138,9 @@ export class AggregatorRegistry extends Registry {
 	 *   `registry.getMetricsAsJSON()`.
 	 * @return {Registry} aggregated registry.
 	 */
-	static aggregate(metricsArr: Array<Object>): Registry; // TODO Promise?
+	static aggregate<T extends RegistryContentType>(
+		metricsArr: Array<Object>,
+	): Registry<T>; // TODO Promise?
 
 	/**
 	 * Sets the registry or registries to be aggregated. Call from workers to
@@ -145,7 +149,14 @@ export class AggregatorRegistry extends Registry {
 	 *   aggregated.
 	 * @return {void}
 	 */
-	static setRegistries(regs: Array<Registry> | Registry): void;
+	static setRegistries(
+		regs:
+			| Array<
+					Registry<PrometheusContentType> | Registry<OpenMetricsContentType>
+			  >
+			| Registry<PrometheusContentType>
+			| Registry<OpenMetricsContentType>,
+	): void;
 }
 
 /**
@@ -359,7 +370,7 @@ export class Gauge<T extends string = string> {
 	get(): Promise<MetricObjectWithValues<MetricValue<T>>>;
 
 	/**
-	 * Set gauge value to current epoch time in ms
+	 * Set gauge value to current epoch time in seconds
 	 * @param labels Object with label keys and values
 	 */
 	setToCurrentTime(labels?: LabelValues<T>): void;
@@ -486,6 +497,19 @@ export class Histogram<T extends string = string> {
 	 * returns is the timed duration.
 	 */
 	startTimer(labels?: LabelValues<T>): (labels?: LabelValues<T>) => number;
+
+	/**
+	 * Start a timer with exemplar. Calling the returned function will observe the duration in
+	 * seconds in the histogram.
+	 * @param labels Object with label keys and values
+	 * @param exemplarLabels Object with label keys and values for exemplars
+	 * @return Function to invoke when timer should be stopped. The value it
+	 * returns is the timed duration.
+	 */
+	startTimer(
+		labels?: LabelValues<T>,
+		exemplarLabels?: LabelValues<T>,
+	): (labels?: LabelValues<T>, exemplarLabels?: LabelValues<T>) => number;
 
 	/**
 	 * Reset histogram values
@@ -655,13 +679,13 @@ export namespace Summary {
 /**
  * Push metrics to a Pushgateway
  */
-export class Pushgateway {
+export class Pushgateway<T extends RegistryContentType> {
 	/**
 	 * @param url Complete url to the Pushgateway. If port is needed append url with :port
 	 * @param options Options
 	 * @param registry Registry
 	 */
-	constructor(url: string, options?: any, registry?: Registry);
+	constructor(url: string, options?: any, registry?: Registry<T>);
 
 	/**
 	 * Add metric and overwrite old ones
@@ -729,28 +753,27 @@ export function exponentialBuckets(
 	count: number,
 ): number[];
 
-export interface DefaultMetricsCollectorConfiguration {
-	register?: Registry;
+export interface DefaultMetricsCollectorConfiguration<
+	T extends RegistryContentType,
+> {
+	register?: Registry<T>;
 	prefix?: string;
 	gcDurationBuckets?: number[];
 	eventLoopMonitoringPrecision?: number;
 	labels?: Object;
 }
 
-/**
- * Configure default metrics
- * @param config Configuration object for default metrics collector
- */
-export function collectDefaultMetrics(
-	config?: DefaultMetricsCollectorConfiguration,
-): void;
-
-export interface defaultMetrics {
+export const collectDefaultMetrics: {
 	/**
-	 * All available default metrics
+	 * Configure default metrics
+	 * @param config Configuration object for default metrics collector
 	 */
+	<T extends RegistryContentType>(
+		config?: DefaultMetricsCollectorConfiguration<T>,
+	): void;
+	/** All available default metrics */
 	metricsList: string[];
-}
+};
 
 /**
  * Validate a metric name
