@@ -19,6 +19,34 @@ describe.each([
 			globalRegistry.clear();
 		});
 
+		describe('should throw error on instantiation', () => {
+			const defaultParams = { name: 'gauge_test', help: 'help' };
+			const noValidName = 'no valid name';
+
+			it('should thrown a instantiation error due invalid metric name', () => {
+				expect(
+					() => new Gauge({ ...defaultParams, name: noValidName }),
+				).toThrow(new Error(`Invalid metric name: ${noValidName}`));
+			});
+
+			it('should thrown a instantiation error due some invalid label name', () => {
+				const noValidLabelNames = [noValidName, defaultParams.name];
+				expect(
+					() =>
+						new Gauge({
+							...defaultParams,
+							labelNames: noValidLabelNames,
+						}),
+				).toThrow(
+					new Error(
+						`At least one label name is invalid: ${noValidLabelNames.join(
+							',',
+						)}`,
+					),
+				);
+			});
+		});
+
 		describe('with parameters as object', () => {
 			beforeEach(() => {
 				instance = new Gauge({ name: 'gauge_test', help: 'help' });
