@@ -19,31 +19,40 @@ describe.each([
 			globalRegistry.clear();
 		});
 
-		describe('should throw error on instantiation', () => {
+		describe('Metric instantiation', () => {
 			const defaultParams = { name: 'gauge_test', help: 'help' };
-			const noValidName = 'no valid name';
 
-			it('should thrown a instantiation error due invalid metric name', () => {
-				expect(
-					() => new Gauge({ ...defaultParams, name: noValidName }),
-				).toThrow(new Error(`Invalid metric name: ${noValidName}`));
+			describe('happy path', () => {
+				it('should create a instance', () => {
+					const instance = new Gauge(defaultParams);
+					expect(instance).toBeInstanceOf(Gauge);
+				});
 			});
 
-			it('should thrown a instantiation error due some invalid label name', () => {
-				const noValidLabelNames = [noValidName, defaultParams.name];
-				expect(
-					() =>
-						new Gauge({
-							...defaultParams,
-							labelNames: noValidLabelNames,
-						}),
-				).toThrow(
-					new Error(
-						`At least one label name is invalid: ${noValidLabelNames.join(
-							',',
-						)}`,
-					),
-				);
+			describe('un-happy path', () => {
+				const noValidName = 'no valid name';
+				it('should thrown an error due invalid metric name', () => {
+					expect(
+						() => new Gauge({ ...defaultParams, name: noValidName }),
+					).toThrow(new Error(`Invalid metric name: ${noValidName}`));
+				});
+
+				it('should thrown an error due some invalid label name', () => {
+					const noValidLabelNames = [noValidName, defaultParams.name];
+					expect(
+						() =>
+							new Gauge({
+								...defaultParams,
+								labelNames: noValidLabelNames,
+							}),
+					).toThrow(
+						new Error(
+							`At least one label name is invalid: ${noValidLabelNames.join(
+								',',
+							)}`,
+						),
+					);
+				});
 			});
 		});
 
