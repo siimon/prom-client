@@ -1,5 +1,6 @@
 'use strict';
 
+const { Metric } = require('../lib/metric');
 const Registry = require('../index').Registry;
 
 describe.each([
@@ -23,9 +24,14 @@ describe.each([
 			const defaultParams = { name: 'gauge_test', help: 'help' };
 
 			describe('happy path', () => {
-				it('should create a instance', () => {
+				it('should create a instance', async () => {
 					const instance = new Gauge(defaultParams);
+					const instanceValues = await instance.get();
+					expect(instance).toBeInstanceOf(Metric);
 					expect(instance).toBeInstanceOf(Gauge);
+					expect(instance.labelNames).toStrictEqual([]);
+					expect(instanceValues.name).toStrictEqual(defaultParams.name);
+					expect(instanceValues.help).toStrictEqual(defaultParams.help);
 				});
 			});
 
