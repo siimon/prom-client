@@ -52,11 +52,7 @@ describe.each([
 								labelNames: noValidLabelNames,
 							}),
 					).toThrow(
-						new Error(
-							`At least one label name is invalid: ${noValidLabelNames.join(
-								',',
-							)}`,
-						),
+						new Error(`At least one label name is invalid: ${noValidName}`),
 					);
 				});
 			});
