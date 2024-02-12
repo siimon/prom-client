@@ -17,15 +17,6 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - Minor performance improvements:
   - Uvoid unneeded hash table updates
   - Avoid hash table lookup for examplars
-
-### Added
-
-## [Unreleased]
-
-### Breaking
-
-### Changed
-
 - Improve the memory usage of histograms when the `enableExemplars` option is disabled
 
 ### Added
