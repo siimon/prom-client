@@ -214,6 +214,7 @@ interface MetricConfiguration<T extends string> {
 		| Registry<PrometheusContentType>
 		| Registry<OpenMetricsContentType>
 	)[];
+	defaultLabels: Partial<Record<T, string | number>>;
 	aggregator?: Aggregator;
 	collect?: CollectFunction<any>;
 	enableExemplars?: boolean;

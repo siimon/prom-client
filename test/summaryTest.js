@@ -8,6 +8,7 @@ describe.each([
 ])('summary with %s registry', (tag, regType) => {
 	const Summary = require('../index').Summary;
 	const globalRegistry = require('../index').register;
+	/** @type {Summary} */
 	let instance;
 
 	beforeEach(() => {
@@ -448,6 +449,142 @@ describe.each([
 					const values = (await instance.get()).values;
 					values.forEach(value => {
 						expect(value.labels).not.toEqual({ endpoint: '/test' });
+					});
+				});
+			});
+
+			describe('default label values', () => {
+				beforeEach(() => {
+					instance = new Summary({
+						name: 'summary_test_1',
+						help: 'help',
+						labelNames: ['method', 'endpoint', 'protocol'],
+						defaultLabels: {
+							protocol: 'https',
+						},
+					});
+				});
+
+				it("then throws an error on construction if labels don't match up", () => {
+					expect.assertions(4);
+					try {
+						new Summary({
+							name: 'summary_test_2',
+							help: 'help',
+							labelNames: ['method', 'endpoint', 'protocol'],
+							defaultLabels: {
+								a_bad_label: 'oh noooo',
+							},
+						});
+					} catch (error) {
+						expect(error).toBeInstanceOf(Error);
+						expect(error.message).toEqual('Invalid default label values');
+						expect(error.cause).toBeInstanceOf(Error);
+						expect(error.cause.message).toEqual(
+							"Added label \"a_bad_label\" is not included in initial labelset: [ 'method', 'endpoint', 'protocol' ]",
+						);
+					}
+				});
+
+				describe('observe', () => {
+					it('should record label value with provided value plus any default labels', async () => {
+						instance.labels({ method: 'GET', endpoint: '/test' }).observe(1);
+						const values = (await instance.get()).values;
+
+						expect(values[0].labels.quantile).toEqual(0.01);
+						expect(values[0].value).toEqual(1);
+						expect(values[0].labels).toEqual({
+							quantile: 0.01,
+							method: 'GET',
+							endpoint: '/test',
+							protocol: 'https',
+						});
+					});
+
+					it('allows specifying value for default label', async () => {
+						instance.labels('GET', '/test', 'http').observe(1);
+						const values = (await instance.get()).values;
+
+						expect(values[0].labels.quantile).toEqual(0.01);
+						expect(values[0].value).toEqual(1);
+						expect(values[0].labels).toEqual({
+							quantile: 0.01,
+							method: 'GET',
+							endpoint: '/test',
+							protocol: 'http',
+						});
+					});
+				});
+
+				describe('remove', () => {
+					it('then removes without specifying default labels', async () => {
+						instance.labels({ method: 'GET', endpoint: '/test' }).observe(1);
+						instance.labels({ method: 'POST', endpoint: '/test' }).observe(1);
+
+						instance.remove({ method: 'POST', endpoint: '/test' });
+
+						const values = (await instance.get()).values;
+						expect(values[0].labels.quantile).toEqual(0.01);
+						expect(values[0].value).toEqual(1);
+						expect(values[0].labels).toEqual({
+							quantile: 0.01,
+							method: 'GET',
+							endpoint: '/test',
+							protocol: 'https',
+						});
+					});
+
+					it('then removes with specifying default labels', async () => {
+						instance.labels({ method: 'GET', endpoint: '/test' }).observe(1);
+						instance.labels({ method: 'POST', endpoint: '/test' }).observe(1);
+
+						instance.remove('POST', '/test', 'https');
+
+						const values = (await instance.get()).values;
+						expect(values[0].labels.quantile).toEqual(0.01);
+						expect(values[0].value).toEqual(1);
+						expect(values[0].labels).toEqual({
+							quantile: 0.01,
+							method: 'GET',
+							endpoint: '/test',
+							protocol: 'https',
+						});
+					});
+				});
+
+				describe('reset', () => {
+					it('should reset the summary, incl default labels', async () => {
+						const instance = new Summary({
+							name: 'test_metric',
+							help: 'Another test metric',
+							labelNames: ['serial', 'active', 'color'],
+							defaultLabels: { color: 'red' },
+						});
+
+						instance.observe({ serial: '12345', active: 'yes' }, 5);
+						let values = (await instance.get()).values;
+						expect(values[0].labels.quantile).toEqual(0.01);
+						expect(values[0].value).toEqual(5);
+						expect(values[0].labels).toEqual({
+							quantile: 0.01,
+							active: 'yes',
+							color: 'red',
+							serial: '12345',
+						});
+
+						instance.observe(
+							{ serial: '12345', active: 'yes', color: 'blue' },
+							4,
+						);
+						values = (await instance.get()).values;
+						expect(values[0].labels.quantile).toEqual(0.01);
+						expect(values[0].value).toEqual(5);
+						expect(values[0].labels).toEqual({
+							quantile: 0.01,
+							active: 'yes',
+							color: 'red',
+							serial: '12345',
+						});
 					});
 				});
 			});

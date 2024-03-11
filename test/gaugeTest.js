@@ -8,6 +8,7 @@ describe.each([
 ])('gauge with %s registry', (tag, regType) => {
 	const Gauge = require('../index').Gauge;
 	const globalRegistry = require('../index').register;
+	/** @type { Gauge } */
 	let instance;
 
 	beforeEach(() => {
@@ -168,6 +169,141 @@ describe.each([
 				});
 			});
 
+			describe('default label values', () => {
+				beforeEach(() => {
+					instance = new Gauge({
+						name: 'gauge_test_2',
+						help: 'help',
+						labelNames: ['method', 'endpoint', 'protocol'],
+						defaultLabels: {
+							protocol: 'https',
+						},
+					});
+					instance.setToCurrentTime;
+					instance.startTimer;
+					instance.labels;
+				});
+
+				it("then throws an error on construction if labels don't match up", () => {
+					expect.assertions(4);
+					try {
+						new Gauge({
+							name: 'gauge_test_2',
+							help: 'help',
+							labelNames: ['method', 'endpoint', 'protocol'],
+							defaultLabels: {
+								a_bad_label: 'oh noooo',
+							},
+						});
+					} catch (error) {
+						expect(error).toBeInstanceOf(Error);
+						expect(error.message).toEqual('Invalid default label values');
+						expect(error.cause).toBeInstanceOf(Error);
+						expect(error.cause.message).toEqual(
+							"Added label \"a_bad_label\" is not included in initial labelset: [ 'method', 'endpoint', 'protocol' ]",
+						);
+					}
+				});
+
+				describe('inc', () => {
+					it('should increment label value with provided value plus any default labels', async () => {
+						instance.labels({ method: 'GET', endpoint: '/test' }).inc(100);
+						const values = (await instance.get()).values;
+						expect(values[0].value).toEqual(100);
+						expect(values[0].labels).toEqual({
+							method: 'GET',
+							endpoint: '/test',
+							protocol: 'https',
+						});
+					});
+
+					it('allows specifying value for default label', async () => {
+						instance.labels('GET', '/test', 'http').inc(100);
+						const values = (await instance.get()).values;
+						expect(values[0].value).toEqual(100);
+						expect(values[0].labels).toEqual({
+							method: 'GET',
+							endpoint: '/test',
+							protocol: 'http',
+						});
+					});
+				});
+
+				describe('set', () => {
+					it('should set label value with provided value plus any default labels', async () => {
+						instance.labels({ method: 'GET', endpoint: '/test' }).inc(100);
+						instance.labels({ method: 'GET', endpoint: '/test' }).set(12);
+						const values = (await instance.get()).values;
+						expect(values[0].value).toEqual(12);
+						expect(values[0].labels).toEqual({
+							method: 'GET',
+							endpoint: '/test',
+							protocol: 'https',
+						});
+					});
+
+					it('allows specifying value for default label', async () => {
+						instance.labels('GET', '/test', 'http').inc(100);
+						instance.labels('GET', '/test', 'http').set(12);
+						const values = (await instance.get()).values;
+						expect(values[0].value).toEqual(12);
+						expect(values[0].labels).toEqual({
+							method: 'GET',
+							endpoint: '/test',
+							protocol: 'http',
+						});
+					});
+				});
+
+				describe('dec', () => {
+					it('should increment label value with provided value plus any default labels', async () => {
+						instance.labels({ method: 'GET', endpoint: '/test' }).inc(100);
+						instance.labels({ method: 'GET', endpoint: '/test' }).dec(50);
+						const values = (await instance.get()).values;
+						expect(values[0].value).toEqual(50);
+						expect(values[0].labels).toEqual({
+							method: 'GET',
+							endpoint: '/test',
+							protocol: 'https',
+						});
+					});
+
+					it('allows specifying value for default label', async () => {
+						instance.labels('GET', '/test', 'http').inc(100);
+						instance.labels('GET', '/test', 'http').dec(50);
+						const values = (await instance.get()).values;
+						expect(values[0].value).toEqual(50);
+						expect(values[0].labels).toEqual({
+							method: 'GET',
+							endpoint: '/test',
+							protocol: 'http',
+						});
+					});
+				});
+
+				describe('remove', () => {
+					it('then removes without specifying default labels', async () => {
+						instance.labels({ method: 'GET', endpoint: '/test' }).inc(100);
+						instance.labels({ method: 'POST', endpoint: '/test' }).inc(100);
+
+						instance.remove({ method: 'POST', endpoint: '/test' });
+
+						const values = (await instance.get()).values;
+						expect(values.length).toEqual(1);
+					});
+
+					it('then removes with specifying default labels', async () => {
+						instance.labels({ method: 'GET', endpoint: '/test' }).inc(100);
+						instance.labels({ method: 'POST', endpoint: '/test' }).inc(100);
+
+						instance.remove('POST', '/test', 'https');
+
+						const values = (await instance.get()).values;
+						expect(values.length).toEqual(1);
+					});
+				});
+			});
+
 			describe('with remove', () => {
 				beforeEach(() => {
 					instance = new Gauge({
@@ -269,6 +405,30 @@ describe.each([
 			expect((await instance.get()).values[0].value).toEqual(10);
 			expect((await instance.get()).values[0].labels.serial).toEqual('12345');
 			expect((await instance.get()).values[0].labels.active).toEqual('no');
+		});
+		it('should reset the gauge, incl default labels', async () => {
+			const instance = new Gauge({
+				name: 'test_metric',
+				help: 'Another test metric',
+				labelNames: ['serial', 'active', 'color'],
+				defaultLabels: { color: 'red' },
+			});
+
+			instance.inc({ serial: '12345', active: 'yes' }, 12);
+			expect((await instance.get()).values[0].value).toEqual(12);
+			expect((await instance.get()).values[0].labels.serial).toEqual('12345');
+			expect((await instance.get()).values[0].labels.active).toEqual('yes');
+			expect((await instance.get()).values[0].labels.color).toEqual('red');
+
+			instance.inc({ serial: '12345', active: 'yes', color: 'blue' }, 12);
+			expect((await instance.get()).values[1].value).toEqual(12);
+			expect((await instance.get()).values[1].labels.serial).toEqual('12345');
+			expect((await instance.get()).values[1].labels.active).toEqual('yes');
+			expect((await instance.get()).values[1].labels.color).toEqual('blue');
+
+			instance.reset();
+
+			expect((await instance.get()).values).toEqual([]);
 		});
 	});
 
