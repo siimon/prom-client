@@ -11,12 +11,16 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-- Improve the memory usage of histograms when the `enableExemplars` option is disabled
-- fix: Avoid updating exemplar values during subsequent metric changes (Fixes [#616](https://github.com/siimon/prom-client/issues/616))
-
 ### Added
 
 [unreleased]: https://github.com/siimon/prom-client/compare/v15.1.0...HEAD
+
+## [15.1.1] - 2024-03-26
+
+### Changed
+
+- Improve the memory usage of histograms when the `enableExemplars` option is disabled
+- fix: Avoid updating exemplar values during subsequent metric changes (Fixes [#616](https://github.com/siimon/prom-client/issues/616))
 
 ## [15.1.0] - 2023-12-15
 
