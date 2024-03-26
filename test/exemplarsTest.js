@@ -172,6 +172,74 @@ describe('Exemplars', () => {
 				jest.useRealTimers();
 			});
 
+			describe('when the exemplar labels are not provided during subsequent metric updates', () => {
+				it('does not update the counter metric exemplar value ', async () => {
+					const counterInstance = new Counter({
+						name: 'counter_exemplar_value_test',
+						help: 'help',
+						labelNames: ['method', 'code'],
+						enableExemplars: true,
+					});
+
+					counterInstance.inc({
+						value: 2,
+						labels: { method: 'get', code: '200' },
+						exemplarLabels: {
+							traceId: 'trace_id_test',
+							spanId: 'span_id_test',
+						},
+					});
+
+					counterInstance.inc({
+						value: 4,
+						labels: { method: 'get', code: '200' },
+					});
+
+					const vals = await counterInstance.get();
+					expect(vals.values[0].value).toEqual(6);
+					expect(vals.values[0].exemplar.value).toEqual(2);
+					expect(vals.values[0].exemplar.labelSet.traceId).toEqual(
+						'trace_id_test',
+					);
+					expect(vals.values[0].exemplar.labelSet.spanId).toEqual(
+						'span_id_test',
+					);
+				});
+
+				it('does not update the histogram metric exemplar value ', async () => {
+					const histogramInstance = new Histogram({
+						name: 'histogram_exemplar_value_test',
+						help: 'test',
+						labelNames: ['method', 'code'],
+						enableExemplars: true,
+					});
+
+					histogramInstance.observe({
+						value: 0.3,
+						labels: { method: 'get', code: '200' },
+						exemplarLabels: {
+							traceId: 'trace_id_test_1',
+							spanId: 'span_id_test_1',
+						},
+					});
+					histogramInstance.observe({
+						value: 0.4,
+						labels: { method: 'get', code: '200' },
+					});
+
+					const vals = (await histogramInstance.get()).values;
+
+					expect(getValuesByLabel(0.5, vals)[0].value).toEqual(2);
+					expect(
+						getValuesByLabel(0.5, vals)[0].exemplar.labelSet.traceId,
+					).toEqual('trace_id_test_1');
+					expect(
+						getValuesByLabel(0.5, vals)[0].exemplar.labelSet.spanId,
+					).toEqual('span_id_test_1');
+					expect(getValuesByLabel(0.5, vals)[0].exemplar.value).toEqual(0.3);
+				});
+			});
+
 			function getValueByLabel(label, values, key) {
 				return values.reduce((acc, val) => {
 					if (val.labels && val.labels[key || 'le'] === label) {
