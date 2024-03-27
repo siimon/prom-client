@@ -106,6 +106,104 @@ describe.each([
 		});
 	});
 
+	describe('with params as object (BigInt)', () => {
+		beforeEach(() => {
+			instance = new Counter({ name: 'gauge_test', help: 'test' });
+		});
+		afterEach(() => {
+			globalRegistry.clear();
+		});
+
+		it('should increment counter', async () => {
+			instance.inc();
+			expect((await instance.get()).values[0].value).toEqual(1);
+			instance.inc();
+			expect((await instance.get()).values[0].value).toEqual(2);
+			instance.inc(0n);
+			expect((await instance.get()).values[0].value).toEqual(2n);
+		});
+		it('should increment with a provided value', async () => {
+			instance.inc(100n);
+			expect((await instance.get()).values[0].value).toEqual(100n);
+		});
+		it('should not be possible to decrease a counter', () => {
+			const fn = function () {
+				instance.inc(-100n);
+			};
+			expect(fn).toThrowErrorMatchingSnapshot();
+		});
+		it('should throw an error when the value is not a number', () => {
+			const fn = () => {
+				instance.inc('3ms');
+			};
+			expect(fn).toThrowErrorMatchingSnapshot();
+		});
+		it('should throw an error when mixing BigInt and Float values', () => {
+			const fn = () => {
+				instance.inc(1n);
+				instance.inc(1.1);
+			};
+			expect(fn).toThrowErrorMatchingSnapshot();
+		});
+		it('should throw an error when mixing Float and BigInt values', () => {
+			const fn = () => {
+				instance.inc(1.1);
+				instance.inc(1n);
+			};
+			expect(fn).toThrowErrorMatchingSnapshot();
+		});
+		it('should handle incrementing with 0', async () => {
+			instance.inc(0n);
+			expect((await instance.get()).values[0].value).toEqual(0n);
+		});
+		it('should init counter to 0', async () => {
+			const values = (await instance.get()).values;
+			expect(values).toHaveLength(1);
+			expect(values[0].value).toEqual(0);
+		});
+
+		describe('labels', () => {
+			beforeEach(() => {
+				instance = new Counter({
+					name: 'gauge_test_2',
+					help: 'help',
+					labelNames: ['method', 'endpoint'],
+				});
+			});
+
+			it('should handle 1 value per label', async () => {
+				instance.labels('GET', '/test').inc(1n);
+				instance.labels('POST', '/test').inc(1n);
+
+				const values = (await instance.get()).values;
+				expect(values).toHaveLength(2);
+			});
+
+			it('should handle labels provided as an object', async () => {
+				instance.labels({ method: 'POST', endpoint: '/test' }).inc(1n);
+				const values = (await instance.get()).values;
+				expect(values).toHaveLength(1);
+				expect(values[0].labels).toEqual({
+					method: 'POST',
+					endpoint: '/test',
+				});
+			});
+
+			it('should throw error if label lengths does not match', () => {
+				const fn = function () {
+					instance.labels('GET').inc(1n);
+				};
+				expect(fn).toThrowErrorMatchingSnapshot();
+			});
+
+			it('should increment label value with provided value', async () => {
+				instance.labels('GET', '/test').inc(100n);
+				const values = (await instance.get()).values;
+				expect(values[0].value).toEqual(100n);
+			});
+		});
+	});
+
 	describe('remove', () => {
 		beforeEach(() => {
 			instance = new Counter({

@@ -1,5 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`gauge with OpenMetrics registry global registry with parameters as object (BigInt) should not allow non numbers 1`] = `"Value is not a valid number: asd"`;
+
+exports[`gauge with OpenMetrics registry global registry with parameters as object (BigInt) should throw an error when mixing BigInt and Float values 1`] = `"The number 1.1 cannot be converted to a BigInt because it is not an integer"`;
+
 exports[`gauge with OpenMetrics registry global registry with parameters as object should not allow non numbers 1`] = `"Value is not a valid number: asd"`;
+
+exports[`gauge with Prometheus registry global registry with parameters as object (BigInt) should not allow non numbers 1`] = `"Value is not a valid number: asd"`;
+
+exports[`gauge with Prometheus registry global registry with parameters as object (BigInt) should throw an error when mixing BigInt and Float values 1`] = `"The number 1.1 cannot be converted to a BigInt because it is not an integer"`;
 
 exports[`gauge with Prometheus registry global registry with parameters as object should not allow non numbers 1`] = `"Value is not a valid number: asd"`;

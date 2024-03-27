@@ -199,6 +199,103 @@ describe.each([
 				});
 			});
 		});
+		describe('with parameters as object (BigInt)', () => {
+			beforeEach(() => {
+				instance = new Gauge({ name: 'gauge_test', help: 'help' });
+				instance.set(10n);
+			});
+
+			it('should set a gauge to provided value', async () => {
+				await expectValue(10n);
+			});
+
+			it('should increase with 1 if no param provided', async () => {
+				instance.inc();
+				await expectValue(11n);
+			});
+
+			it('should increase with param value if provided', async () => {
+				instance.inc(5n);
+				await expectValue(15n);
+			});
+
+			it('should decrease with 1 if no param provided', async () => {
+				instance.dec();
+				await expectValue(9n);
+			});
+
+			it('should decrease with param if provided', async () => {
+				instance.dec(5n);
+				await expectValue(5n);
+			});
+
+			it('should set to exactly zero without defaulting to 1', async () => {
+				instance.set(0n);
+				await expectValue(0n);
+			});
+
+			it('should inc by zero without defaulting to 1', async () => {
+				instance.inc(0n);
+				await expectValue(10n);
+			});
+
+			it('should start a timer and set a gauge to elapsed in seconds', async () => {
+				jest.useFakeTimers('modern');
+				jest.setSystemTime(0);
+				const doneFn = instance.startTimer();
+				jest.advanceTimersByTime(500);
+				const dur = doneFn();
+				await expectValue(0.5);
+				expect(dur).toEqual(0.5);
+				jest.useRealTimers();
+			});
+
+			it('should set to current time', async () => {
+				jest.useFakeTimers('modern');
+				jest.setSystemTime(0);
+				instance.setToCurrentTime();
+				await expectValue(Date.now());
+				jest.useRealTimers();
+			});
+
+			it('should not allow non numbers', () => {
+				const fn = function () {
+					instance.set('asd');
+				};
+				expect(fn).toThrowErrorMatchingSnapshot();
+			});
+
+			it('should throw an error when mixing BigInt and Float values', () => {
+				const fn = () => {
+					instance.inc(1n);
+					instance.inc(1.1);
+				};
+				expect(fn).toThrowErrorMatchingSnapshot();
+			});
+
+			describe('with labels', () => {
+				beforeEach(() => {
+					instance = new Gauge({
+						name: 'name',
+						help: 'help',
+						labelNames: ['code'],
+					});
+					instance.set({ code: '200' }, 20n);
+				});
+				it('should be able to increment', async () => {
+					instance.labels('200').inc();
+					await expectValue(21n);
+				});
+				it('should be able to decrement', async () => {
+					instance.labels('200').dec();
+					await expectValue(19n);
+				});
+				it('should be able to set value', async () => {
+					instance.labels('200').set(500n);
+					await expectValue(500n);
+				});
+			});
+		});
 	});
 	describe('without registry', () => {
 		afterEach(() => {
