@@ -10,6 +10,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ### Breaking
 
 ### Changed
+- Enable `bun.js` by catching `NotImplemented` error thrown in `perf_hooks.monitorEventLoopDelay`
 
 ### Added
 
