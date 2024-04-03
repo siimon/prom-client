@@ -10,7 +10,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ### Breaking
 
 ### Changed
-- Enable `bun.js` by catching `NotImplemented` error thrown in `perf_hooks.monitorEventLoopDelay`
+
+- Enable `bun.js` by catching `NotImplemented` error (Fixes [#570](https://github.com/siimon/prom-client/issues/570))
 
 ### Added
 
