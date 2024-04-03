@@ -1,4 +1,4 @@
-name: Node.js CI
+name: CI
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
       - '**'
 
 jobs:
-  build:
+  nodejs:
     name: Test on Node.js v${{ matrix.node-version }} and OS ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -40,3 +40,15 @@ jobs:
         run: npm i
       - name: Test
         run: npm run test
+  bun:
+    name: Test on Bun
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Install Dependencies
+        run: bun install
+      - name: Test
+        run: bun test-unit
