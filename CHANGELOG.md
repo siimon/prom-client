@@ -11,6 +11,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Enable `bun.js` by catching `NotImplemented` error (Fixes [#570](https://github.com/siimon/prom-client/issues/570))
+
 ### Added
 
 [unreleased]: https://github.com/siimon/prom-client/compare/v15.1.0...HEAD
