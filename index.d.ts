@@ -114,8 +114,8 @@ export type Collector = () => void;
 export const register: Registry;
 
 /**
- * HTTP Content-Type for metrics response headers for the default registry,
- * defaults to Prometheus text format.
+ * HTTP Content-Type for metrics response headers, defaults to Prometheus text
+ * format.
  */
 export const contentType: RegistryContentType;
 
