@@ -10,8 +10,10 @@ exports.Registry = require('./lib/registry');
 Object.defineProperty(exports, 'contentType', {
 	configurable: false,
 	enumerable: true,
-	get: () => exports.register.contentType,
-	set: value => {
+	get() {
+		return exports.register.contentType;
+	},
+	set(value) {
 		exports.register.setContentType(value);
 	},
 });
