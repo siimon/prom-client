@@ -70,7 +70,7 @@ export class Registry<RegistryContentType = PrometheusContentType> {
 	 * @param labels of name/value pairs:
 	 * { defaultLabel: "value", anotherLabel: "value 2" }
 	 */
-	setDefaultLabels(labels: Object): void;
+	setDefaultLabels(labels: object): void;
 
 	/**
 	 * Get a string representation of a single metric by name
@@ -149,7 +149,7 @@ export class AggregatorRegistry<
 	 * @return {Registry} aggregated registry.
 	 */
 	static aggregate<T extends RegistryContentType>(
-		metricsArr: Array<Object>,
+		metricsArr: Array<object>,
 	): Registry<T>; // TODO Promise?
 
 	/**
@@ -770,7 +770,7 @@ export interface DefaultMetricsCollectorConfiguration<
 	prefix?: string;
 	gcDurationBuckets?: number[];
 	eventLoopMonitoringPrecision?: number;
-	labels?: Object;
+	labels?: object;
 }
 
 export const collectDefaultMetrics: {
