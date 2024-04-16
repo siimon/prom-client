@@ -11,6 +11,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Add `Registry.PROMETHEUS_CONTENT_TYPE` and `Registry.OPENMETRICS_CONTENT_TYPE` constants to the TypeScript types
 - Correctly read and set `contentType` top level export
 
 ### Added
