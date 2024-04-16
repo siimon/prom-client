@@ -149,7 +149,7 @@ export class AggregatorRegistry<
 	 * @return {Registry} aggregated registry.
 	 */
 	static aggregate<T extends RegistryContentType>(
-		metricsArr: Array<Object>,
+		metricsArr: Array<object>,
 	): Registry<T>; // TODO Promise?
 
 	/**
