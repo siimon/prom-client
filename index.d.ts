@@ -197,7 +197,7 @@ interface MetricObject {
 	help: string;
 	type: MetricType;
 	aggregator: Aggregator;
-	collect: CollectFunction<unknown>;
+	collect: CollectFunction<any>;
 }
 
 interface MetricObjectWithValues<T extends MetricValue<string>>
