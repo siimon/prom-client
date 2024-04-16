@@ -95,6 +95,16 @@ export class Registry<RegistryContentType = PrometheusContentType> {
 	 * @param registers The registers you want to merge together
 	 */
 	static merge(registers: Registry[]): Registry;
+
+	/**
+	 * HTTP Prometheus Content-Type for metrics response headers.
+	 */
+	static PROMETHEUS_CONTENT_TYPE: PrometheusContentType;
+
+	/**
+	 * HTTP OpenMetrics Content-Type for metrics response headers.
+	 */
+	static OPENMETRICS_CONTENT_TYPE: OpenMetricsContentType;
 }
 export type Collector = () => void;
 
