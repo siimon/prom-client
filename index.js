@@ -17,10 +17,8 @@ Object.defineProperty(exports, 'contentType', {
 		exports.register.setContentType(value);
 	},
 });
-exports.prometheusContentType =
-	require('./lib/registry').PROMETHEUS_CONTENT_TYPE;
-exports.openMetricsContentType =
-	require('./lib/registry').OPENMETRICS_CONTENT_TYPE;
+exports.prometheusContentType = exports.Registry.PROMETHEUS_CONTENT_TYPE;
+exports.openMetricsContentType = exports.Registry.OPENMETRICS_CONTENT_TYPE;
 exports.validateMetricName = require('./lib/validation').validateMetricName;
 
 exports.Counter = require('./lib/counter');
