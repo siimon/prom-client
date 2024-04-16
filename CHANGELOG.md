@@ -11,9 +11,11 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-- Enable `bun.js` by catching `NotImplemented` error (Fixes [#570](https://github.com/siimon/prom-client/issues/570))
+- Add `Registry.PROMETHEUS_CONTENT_TYPE` and `Registry.OPENMETRICS_CONTENT_TYPE` constants to the TypeScript types
 
 ### Added
+
+- Enable `bun.js` by catching `NotImplemented` error (Fixes [#570](https://github.com/siimon/prom-client/issues/570))
 
 [unreleased]: https://github.com/siimon/prom-client/compare/v15.1.0...HEAD
 
