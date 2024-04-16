@@ -7,7 +7,14 @@
 
 exports.register = require('./lib/registry').globalRegistry;
 exports.Registry = require('./lib/registry');
-exports.contentType = require('./lib/registry').globalRegistry.contentType;
+Object.defineProperty(exports, 'contentType', {
+	configurable: false,
+	enumerable: true,
+	get: () => exports.register.contentType,
+	set: value => {
+		exports.register.setContentType(value);
+	},
+});
 exports.prometheusContentType =
 	require('./lib/registry').PROMETHEUS_CONTENT_TYPE;
 exports.openMetricsContentType =
