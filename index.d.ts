@@ -81,7 +81,7 @@ export class Registry<RegistryContentType = PrometheusContentType> {
 	/**
 	 * Gets the Content-Type of the metrics for use in the response headers.
 	 */
-	contentType: RegistryContentType;
+	readonly contentType: RegistryContentType;
 
 	/**
 	 * Set the content type of a registry. Used to change between Prometheus and
