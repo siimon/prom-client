@@ -21,7 +21,9 @@ export type RegistryContentType =
 /**
  * Container for all registered metrics
  */
-export class Registry<BoundRegistryContentType = PrometheusContentType> {
+export class Registry<
+	BoundRegistryContentType extends RegistryContentType = PrometheusContentType,
+> {
 	/**
 	 * Get string representation for all metrics
 	 */
