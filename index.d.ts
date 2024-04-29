@@ -88,7 +88,9 @@ export class Registry<RegistryContentType = PrometheusContentType> {
 	 * OpenMetrics versions.
 	 * @param contentType The type of the registry
 	 */
-	setContentType(contentType: PrometheusContentType | OpenMetricsContentType): void;
+	setContentType(
+		contentType: PrometheusContentType | OpenMetricsContentType,
+	): void;
 
 	/**
 	 * Merge registers
