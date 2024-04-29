@@ -76,6 +76,8 @@
 			"parser": "@typescript-eslint/parser",
 			"plugins": ["@typescript-eslint"],
 			"rules": {
+				"no-shadow": "off",
+				"@typescript-eslint/no-shadow": "warn",
 				"node/no-unsupported-features/es-syntax": "off"
 			}
 		},
