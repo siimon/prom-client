@@ -78,9 +78,17 @@ describe.each([
 				name: 'test_gauge',
 				type: 'gauge',
 				values: [
-					{ value: 0.47, labels: { method: 'get', code: 200 }, hash: 'test_gauge{method="get",code="200"}' },
+					{
+						value: 0.47,
+						labels: { method: 'get', code: 200 },
+						hash: 'test_gauge{method="get",code="200"}',
+					},
 					{ value: 0.64, labels: {}, hash: 'test_gauge{}' },
-					{ value: 23, labels: { method: 'post', code: '300' }, hash: 'test_gauge{method="post",code="300"}' },
+					{
+						value: 23,
+						labels: { method: 'post', code: '300' },
+						hash: 'test_gauge{method="post",code="300"}',
+					},
 				],
 				aggregator: 'sum',
 			},
@@ -88,14 +96,22 @@ describe.each([
 				help: 'Start time of the process since unix epoch in seconds.',
 				name: 'process_start_time_seconds',
 				type: 'gauge',
-				values: [{ value: 1502075832, labels: {}, hash: 'process_start_time_seconds{}' }],
+				values: [
+					{
+						value: 1502075832,
+						labels: {},
+						hash: 'process_start_time_seconds{}',
+					},
+				],
 				aggregator: 'omit',
 			},
 			{
 				help: 'Lag of event loop in seconds.',
 				name: 'nodejs_eventloop_lag_seconds',
 				type: 'gauge',
-				values: [{ value: 0.009, labels: {}, hash: 'nodejs_eventloop_lag_seconds{}' }],
+				values: [
+					{ value: 0.009, labels: {}, hash: 'nodejs_eventloop_lag_seconds{}' },
+				],
 				aggregator: 'average',
 			},
 			{
@@ -138,9 +154,17 @@ describe.each([
 				name: 'test_gauge',
 				type: 'gauge',
 				values: [
-					{ value: 0.02, labels: { method: 'get', code: 200 }, hash: 'test_gauge{method="get",code="200"}' },
+					{
+						value: 0.02,
+						labels: { method: 'get', code: 200 },
+						hash: 'test_gauge{method="get",code="200"}',
+					},
 					{ value: 0.24, labels: {}, hash: 'test_gauge{}' },
-					{ value: 51, labels: { method: 'post', code: '300' }, hash: 'test_gauge{method="post",code="300"}' },
+					{
+						value: 51,
+						labels: { method: 'post', code: '300' },
+						hash: 'test_gauge{method="post",code="300"}',
+					},
 				],
 				aggregator: 'sum',
 			},
@@ -148,14 +172,22 @@ describe.each([
 				help: 'Start time of the process since unix epoch in seconds.',
 				name: 'process_start_time_seconds',
 				type: 'gauge',
-				values: [{ value: 1502075849, labels: {}, hash: 'process_start_time_seconds{}' }],
+				values: [
+					{
+						value: 1502075849,
+						labels: {},
+						hash: 'process_start_time_seconds{}',
+					},
+				],
 				aggregator: 'omit',
 			},
 			{
 				help: 'Lag of event loop in seconds.',
 				name: 'nodejs_eventloop_lag_seconds',
 				type: 'gauge',
-				values: [{ value: 0.008, labels: {}, hash: 'nodejs_eventloop_lag_seconds{}' }],
+				values: [
+					{ value: 0.008, labels: {}, hash: 'nodejs_eventloop_lag_seconds{}' },
+				],
 				aggregator: 'average',
 			},
 			{

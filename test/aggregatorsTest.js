@@ -9,7 +9,7 @@ describe('aggregators', () => {
 			type: 'does not matter',
 			values: [
 				{ labels: [], value: 1, hash: 'h1' },
-				{ labels: ['label1'], value: 2, hash: 'h2'},
+				{ labels: ['label1'], value: 2, hash: 'h2' },
 			],
 		},
 		{
@@ -17,8 +17,8 @@ describe('aggregators', () => {
 			name: 'metric_name',
 			type: 'does not matter',
 			values: [
-				{ labels: [], value: 3, hash: 'h1'},
-				{ labels: ['label1'], value: 4, hash: 'h2'},
+				{ labels: [], value: 3, hash: 'h1' },
+				{ labels: ['label1'], value: 4, hash: 'h2' },
 			],
 		},
 	];
@@ -116,7 +116,7 @@ describe('aggregators', () => {
 					help: 'metric_help',
 					name: 'metric_name',
 					type: 'does not matter',
-					values: [{ labels: [], value: 5, metricName: 'def', hash: 'h2'}],
+					values: [{ labels: [], value: 5, metricName: 'def', hash: 'h2' }],
 				},
 			];
 			metrics2.workerSize = 2;
