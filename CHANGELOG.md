@@ -11,6 +11,11 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Changes for cluster mode
+- Removed `byLabels` Grouper in `metricAggregators.js` file and created a global Map to avoid Map creation on every request for the metrics
+- Moved hashing of labels from master to worker to distribute the cpu bound hashing among workers
+- Workers to write metrics in tmp file and send the file name to master to read metrics from rather than sending on IPC to keep IPC congestion free. (change in `cluster.js`)
+
 ### Added
 
 [unreleased]: https://github.com/siimon/prom-client/compare/v15.1.2...HEAD
