@@ -23,8 +23,6 @@ describe('aggregators', () => {
 		},
 	];
 
-	metrics.workerSize = 2;
-
 	describe('sum', () => {
 		it('properly sums values', () => {
 			const result = aggregators.sum(metrics);
@@ -119,7 +117,6 @@ describe('aggregators', () => {
 					values: [{ labels: [], value: 5, metricName: 'def', hash: 'h2' }],
 				},
 			];
-			metrics2.workerSize = 2;
 			const result = aggregators.sum(metrics2);
 			expect(result.values).toEqual([
 				{ value: 4, labels: [], metricName: 'abc' },
