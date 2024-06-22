@@ -39,7 +39,7 @@
 		"@typescript-eslint/parser": "^6.21.0",
 		"eslint": "^8.32.0",
 		"eslint-config-prettier": "^9.1.0",
-		"eslint-plugin-node": "^11.0.0",
+		"eslint-plugin-n": "^16.0.0",
 		"eslint-plugin-prettier": "^5.0.1",
 		"express": "^4.13.3",
 		"husky": "^9.0.0",
