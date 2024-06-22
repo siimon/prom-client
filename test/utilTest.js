@@ -13,7 +13,7 @@ describe('utils', () => {
 			expect(() => {
 				getLabels(['label1', 'label2'], ['arg1']);
 			}).toThrowError(
-				'Invalid number of arguments: "arg1" for label names: "label1,label2".',
+				'Invalid number of arguments (1): "arg1" for label names (2): "label1, label2".',
 			);
 		});
 	});
