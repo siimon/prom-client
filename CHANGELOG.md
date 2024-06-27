@@ -11,11 +11,15 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-- Improve error message when number of registered labels mismatch with the number of labels provided
-
 ### Added
 
-[unreleased]: https://github.com/siimon/prom-client/compare/v15.1.2...HEAD
+[unreleased]: https://github.com/siimon/prom-client/compare/v15.1.3...HEAD
+
+## [15.1.3] - 2024-06-27
+
+### Changed
+
+- Improve error message when number of registered labels mismatch with the number of labels provided
 
 ## [15.1.2] - 2024-04-16
 
