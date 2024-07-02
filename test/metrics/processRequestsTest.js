@@ -37,6 +37,6 @@ describe.each([
 
 		expect(metrics[1].help).toEqual('Total number of active requests.');
 		expect(metrics[1].type).toEqual('gauge');
-		expect(metrics[1].name).toEqual('nodejs_active_requests_total');
+		expect(metrics[1].name).toEqual('nodejs_active_requests_total_number');
 	});
 });
