@@ -8,8 +8,8 @@ describe('aggregators', () => {
 			name: 'metric_name',
 			type: 'does not matter',
 			values: [
-				{ labels: [], value: 1 },
-				{ labels: ['label1'], value: 2 },
+				{ labels: [], value: 1, hash: 'h1' },
+				{ labels: ['label1'], value: 2, hash: 'h2' },
 			],
 		},
 		{
@@ -17,8 +17,8 @@ describe('aggregators', () => {
 			name: 'metric_name',
 			type: 'does not matter',
 			values: [
-				{ labels: [], value: 3 },
-				{ labels: ['label1'], value: 4 },
+				{ labels: [], value: 3, hash: 'h1' },
+				{ labels: ['label1'], value: 4, hash: 'h2' },
 			],
 		},
 	];
@@ -102,19 +102,19 @@ describe('aggregators', () => {
 					help: 'metric_help',
 					name: 'metric_name',
 					type: 'does not matter',
-					values: [{ labels: [], value: 1, metricName: 'abc' }],
+					values: [{ labels: [], value: 1, metricName: 'abc', hash: 'h1' }],
 				},
 				{
 					help: 'metric_help',
 					name: 'metric_name',
 					type: 'does not matter',
-					values: [{ labels: [], value: 3, metricName: 'abc' }],
+					values: [{ labels: [], value: 3, metricName: 'abc', hash: 'h1' }],
 				},
 				{
 					help: 'metric_help',
 					name: 'metric_name',
 					type: 'does not matter',
-					values: [{ labels: [], value: 5, metricName: 'def' }],
+					values: [{ labels: [], value: 5, metricName: 'def', hash: 'h2' }],
 				},
 			];
 			const result = aggregators.sum(metrics2);
