@@ -5,6 +5,8 @@ jobs:
   remind:
     name: Changelog Reminder
     runs-on: ubuntu-latest
+    permissions:
+      issues: write # to create comment
     steps:
       - uses: actions/checkout@master
       - name: Changelog Reminder

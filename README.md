@@ -51,7 +51,7 @@ available on Linux.
 `collectDefaultMetrics` optionally accepts a config object with following entries:
 
 - `prefix` an optional prefix for metric names. Default: no prefix.
-- `register` to which metrics should be registered. Default: the global default registry.
+- `register` to which registry the metrics should be registered. Default: the global default registry.
 - `gcDurationBuckets` with custom buckets for GC duration histogram. Default buckets of GC duration histogram are `[0.001, 0.01, 0.1, 1, 2, 5]` (in seconds).
 - `eventLoopMonitoringPrecision` with sampling rate in milliseconds. Must be greater than zero. Default: 10.
 
@@ -188,7 +188,7 @@ functions will not have the correct value for `this`.
 ##### Utility Functions
 
 ```js
-// Set value to current time:
+// Set value to current time in seconds:
 gauge.setToCurrentTime();
 
 // Record durations:
@@ -356,7 +356,7 @@ Typescript can also enforce label names using `as const`
 ```typescript
 import * as client from 'prom-client';
 
-const gauge = new client.Counter({
+const counter = new client.Counter({
   name: 'metric_name',
   help: 'metric_help',
   // add `as const` here to enforce label names
@@ -364,11 +364,11 @@ const gauge = new client.Counter({
 });
 
 // Ok
-gauge.inc({ method: 1 });
+counter.inc({ method: 1 });
 
 // this is an error since `'methods'` is not a valid `labelName`
 // @ts-expect-error
-gauge.inc({ methods: 1 });
+counter.inc({ methods: 1 });
 ```
 
 #### Default Labels (segmented by registry)
@@ -579,6 +579,16 @@ gateway = new client.Pushgateway('http://127.0.0.1:9091', {
     maxSockets: 5,
   }),
 });
+```
+
+Some gateways such as [Gravel Gateway](https://github.com/sinkingpoint/prometheus-gravel-gateway) do not support grouping by job name, exposing a plain `/metrics` endpoint instead of `/metrics/job/<jobName>`. It's possible to configure a gateway instance to not require a jobName in the options argument.
+
+```js
+gravelGateway = new client.Pushgateway('http://127.0.0.1:9091', {
+  timeout: 5000,
+  requireJobName: false,
+});
+gravelGateway.pushAdd();
 ```
 
 ### Bucket Generators

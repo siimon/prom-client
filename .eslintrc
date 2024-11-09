@@ -2,7 +2,7 @@
 	"plugins": ["prettier"],
 	"extends": [
 		"eslint:recommended",
-		"plugin:node/recommended",
+		"plugin:n/recommended",
 		"plugin:prettier/recommended"
 	],
 	"env": {
@@ -68,6 +68,24 @@
 			"files": ["example/**/*.js", "benchmarks/**/*.js"],
 			"rules": {
 				"no-console": "off"
+			}
+		},
+		{
+			"files": ["**/*.ts"],
+			"extends": ["plugin:@typescript-eslint/recommended"],
+			"parser": "@typescript-eslint/parser",
+			"plugins": ["@typescript-eslint"],
+			"rules": {
+				"no-shadow": "off",
+				"@typescript-eslint/no-shadow": "warn",
+				"n/no-unsupported-features/es-syntax": "off"
+			}
+		},
+		{
+			"files": ["**/*.d.ts"],
+			"rules": {
+				"@typescript-eslint/no-explicit-any": "off",
+				"@typescript-eslint/no-unused-vars": "off"
 			}
 		}
 	]
