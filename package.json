@@ -51,6 +51,7 @@
 	},
 	"dependencies": {
 		"@opentelemetry/api": "^1.4.0",
+		"snappyjs": "^0.7.0",
 		"tdigest": "^0.1.1"
 	},
 	"types": "./index.d.ts",
