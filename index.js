@@ -26,6 +26,7 @@ exports.Gauge = require('./lib/gauge');
 exports.Histogram = require('./lib/histogram');
 exports.Summary = require('./lib/summary');
 exports.Pushgateway = require('./lib/pushgateway');
+exports.Remotewrite = require('./lib/remotewrite');
 
 exports.linearBuckets = require('./lib/bucketGenerators').linearBuckets;
 exports.exponentialBuckets =
