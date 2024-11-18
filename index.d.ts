@@ -136,10 +136,11 @@ export class AggregatorRegistry<
 > extends Registry<T> {
 	/**
 	 * Gets aggregated metrics for all workers.
+	 * @param {ClusterMetricsOptions|undefined} options Additional options for cluster metrics aggregation
 	 * @return {Promise<string>} Promise that resolves with the aggregated
 	 * metrics.
 	 */
-	clusterMetrics(): Promise<string>;
+	clusterMetrics(options?: ClusterMetricsOptions): Promise<string>;
 
 	/**
 	 * Creates a new Registry instance from an array of metrics that were
@@ -191,6 +192,10 @@ export enum MetricType {
 	Histogram,
 	Summary,
 }
+
+export type ClusterMetricsOptions = {
+	timeoutMs?: number;
+};
 
 type CollectFunction<T> = (this: T) => void | Promise<void>;
 
