@@ -137,6 +137,7 @@ export class AggregatorRegistry<
 	/**
 	 * Gets aggregated metrics for all workers.
 	 * @param {ClusterMetricsOptions|undefined} options Additional options for cluster metrics aggregation
+	 * @param {number} [options.timeoutMs=5000] Timeout to wait for all workers to respond before error.
 	 * @return {Promise<string>} Promise that resolves with the aggregated
 	 * metrics.
 	 */
@@ -194,6 +195,7 @@ export enum MetricType {
 }
 
 export type ClusterMetricsOptions = {
+	/** Timeout to wait for all workers to respond before error. */
 	timeoutMs?: number;
 };
 
