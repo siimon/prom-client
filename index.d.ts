@@ -37,12 +37,12 @@ export class Registry<
 	/**
 	 * Reset all metrics in the registry
 	 */
-	resetMetrics(name: string): void;
+	resetMetrics(): void;
 
 	/**
 	 * Reset one naed metric
 	 */
-	resetMetric(): void;
+	resetMetric(name: string): void;
 
 	/**
 	 * Register metric to register
