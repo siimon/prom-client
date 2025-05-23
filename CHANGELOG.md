@@ -11,6 +11,13 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Changes for cluster mode
+- Removed `byLabels` Grouper in `metricAggregators.js` file and created a global Map to avoid Map creation on every request for the metrics
+- Made an options field `performanceOptimizedVarient` to create AggregatorRegistry as an optional param.
+- If the `performanceOptimizedVarient` is set to true the hashing of labels is done by the workers to distribute the cpu bound hashing among workers. (change in `cluster.js`)
+- If the `performanceOptimizedVarient` is set to true the workers will write metrics in a file in /tmp dir and send the file name to master to read metrics rather than sending the complete metrics on IPC to keep IPC congestion free. (change in `cluster.js`)
+- Added a new example in `cluster-2.js` for creating the AggregatorRegistry using the performance configurations
+
 ### Added
 
 [unreleased]: https://github.com/siimon/prom-client/compare/v15.1.3...HEAD

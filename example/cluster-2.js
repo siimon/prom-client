@@ -5,9 +5,11 @@ const express = require('express');
 const metricsServer = express();
 const AggregatorRegistry = require('../').AggregatorRegistry;
 
-// Create default AggregatorRegistry
-// Uses IPC communication for metrics flow from workers to master for aggregation
-const aggregatorRegistry = new AggregatorRegistry();
+// Create performance optimized AggregatorRegistry
+// Uses file based communication for metrics flow from workers to master and requires access to /tmp folder
+const aggregatorRegistry = new AggregatorRegistry(undefined, {
+	performanceOptimizedVarient: true,
+});
 
 if (cluster.isMaster) {
 	for (let i = 0; i < 4; i++) {
