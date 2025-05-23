@@ -131,9 +131,27 @@ export const prometheusContentType: PrometheusContentType;
  */
 export const openMetricsContentType: OpenMetricsContentType;
 
+export interface ClusterOptions {
+	/**
+	 * Enable performance optimizations
+	 * When enabled:
+	 * - Workers use file based communication instead of IPC for transferring metrics to master
+	 * - Workers perform metrics hashing instead of the master process
+	 * @default false
+	 */
+	enablePerformanceOptimizedVarient?: boolean;
+}
+
 export class AggregatorRegistry<
 	T extends RegistryContentType,
 > extends Registry<T> {
+	/**
+	 * Create a new AggregatorRegistry
+	 * @param reContentType Content Type of the registry
+	 * @param options Performance optimization options for cluster mode
+	 */
+	constructor(regContentType?: T, options?: ClusterOptions);
+
 	/**
 	 * Gets aggregated metrics for all workers.
 	 * @return {Promise<string>} Promise that resolves with the aggregated
@@ -159,6 +177,7 @@ export class AggregatorRegistry<
 	 * use a registry/registries other than the default global registry.
 	 * @param {Array<Registry>|Registry} regs Registry or registries to be
 	 *   aggregated.
+	 * @param {ClusterOptions} options Performance optimization options for cluster mode
 	 * @return {void}
 	 */
 	static setRegistries(
@@ -168,6 +187,7 @@ export class AggregatorRegistry<
 			  >
 			| Registry<PrometheusContentType>
 			| Registry<OpenMetricsContentType>,
+		options?: ClusterOptions,
 	): void;
 }
 
