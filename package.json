@@ -13,7 +13,7 @@
 	},
 	"scripts": {
 		"benchmarks": "node ./benchmarks/index.js",
-		"test": "npm run lint && npm run check-prettier && npm run compile-typescript && npm run test-unit",
+		"test": "npm run lint && npm run check-prettier && npm run compile-typescript && npm run test-unit -- --coverage",
 		"lint": "eslint .",
 		"test-unit": "jest",
 		"run-prettier": "prettier . .eslintrc",
