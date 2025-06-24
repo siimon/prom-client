@@ -17,6 +17,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 - Improve types for no labels
 - Faster stats gathering with lower memory overhead
+- Simplified number format logic
 
 ### Added
 
