@@ -12,7 +12,7 @@ describe('utils', () => {
 		it('should throw on missing argument', async () => {
 			expect(() => {
 				getLabels(['label1', 'label2'], ['arg1']);
-			}).toThrowError(
+			}).toThrow(
 				'Invalid number of arguments (1): "arg1" for label names (2): "label1, label2".',
 			);
 		});
