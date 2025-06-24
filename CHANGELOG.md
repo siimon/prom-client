@@ -126,7 +126,6 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 - The `processResources` metric was added, which keeps a track of all sorts of
   active resources. It consists of the following gauges:
-
   - `nodejs_active_resources` - Number of active resources that are currently
     keeping the event loop alive, grouped by async resource type.
   - `nodejs_active_resources_total` - Total number of active resources.
