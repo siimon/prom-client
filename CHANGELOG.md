@@ -11,6 +11,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Improve types for no lables
+
 ### Added
 
 [unreleased]: https://github.com/siimon/prom-client/compare/v15.1.3...HEAD
