@@ -10,13 +10,13 @@ describe('Register', () => {
 	it('should throw if set to an unsupported type', () => {
 		expect(() => {
 			register.setContentType(contentTypeTestStr);
-		}).toThrowError(expectedContentTypeErrStr);
+		}).toThrow(expectedContentTypeErrStr);
 	});
 
 	it('should throw if created with an unsupported type', () => {
 		expect(() => {
 			new Registry(contentTypeTestStr);
-		}).toThrowError(expectedContentTypeErrStr);
+		}).toThrow(expectedContentTypeErrStr);
 	});
 
 	describe.each([
@@ -71,7 +71,7 @@ describe('Register', () => {
 
 			expect(() => {
 				register.registerMetric(getMetric());
-			}).toThrowError(
+			}).toThrow(
 				'A metric with the name test_metric has already been registered.',
 			);
 		});
@@ -725,7 +725,7 @@ describe('Register', () => {
 					Registry.merge([registryOne, registryTwo]);
 				};
 
-				expect(fn).toThrowError(Error);
+				expect(fn).toThrow(Error);
 			});
 
 			it('should throw if merging different types of registers', () => {
@@ -736,7 +736,7 @@ describe('Register', () => {
 					Registry.merge([registryOne, registryTwo]);
 				};
 
-				expect(fn).toThrowError(
+				expect(fn).toThrow(
 					'Registers can only be merged if they have the same content type',
 				);
 			});

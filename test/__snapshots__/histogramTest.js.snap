@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`histogram with OpenMetrics registry with object as params with global registry labels should not allow different number of labels 1`] = `"Invalid number of arguments (2): "get, 500" for label names (1): "method"."`;
 

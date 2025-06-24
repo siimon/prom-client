@@ -44,7 +44,7 @@
 		"express": "^5.1.0",
 		"globals": "^16.2.0",
 		"husky": "^9.0.0",
-		"jest": "^29.3.1",
+		"jest": "^30.0.2",
 		"lint-staged": "^13.1.0",
 		"nock": "^13.0.5",
 		"prettier": "3.6.0",
@@ -57,7 +57,6 @@
 	},
 	"types": "./index.d.ts",
 	"jest": {
-		"testEnvironment": "node",
 		"testRegex": ".*Test\\.js$"
 	},
 	"lint-staged": {
