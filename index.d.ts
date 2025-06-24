@@ -171,7 +171,7 @@ export class AggregatorRegistry<
 	): void;
 }
 
-type NoLabelNameType = never
+type NoLabelNameType = never;
 
 /**
  * General metric type
@@ -219,8 +219,8 @@ type MetricValueWithName<T extends string> = MetricValue<T> & {
 };
 
 type LabelValues<T extends string> = T extends NoLabelNameType
-  ? Partial<Record<string, never>>
-  : Partial<Record<T, string | number>>
+	? Partial<Record<string, never>>
+	: Partial<Record<T, string | number>>;
 
 interface MetricConfiguration<T extends string> {
 	name: string;
