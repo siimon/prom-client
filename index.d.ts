@@ -136,7 +136,7 @@ export class AggregatorRegistry<
 > extends Registry<T> {
 	/**
 	 * Gets aggregated metrics for all workers.
-	 * @return {Promise<string>} Promise that resolves with the aggregated
+	 * @returns {Promise<string>} Promise that resolves with the aggregated
 	 * metrics.
 	 */
 	clusterMetrics(): Promise<string>;
@@ -148,7 +148,7 @@ export class AggregatorRegistry<
 	 * `aggregator` is undefined.
 	 * @param {Array} metricsArr Array of metrics, each of which created by
 	 *   `registry.getMetricsAsJSON()`.
-	 * @return {Registry} aggregated registry.
+	 * @returns {Registry} aggregated registry.
 	 */
 	static aggregate<T extends RegistryContentType>(
 		metricsArr: Array<object>,
@@ -159,7 +159,7 @@ export class AggregatorRegistry<
 	 * use a registry/registries other than the default global registry.
 	 * @param {Array<Registry>|Registry} regs Registry or registries to be
 	 *   aggregated.
-	 * @return {void}
+	 * @returns {void}
 	 */
 	static setRegistries(
 		regs:
@@ -288,14 +288,14 @@ export class Counter<T extends string = NoLabelNameType> {
 	/**
 	 * Return the child for given labels
 	 * @param values Label values
-	 * @return Configured counter with given labels
+	 * @returns Configured counter with given labels
 	 */
 	labels(...values: string[]): Counter.Internal;
 
 	/**
 	 * Return the child for given labels
 	 * @param labels Object with label keys and values
-	 * @return Configured counter with given labels
+	 * @returns Configured counter with given labels
 	 */
 	labels(labels: LabelValues<T>): Counter.Internal;
 
@@ -395,7 +395,7 @@ export class Gauge<T extends string = NoLabelNameType> {
 	 * Start a timer. Calling the returned function will set the gauge's value
 	 * to the observed duration in seconds.
 	 * @param labels Object with label keys and values
-	 * @return Function to invoke when timer should be stopped. The value it
+	 * @returns Function to invoke when timer should be stopped. The value it
 	 * returns is the timed duration.
 	 */
 	startTimer(labels?: LabelValues<T>): (labels?: LabelValues<T>) => number;
@@ -403,14 +403,14 @@ export class Gauge<T extends string = NoLabelNameType> {
 	/**
 	 * Return the child for given labels
 	 * @param values Label values
-	 * @return Configured gauge with given labels
+	 * @returns Configured gauge with given labels
 	 */
 	labels(...values: string[]): Gauge.Internal<T>;
 
 	/**
 	 * Return the child for given labels
 	 * @param labels Object with label keys and values
-	 * @return Configured counter with given labels
+	 * @returns Configured counter with given labels
 	 */
 	labels(labels: LabelValues<T>): Gauge.Internal<T>;
 
@@ -460,7 +460,7 @@ export namespace Gauge {
 		/**
 		 * Start a timer. Calling the returned function will set the gauge's value
 		 * to the observed duration in seconds.
-		 * @return Function to invoke when timer should be stopped. The value it
+		 * @returns Function to invoke when timer should be stopped. The value it
 		 * returns is the timed duration.
 		 */
 		startTimer(): (labels?: LabelValues<T>) => number;
@@ -509,7 +509,7 @@ export class Histogram<T extends string = NoLabelNameType> {
 	 * Start a timer. Calling the returned function will observe the duration in
 	 * seconds in the histogram.
 	 * @param labels Object with label keys and values
-	 * @return Function to invoke when timer should be stopped. The value it
+	 * @returns Function to invoke when timer should be stopped. The value it
 	 * returns is the timed duration.
 	 */
 	startTimer(labels?: LabelValues<T>): (labels?: LabelValues<T>) => number;
@@ -519,7 +519,7 @@ export class Histogram<T extends string = NoLabelNameType> {
 	 * seconds in the histogram.
 	 * @param labels Object with label keys and values
 	 * @param exemplarLabels Object with label keys and values for exemplars
-	 * @return Function to invoke when timer should be stopped. The value it
+	 * @returns Function to invoke when timer should be stopped. The value it
 	 * returns is the timed duration.
 	 */
 	startTimer(
@@ -540,14 +540,14 @@ export class Histogram<T extends string = NoLabelNameType> {
 	/**
 	 * Return the child for given labels
 	 * @param values Label values
-	 * @return Configured histogram with given labels
+	 * @returns Configured histogram with given labels
 	 */
 	labels(...values: string[]): Histogram.Internal<T>;
 
 	/**
 	 * Return the child for given labels
 	 * @param labels Object with label keys and values
-	 * @return Configured counter with given labels
+	 * @returns Configured counter with given labels
 	 */
 	labels(labels: LabelValues<T>): Histogram.Internal<T>;
 
@@ -575,8 +575,7 @@ export namespace Histogram {
 		/**
 		 * Start a timer. Calling the returned function will observe the
 		 * duration in seconds in the histogram.
-		 * @param labels Object with label keys and values
-		 * @return Function to invoke when timer should be stopped. The value it
+		 * @returns Function to invoke when timer should be stopped. The value it
 		 * returns is the timed duration.
 		 */
 		startTimer(): (labels?: LabelValues<T>) => void;
@@ -630,7 +629,7 @@ export class Summary<T extends string = NoLabelNameType> {
 	 * Start a timer. Calling the returned function will observe the duration in
 	 * seconds in the summary.
 	 * @param labels Object with label keys and values
-	 * @return Function to invoke when timer should be stopped
+	 * @returns Function to invoke when timer should be stopped
 	 */
 	startTimer(labels?: LabelValues<T>): (labels?: LabelValues<T>) => number;
 
@@ -642,14 +641,14 @@ export class Summary<T extends string = NoLabelNameType> {
 	/**
 	 * Return the child for given labels
 	 * @param values Label values
-	 * @return Configured summary with given labels
+	 * @returns Configured summary with given labels
 	 */
 	labels(...values: string[]): Summary.Internal<T>;
 
 	/**
 	 * Return the child for given labels
 	 * @param labels Object with label keys and values
-	 * @return Configured counter with given labels
+	 * @returns Configured counter with given labels
 	 */
 	labels(labels: LabelValues<T>): Summary.Internal<T>;
 
@@ -677,8 +676,7 @@ export namespace Summary {
 		/**
 		 * Start a timer. Calling the returned function will observe the
 		 * duration in seconds in the summary.
-		 * @param labels Object with label keys and values
-		 * @return Function to invoke when timer should be stopped. The value it
+		 * @returns Function to invoke when timer should be stopped. The value it
 		 * returns is the timed duration.
 		 */
 		startTimer(): (labels?: LabelValues<T>) => number;
@@ -744,11 +742,11 @@ export namespace Pushgateway {
 }
 
 /**
- * Create an array with equal spacing between the elements
+ * Create an array with equal spacing between the elements.
  * @param start The first value in the array
  * @param width The spacing between the elements
  * @param count The number of items in array
- * @return An array with the requested number of elements
+ * @returns An array with the requested number of elements
  */
 export function linearBuckets(
 	start: number,
@@ -757,11 +755,11 @@ export function linearBuckets(
 ): number[];
 
 /**
- * Create an array that grows exponentially
+ * Create an array that grows exponentially.
  * @param start The first value in the array
  * @param factor The exponential factor
  * @param count The number of items in array
- * @return An array with the requested number of elements
+ * @returns An array with the requested number of elements
  */
 export function exponentialBuckets(
 	start: number,
@@ -792,8 +790,8 @@ export const collectDefaultMetrics: {
 };
 
 /**
- * Validate a metric name
+ * Validate a metric name.
  * @param name The name to validate
- * @return True if the metric name is valid, false if not
+ * @returns True if the metric name is valid, false if not
  */
 export function validateMetricName(name: string): boolean;
