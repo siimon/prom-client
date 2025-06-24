@@ -171,10 +171,12 @@ export class AggregatorRegistry<
 	): void;
 }
 
+type NoLabelNameType = never;
+
 /**
  * General metric type
  */
-export type Metric<T extends string = string> =
+export type Metric<T extends string = NoLabelNameType> =
 	| Counter<T>
 	| Gauge<T>
 	| Summary<T>
@@ -216,7 +218,9 @@ type MetricValueWithName<T extends string> = MetricValue<T> & {
 	metricName?: string;
 };
 
-type LabelValues<T extends string> = Partial<Record<T, string | number>>;
+type LabelValues<T extends string> = T extends NoLabelNameType
+	? Partial<Record<string, never>>
+	: Partial<Record<T, string | number>>;
 
 interface MetricConfiguration<T extends string> {
 	name: string;
@@ -251,7 +255,7 @@ export interface ObserveDataWithExemplar<T extends string> {
 /**
  * A counter is a cumulative metric that represents a single numerical value that only ever goes up
  */
-export class Counter<T extends string = string> {
+export class Counter<T extends string = NoLabelNameType> {
 	/**
 	 * @param configuration Configuration when creating a Counter metric. Name and Help is required.
 	 */
@@ -331,7 +335,7 @@ export interface GaugeConfiguration<T extends string>
 /**
  * A gauge is a metric that represents a single numerical value that can arbitrarily go up and down.
  */
-export class Gauge<T extends string = string> {
+export class Gauge<T extends string = NoLabelNameType> {
 	/**
 	 * @param configuration Configuration when creating a Gauge metric. Name and Help is mandatory
 	 */
@@ -472,7 +476,7 @@ export interface HistogramConfiguration<T extends string>
 /**
  * A histogram samples observations (usually things like request durations or response sizes) and counts them in configurable buckets
  */
-export class Histogram<T extends string = string> {
+export class Histogram<T extends string = NoLabelNameType> {
 	/**
 	 * @param configuration Configuration when creating the Histogram. Name and Help is mandatory
 	 */
@@ -599,7 +603,7 @@ export interface SummaryConfiguration<T extends string>
 /**
  * A summary samples observations
  */
-export class Summary<T extends string = string> {
+export class Summary<T extends string = NoLabelNameType> {
 	/**
 	 * @param configuration Configuration when creating Summary metric. Name and Help is mandatory
 	 */
