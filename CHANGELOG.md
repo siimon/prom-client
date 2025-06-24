@@ -10,14 +10,15 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ### Breaking
 
 - Drop support for Node.js versions 16, 18, 21 and 23
+- Metric internal storage ('hashMap') changed to Map from Object. If you have
+  subclassed the built-in metric types you may need to adjust your code.
 
 ### Changed
 
-- Improve types for no lables
+- Improve types for no labels
+- Faster stats gathering with lower memory overhead
 
 ### Added
-
-[unreleased]: https://github.com/siimon/prom-client/compare/v15.1.3...HEAD
 
 ## [15.1.3] - 2024-06-27
 
