@@ -35,7 +35,7 @@
 	"homepage": "https://github.com/siimon/prom-client",
 	"devDependencies": {
 		"@clevernature/benchmark-regression": "^1.0.0",
-		"@typescript-eslint/eslint-plugin": "^6.21.0",
+		"@typescript-eslint/eslint-plugin": "^8.35.0",
 		"@typescript-eslint/parser": "^6.21.0",
 		"eslint": "^8.32.0",
 		"eslint-config-prettier": "^10.1.5",
