@@ -9,6 +9,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Breaking
 
+- Drop support for Node.js versions 16, 18, 21 and 23
+
 ### Changed
 
 - Improve types for no lables
