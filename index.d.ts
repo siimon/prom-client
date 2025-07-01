@@ -142,6 +142,20 @@ export class AggregatorRegistry<
 	clusterMetrics(): Promise<string>;
 
 	/**
+	 * Gets aggregated metrics for all workers as objects
+	 * @return {Promise<metric[]>} Promise that resolves with the aggregated
+	 * metrics.
+	 */
+	getClusterMetricsAsJSON(): Promise<metric[]>;
+
+	/**
+	 * Gets aggregated metrics for all workers as objects
+	 * @return {Promise<metric[]>} Promise that resolves with the aggregated
+	 * metrics.
+	 */
+	getClusterMetricsAsArray(): Promise<metric[]>;
+
+	/**
 	 * Creates a new Registry instance from an array of metrics that were
 	 * created by `registry.getMetricsAsJSON()`. Metrics are aggregated using
 	 * the method specified by their `aggregator` property, or by summation if
