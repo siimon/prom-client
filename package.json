@@ -12,8 +12,8 @@
 		"node": "^20 || ^22 || >=24"
 	},
 	"scripts": {
-		"benchmarks": "node ./benchmarks/index.js",
-		"test": "npm run lint && npm run check-prettier && npm run compile-typescript && npm run test-unit",
+		"benchmarks": "node --max-old-space-size=8192 ./benchmarks/index.js",
+		"test": "npm run lint && npm run check-prettier && npm run compile-typescript && npm run test-unit -- --coverage",
 		"lint": "eslint .",
 		"test-unit": "jest",
 		"run-prettier": "prettier .",
