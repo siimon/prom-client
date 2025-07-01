@@ -1,7 +1,6 @@
 'use strict';
 
 const express = require('express');
-const cluster = require('cluster');
 const server = express();
 const register = require('../').register;
 
@@ -67,13 +66,6 @@ setInterval(() => {
 	g.set(Math.random());
 	g.labels('post', '300').inc();
 }, 100);
-
-if (cluster.isWorker) {
-	// Expose some worker-specific metric as an example
-	setInterval(() => {
-		c.inc({ code: `worker_${cluster.worker.id}` });
-	}, 2000);
-}
 
 const t = [];
 setInterval(() => {
