@@ -49,6 +49,7 @@ benchmarks.suite('gauge', require('./gauge'));
 benchmarks.suite('histogram', require('./histogram'));
 benchmarks.suite('registry', require('./registry'));
 benchmarks.suite('summary', require('./summary'));
+benchmarks.suite('cluster', require('./cluster'));
 
 benchmarks
 	.run()
