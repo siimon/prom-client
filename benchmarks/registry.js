@@ -25,12 +25,18 @@ function setupRegistrySuite(suite) {
 		suite.add(`metrics#${name}`, (client, registry) => registry.metrics(), {
 			setup: setup(counts),
 		});
+		suite.add(
+			`metrics#${name} and openMetrics`,
+			(client, registry) => registry.metrics(),
+			{ setup: setup(counts, true) },
+		);
 	});
 }
 
-function setup(labelCounts) {
+function setup(labelCounts, open) {
 	return client => {
-		const registry = new client.Registry();
+		const contentType = open && client.Registry.OPENMETRICS_CONTENT_TYPE;
+		const registry = new client.Registry(contentType);
 
 		const histogram = new client.Histogram({
 			name: 'histogram',
@@ -39,9 +45,17 @@ function setup(labelCounts) {
 			registers: [registry],
 		});
 
+		const counter = new client.Counter({
+			name: 'counter',
+			help: 'counter',
+			labelNames: getLabelNames(labelCounts.length),
+			registers: [registry],
+		});
+
 		const labelCombinations = getLabelCombinations(labelCounts);
 
 		labelCombinations.forEach(labels => histogram.observe(labels, 1));
+		labelCombinations.forEach(labels => counter.inc(labels, 1));
 
 		return registry;
 	};

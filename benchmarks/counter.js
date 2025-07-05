@@ -15,10 +15,10 @@ function setupCounterSuite(suite) {
 
 	suite.add(
 		'inc with labels',
-		labelCombinationFactory([8, 8], (client, { Counter }, labels) =>
+		labelCombinationFactory([8, 8, 3], (client, { Counter }, labels) =>
 			Counter.inc(labels, 1),
 		),
-		{ teardown, setup: setup(2) },
+		{ teardown, setup: setup(3) },
 	);
 }
 

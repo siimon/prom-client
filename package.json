@@ -36,6 +36,8 @@
 	"devDependencies": {
 		"@clevernature/benchmark-regression": "^1.0.0",
 		"@eslint/js": "^9.29.0",
+		"benchmark": "^2.1",
+		"debug": "^4.4.1",
 		"eslint": "^9.29.0",
 		"eslint-config-prettier": "^10.1.5",
 		"eslint-plugin-jsdoc": "^51.2.3",

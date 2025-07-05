@@ -18,8 +18,13 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - Improve types for no labels
 - Faster stats gathering with lower memory overhead
 - Simplified number format logic
+- Sped up Map accesses
+- Optimize hashObject to assume labels
+- Remove truthy conditionals in hot code paths
 
 ### Added
+
+- Expanded benchmarking code
 
 ## [15.1.3] - 2024-06-27
 
