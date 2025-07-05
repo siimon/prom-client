@@ -254,4 +254,21 @@ describe.each([
 			});
 		});
 	});
+
+	describe('message handling', () => {
+		it('does not error out on unexpected (or late) responses', () => {
+			jest.resetModules();
+
+			require('../lib/cluster');
+
+			//Emulate a response that has been deleted from requests
+			const unexpected = {
+				type: 'prom-client:getMetricsRes',
+				metrics: ['{}'],
+				requestId: -3,
+			};
+
+			expect(() => cluster.emit('message', {}, unexpected)).not.toThrow();
+		});
+	});
 });
