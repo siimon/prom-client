@@ -20,6 +20,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - Simplified number format logic
 - Simplified Histogram.observe() call stack
 - Fix memory leak in cluster.js by deleting all expired requests
+- Sped up Map accesses
 
 ### Added
 
