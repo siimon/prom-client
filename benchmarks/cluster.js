@@ -14,7 +14,7 @@ function setupClusterSuite(suite) {
 
 async function setup(client) {
 	const { Counter, Histogram, Registry } = client;
-	const registers = [new Registry(), new Registry()];
+	const registers = new Array(8).fill(0).map(() => new Registry());
 
 	const labelNames =
 		'single letter labels make poor approximations of real label interpolation behavior for real metrics'.split(
@@ -45,5 +45,11 @@ async function setup(client) {
 		histogram.observe(labels, 1);
 	}
 
-	return Promise.all(registers.map(registry => registry.getMetricsAsJSON()));
+	const results = [];
+
+	for (const registry of registers) {
+		results.push(await registry.getMetricsAsJSON());
+	}
+
+	return results.concat(results);
 }
