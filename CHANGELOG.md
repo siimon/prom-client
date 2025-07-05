@@ -16,11 +16,12 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 - Improve types for no labels
-- Faster stats gathering with lower memory overhead
+- perf: Faster stats gathering with lower memory overhead
 - Simplified number format logic
 - Simplified Histogram.observe() call stack
 - Fix memory leak in cluster.js by deleting all expired requests
-- Sped up Map accesses
+- perf: Sped up Map accesses
+- perf: Remove truthy conditionals in hot code paths
 
 ### Added
 
