@@ -19,6 +19,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - Faster stats gathering with lower memory overhead
 - Simplified number format logic
 - Sped up Map accesses
+- Optimize hashObject to assume labels
 
 ### Added
 
