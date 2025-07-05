@@ -23,6 +23,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- Expanded benchmarking code
+
 ## [15.1.3] - 2024-06-27
 
 ### Changed
