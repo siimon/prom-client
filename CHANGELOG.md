@@ -20,6 +20,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - Simplified number format logic
 - Sped up Map accesses
 - Optimize hashObject to assume labels
+- Remove truthy conditionals in hot code paths
 
 ### Added
 
