@@ -22,6 +22,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - Fix memory leak in cluster.js by deleting all expired requests
 - perf: Sped up Map accesses
 - perf: Remove truthy conditionals in hot code paths
+- perf: faster merge of registry defaultLabels during metric processing
 
 ### Added
 
