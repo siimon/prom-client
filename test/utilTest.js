@@ -18,6 +18,152 @@ describe('utils', () => {
 		});
 	});
 
+	describe('LabelMap', () => {
+		const { LabelMap } = require('../lib/util');
+
+		it('can be instantiated', () => {
+			const map = new LabelMap(['d', 'b', 'a']);
+
+			expect(map.size).toEqual(0);
+		});
+
+		describe('keyFrom()', () => {
+			it('handles reordered labels', () => {
+				const map = new LabelMap(['b', 'c', 'a']);
+
+				const result = map.keyFrom({ a: 1, c: 200, b: 'post' });
+
+				expect(result).toEqual('1|post|200');
+			});
+
+			it('allows sparse labels ', () => {
+				const map = new LabelMap(['b', 'c', 'a', 'd']);
+
+				const result = map.keyFrom({ d: 'a|b' });
+
+				expect(result).toEqual('|||a|b');
+			});
+		});
+
+		describe('set()', () => {
+			it('can create new records', () => {
+				const map = new LabelMap(['b', 'c', 'a']);
+
+				map.set({ a: 2 }, 3);
+
+				expect(map.size).toEqual(1);
+				expect(map.get('2||')).toStrictEqual({ value: 3, labels: { a: 2 } });
+			});
+
+			it('can update existing values', () => {
+				const map = new LabelMap(['b', 'c', 'a']);
+
+				// And supports chaining
+				map.set({ a: 2 }, 3).set({ a: 2 }, 4);
+
+				expect(map.size).toEqual(1);
+				expect(map.get('2||')).toStrictEqual({ value: 4, labels: { a: 2 } });
+			});
+
+			it('creates separate records for each label combination', () => {
+				const map = new LabelMap(['b', 'c', 'a']);
+
+				map.set({ a: 2 }, 3).set({ a: 3 }, 3);
+
+				expect(map.size).toEqual(2);
+				expect(map.get('2||')).toStrictEqual({ value: 3, labels: { a: 2 } });
+			});
+		});
+
+		describe('setDetla()', () => {
+			it('can create new records', () => {
+				const map = new LabelMap(['b', 'c', 'a']);
+
+				map.setDelta({ a: 2 }, 3);
+
+				expect(map.size).toEqual(1);
+				expect(map.get('2||')).toStrictEqual({ value: 3, labels: { a: 2 } });
+			});
+
+			it('can update existing values', () => {
+				const map = new LabelMap(['b', 'c', 'a']);
+
+				map.setDelta({ a: 2 }, 3).setDelta({ a: 2 }, 4);
+
+				expect(map.size).toEqual(1);
+				expect(map.get('2||')).toStrictEqual({
+					value: 3 + 4,
+					labels: { a: 2 },
+				});
+			});
+
+			it('creates separate records for each label combination', () => {
+				const map = new LabelMap(['b', 'c', 'a']);
+
+				map.setDelta({ a: 2 }, 3);
+				map.setDelta({ a: 3 }, 3);
+
+				expect(map.size).toEqual(2);
+				expect(map.get('2||')).toStrictEqual({ value: 3, labels: { a: 2 } });
+			});
+		});
+
+		describe('remove()', () => {
+			it('can create new records', () => {
+				const map = new LabelMap(['b', 'c', 'a']);
+
+				map.setDelta({ a: 2 }, 3);
+
+				expect(map.size).toEqual(1);
+				expect(map.get('2||')).toStrictEqual({ value: 3, labels: { a: 2 } });
+			});
+
+			it('can update existing values', () => {
+				const map = new LabelMap(['b', 'c', 'a']);
+
+				map.setDelta({ a: 2 }, 3).setDelta({ a: 2 }, 4);
+
+				expect(map.size).toEqual(1);
+				expect(map.get('2||')).toStrictEqual({
+					value: 3 + 4,
+					labels: { a: 2 },
+				});
+			});
+
+			it('creates separate records for each label combination', () => {
+				const map = new LabelMap(['b', 'c', 'a']);
+
+				map.setDelta({ a: 2 }, 3);
+				map.setDelta({ a: 3 }, 3);
+
+				expect(map.size).toEqual(2);
+				expect(map.get('2||')).toStrictEqual({ value: 3, labels: { a: 2 } });
+			});
+		});
+
+		describe('clear()', () => {
+			it('resets the collection', () => {
+				const map = new LabelMap(['b', 'c', 'a']);
+
+				map.set({ a: 2 }, 3).set({ a: 3 }, 4);
+				map.clear();
+
+				expect(map.size).toEqual(0);
+			});
+
+			it('can still add new records after clear()ing', () => {
+				const map = new LabelMap(['b', 'c', 'a']);
+
+				map.set({ a: 2 }, 3);
+				map.clear();
+				map.set({ a: 3 }, 4);
+
+				expect(map.size).toEqual(1);
+				expect(map.get('3||')).toStrictEqual({ value: 4, labels: { a: 3 } });
+			});
+		});
+	});
+
 	describe('Grouper', () => {
 		const { Grouper } = require('../lib/util');
 
