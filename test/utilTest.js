@@ -141,6 +141,36 @@ describe('utils', () => {
 			});
 		});
 
+		describe('getOrAdd()', () => {
+			it('returns existing values', () => {
+				const map = new LabelMap(['b', 'c', 'a']);
+				const callback = jest.fn();
+
+				map.set({ c: 200 }, [2, 3]);
+
+				const actual = map.getOrAdd({ c: 200 }, callback);
+
+				expect(actual).toStrictEqual([2, 3]);
+				expect(callback).not.toHaveBeenCalled();
+			});
+
+			it('adds on missing record', () => {
+				const map = new LabelMap(['b', 'c', 'a']);
+				const callback = jest.fn(() => 4);
+
+				map.set({ c: 200 }, [2, 3]);
+
+				const actual = map.getOrAdd({ c: 401 }, callback);
+
+				expect(actual).toStrictEqual(4);
+				expect(map.get('||401')).toStrictEqual({
+					labels: { c: 401 },
+					value: 4,
+				});
+				expect(callback).toHaveBeenCalled();
+			});
+		});
+
 		describe('clear()', () => {
 			it('resets the collection', () => {
 				const map = new LabelMap(['b', 'c', 'a']);
