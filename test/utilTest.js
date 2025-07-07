@@ -182,6 +182,22 @@ describe('utils', () => {
 			});
 		});
 
+		describe('validate()', () => {
+			it('should not throw on known label', () => {
+				const map = new LabelMap(['exists']);
+
+				expect(() => map.validate({ exists: null })).not.toThrow();
+			});
+
+			it('should throw on unknown label', () => {
+				const map = new LabelMap(['exists']);
+
+				expect(() => map.validate({ somethingElse: null })).toThrow(
+					'Added label "somethingElse" is not included in initial labelset: [ \'exists\' ]',
+				);
+			});
+		});
+
 		describe('getOrAdd()', () => {
 			it('returns existing values', () => {
 				const map = new LabelMap(['b', 'c', 'a']);
