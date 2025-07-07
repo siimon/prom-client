@@ -52,7 +52,9 @@ describe('utils', () => {
 				map.set({ a: 2 }, 3);
 
 				expect(map.size).toEqual(1);
-				expect(map.get('2||')).toStrictEqual({ value: 3, labels: { a: 2 } });
+				expect(Array.from(map.values())).toStrictEqual([
+					{ value: 3, labels: { a: 2 } },
+				]);
 			});
 
 			it('can update existing values', () => {
@@ -62,27 +64,40 @@ describe('utils', () => {
 				map.set({ a: 2 }, 3).set({ a: 2 }, 4);
 
 				expect(map.size).toEqual(1);
-				expect(map.get('2||')).toStrictEqual({ value: 4, labels: { a: 2 } });
+				expect(Array.from(map.values())).toStrictEqual([
+					{ value: 4, labels: { a: 2 } },
+				]);
 			});
 
 			it('creates separate records for each label combination', () => {
 				const map = new LabelMap(['b', 'c', 'a']);
 
-				map.set({ a: 2 }, 3).set({ a: 3 }, 3);
+				map.set({ a: 2 }, 22).set({ a: 3 }, 3);
 
 				expect(map.size).toEqual(2);
-				expect(map.get('2||')).toStrictEqual({ value: 3, labels: { a: 2 } });
+				expect(Array.from(map.values())).toStrictEqual([
+					{
+						value: 22,
+						labels: { a: 2 },
+					},
+					{
+						value: 3,
+						labels: { a: 3 },
+					},
+				]);
 			});
 		});
 
-		describe('setDetla()', () => {
+		describe('setDelta()', () => {
 			it('can create new records', () => {
 				const map = new LabelMap(['b', 'c', 'a']);
 
 				map.setDelta({ a: 2 }, 3);
 
 				expect(map.size).toEqual(1);
-				expect(map.get('2||')).toStrictEqual({ value: 3, labels: { a: 2 } });
+				expect(Array.from(map.values())).toStrictEqual([
+					{ value: 3, labels: { a: 2 } },
+				]);
 			});
 
 			it('can update existing values', () => {
@@ -91,10 +106,9 @@ describe('utils', () => {
 				map.setDelta({ a: 2 }, 3).setDelta({ a: 2 }, 4);
 
 				expect(map.size).toEqual(1);
-				expect(map.get('2||')).toStrictEqual({
-					value: 3 + 4,
-					labels: { a: 2 },
-				});
+				expect(Array.from(map.values())).toStrictEqual([
+					{ value: 3 + 4, labels: { a: 2 } },
+				]);
 			});
 
 			it('creates separate records for each label combination', () => {
@@ -104,40 +118,48 @@ describe('utils', () => {
 				map.setDelta({ a: 3 }, 3);
 
 				expect(map.size).toEqual(2);
-				expect(map.get('2||')).toStrictEqual({ value: 3, labels: { a: 2 } });
+				expect(Array.from(map.values())).toStrictEqual([
+					{ value: 3, labels: { a: 2 } },
+					{ value: 3, labels: { a: 3 } },
+				]);
+			});
+		});
+
+		describe('get()', () => {
+			it('does not error on missing entry', () => {
+				const map = new LabelMap(['b', 'c', 'a']);
+
+				expect(map.get({ foo: 'bar' })).toBeUndefined();
+			});
+
+			it('returns the entry.value', () => {
+				const map = new LabelMap(['b', 'c', 'a']);
+
+				map.set({ b: 22 }, 10);
+
+				expect(map.get({ b: 22 })).toEqual(10);
 			});
 		});
 
 		describe('remove()', () => {
-			it('can create new records', () => {
+			it('can remove records', () => {
 				const map = new LabelMap(['b', 'c', 'a']);
 
 				map.setDelta({ a: 2 }, 3);
+				map.remove({ a: 2 });
 
-				expect(map.size).toEqual(1);
-				expect(map.get('2||')).toStrictEqual({ value: 3, labels: { a: 2 } });
+				expect(map.size).toEqual(0);
 			});
 
-			it('can update existing values', () => {
-				const map = new LabelMap(['b', 'c', 'a']);
-
-				map.setDelta({ a: 2 }, 3).setDelta({ a: 2 }, 4);
-
-				expect(map.size).toEqual(1);
-				expect(map.get('2||')).toStrictEqual({
-					value: 3 + 4,
-					labels: { a: 2 },
-				});
-			});
-
-			it('creates separate records for each label combination', () => {
+			it('does nothing on a miss', () => {
 				const map = new LabelMap(['b', 'c', 'a']);
 
 				map.setDelta({ a: 2 }, 3);
 				map.setDelta({ a: 3 }, 3);
 
+				map.remove({ a: 5 });
+
 				expect(map.size).toEqual(2);
-				expect(map.get('2||')).toStrictEqual({ value: 3, labels: { a: 2 } });
 			});
 		});
 
@@ -163,10 +185,10 @@ describe('utils', () => {
 				const actual = map.getOrAdd({ c: 401 }, callback);
 
 				expect(actual).toStrictEqual(4);
-				expect(map.get('||401')).toStrictEqual({
-					labels: { c: 401 },
-					value: 4,
-				});
+				expect(Array.from(map.values())).toStrictEqual([
+					{ value: [2, 3], labels: { c: 200 } },
+					{ value: 4, labels: { c: 401 } },
+				]);
 				expect(callback).toHaveBeenCalled();
 			});
 		});
@@ -184,12 +206,14 @@ describe('utils', () => {
 			it('can still add new records after clear()ing', () => {
 				const map = new LabelMap(['b', 'c', 'a']);
 
-				map.set({ a: 2 }, 3);
+				map.set({ a: 3 }, 3);
 				map.clear();
-				map.set({ a: 3 }, 4);
+				map.setDelta({ a: 3 }, 4);
 
 				expect(map.size).toEqual(1);
-				expect(map.get('3||')).toStrictEqual({ value: 4, labels: { a: 3 } });
+				expect(Array.from(map.values())).toStrictEqual([
+					{ value: 4, labels: { a: 3 } },
+				]);
 			});
 		});
 	});
