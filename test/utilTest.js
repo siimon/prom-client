@@ -141,6 +141,25 @@ describe('utils', () => {
 			});
 		});
 
+		describe('entry()', () => {
+			it('does not error on missing entry', () => {
+				const map = new LabelMap(['b', 'c', 'a']);
+
+				expect(map.entry({ foo: 'bar' })).toBeUndefined();
+			});
+
+			it('returns the entry', () => {
+				const map = new LabelMap(['b', 'c', 'a']);
+
+				map.set({ b: 22 }, 10);
+
+				expect(map.entry({ b: 22 })).toStrictEqual({
+					value: 10,
+					labels: { b: 22 },
+				});
+			});
+		});
+
 		describe('remove()', () => {
 			it('can remove records', () => {
 				const map = new LabelMap(['b', 'c', 'a']);
