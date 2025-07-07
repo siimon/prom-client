@@ -4,7 +4,21 @@ const { getLabelNames, labelCombinationFactory } = require('./utils/labels');
 
 module.exports = setupCounterSuite;
 
+let count = 1;
+
 function setupCounterSuite(suite) {
+	suite.add(
+		'new',
+		(client, labelNames) =>
+			new client.Counter({
+				name: `Counter${count++}`,
+				help: 'Counter',
+				labelNames,
+			}),
+		{
+			setup: () => getLabelNames(4),
+		},
+	);
 	suite.add(
 		'inc',
 		labelCombinationFactory([], (client, { Counter }, labels) =>

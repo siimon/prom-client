@@ -6,6 +6,7 @@ module.exports = setupRegistrySuite;
 
 function setupRegistrySuite(suite) {
 	const labelSetups = [
+		{ name: 'no labels', counts: [] },
 		{ name: '1 x 64', counts: [64] },
 		{ name: '2 x 4', counts: [4, 4] },
 		{ name: '2 x 8', counts: [8, 8] },
@@ -16,14 +17,14 @@ function setupRegistrySuite(suite) {
 
 	labelSetups.forEach(({ name, counts, defaults }) => {
 		suite.add(
-			`getMetricsAsJSON#${name}`,
+			`getMetricsAsJSON() ${name}`,
 			(client, registry) => registry.getMetricsAsJSON(),
 			{ setup: setup(counts, defaults, false) },
 		);
 	});
 
 	labelSetups.forEach(({ name, counts, defaults }) => {
-		suite.add(`metrics#${name}`, (client, registry) => registry.metrics(), {
+		suite.add(`metrics() ${name}`, (client, registry) => registry.metrics(), {
 			setup: setup(counts, defaults, false),
 		});
 		suite.add(
@@ -62,8 +63,8 @@ function setup(labelCounts, defaultLabels, open) {
 
 		const labelCombinations = getLabelCombinations(labelCounts);
 
-		labelCombinations.forEach(labels => histogram.observe(labels, 1));
-		labelCombinations.forEach(labels => counter.inc(labels, 1));
+		labelCombinations.forEach(labels => histogram.observe({ ...labels }, 1));
+		labelCombinations.forEach(labels => counter.inc({ ...labels }, 1));
 
 		return registry;
 	};
