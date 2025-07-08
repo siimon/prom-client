@@ -19,6 +19,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - Faster stats gathering with lower memory overhead
 - Simplified number format logic
 - Simplified Histogram.observe() call stack
+- Fix memory leak in cluster.js by deleting all expired requests
 
 ### Added
 
