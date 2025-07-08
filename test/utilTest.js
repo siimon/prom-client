@@ -251,6 +251,34 @@ describe('utils', () => {
 				]);
 			});
 		});
+
+		describe('merge()', () => {
+			it('creates an entry if missing', () => {
+				const map = new LabelMap(['method', 'region', 'version']);
+
+				const result = map.merge(
+					{ method: 'head' },
+					{ a: 'foo', labels: { b: 2 } },
+				);
+				expect(result).toBeDefined();
+
+				expect(map.entry({ method: 'head' })).toBe(result);
+			});
+
+			it('merges in values', () => {
+				const map = new LabelMap(['method', 'region', 'version']);
+
+				const result = map.merge(
+					{ method: 'head' },
+					{ a: 'foo', labels: { b: 2 } },
+				);
+
+				expect(result).toStrictEqual({
+					labels: { method: 'head' },
+					a: 'foo',
+				});
+			});
+		});
 	});
 
 	describe('Grouper', () => {

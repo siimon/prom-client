@@ -8,18 +8,6 @@ let count = 1;
 
 function setupCounterSuite(suite) {
 	suite.add(
-		'new',
-		(client, labelNames) =>
-			new client.Counter({
-				name: `Counter${count++}`,
-				help: 'Counter',
-				labelNames,
-			}),
-		{
-			setup: () => getLabelNames(4),
-		},
-	);
-	suite.add(
 		'inc',
 		labelCombinationFactory([], (client, { Counter }, labels) =>
 			Counter.inc(labels, 1),
@@ -33,6 +21,19 @@ function setupCounterSuite(suite) {
 			Counter.inc(labels, 1),
 		),
 		{ teardown, setup: setup(3) },
+	);
+
+	suite.add(
+		'new',
+		(client, labelNames) =>
+			new client.Counter({
+				name: `Counter${count++}`,
+				help: 'Counter',
+				labelNames,
+			}),
+		{
+			setup: () => getLabelNames(4),
+		},
 	);
 }
 
