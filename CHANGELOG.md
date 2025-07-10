@@ -25,6 +25,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - Show the invalid name in the validation errors
 - perf: Improve performance of registry defaultLabels during metric processing
 - perf: New, more space-efficient storage engine, 20-45% faster stats recording
+- perf: Further improvement to key generation cost
 
 ### Added
 

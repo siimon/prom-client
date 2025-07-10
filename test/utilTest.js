@@ -33,7 +33,7 @@ describe('utils', () => {
 
 				const result = map.keyFrom({ a: 1, c: 200, b: 'post' });
 
-				expect(result).toEqual('1|post|200');
+				expect(result).toEqual('1|post|200|');
 			});
 
 			it('allows sparse labels ', () => {
@@ -41,7 +41,7 @@ describe('utils', () => {
 
 				const result = map.keyFrom({ d: 'a|b' });
 
-				expect(result).toEqual('|||a|b');
+				expect(result).toEqual('|||a|b|');
 			});
 		});
 
