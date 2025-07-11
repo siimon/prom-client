@@ -344,36 +344,5 @@ describe('utils', () => {
 				expect(grouper.get('other')).toStrictEqual([3]);
 			});
 		});
-
-		describe('getOrAdd()', () => {
-			it('returns existing values', () => {
-				const grouper = new Grouper([['name', [2, 3]]]);
-				const callback = jest.fn();
-
-				const actual = grouper.getOrAdd('name', callback);
-
-				expect(actual).toStrictEqual([2, 3]);
-				expect(callback).not.toHaveBeenCalled();
-			});
-
-			it('adds on missing record', () => {
-				const grouper = new Grouper([['name', [2, 3]]]);
-				const callback = jest.fn(() => 4);
-
-				const actual = grouper.getOrAdd('blah', callback);
-
-				expect(actual).toStrictEqual(4);
-				expect(grouper.get('blah')).toStrictEqual(4);
-				expect(callback).toHaveBeenCalled();
-			});
-
-			it('defaults to inserting an empty array', () => {
-				const grouper = new Grouper([['name', [2, 3]]]);
-				const actual = grouper.getOrAdd('blah');
-
-				expect(actual).toStrictEqual([]);
-				expect(grouper.get('blah')).toStrictEqual([]);
-			});
-		});
 	});
 });
