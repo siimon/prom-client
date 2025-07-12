@@ -7,8 +7,8 @@ const AggregatorRegistry = require('../').AggregatorRegistry;
 const aggregatorRegistry = new AggregatorRegistry();
 
 if (cluster.isPrimary) {
-	for (let i = 0; i < 4; i++) {
-		cluster.fork();
+	for (let i = 1; i <= 4; i++) {
+		cluster.fork({ ...process.env, PORT: 3000 + i });
 	}
 
 	metricsServer.get('/cluster_metrics', async (req, res) => {
@@ -22,9 +22,9 @@ if (cluster.isPrimary) {
 		}
 	});
 
-	metricsServer.listen(3001);
+	metricsServer.listen(3000);
 	console.log(
-		'Cluster metrics server listening to 3001, metrics exposed on /cluster_metrics',
+		'Cluster metrics server listening to 3000, metrics exposed on /cluster_metrics',
 	);
 } else {
 	require('./server.js');
