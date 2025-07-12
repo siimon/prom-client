@@ -3,8 +3,8 @@
 const cluster = require('cluster');
 const express = require('express');
 const metricsServer = express();
-const AggregatorRegistry = require('../').AggregatorRegistry;
-const aggregatorRegistry = new AggregatorRegistry();
+const { ClusterRegistry } = require('../');
+const clusterRegistry = new ClusterRegistry();
 
 if (cluster.isPrimary) {
 	for (let i = 1; i <= 4; i++) {
@@ -13,8 +13,8 @@ if (cluster.isPrimary) {
 
 	metricsServer.get('/cluster_metrics', async (req, res) => {
 		try {
-			const metrics = await aggregatorRegistry.clusterMetrics();
-			res.set('Content-Type', aggregatorRegistry.contentType);
+			const metrics = await clusterRegistry.clusterMetrics();
+			res.set('Content-Type', clusterRegistry.contentType);
 			res.send(metrics);
 		} catch (ex) {
 			res.statusCode = 500;

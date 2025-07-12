@@ -99,6 +99,19 @@ export class Registry<
 	static merge(registers: Registry[]): Registry;
 
 	/**
+	 * Creates a new Registry instance from an array of metrics that were
+	 * created by `registry.getMetricsAsJSON()`. Metrics are aggregated using
+	 * the method specified by their `aggregator` property, or by summation if
+	 * `aggregator` is undefined.
+	 * @param {Array} metricsArr Array of metrics, each of which created by
+	 *   `registry.getMetricsAsJSON()`.
+	 * @returns {Registry} aggregated registry.
+	 */
+	static aggregate<T extends RegistryContentType>(
+		metricsArr: Array<object>,
+	): Registry<T>; // TODO Promise?
+
+	/**
 	 * HTTP Prometheus Content-Type for metrics response headers.
 	 */
 	static PROMETHEUS_CONTENT_TYPE: PrometheusContentType;
@@ -131,7 +144,7 @@ export const prometheusContentType: PrometheusContentType;
  */
 export const openMetricsContentType: OpenMetricsContentType;
 
-export class AggregatorRegistry<
+export class ClusterRegistry<
 	T extends RegistryContentType,
 > extends Registry<T> {
 	/**
@@ -142,17 +155,60 @@ export class AggregatorRegistry<
 	clusterMetrics(): Promise<string>;
 
 	/**
-	 * Creates a new Registry instance from an array of metrics that were
-	 * created by `registry.getMetricsAsJSON()`. Metrics are aggregated using
-	 * the method specified by their `aggregator` property, or by summation if
-	 * `aggregator` is undefined.
-	 * @param {Array} metricsArr Array of metrics, each of which created by
-	 *   `registry.getMetricsAsJSON()`.
-	 * @returns {Registry} aggregated registry.
+	 * Sets the registry or registries to be aggregated. Call from workers to
+	 * use a registry/registries other than the default global registry.
+	 * @param {Array<Registry>|Registry} regs Registry or registries to be
+	 *   aggregated.
+	 * @returns {void}
 	 */
-	static aggregate<T extends RegistryContentType>(
-		metricsArr: Array<object>,
-	): Registry<T>; // TODO Promise?
+	static setRegistries(
+		regs:
+			| Array<
+					Registry<PrometheusContentType> | Registry<OpenMetricsContentType>
+			  >
+			| Registry<PrometheusContentType>
+			| Registry<OpenMetricsContentType>,
+	): void;
+}
+
+export class WorkerRegistry<T extends RegistryContentType> extends Registry<T> {
+	/**
+	 * Gets aggregated metrics for all workers.
+	 * @returns {Promise<string>} Promise that resolves with the aggregated
+	 * metrics.
+	 */
+	workerMetrics(): Promise<string>;
+
+	addWorker(worker: Worker): void;
+	/**
+	 * Sets the registry or registries to be aggregated. Call from workers to
+	 * use a registry/registries other than the default global registry.
+	 * @param {Array<Registry>|Registry} regs Registry or registries to be
+	 *   aggregated.
+	 * @returns {void}
+	 */
+	static setRegistries(
+		regs:
+			| Array<
+					Registry<PrometheusContentType> | Registry<OpenMetricsContentType>
+			  >
+			| Registry<PrometheusContentType>
+			| Registry<OpenMetricsContentType>,
+	): void;
+}
+
+/**
+ * @deprecated
+ */
+export class AggregatorRegistry<
+	T extends RegistryContentType,
+> extends Registry<T> {
+	/**
+	 * Gets aggregated metrics for all workers.
+	 * @returns {Promise<string>} Promise that resolves with the aggregated
+	 * metrics.
+	 */
+	clusterMetrics(): Promise<string>;
 
 	/**
 	 * Sets the registry or registries to be aggregated. Call from workers to

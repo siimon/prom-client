@@ -2,6 +2,7 @@
 
 const express = require('express');
 const cluster = require('cluster');
+const { isMainThread, threadId } = require('node:worker_threads');
 const server = express();
 const register = require('../').register;
 
@@ -72,6 +73,11 @@ if (cluster.isWorker) {
 	// Expose some worker-specific metric as an example
 	setInterval(() => {
 		c.inc({ code: `worker_${cluster.worker.id}` });
+	}, 2000);
+} else if (!isMainThread) {
+	// Expose some worker-specific metric as an example
+	setInterval(() => {
+		c.inc({ code: `worker_${threadId}` });
 	}, 2000);
 }
 
