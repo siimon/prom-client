@@ -1,6 +1,34 @@
 'use strict';
 
 describe('utils', () => {
+	describe('isObject', () => {
+		const isObject = require('../lib/util').isObject;
+
+		it('should not throw on missing argument', () => {
+			isObject();
+		});
+
+		it('should return true for empty object', () => {
+			expect(isObject({})).toBe(true);
+		});
+	});
+
+	describe('isEmpty', () => {
+		const isEmpty = require('../lib/util').isEmpty;
+
+		it('should not throw on missing argument', () => {
+			isEmpty();
+		});
+
+		it('should return true for empty object', async () => {
+			expect(isEmpty({})).toBe(true);
+		});
+
+		it('should return false for an object with keys', async () => {
+			expect(isEmpty({ foo: undefined })).toBe(false);
+		});
+	});
+
 	describe('getLabels', () => {
 		const getLabels = require('../lib/util').getLabels;
 
