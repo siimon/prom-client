@@ -22,10 +22,11 @@ if (cluster.isPrimary) {
 		}
 	});
 
-	metricsServer.listen(3000);
-	console.log(
-		'Cluster metrics server listening to 3000, metrics exposed on /cluster_metrics',
-	);
+	metricsServer.listen(3000, () => {
+		console.log(
+			'Cluster metrics server listening to 3000, metrics exposed on /cluster_metrics',
+		);
+	});
 } else {
 	require('./server.js');
 }

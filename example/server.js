@@ -114,7 +114,8 @@ server.get('/metrics/counter', async (req, res) => {
 });
 
 const port = process.env.PORT || 3000;
-console.log(
-	`Server listening to ${port}, metrics exposed on /metrics endpoint`,
-);
-server.listen(port);
+server.listen(port, () => {
+	console.log(
+		`Server listening to ${port}, metrics exposed on /metrics endpoint`,
+	);
+});
