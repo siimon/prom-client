@@ -22,6 +22,11 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - Fix memory leak in cluster.js by deleting all expired requests
 - perf: Sped up Map accesses
 - perf: Remove truthy conditionals in hot code paths
+- Show the invalid name in the output error in the abstract class `Metric`.
+- Show the invalid label names instead of a generic message in the abstract class `Metric`.
+- Return an array of the invalid label names in the function `validateLabelName` instead of a boolean. It was achieved changing the implementation from the array function `every` to `forEach` and negating the test regex in favor to return the rejected ones.
+- Change the conditional`if` to throw an error in case the label names are invalid using the array returned from the function `validateLabelName`.
+- Unit test added in the gauge test case. It could be performed in any other metric that inherits from the abstract class `Metric`.
 
 ### Added
 
@@ -47,12 +52,6 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ## [15.1.1] - 2024-03-26
 
 ### Changed
-
-- Show the invalid name in the output error in the abstract class `Metric`.
-- Show the invalid label names instead of a generic message in the abstract class `Metric`.
-- Return an array of the invalid label names in the function `validateLabelName` instead of a boolean. It was achieved changing the implementation from the array function `every` to `forEach` and negating the test regex in favor to return the rejected ones.
-- Change the conditional`if` to throw an error in case the label names are invalid using the array returned from the function `validateLabelName`.
-- Unit test added in the gauge test case. It could be performed in any other metric that inherits from the abstract class `Metric`.
 - Improve the memory usage of histograms when the `enableExemplars` option is disabled
 - fix: Avoid updating exemplar values during subsequent metric changes (Fixes [#616](https://github.com/siimon/prom-client/issues/616))
 
