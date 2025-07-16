@@ -273,6 +273,7 @@ describe.each([
 	});
 
 	async function expectValue(val) {
-		expect((await instance.get()).values[0].value).toEqual(val);
+		const result = await instance.get();
+		expect(result.values[0].value).toEqual(val);
 	}
 });
