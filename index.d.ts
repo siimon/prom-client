@@ -21,7 +21,9 @@ export type RegistryContentType =
 /**
  * Container for all registered metrics
  */
-export class Registry<RegistryContentType = PrometheusContentType> {
+export class Registry<
+	BoundRegistryContentType extends RegistryContentType = PrometheusContentType,
+> {
 	/**
 	 * Get string representation for all metrics
 	 */
@@ -70,7 +72,7 @@ export class Registry<RegistryContentType = PrometheusContentType> {
 	 * @param labels of name/value pairs:
 	 * { defaultLabel: "value", anotherLabel: "value 2" }
 	 */
-	setDefaultLabels(labels: Object): void;
+	setDefaultLabels(labels: object): void;
 
 	/**
 	 * Get a string representation of a single metric by name
@@ -81,20 +83,30 @@ export class Registry<RegistryContentType = PrometheusContentType> {
 	/**
 	 * Gets the Content-Type of the metrics for use in the response headers.
 	 */
-	contentType: RegistryContentType;
+	readonly contentType: BoundRegistryContentType;
 
 	/**
 	 * Set the content type of a registry. Used to change between Prometheus and
 	 * OpenMetrics versions.
 	 * @param contentType The type of the registry
 	 */
-	setContentType(contentType: RegistryContentType): void;
+	setContentType(contentType: BoundRegistryContentType): void;
 
 	/**
 	 * Merge registers
 	 * @param registers The registers you want to merge together
 	 */
 	static merge(registers: Registry[]): Registry;
+
+	/**
+	 * HTTP Prometheus Content-Type for metrics response headers.
+	 */
+	static PROMETHEUS_CONTENT_TYPE: PrometheusContentType;
+
+	/**
+	 * HTTP OpenMetrics Content-Type for metrics response headers.
+	 */
+	static OPENMETRICS_CONTENT_TYPE: OpenMetricsContentType;
 }
 export type Collector = () => void;
 
@@ -104,8 +116,8 @@ export type Collector = () => void;
 export const register: Registry;
 
 /**
- * HTTP Content-Type for metrics response headers, defaults to Prometheus text
- * format.
+ * HTTP Content-Type for metrics response headers for the default registry,
+ * defaults to Prometheus text format.
  */
 export const contentType: RegistryContentType;
 
@@ -124,7 +136,7 @@ export class AggregatorRegistry<
 > extends Registry<T> {
 	/**
 	 * Gets aggregated metrics for all workers.
-	 * @return {Promise<string>} Promise that resolves with the aggregated
+	 * @returns {Promise<string>} Promise that resolves with the aggregated
 	 * metrics.
 	 */
 	clusterMetrics(): Promise<string>;
@@ -136,10 +148,10 @@ export class AggregatorRegistry<
 	 * `aggregator` is undefined.
 	 * @param {Array} metricsArr Array of metrics, each of which created by
 	 *   `registry.getMetricsAsJSON()`.
-	 * @return {Registry} aggregated registry.
+	 * @returns {Registry} aggregated registry.
 	 */
 	static aggregate<T extends RegistryContentType>(
-		metricsArr: Array<Object>,
+		metricsArr: Array<object>,
 	): Registry<T>; // TODO Promise?
 
 	/**
@@ -147,7 +159,7 @@ export class AggregatorRegistry<
 	 * use a registry/registries other than the default global registry.
 	 * @param {Array<Registry>|Registry} regs Registry or registries to be
 	 *   aggregated.
-	 * @return {void}
+	 * @returns {void}
 	 */
 	static setRegistries(
 		regs:
@@ -159,10 +171,12 @@ export class AggregatorRegistry<
 	): void;
 }
 
+type NoLabelNameType = never;
+
 /**
  * General metric type
  */
-export type Metric<T extends string = string> =
+export type Metric<T extends string = NoLabelNameType> =
 	| Counter<T>
 	| Gauge<T>
 	| Summary<T>
@@ -204,7 +218,9 @@ type MetricValueWithName<T extends string> = MetricValue<T> & {
 	metricName?: string;
 };
 
-type LabelValues<T extends string> = Partial<Record<T, string | number>>;
+type LabelValues<T extends string> = T extends NoLabelNameType
+	? Partial<Record<string, never>>
+	: Partial<Record<T, string | number>>;
 
 interface MetricConfiguration<T extends string> {
 	name: string;
@@ -239,7 +255,7 @@ export interface ObserveDataWithExemplar<T extends string> {
 /**
  * A counter is a cumulative metric that represents a single numerical value that only ever goes up
  */
-export class Counter<T extends string = string> {
+export class Counter<T extends string = NoLabelNameType> {
 	/**
 	 * @param configuration Configuration when creating a Counter metric. Name and Help is required.
 	 */
@@ -272,14 +288,14 @@ export class Counter<T extends string = string> {
 	/**
 	 * Return the child for given labels
 	 * @param values Label values
-	 * @return Configured counter with given labels
+	 * @returns Configured counter with given labels
 	 */
 	labels(...values: string[]): Counter.Internal;
 
 	/**
 	 * Return the child for given labels
 	 * @param labels Object with label keys and values
-	 * @return Configured counter with given labels
+	 * @returns Configured counter with given labels
 	 */
 	labels(labels: LabelValues<T>): Counter.Internal;
 
@@ -319,7 +335,7 @@ export interface GaugeConfiguration<T extends string>
 /**
  * A gauge is a metric that represents a single numerical value that can arbitrarily go up and down.
  */
-export class Gauge<T extends string = string> {
+export class Gauge<T extends string = NoLabelNameType> {
 	/**
 	 * @param configuration Configuration when creating a Gauge metric. Name and Help is mandatory
 	 */
@@ -379,7 +395,7 @@ export class Gauge<T extends string = string> {
 	 * Start a timer. Calling the returned function will set the gauge's value
 	 * to the observed duration in seconds.
 	 * @param labels Object with label keys and values
-	 * @return Function to invoke when timer should be stopped. The value it
+	 * @returns Function to invoke when timer should be stopped. The value it
 	 * returns is the timed duration.
 	 */
 	startTimer(labels?: LabelValues<T>): (labels?: LabelValues<T>) => number;
@@ -387,14 +403,14 @@ export class Gauge<T extends string = string> {
 	/**
 	 * Return the child for given labels
 	 * @param values Label values
-	 * @return Configured gauge with given labels
+	 * @returns Configured gauge with given labels
 	 */
 	labels(...values: string[]): Gauge.Internal<T>;
 
 	/**
 	 * Return the child for given labels
 	 * @param labels Object with label keys and values
-	 * @return Configured counter with given labels
+	 * @returns Configured counter with given labels
 	 */
 	labels(labels: LabelValues<T>): Gauge.Internal<T>;
 
@@ -444,7 +460,7 @@ export namespace Gauge {
 		/**
 		 * Start a timer. Calling the returned function will set the gauge's value
 		 * to the observed duration in seconds.
-		 * @return Function to invoke when timer should be stopped. The value it
+		 * @returns Function to invoke when timer should be stopped. The value it
 		 * returns is the timed duration.
 		 */
 		startTimer(): (labels?: LabelValues<T>) => number;
@@ -460,7 +476,7 @@ export interface HistogramConfiguration<T extends string>
 /**
  * A histogram samples observations (usually things like request durations or response sizes) and counts them in configurable buckets
  */
-export class Histogram<T extends string = string> {
+export class Histogram<T extends string = NoLabelNameType> {
 	/**
 	 * @param configuration Configuration when creating the Histogram. Name and Help is mandatory
 	 */
@@ -493,7 +509,7 @@ export class Histogram<T extends string = string> {
 	 * Start a timer. Calling the returned function will observe the duration in
 	 * seconds in the histogram.
 	 * @param labels Object with label keys and values
-	 * @return Function to invoke when timer should be stopped. The value it
+	 * @returns Function to invoke when timer should be stopped. The value it
 	 * returns is the timed duration.
 	 */
 	startTimer(labels?: LabelValues<T>): (labels?: LabelValues<T>) => number;
@@ -503,7 +519,7 @@ export class Histogram<T extends string = string> {
 	 * seconds in the histogram.
 	 * @param labels Object with label keys and values
 	 * @param exemplarLabels Object with label keys and values for exemplars
-	 * @return Function to invoke when timer should be stopped. The value it
+	 * @returns Function to invoke when timer should be stopped. The value it
 	 * returns is the timed duration.
 	 */
 	startTimer(
@@ -524,14 +540,14 @@ export class Histogram<T extends string = string> {
 	/**
 	 * Return the child for given labels
 	 * @param values Label values
-	 * @return Configured histogram with given labels
+	 * @returns Configured histogram with given labels
 	 */
 	labels(...values: string[]): Histogram.Internal<T>;
 
 	/**
 	 * Return the child for given labels
 	 * @param labels Object with label keys and values
-	 * @return Configured counter with given labels
+	 * @returns Configured counter with given labels
 	 */
 	labels(labels: LabelValues<T>): Histogram.Internal<T>;
 
@@ -559,8 +575,7 @@ export namespace Histogram {
 		/**
 		 * Start a timer. Calling the returned function will observe the
 		 * duration in seconds in the histogram.
-		 * @param labels Object with label keys and values
-		 * @return Function to invoke when timer should be stopped. The value it
+		 * @returns Function to invoke when timer should be stopped. The value it
 		 * returns is the timed duration.
 		 */
 		startTimer(): (labels?: LabelValues<T>) => void;
@@ -587,7 +602,7 @@ export interface SummaryConfiguration<T extends string>
 /**
  * A summary samples observations
  */
-export class Summary<T extends string = string> {
+export class Summary<T extends string = NoLabelNameType> {
 	/**
 	 * @param configuration Configuration when creating Summary metric. Name and Help is mandatory
 	 */
@@ -614,7 +629,7 @@ export class Summary<T extends string = string> {
 	 * Start a timer. Calling the returned function will observe the duration in
 	 * seconds in the summary.
 	 * @param labels Object with label keys and values
-	 * @return Function to invoke when timer should be stopped
+	 * @returns Function to invoke when timer should be stopped
 	 */
 	startTimer(labels?: LabelValues<T>): (labels?: LabelValues<T>) => number;
 
@@ -626,14 +641,14 @@ export class Summary<T extends string = string> {
 	/**
 	 * Return the child for given labels
 	 * @param values Label values
-	 * @return Configured summary with given labels
+	 * @returns Configured summary with given labels
 	 */
 	labels(...values: string[]): Summary.Internal<T>;
 
 	/**
 	 * Return the child for given labels
 	 * @param labels Object with label keys and values
-	 * @return Configured counter with given labels
+	 * @returns Configured counter with given labels
 	 */
 	labels(labels: LabelValues<T>): Summary.Internal<T>;
 
@@ -661,8 +676,7 @@ export namespace Summary {
 		/**
 		 * Start a timer. Calling the returned function will observe the
 		 * duration in seconds in the summary.
-		 * @param labels Object with label keys and values
-		 * @return Function to invoke when timer should be stopped. The value it
+		 * @returns Function to invoke when timer should be stopped. The value it
 		 * returns is the timed duration.
 		 */
 		startTimer(): (labels?: LabelValues<T>) => number;
@@ -728,11 +742,11 @@ export namespace Pushgateway {
 }
 
 /**
- * Create an array with equal spacing between the elements
+ * Create an array with equal spacing between the elements.
  * @param start The first value in the array
  * @param width The spacing between the elements
  * @param count The number of items in array
- * @return An array with the requested number of elements
+ * @returns An array with the requested number of elements
  */
 export function linearBuckets(
 	start: number,
@@ -741,11 +755,11 @@ export function linearBuckets(
 ): number[];
 
 /**
- * Create an array that grows exponentially
+ * Create an array that grows exponentially.
  * @param start The first value in the array
  * @param factor The exponential factor
  * @param count The number of items in array
- * @return An array with the requested number of elements
+ * @returns An array with the requested number of elements
  */
 export function exponentialBuckets(
 	start: number,
@@ -760,7 +774,7 @@ export interface DefaultMetricsCollectorConfiguration<
 	prefix?: string;
 	gcDurationBuckets?: number[];
 	eventLoopMonitoringPrecision?: number;
-	labels?: Object;
+	labels?: object;
 }
 
 export const collectDefaultMetrics: {
@@ -776,8 +790,8 @@ export const collectDefaultMetrics: {
 };
 
 /**
- * Validate a metric name
+ * Validate a metric name.
  * @param name The name to validate
- * @return True if the metric name is valid, false if not
+ * @returns True if the metric name is valid, false if not
  */
 export function validateMetricName(name: string): boolean;

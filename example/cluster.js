@@ -6,7 +6,7 @@ const metricsServer = express();
 const AggregatorRegistry = require('../').AggregatorRegistry;
 const aggregatorRegistry = new AggregatorRegistry();
 
-if (cluster.isMaster) {
+if (cluster.isPrimary) {
 	for (let i = 0; i < 4; i++) {
 		cluster.fork();
 	}

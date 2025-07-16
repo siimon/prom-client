@@ -17,8 +17,10 @@ const cartesianProduct = (a, b, ...c) =>
 	b ? cartesianProduct(flatten(a, b), ...c) : a;
 const times = a => Array.from(Array(a)).map((_, x) => x);
 
-function getLabelCombinations(labelValues) {
-	const labelNames = getLabelNames(labelValues.length);
+function getLabelCombinations(
+	labelValues,
+	labelNames = getLabelNames(labelValues.length),
+) {
 	labelValues = labelValues.length > 1 ? labelValues : labelValues.concat(1);
 	const labelValuesArray = labelValues.map(times);
 	const labelValueCombinations = cartesianProduct(...labelValuesArray);

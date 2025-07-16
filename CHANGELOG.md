@@ -9,6 +9,43 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Breaking
 
+- Drop support for Node.js versions 16, 18, 21 and 23
+- Metric internal storage ('hashMap') changed to Map from Object. If you have
+  subclassed the built-in metric types you may need to adjust your code.
+
+### Changed
+
+- Improve types for no labels
+- perf: Faster stats gathering with lower memory overhead
+- Simplified number format logic
+- Simplified Histogram.observe() call stack
+- Fix memory leak in cluster.js by deleting all expired requests
+- perf: Sped up Map accesses
+- perf: Remove truthy conditionals in hot code paths
+
+### Added
+
+- Expanded benchmarking code
+
+## [15.1.3] - 2024-06-27
+
+### Changed
+
+- Improve error message when number of registered labels mismatch with the number of labels provided
+
+## [15.1.2] - 2024-04-16
+
+### Changed
+
+- Add `Registry.PROMETHEUS_CONTENT_TYPE` and `Registry.OPENMETRICS_CONTENT_TYPE` constants to the TypeScript types
+- Correctly read and set `contentType` top level export
+
+### Added
+
+- Enable `bun.js` by catching `NotImplemented` error (Fixes [#570](https://github.com/siimon/prom-client/issues/570))
+
+## [15.1.1] - 2024-03-26
+
 ### Changed
 
 - Show the invalid name in the output error in the abstract class `Metric`.
@@ -17,8 +54,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - Change the conditional`if` to throw an error in case the label names are invalid using the array returned from the function `validateLabelName`.
 - Unit test added in the gauge test case. It could be performed in any other metric that inherits from the abstract class `Metric`.
 - Improve the memory usage of histograms when the `enableExemplars` option is disabled
-
-### Added
+- fix: Avoid updating exemplar values during subsequent metric changes (Fixes [#616](https://github.com/siimon/prom-client/issues/616))
 
 ## [15.1.0] - 2023-12-15
 
@@ -32,6 +68,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 - Allow Pushgateway to now require job names for compatibility with Gravel Gateway.
 - Allow `histogram.startTime()` to be used with exemplars.
+
+[15.1.0]: https://github.com/siimon/prom-client/compare/v15.0.0...v15.1.0
 
 ## [15.0.0] - 2023-10-09
 
@@ -57,6 +95,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 - Support for OpenMetrics and Exemplars
 
+[15.0.0]: https://github.com/siimon/prom-client/compare/v14.2.0...v15.0.0
+
 ## [14.2.0] - 2023-03-06
 
 ### Changed
@@ -73,11 +113,15 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 - Add `get` method to type definitions of metric classes
 
+[14.2.0]: https://github.com/siimon/prom-client/compare/v14.1.1...v14.2.0
+
 ## [14.1.1] - 2022-12-31
 
 ### Changed
 
 - Increase compatibility with external build system such as `rollup` by making perf_hooks optional in gc.js
+
+[14.1.1]: https://github.com/siimon/prom-client/compare/v14.1.0...v14.1.1
 
 ## [14.1.0] - 2022-08-23
 
@@ -97,7 +141,6 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 - The `processResources` metric was added, which keeps a track of all sorts of
   active resources. It consists of the following gauges:
-
   - `nodejs_active_resources` - Number of active resources that are currently
     keeping the event loop alive, grouped by async resource type.
   - `nodejs_active_resources_total` - Total number of active resources.
@@ -107,11 +150,15 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 - Support gzipped pushgateway requests
 
+[14.1.0]: https://github.com/siimon/prom-client/compare/v14.0.1...v14.1.0
+
 ## [14.0.1] - 2021-11-02
 
 ### Changed
 
 - changed: typedef for pushgateway to reflect js implementation.
+
+[14.0.1]: https://github.com/siimon/prom-client/compare/v14.0.0...v14.0.1
 
 ## [14.0.0] - 2021-09-18
 
@@ -150,6 +197,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - Add missing type declaration for `client.contentType`. [`3b66641`](https://github.com/siimon/prom-client/commit/3b6664160bdd1555045b03d8f4c421022f30e1db)
 - Modernize some label processing code. [`c9bf1d8`](https://github.com/siimon/prom-client/commit/c9bf1d8e3db3b5fb97faf2df9ca9b9af670288f3)
 
+[14.0.0]: https://github.com/siimon/prom-client/compare/v13.2.0...v14.0.0
+
 ## [13.2.0] - 2021-08-08
 
 ### Changed
@@ -165,6 +214,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - feat: added `zero()` to `Histogram` for setting the metrics for a given label combination to zero
 - fix: allow `Gauge.inc/dec(0)` without defaulting to 1
 
+[13.2.0]: https://github.com/siimon/prom-client/compare/v13.1.0...v13.2.0
+
 ## [13.1.0] - 2021-01-24
 
 ### Changed
@@ -177,6 +228,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 - feat: added the ability to pass labels as an object to `labels()` and `remove()`
 - Added: More examples with commented output
+
+[13.1.0]: https://github.com/siimon/prom-client/compare/v13.0.0...v13.1.0
 
 ## [13.0.0] - 2020-12-16
 
@@ -225,6 +278,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - feat: added support for adding labels to default metrics (#374)
 - Added CHANGELOG reminder
 
+[13.0.0]: https://github.com/siimon/prom-client/compare/v12.0.0...v13.0.0
+
 ## [12.0.0] - 2020-02-20
 
 ### Breaking
@@ -255,6 +310,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - feat: implement GC metrics collection without native(C++) modules.
 - feat: implement advanced event loop monitoring
 
+[12.0.0]: https://github.com/siimon/prom-client/compare/v11.5.3...v12.0.0
+
 ## [11.5.3] - 2019-06-27
 
 ### Changed
@@ -262,17 +319,23 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - Parameter `compressCount` in Summaries to control compression of data in t-digest.
 - Compress t-digest in Summaries
 
+[11.5.3]: https://github.com/siimon/prom-client/compare/v11.5.2...v11.5.3
+
 ## [11.5.2] - 2019-06-20
 
 ### Changed
 
 - fix: avoid mutation bug in registry
 
+[11.5.2]: https://github.com/siimon/prom-client/compare/v11.5.1...v11.5.2
+
 ## [11.5.1] - 2019-06-13
 
 ### Changed
 
 - fix: guard against missing constructor
+
+[11.5.1]: https://github.com/siimon/prom-client/compare/v11.5.0...v11.5.1
 
 ## [11.5.0] - 2019-06-04
 
@@ -281,12 +344,16 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - Added `timestamps` toggle to `collectDefaultMetrics` options
 - Export `validateMetricName`
 
+[11.5.0]: https://github.com/siimon/prom-client/compare/v11.4.0...v11.5.0
+
 ## [11.4.0] - 2019-06-04
 
 ### Added
 
 - `nodejs_active_handles` metric to the `collectDefaultMetrics()`. Unlike `nodejs_active_handles_total` it split count of active handles by type.
 - `nodejs_active_requests` metric to the `collectDefaultMetrics()`. Unlike `nodejs_active_requests_total` it split count of active requests by type.
+
+[11.4.0]: https://github.com/siimon/prom-client/compare/v11.3.0...v11.4.0
 
 ## [11.3.0] - 2019-04-02
 
@@ -299,6 +366,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 - Added a `remove()` method on each metric type, based on [Prometheus "Writing Client Libraries" section on labels](https://prometheus.io/docs/instrumenting/writing_clientlibs/#labels)
 
+[11.3.0]: https://github.com/siimon/prom-client/compare/v11.2.1...v11.3.0
+
 ## [11.2.1]
 
 ### Breaking
@@ -308,6 +377,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - Updated types for Summary in typescript definition file
+
+[11.2.1]: https://github.com/siimon/prom-client/compare/v11.2.0...v11.2.1
 
 ## [11.2.0]
 
@@ -320,12 +391,16 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - Added an initial `benchmark` suite which can be run with `npm run benchmarks`.
 - Add support for sliding windows in Summaries
 
+[11.2.0]: https://github.com/siimon/prom-client/compare/v11.1.3...v11.2.0
+
 ## [11.1.3] - 2018-09-22
 
 ### Changed
 
 - Fixed performance by avoiding `Object.assign` on hot paths, as well as
   mutating objects when appropriate.
+
+[11.1.3]: https://github.com/siimon/prom-client/compare/v11.1.2...v11.1.3
 
 ## [11.1.2] - 2018-09-19
 
@@ -334,11 +409,15 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - Allow setting Gauge values to NaN, +Inf, and -Inf
 - Fixed `histogram` scrape performance by using `acc.push` instead of `acc.concat`. Fixes #216 with #219
 
+[11.1.2]: https://github.com/siimon/prom-client/compare/v11.1.1...v11.1.2
+
 ## [11.1.1] - 2018-06-29
 
 ### Changed
 
 - Fixed `processOpenFileDescriptors` metric when no custom config was set
+
+[11.1.1]: https://github.com/siimon/prom-client/compare/v11.1.0...v11.1.1
 
 ## [11.1.0] - 2018-06-29
 
@@ -351,6 +430,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
   labelset
 - Fixed `AggregatorFactory` losing the aggregator method of metrics
 
+[11.1.0]: https://github.com/siimon/prom-client/compare/v11.0.0...v11.1.0
+
 ## [11.0.0] - 2018-03-10
 
 ### Breaking
@@ -359,6 +440,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
   - This conforms to Prometheus
     [best practices](https://prometheus.io/docs/practices/naming/#base-units)
 - Dropped support for node 4
+
+[11.0.0]: https://github.com/siimon/prom-client/compare/v10.2.3...v11.0.0
 
 ## [10.2.3] - 2018-02-28
 
@@ -369,6 +452,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed issue that `registry.getMetricsAsJSON()` ignores registry default labels
 
 ### Added
+
+[10.2.3]: https://github.com/siimon/prom-client/compare/v10.2.2...v10.2.3
 
 ## [10.2.2] - 2017-11-02
 
@@ -493,7 +578,6 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - Creating metrics with one argument per parameter - use object literals
   instead.
 
-[unreleased]: https://github.com/siimon/prom-client/compare/v10.2.2...HEAD
 [10.2.2]: https://github.com/siimon/prom-client/compare/v10.2.1...v10.2.2
 [10.2.1]: https://github.com/siimon/prom-client/compare/v10.2.0...v10.2.1
 [10.2.0]: https://github.com/siimon/prom-client/compare/v10.1.1...v10.2.0

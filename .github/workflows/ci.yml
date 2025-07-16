@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - main
+      - next
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  nodejs:
+    name: Test on Node.js v${{ matrix.node-version }} and OS ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [20.x, 22.x, 24.x]
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Restore dependencies cache
+        uses: actions/cache@v4
+        id: cache
+        with:
+          path: node_modules
+          key: ${{ matrix.os }}-${{ matrix.node-version }}-node_modules-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ matrix.os }}-${{ matrix.node-version }}-node_modules-
+      - name: Install Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm i
+      - name: Test
+        run: npm run test-unit
+  lint:
+    name: Run ESLint
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Restore dependencies cache
+        uses: actions/cache@v4
+        id: cache
+        with:
+          path: node_modules
+          key: ${{ matrix.os }}-${{ matrix.node-version }}-node_modules-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ matrix.os }}-${{ matrix.node-version }}-node_modules-
+      - name: Install Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm i
+      - name: Test
+        run: npm run lint && npm run check-prettier && npm run compile-typescript
+  bun:
+    name: Test on Bun
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Install Dependencies
+        run: bun install
+      - name: Test
+        run: bun test-unit
