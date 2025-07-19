@@ -3,6 +3,8 @@
 module.exports = setupUtilSuite;
 
 function setupUtilSuite(suite) {
+	const skip = ['prom-client@latest', 'prom-client@trunk'];
+
 	suite.add(
 		'hashObject',
 		(client, Util) => {
@@ -16,7 +18,7 @@ function setupUtilSuite(suite) {
 				gateway: 'lb04',
 			});
 		},
-		{ setup: findUtil },
+		{ setup: findUtil, skip },
 	);
 
 	suite.add(
@@ -32,7 +34,7 @@ function setupUtilSuite(suite) {
 				status_code: 503,
 			});
 		},
-		{ setup },
+		{ setup, skip },
 	);
 
 	suite.add(
@@ -48,7 +50,7 @@ function setupUtilSuite(suite) {
 				status_code: 503,
 			});
 		},
-		{ setup },
+		{ setup, skip },
 	);
 }
 
