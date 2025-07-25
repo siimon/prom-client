@@ -10,7 +10,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ### Breaking
 
 - Drop support for Node.js versions 16, 18, 21 and 23
-- Metric internal storage ('hashMap') changed to Map from Object. If you have
+- Metric internal storage ('hashMap') changed to a separate object, LabelMap. If you have
   subclassed the built-in metric types you may need to adjust your code.
 
 ### Changed
@@ -23,6 +23,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - perf: Sped up Map accesses
 - perf: Remove truthy conditionals in hot code paths
 - Show the invalid name in the validation errors
+- perf: Improve performance of registry defaultLabels during metric processing
+- perf: New, more space-efficient storage engine, 20-45% faster stats recording
 
 ### Added
 
