@@ -5,7 +5,7 @@ describe('utils', () => {
 		const isObject = require('../lib/util').isObject;
 
 		it('should not throw on missing argument', () => {
-			isObject();
+			expect(isObject()).not.toThrow();
 		});
 
 		it('should return true for empty object', () => {
@@ -17,7 +17,7 @@ describe('utils', () => {
 		const isEmpty = require('../lib/util').isEmpty;
 
 		it('should not throw on missing argument', () => {
-			isEmpty();
+			expect(isEmpty()).not.toThrow();
 		});
 
 		it('should return true for empty object', async () => {
