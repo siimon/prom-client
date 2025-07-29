@@ -24,7 +24,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - perf: Remove truthy conditionals in hot code paths
 - Show the invalid name in the validation errors
 - perf: Improve performance of registry defaultLabels during metric processing
-- perf: New, more space-efficient storage engine, 20-45% faster stats recording
+- perf: New, more space-efficient storage engine, 20-45% faster stats recording, 148% faster aggregation
 
 ### Added
 
