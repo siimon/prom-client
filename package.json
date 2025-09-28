@@ -15,7 +15,7 @@
 		"benchmarks": "node --max-heap-size=5000 ./benchmarks/index.js",
 		"test": "npm run lint && npm run check-prettier && npm run compile-typescript && npm run test-unit -- --coverage",
 		"lint": "eslint .",
-		"test-unit": "jest",
+		"test-unit": "node --test test/**/*Test.js",
 		"run-prettier": "prettier .",
 		"check-prettier": "npm run run-prettier -- --check",
 		"compile-typescript": "tsc --project .",
@@ -36,6 +36,8 @@
 	"devDependencies": {
 		"@clevernature/benchmark-regression": "^1.0.0",
 		"@eslint/js": "^9.29.0",
+		"@matteo.collina/snap": "^0.3.0",
+		"@sinonjs/fake-timers": "^15.0.0",
 		"benchmark": "^2.1",
 		"debug": "^4.4.1",
 		"eslint": "^9.29.0",
@@ -46,7 +48,6 @@
 		"express": "^5.1.0",
 		"globals": "^16.2.0",
 		"husky": "^9.0.0",
-		"jest": "^30.0.2",
 		"lint-staged": "^15.5.2",
 		"nock": "^13.0.5",
 		"prettier": "3.6.2",
@@ -58,9 +59,6 @@
 		"tdigest": "^0.1.1"
 	},
 	"types": "./index.d.ts",
-	"jest": {
-		"testRegex": ".*Test\\.js$"
-	},
 	"lint-staged": {
 		"*.{js,ts}": "eslint --fix",
 		"*.{md,json,yml}": "prettier --write"

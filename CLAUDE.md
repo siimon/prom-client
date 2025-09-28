@@ -11,18 +11,19 @@ This is **prom-client**, a Prometheus client library for Node.js that provides m
 ### Essential Commands
 
 - `npm test` - Full test suite (lint + prettier + typescript + unit tests with coverage)
-- `npm run test-unit` - Run Jest unit tests only
+- `npm run test-unit` - Run node:test unit tests only
 - `npm run lint` - ESLint validation
 - `npm run check-prettier` - Prettier formatting check
 - `npm run compile-typescript` - TypeScript compilation check
 
 ### Running Single Tests
 
-Tests are located in `/test/` and follow the pattern `*Test.js`. Use Jest's pattern matching:
+Tests are located in `/test/` and follow the pattern `*Test.js`. Use node:test directly:
 
 ```bash
-npm run test-unit -- --testNamePattern="Counter"
-npm run test-unit -- test/counterTest.js
+node --test test/counterTest.js
+node --test test/metrics/
+node --test "test/**/*Test.js"
 ```
 
 ## Code Architecture
@@ -69,10 +70,12 @@ Each metric type follows a consistent pattern:
 
 ### Testing Approach
 
-- Unit tests in `/test/` with Jest
+- Unit tests in `/test/` with Node.js built-in test runner (node:test)
 - Metrics tests in `/test/metrics/` for default metrics
 - Examples in `/example/` demonstrate real usage patterns
 - Mock HTTP requests with `nock` library
+- Timer mocking with `@sinonjs/fake-timers`
+- Test helpers and utilities in `/test/helpers.js`
 
 ### TypeScript Support
 
