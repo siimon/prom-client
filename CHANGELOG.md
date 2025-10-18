@@ -25,10 +25,12 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - Show the invalid name in the validation errors
 - perf: Improve performance of registry defaultLabels during metric processing
 - perf: New, more space-efficient storage engine, 20-45% faster stats recording
+- AggregatorRegistry renamed to ClusterRegistry, old name deprecated
 
 ### Added
 
 - Expanded benchmarking code
+- new WorkerRegistry to provide equivalent support to AggregatorRegistry
 
 ## [15.1.3] - 2024-06-27
 
