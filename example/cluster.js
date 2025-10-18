@@ -2,8 +2,9 @@
 
 const cluster = require('cluster');
 const express = require('express');
-const metricsServer = express();
 const { ClusterRegistry } = require('../');
+
+const metricsServer = express();
 const clusterRegistry = new ClusterRegistry();
 
 if (cluster.isPrimary) {

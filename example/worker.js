@@ -3,9 +3,10 @@
 const Path = require('path');
 const { Worker, isMainThread, workerData } = require('node:worker_threads');
 const express = require('express');
-const metricsServer = express();
 const WorkerRegistry = require('../').WorkerRegistry;
+
 const collector = workerData?.['prom-client']?.collector === true;
+const metricsServer = express();
 const workerRegistry = new WorkerRegistry(
 	WorkerRegistry.PROMETHEUS_CONTENT_TYPE,
 	collector,
