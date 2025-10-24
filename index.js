@@ -35,3 +35,4 @@ exports.collectDefaultMetrics = require('./lib/defaultMetrics');
 
 exports.aggregators = require('./lib/metricAggregators').aggregators;
 exports.AggregatorRegistry = require('./lib/cluster');
+exports[Symbol('util')] = require('./lib/util');
