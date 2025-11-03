@@ -26,6 +26,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - perf: Improve performance of registry defaultLabels during metric processing
 - perf: New, more space-efficient storage engine, 20-45% faster stats recording
 - perf: Further improvement to key generation cost
+- AggregatorRegistry renamed to ClusterRegistry, old name deprecated
+- perf: Stat aggregation uses similar strategy to collection. 60% faster aggregation
 
 ### Added
 
