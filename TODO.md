@@ -1,2 +1,0 @@
-- [x] investigate why new Counter is slower
-- [] improve performance of Registry metrics() and Registry getMetricsAsJSON()
