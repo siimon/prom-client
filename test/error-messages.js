@@ -20,5 +20,6 @@ module.exports = {
 
 	// Common error patterns
 	INVALID_NUMBER: value => `Value is not a valid number: ${value}`,
-	INVALID_LABEL_SET: label => `Added label "${label}" is not included in initial labelset: [ 'foo' ]`,
+	INVALID_LABEL_SET: label =>
+		`Added label "${label}" is not included in initial labelset: [ 'foo' ]`,
 };

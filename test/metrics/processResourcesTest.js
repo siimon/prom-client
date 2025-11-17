@@ -1,6 +1,13 @@
 'use strict';
 
-const { describe, it, beforeEach, afterEach, before, after } = require('node:test');
+const {
+	describe,
+	it,
+	beforeEach,
+	afterEach,
+	before,
+	after,
+} = require('node:test');
 const assert = require('node:assert');
 const { describeEach } = require('../helpers');
 
@@ -17,7 +24,6 @@ describe('processRequests', () => {
 	});
 
 	it('should add metric to the registry', async () => {
-		// eslint-disable-next-line n/no-unsupported-features/node-builtins
 		if (typeof process.getActiveResourcesInfo !== 'function') {
 			return;
 		}
@@ -29,7 +35,10 @@ describe('processRequests', () => {
 		const metrics = await register.getMetricsAsJSON();
 
 		assert.strictEqual(metrics.length, 2);
-		assert.strictEqual(metrics[0].help, 'Number of active resources that are currently keeping the event loop alive, grouped by async resource type.');
+		assert.strictEqual(
+			metrics[0].help,
+			'Number of active resources that are currently keeping the event loop alive, grouped by async resource type.',
+		);
 		assert.strictEqual(metrics[0].type, 'gauge');
 		assert.strictEqual(metrics[0].name, 'nodejs_active_resources');
 

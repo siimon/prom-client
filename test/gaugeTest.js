@@ -47,7 +47,10 @@ describeEach([
 						new Gauge({ ...defaultParams, name: noValidName });
 						assert.fail('Expected function to throw');
 					} catch (error) {
-						assert.strictEqual(error.message, `Invalid metric name: ${noValidName}`);
+						assert.strictEqual(
+							error.message,
+							`Invalid metric name: ${noValidName}`,
+						);
 					}
 				});
 
@@ -60,7 +63,10 @@ describeEach([
 						});
 						assert.fail('Expected function to throw');
 					} catch (error) {
-						assert.strictEqual(error.message, `At least one label name is invalid: ${noValidName}`);
+						assert.strictEqual(
+							error.message,
+							`At least one label name is invalid: ${noValidName}`,
+						);
 					}
 				});
 			});
@@ -137,7 +143,10 @@ describeEach([
 					fn();
 					assert.fail('Expected function to throw');
 				} catch (error) {
-					assert.strictEqual(error.message, errorMessages.INVALID_NUMBER('asd'));
+					assert.strictEqual(
+						error.message,
+						errorMessages.INVALID_NUMBER('asd'),
+					);
 				}
 			});
 
@@ -322,7 +331,10 @@ describeEach([
 
 			instance.set({ serial: '12345', active: 'yes' }, 12);
 			assert.strictEqual((await instance.get()).values[0].value, 12);
-			assert.strictEqual((await instance.get()).values[0].labels.serial, '12345');
+			assert.strictEqual(
+				(await instance.get()).values[0].labels.serial,
+				'12345',
+			);
 			assert.strictEqual((await instance.get()).values[0].labels.active, 'yes');
 
 			instance.reset();
@@ -331,7 +343,10 @@ describeEach([
 
 			instance.set({ serial: '12345', active: 'no' }, 10);
 			assert.strictEqual((await instance.get()).values[0].value, 10);
-			assert.strictEqual((await instance.get()).values[0].labels.serial, '12345');
+			assert.strictEqual(
+				(await instance.get()).values[0].labels.serial,
+				'12345',
+			);
 			assert.strictEqual((await instance.get()).values[0].labels.active, 'no');
 		});
 	});

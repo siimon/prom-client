@@ -4,8 +4,8 @@ const { getLabelNames, labelCombinationFactory } = require('./utils/labels');
 
 module.exports = setupHistogramSuite;
 
-function random () {
-	return Math.random() * 100
+function random() {
+	return Math.random() * 100;
 }
 
 function setupHistogramSuite(suite) {

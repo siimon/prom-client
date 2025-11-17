@@ -17,25 +17,25 @@ const mockHttp = {
 		end: () => {},
 		write: () => {},
 	},
-	mockClear: function() {
+	mockClear() {
 		this.calls = [];
 	},
-	request: function(options) {
+	request(options) {
 		this.calls.push({ options });
 		return this.mockReturnValue;
-	}
+	},
 };
 
 // Mock the http module by intercepting require calls
 const Module = require('module');
 const originalRequire = Module.prototype.require;
-Module.prototype.require = function(...args) {
+Module.prototype.require = function (...args) {
 	if (args[0] === 'http') {
 		return {
 			request: (...requestArgs) => {
 				mockHttp.calls.push(requestArgs);
 				return mockHttp.mockReturnValue;
-			}
+			},
 		};
 	}
 	return originalRequire.apply(this, args);
@@ -73,7 +73,10 @@ describeEach([
 				assert.strictEqual(mockHttp.calls.length, 1);
 				const invocation = mockHttp.calls[0][0];
 				assert.strictEqual(invocation.method, 'POST');
-				assert.strictEqual(invocation.path, '/path/metrics/job/testJob/key/value');
+				assert.strictEqual(
+					invocation.path,
+					'/path/metrics/job/testJob/key/value',
+				);
 			});
 
 			it('should escape groupings', () => {

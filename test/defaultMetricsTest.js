@@ -1,6 +1,13 @@
 'use strict';
 
-const { describe, it, beforeEach, afterEach, before, after } = require('node:test');
+const {
+	describe,
+	it,
+	beforeEach,
+	afterEach,
+	before,
+	after,
+} = require('node:test');
 const assert = require('node:assert');
 const { describeEach } = require('./helpers');
 const Registry = require('../index').Registry;
@@ -117,13 +124,22 @@ describeEach([
 
 			collectDefaultMetrics();
 
-			assert.strictEqual((await register.getMetricsAsJSON()).length !== 0, true);
+			assert.strictEqual(
+				(await register.getMetricsAsJSON()).length !== 0,
+				true,
+			);
 			assert.strictEqual((await registry.getMetricsAsJSON()).length, 0);
 
 			collectDefaultMetrics({ register: registry });
 
-			assert.strictEqual((await register.getMetricsAsJSON()).length !== 0, true);
-			assert.strictEqual((await registry.getMetricsAsJSON()).length !== 0, true);
+			assert.strictEqual(
+				(await register.getMetricsAsJSON()).length !== 0,
+				true,
+			);
+			assert.strictEqual(
+				(await registry.getMetricsAsJSON()).length !== 0,
+				true,
+			);
 		});
 	});
 });

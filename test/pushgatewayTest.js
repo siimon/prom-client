@@ -118,7 +118,9 @@ describeEach([
 					registry,
 				);
 
-				return instance.pushAdd().then(() => assert.strictEqual(mockHttp.isDone(), true));
+				return instance
+					.pushAdd()
+					.then(() => assert.strictEqual(mockHttp.isDone(), true));
 			});
 		});
 

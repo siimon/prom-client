@@ -1,6 +1,13 @@
 'use strict';
 
-const { describe, it, beforeEach, afterEach, before, after } = require('node:test');
+const {
+	describe,
+	it,
+	beforeEach,
+	afterEach,
+	before,
+	after,
+} = require('node:test');
 const assert = require('node:assert');
 const { describeEach, wait } = require('../helpers');
 
@@ -38,31 +45,52 @@ describeEach([
 		assert.strictEqual(metrics[0].type, 'gauge');
 		assert.strictEqual(metrics[0].name, 'nodejs_eventloop_lag_seconds');
 
-		assert.strictEqual(metrics[1].help, 'The minimum recorded event loop delay.');
+		assert.strictEqual(
+			metrics[1].help,
+			'The minimum recorded event loop delay.',
+		);
 		assert.strictEqual(metrics[1].type, 'gauge');
 		assert.strictEqual(metrics[1].name, 'nodejs_eventloop_lag_min_seconds');
 
-		assert.strictEqual(metrics[2].help, 'The maximum recorded event loop delay.');
+		assert.strictEqual(
+			metrics[2].help,
+			'The maximum recorded event loop delay.',
+		);
 		assert.strictEqual(metrics[2].type, 'gauge');
 		assert.strictEqual(metrics[2].name, 'nodejs_eventloop_lag_max_seconds');
 
-		assert.strictEqual(metrics[3].help, 'The mean of the recorded event loop delays.');
+		assert.strictEqual(
+			metrics[3].help,
+			'The mean of the recorded event loop delays.',
+		);
 		assert.strictEqual(metrics[3].type, 'gauge');
 		assert.strictEqual(metrics[3].name, 'nodejs_eventloop_lag_mean_seconds');
 
-		assert.strictEqual(metrics[4].help, 'The standard deviation of the recorded event loop delays.');
+		assert.strictEqual(
+			metrics[4].help,
+			'The standard deviation of the recorded event loop delays.',
+		);
 		assert.strictEqual(metrics[4].type, 'gauge');
 		assert.strictEqual(metrics[4].name, 'nodejs_eventloop_lag_stddev_seconds');
 
-		assert.strictEqual(metrics[5].help, 'The 50th percentile of the recorded event loop delays.');
+		assert.strictEqual(
+			metrics[5].help,
+			'The 50th percentile of the recorded event loop delays.',
+		);
 		assert.strictEqual(metrics[5].type, 'gauge');
 		assert.strictEqual(metrics[5].name, 'nodejs_eventloop_lag_p50_seconds');
 
-		assert.strictEqual(metrics[6].help, 'The 90th percentile of the recorded event loop delays.');
+		assert.strictEqual(
+			metrics[6].help,
+			'The 90th percentile of the recorded event loop delays.',
+		);
 		assert.strictEqual(metrics[6].type, 'gauge');
 		assert.strictEqual(metrics[6].name, 'nodejs_eventloop_lag_p90_seconds');
 
-		assert.strictEqual(metrics[7].help, 'The 99th percentile of the recorded event loop delays.');
+		assert.strictEqual(
+			metrics[7].help,
+			'The 99th percentile of the recorded event loop delays.',
+		);
 		assert.strictEqual(metrics[7].type, 'gauge');
 		assert.strictEqual(metrics[7].name, 'nodejs_eventloop_lag_p99_seconds');
 	});

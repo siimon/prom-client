@@ -135,7 +135,10 @@ describeEach([
 					instance.observe('asd');
 				};
 				assert.throws(fn, error => {
-					assert.strictEqual(error.message, errorMessages.INVALID_NUMBER('asd'));
+					assert.strictEqual(
+						error.message,
+						errorMessages.INVALID_NUMBER('asd'),
+					);
 					return true;
 				});
 			});
@@ -219,7 +222,10 @@ describeEach([
 						instance.labels('get', '500').observe(4);
 					};
 					assert.throws(fn, error => {
-						assert.strictEqual(error.message, errorMessages.INVALID_LABEL_ARGUMENTS(2, 'get, 500', 1, 'method'));
+						assert.strictEqual(
+							error.message,
+							errorMessages.INVALID_LABEL_ARGUMENTS(2, 'get, 500', 1, 'method'),
+						);
 						return true;
 					});
 				});
@@ -379,7 +385,15 @@ describeEach([
 						instance.remove('GET', '/foo');
 					};
 					assert.throws(fn, error => {
-						assert.strictEqual(error.message, errorMessages.INVALID_LABEL_ARGUMENTS(2, 'GET, /foo', 1, 'method'));
+						assert.strictEqual(
+							error.message,
+							errorMessages.INVALID_LABEL_ARGUMENTS(
+								2,
+								'GET, /foo',
+								1,
+								'method',
+							),
+						);
 						return true;
 					});
 				});
@@ -474,7 +488,10 @@ describeEach([
 				);
 				assert.strictEqual(valuePair.value, 1);
 				assert.strictEqual((await globalRegistry.getMetricsAsJSON()).length, 0);
-				assert.strictEqual((await registryInstance.getMetricsAsJSON()).length, 1);
+				assert.strictEqual(
+					(await registryInstance.getMetricsAsJSON()).length,
+					1,
+				);
 			});
 		});
 	});

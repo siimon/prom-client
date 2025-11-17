@@ -4,8 +4,8 @@ const { describe } = require('node:test');
 const assert = require('node:assert');
 
 /**
- * Helper function to implement describe.each functionality
- * Similar to Jest's describe.each, used extensively in the test suite
+ * Helper function to implement describe.each functionality.
+ * Similar to Jest's describe.each, used extensively in the test suite.
  */
 function describeEach(cases) {
 	return function (titleTemplate, fn) {
@@ -19,11 +19,11 @@ function describeEach(cases) {
 }
 
 /**
- * Enhanced assertion helpers that match Jest patterns
+ * Enhanced assertion helpers that match Jest patterns.
  */
 const expect = {
 	/**
-	 * Strict equality check
+	 * Strict equality check.
 	 */
 	toEqual: (actual, expected) => {
 		if (typeof expected === 'object' && expected !== null) {
@@ -34,28 +34,28 @@ const expect = {
 	},
 
 	/**
-	 * Length assertion
+	 * Length assertion.
 	 */
 	toHaveLength: (actual, expectedLength) => {
 		assert.strictEqual(actual.length, expectedLength);
 	},
 
 	/**
-	 * Truthiness check
+	 * Truthiness check.
 	 */
 	toBeTruthy: actual => {
 		assert.ok(actual);
 	},
 
 	/**
-	 * Falsiness check
+	 * Falsiness check.
 	 */
 	toBeFalsy: actual => {
 		assert.ok(!actual);
 	},
 
 	/**
-	 * Function throw assertion
+	 * Function throw assertion.
 	 */
 	toThrow: (fn, expectedError) => {
 		if (expectedError) {
@@ -66,7 +66,7 @@ const expect = {
 	},
 
 	/**
-	 * Error message assertion (replaces toThrowErrorMatchingSnapshot)
+	 * Error message assertion (replaces toThrowErrorMatchingSnapshot).
 	 */
 	toThrowWithMessage: (fn, expectedMessage) => {
 		try {
@@ -78,20 +78,22 @@ const expect = {
 	},
 
 	/**
-	 * General expectation wrapper
+	 * General expectation wrapper.
 	 */
-	expect: actual => ({
-		toEqual: expected => expect.toEqual(actual, expected),
-		toHaveLength: length => expect.toHaveLength(actual, length),
-		toBeTruthy: () => expect.toBeTruthy(actual),
-		toBeFalsy: () => expect.toBeFalsy(actual),
-		toThrow: error => expect.toThrow(actual, error),
-		toThrowWithMessage: message => expect.toThrowWithMessage(actual, message),
-	}),
+	expect: actual => {
+		return {
+			toEqual: expected => expect.toEqual(actual, expected),
+			toHaveLength: length => expect.toHaveLength(actual, length),
+			toBeTruthy: () => expect.toBeTruthy(actual),
+			toBeFalsy: () => expect.toBeFalsy(actual),
+			toThrow: error => expect.toThrow(actual, error),
+			toThrowWithMessage: message => expect.toThrowWithMessage(actual, message),
+		};
+	},
 };
 
 /**
- * Timer mock utilities using @sinonjs/fake-timers
+ * Timer mock utilities using @sinonjs/fake-timers.
  */
 const FakeTimers = require('@sinonjs/fake-timers');
 
@@ -114,13 +116,13 @@ const timers = {
 		}
 	},
 
-	advanceTimersByTime: (ms) => {
+	advanceTimersByTime: ms => {
 		if (clock) {
 			clock.tick(ms);
 		}
 	},
 
-	setSystemTime: (time) => {
+	setSystemTime: time => {
 		if (clock) {
 			clock.setSystemTime(time);
 		}
@@ -130,7 +132,7 @@ const timers = {
 };
 
 /**
- * Simple wait function for async tests
+ * Simple wait function for async tests.
  */
 function wait(ms) {
 	return new Promise(resolve => setTimeout(resolve, ms));

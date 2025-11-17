@@ -1,6 +1,13 @@
 'use strict';
 
-const { describe, it, beforeEach, afterEach, before, after } = require('node:test');
+const {
+	describe,
+	it,
+	beforeEach,
+	afterEach,
+	before,
+	after,
+} = require('node:test');
 const assert = require('node:assert');
 const { describeEach } = require('../helpers');
 
@@ -43,7 +50,10 @@ describeEach([
 			const metrics = await register.getMetricsAsJSON();
 
 			assert.strictEqual(metrics.length, 1);
-			assert.strictEqual(metrics[0].help, 'Maximum number of open file descriptors.');
+			assert.strictEqual(
+				metrics[0].help,
+				'Maximum number of open file descriptors.',
+			);
 			assert.strictEqual(metrics[0].type, 'gauge');
 			assert.strictEqual(metrics[0].name, 'process_max_fds');
 			assert.strictEqual(metrics[0].values.length, 1);

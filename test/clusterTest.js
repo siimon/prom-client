@@ -20,13 +20,13 @@ describeEach([
 
 		require('../lib/cluster');
 
-		assert.strictEqual(cluster.listenerCount('message'),originalListenerCount);
+		assert.strictEqual(cluster.listenerCount('message'), originalListenerCount);
 
 		// Note: jest.resetModules() not directly available in node:test
 
 		require('../lib/cluster');
 
-		assert.strictEqual(cluster.listenerCount('message'),originalListenerCount);
+		assert.strictEqual(cluster.listenerCount('message'), originalListenerCount);
 	});
 
 	it('requiring the cluster should not add any listeners on the process module', () => {
@@ -34,13 +34,13 @@ describeEach([
 
 		require('../lib/cluster');
 
-		assert.strictEqual(process.listenerCount('message'),originalListenerCount);
+		assert.strictEqual(process.listenerCount('message'), originalListenerCount);
 
 		// Note: jest.resetModules() not directly available in node:test
 
 		require('../lib/cluster');
 
-		assert.strictEqual(process.listenerCount('message'),originalListenerCount);
+		assert.strictEqual(process.listenerCount('message'), originalListenerCount);
 	});
 
 	describe('aggregatorRegistry.clusterMetrics()', () => {

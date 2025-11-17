@@ -7,7 +7,7 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-	globalIgnores(['**/coverage/']),
+	globalIgnores(['**/coverage/', 'cpu-*', 'heap-*']),
 	eslint.configs.recommended,
 	nodePlugin.configs['flat/recommended-script'],
 	eslintPluginPrettierRecommended,

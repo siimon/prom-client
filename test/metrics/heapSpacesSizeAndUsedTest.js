@@ -1,6 +1,13 @@
 'use strict';
 
-const { describe, it, beforeEach, afterEach, before, after } = require('node:test');
+const {
+	describe,
+	it,
+	beforeEach,
+	afterEach,
+	before,
+	after,
+} = require('node:test');
 const assert = require('node:assert');
 const { describeEach } = require('../helpers');
 
@@ -33,7 +40,10 @@ describeEach([
 		assert.strictEqual(metrics.length, 3);
 		assert.strictEqual(metrics[0].name, 'nodejs_heap_space_size_total_bytes');
 		assert.strictEqual(metrics[1].name, 'nodejs_heap_space_size_used_bytes');
-		assert.strictEqual(metrics[2].name, 'nodejs_heap_space_size_available_bytes');
+		assert.strictEqual(
+			metrics[2].name,
+			'nodejs_heap_space_size_available_bytes',
+		);
 
 		// Verify the structure - actual values may vary based on real v8 heap spaces
 		assert.strictEqual(Array.isArray(metrics[0].values), true);

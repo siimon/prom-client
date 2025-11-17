@@ -44,7 +44,8 @@ describe('Exemplars', () => {
 				const vals = await counterInstance.get();
 				assert.strictEqual(vals.values[0].value, 2);
 				assert.strictEqual(vals.values[0].exemplar.value, 2);
-				assert.strictEqual(vals.values[0].exemplar.labelSet.traceId,
+				assert.strictEqual(
+					vals.values[0].exemplar.labelSet.traceId,
 					'trace_id_test',
 				);
 			});
@@ -84,14 +85,14 @@ describe('Exemplars', () => {
 
 				const vals = (await histogramInstance.get()).values;
 
-				assert.strictEqual(getValuesByLabel(0.005, vals)[0].value,0);
+				assert.strictEqual(getValuesByLabel(0.005, vals)[0].value, 0);
 				assert.strictEqual(getValuesByLabel(0.005, vals)[0].exemplar, null);
 
 				assert.strictEqual(getValuesByLabel(0.5, vals)[0].value, 2);
 				assert.strictEqual(
 					getValuesByLabel(0.5, vals)[0].exemplar.labelSet.traceId,
-				'trace_id_test_2',
-		);
+					'trace_id_test_2',
+				);
 				assert.strictEqual(getValuesByLabel(0.5, vals)[0].exemplar.value, 0.4);
 
 				assert.strictEqual(getValuesByLabel(10, vals)[0].value, 2);
@@ -100,9 +101,12 @@ describe('Exemplars', () => {
 				assert.strictEqual(getValuesByLabel('+Inf', vals)[0].value, 3);
 				assert.strictEqual(
 					getValuesByLabel('+Inf', vals)[0].exemplar.labelSet.traceId,
-				'trace_id_test_3',
-		);
-				assert.strictEqual(getValuesByLabel('+Inf', vals)[0].exemplar.value, 11);
+					'trace_id_test_3',
+				);
+				assert.strictEqual(
+					getValuesByLabel('+Inf', vals)[0].exemplar.value,
+					11,
+				);
 
 				// Note: Snapshot testing not available in node:test, verify metrics output manually
 				const metrics = await globalRegistry.metrics();
@@ -176,8 +180,8 @@ describe('Exemplars', () => {
 				assert.strictEqual(getValuesByLabel(0.5, vals)[0].value, 1);
 				assert.strictEqual(
 					getValuesByLabel(0.5, vals)[0].exemplar.labelSet.traceId,
-				'trace_id_test_1',
-			);
+					'trace_id_test_1',
+				);
 				timers.useRealTimers();
 			});
 
@@ -207,10 +211,12 @@ describe('Exemplars', () => {
 					const vals = await counterInstance.get();
 					assert.strictEqual(vals.values[0].value, 6);
 					assert.strictEqual(vals.values[0].exemplar.value, 2);
-					assert.strictEqual(vals.values[0].exemplar.labelSet.traceId,
+					assert.strictEqual(
+						vals.values[0].exemplar.labelSet.traceId,
 						'trace_id_test',
 					);
-					assert.strictEqual(vals.values[0].exemplar.labelSet.spanId,
+					assert.strictEqual(
+						vals.values[0].exemplar.labelSet.spanId,
 						'span_id_test',
 					);
 				});
@@ -241,13 +247,16 @@ describe('Exemplars', () => {
 					assert.strictEqual(getValuesByLabel(0.5, vals)[0].value, 2);
 					assert.strictEqual(
 						getValuesByLabel(0.5, vals)[0].exemplar.labelSet.traceId,
-					'trace_id_test_1',
-			);
+						'trace_id_test_1',
+					);
 					assert.strictEqual(
 						getValuesByLabel(0.5, vals)[0].exemplar.labelSet.spanId,
-					'span_id_test_1',
-				);
-					assert.strictEqual(getValuesByLabel(0.5, vals)[0].exemplar.value, 0.3);
+						'span_id_test_1',
+					);
+					assert.strictEqual(
+						getValuesByLabel(0.5, vals)[0].exemplar.value,
+						0.3,
+					);
 				});
 			});
 

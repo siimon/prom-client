@@ -1,6 +1,13 @@
 'use strict';
 
-const { describe, it, beforeEach, afterEach, before, after } = require('node:test');
+const {
+	describe,
+	it,
+	beforeEach,
+	afterEach,
+	before,
+	after,
+} = require('node:test');
 const assert = require('node:assert');
 const { describeEach } = require('../helpers');
 
@@ -34,7 +41,10 @@ describeEach([
 		const startTime = Math.ceil(Date.now() / 1000 - process.uptime());
 
 		assert.strictEqual(metrics.length, 1);
-		assert.strictEqual(metrics[0].help, 'Start time of the process since unix epoch in seconds.');
+		assert.strictEqual(
+			metrics[0].help,
+			'Start time of the process since unix epoch in seconds.',
+		);
 		assert.strictEqual(metrics[0].type, 'gauge');
 		assert.strictEqual(metrics[0].name, 'process_start_time_seconds');
 		assert.strictEqual(metrics[0].values.length, 1);

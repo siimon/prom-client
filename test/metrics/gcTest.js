@@ -1,6 +1,13 @@
 'use strict';
 
-const { describe, it, beforeEach, afterEach, before, after } = require('node:test');
+const {
+	describe,
+	it,
+	beforeEach,
+	afterEach,
+	before,
+	after,
+} = require('node:test');
 const assert = require('node:assert');
 const { describeEach } = require('../helpers');
 
@@ -43,7 +50,10 @@ describeEach([
 		if (perf_hooks) {
 			assert.strictEqual(metrics.length, 1);
 
-			assert.strictEqual(metrics[0].help, 'Garbage collection duration by kind, one of major, minor, incremental or weakcb.');
+			assert.strictEqual(
+				metrics[0].help,
+				'Garbage collection duration by kind, one of major, minor, incremental or weakcb.',
+			);
 			assert.strictEqual(metrics[0].type, 'histogram');
 			assert.strictEqual(metrics[0].name, 'nodejs_gc_duration_seconds');
 		} else {

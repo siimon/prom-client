@@ -1,6 +1,13 @@
 'use strict';
 
-const { describe, it, beforeEach, afterEach, before, after } = require('node:test');
+const {
+	describe,
+	it,
+	beforeEach,
+	afterEach,
+	before,
+	after,
+} = require('node:test');
 const assert = require('node:assert');
 const { describeEach } = require('../helpers');
 
@@ -33,7 +40,10 @@ describeEach([
 		const metrics = await register.getMetricsAsJSON();
 
 		assert.strictEqual(metrics.length, 2);
-		assert.strictEqual(metrics[0].help, 'Number of active libuv requests grouped by request type. Every request type is C++ class name.');
+		assert.strictEqual(
+			metrics[0].help,
+			'Number of active libuv requests grouped by request type. Every request type is C++ class name.',
+		);
 		assert.strictEqual(metrics[0].type, 'gauge');
 		assert.strictEqual(metrics[0].name, 'nodejs_active_requests');
 

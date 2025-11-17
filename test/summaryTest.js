@@ -55,12 +55,18 @@ describeEach([
 					labelNames: ['foo'],
 				});
 
-				assert.throws(() => {
-					summary.observe({ foo: 'bar', baz: 'qaz' }, 10);
-				}, error => {
-					assert.strictEqual(error.message, errorMessages.INVALID_LABEL_SET('baz'));
-					return true;
-				});
+				assert.throws(
+					() => {
+						summary.observe({ foo: 'bar', baz: 'qaz' }, 10);
+					},
+					error => {
+						assert.strictEqual(
+							error.message,
+							errorMessages.INVALID_LABEL_SET('baz'),
+						);
+						return true;
+					},
+				);
 			});
 
 			it('should correctly calculate percentiles when more values are added to the summary', async () => {
@@ -77,29 +83,29 @@ describeEach([
 				assert.strictEqual(values[0].labels.quantile, 0.01);
 				assert.strictEqual(values[0].value, 50);
 
-				assert.strictEqual(values[1].labels.quantile,0.05);
-				assert.strictEqual(values[1].value,50);
+				assert.strictEqual(values[1].labels.quantile, 0.05);
+				assert.strictEqual(values[1].value, 50);
 
-				assert.strictEqual(values[2].labels.quantile,0.5);
-				assert.strictEqual(values[2].value,80);
+				assert.strictEqual(values[2].labels.quantile, 0.5);
+				assert.strictEqual(values[2].value, 80);
 
-				assert.strictEqual(values[3].labels.quantile,0.9);
-				assert.strictEqual(values[3].value,100);
+				assert.strictEqual(values[3].labels.quantile, 0.9);
+				assert.strictEqual(values[3].value, 100);
 
-				assert.strictEqual(values[4].labels.quantile,0.95);
-				assert.strictEqual(values[4].value,100);
+				assert.strictEqual(values[4].labels.quantile, 0.95);
+				assert.strictEqual(values[4].value, 100);
 
-				assert.strictEqual(values[5].labels.quantile,0.99);
-				assert.strictEqual(values[5].value,100);
+				assert.strictEqual(values[5].labels.quantile, 0.99);
+				assert.strictEqual(values[5].value, 100);
 
-				assert.strictEqual(values[6].labels.quantile,0.999);
-				assert.strictEqual(values[6].value,100);
+				assert.strictEqual(values[6].labels.quantile, 0.999);
+				assert.strictEqual(values[6].value, 100);
 
 				assert.strictEqual(values[7].metricName, 'summary_test_sum');
-				assert.strictEqual(values[7].value,400);
+				assert.strictEqual(values[7].value, 400);
 
 				assert.strictEqual(values[8].metricName, 'summary_test_count');
-				assert.strictEqual(values[8].value,5);
+				assert.strictEqual(values[8].value, 5);
 			});
 
 			it('should correctly use calculate other percentiles when configured', async () => {
@@ -119,17 +125,17 @@ describeEach([
 
 				assert.strictEqual(values.length, 4);
 
-				assert.strictEqual(values[0].labels.quantile,0.5);
-				assert.strictEqual(values[0].value,80);
+				assert.strictEqual(values[0].labels.quantile, 0.5);
+				assert.strictEqual(values[0].value, 80);
 
-				assert.strictEqual(values[1].labels.quantile,0.9);
-				assert.strictEqual(values[1].value,100);
+				assert.strictEqual(values[1].labels.quantile, 0.9);
+				assert.strictEqual(values[1].value, 100);
 
-				assert.strictEqual(values[2].metricName,'summary_test_sum');
-				assert.strictEqual(values[2].value,400);
+				assert.strictEqual(values[2].metricName, 'summary_test_sum');
+				assert.strictEqual(values[2].value, 400);
 
-				assert.strictEqual(values[3].metricName,'summary_test_count');
-				assert.strictEqual(values[3].value,5);
+				assert.strictEqual(values[3].metricName, 'summary_test_count');
+				assert.strictEqual(values[3].value, 5);
 			});
 
 			it('should allow to reset itself', async () => {
@@ -143,27 +149,27 @@ describeEach([
 
 				const { values } = await instance.get();
 
-				assert.strictEqual(values[0].labels.quantile,0.5);
+				assert.strictEqual(values[0].labels.quantile, 0.5);
 				assert.strictEqual(values[0].value, 100);
 
-				assert.strictEqual(values[1].metricName,'summary_test_sum');
-				assert.strictEqual(values[1].value,100);
+				assert.strictEqual(values[1].metricName, 'summary_test_sum');
+				assert.strictEqual(values[1].value, 100);
 
-				assert.strictEqual(values[2].metricName,'summary_test_count');
-				assert.strictEqual(values[2].value,1);
+				assert.strictEqual(values[2].metricName, 'summary_test_count');
+				assert.strictEqual(values[2].value, 1);
 
 				instance.reset();
 
 				const { values: valuesPost } = await instance.get();
 
-				assert.strictEqual(valuesPost[0].labels.quantile,0.5);
-				assert.strictEqual(valuesPost[0].value,0);
+				assert.strictEqual(valuesPost[0].labels.quantile, 0.5);
+				assert.strictEqual(valuesPost[0].value, 0);
 
-				assert.strictEqual(valuesPost[1].metricName,'summary_test_sum');
-				assert.strictEqual(valuesPost[1].value,0);
+				assert.strictEqual(valuesPost[1].metricName, 'summary_test_sum');
+				assert.strictEqual(valuesPost[1].value, 0);
 
-				assert.strictEqual(valuesPost[2].metricName,'summary_test_count');
-				assert.strictEqual(valuesPost[2].value,0);
+				assert.strictEqual(valuesPost[2].metricName, 'summary_test_count');
+				assert.strictEqual(valuesPost[2].value, 0);
 			});
 
 			describe('labels', () => {
@@ -183,35 +189,35 @@ describeEach([
 
 					const { values } = await instance.get();
 					assert.strictEqual(values.length, 6);
-					assert.strictEqual(values[0].labels.method,'GET');
-					assert.strictEqual(values[0].labels.endpoint,'/test');
-					assert.strictEqual(values[0].labels.quantile,0.9);
+					assert.strictEqual(values[0].labels.method, 'GET');
+					assert.strictEqual(values[0].labels.endpoint, '/test');
+					assert.strictEqual(values[0].labels.quantile, 0.9);
 					assert.strictEqual(values[0].value, 50);
 
-					assert.strictEqual(values[1].metricName,'summary_test_sum');
-					assert.strictEqual(values[1].labels.method,'GET');
-					assert.strictEqual(values[1].labels.endpoint,'/test');
-					assert.strictEqual(values[1].value,50);
+					assert.strictEqual(values[1].metricName, 'summary_test_sum');
+					assert.strictEqual(values[1].labels.method, 'GET');
+					assert.strictEqual(values[1].labels.endpoint, '/test');
+					assert.strictEqual(values[1].value, 50);
 
-					assert.strictEqual(values[2].metricName,'summary_test_count');
-					assert.strictEqual(values[2].labels.method,'GET');
-					assert.strictEqual(values[2].labels.endpoint,'/test');
-					assert.strictEqual(values[2].value,1);
+					assert.strictEqual(values[2].metricName, 'summary_test_count');
+					assert.strictEqual(values[2].labels.method, 'GET');
+					assert.strictEqual(values[2].labels.endpoint, '/test');
+					assert.strictEqual(values[2].value, 1);
 
-					assert.strictEqual(values[3].labels.quantile,0.9);
-					assert.strictEqual(values[3].labels.method,'POST');
-					assert.strictEqual(values[3].labels.endpoint,'/test');
-					assert.strictEqual(values[3].value,100);
+					assert.strictEqual(values[3].labels.quantile, 0.9);
+					assert.strictEqual(values[3].labels.method, 'POST');
+					assert.strictEqual(values[3].labels.endpoint, '/test');
+					assert.strictEqual(values[3].value, 100);
 
-					assert.strictEqual(values[4].metricName,'summary_test_sum');
-					assert.strictEqual(values[4].labels.method,'POST');
-					assert.strictEqual(values[4].labels.endpoint,'/test');
-					assert.strictEqual(values[4].value,100);
+					assert.strictEqual(values[4].metricName, 'summary_test_sum');
+					assert.strictEqual(values[4].labels.method, 'POST');
+					assert.strictEqual(values[4].labels.endpoint, '/test');
+					assert.strictEqual(values[4].value, 100);
 
-					assert.strictEqual(values[5].metricName,'summary_test_count');
-					assert.strictEqual(values[5].labels.method,'POST');
-					assert.strictEqual(values[5].labels.endpoint,'/test');
-					assert.strictEqual(values[5].value,1);
+					assert.strictEqual(values[5].metricName, 'summary_test_count');
+					assert.strictEqual(values[5].labels.method, 'POST');
+					assert.strictEqual(values[5].labels.endpoint, '/test');
+					assert.strictEqual(values[5].value, 1);
 				});
 
 				it('should throw error if label lengths does not match', () => {
@@ -219,7 +225,15 @@ describeEach([
 						instance.labels('GET').observe();
 					};
 					assert.throws(fn, error => {
-						assert.strictEqual(error.message, errorMessages.INVALID_LABEL_ARGUMENTS(1, 'GET', 2, 'method, endpoint'));
+						assert.strictEqual(
+							error.message,
+							errorMessages.INVALID_LABEL_ARGUMENTS(
+								1,
+								'GET',
+								2,
+								'method, endpoint',
+							),
+						);
 						return true;
 					});
 				});
@@ -233,20 +247,20 @@ describeEach([
 					assert.strictEqual(duration, 1);
 					const { values } = await instance.get();
 					assert.strictEqual(values.length, 3);
-					assert.strictEqual(values[0].labels.method,'GET');
-					assert.strictEqual(values[0].labels.endpoint,'/test');
-					assert.strictEqual(values[0].labels.quantile,0.9);
-					assert.strictEqual(values[0].value,1);
+					assert.strictEqual(values[0].labels.method, 'GET');
+					assert.strictEqual(values[0].labels.endpoint, '/test');
+					assert.strictEqual(values[0].labels.quantile, 0.9);
+					assert.strictEqual(values[0].value, 1);
 
-					assert.strictEqual(values[1].metricName,'summary_test_sum');
-					assert.strictEqual(values[1].labels.method,'GET');
-					assert.strictEqual(values[1].labels.endpoint,'/test');
-					assert.strictEqual(values[1].value,1);
+					assert.strictEqual(values[1].metricName, 'summary_test_sum');
+					assert.strictEqual(values[1].labels.method, 'GET');
+					assert.strictEqual(values[1].labels.endpoint, '/test');
+					assert.strictEqual(values[1].value, 1);
 
-					assert.strictEqual(values[2].metricName,'summary_test_count');
-					assert.strictEqual(values[2].labels.method,'GET');
-					assert.strictEqual(values[2].labels.endpoint,'/test');
-					assert.strictEqual(values[2].value,1);
+					assert.strictEqual(values[2].metricName, 'summary_test_count');
+					assert.strictEqual(values[2].labels.method, 'GET');
+					assert.strictEqual(values[2].labels.endpoint, '/test');
+					assert.strictEqual(values[2].value, 1);
 
 					timers.useRealTimers();
 				});
@@ -259,20 +273,20 @@ describeEach([
 					end({ method: 'GET', endpoint: '/test' });
 					const { values } = await instance.get();
 					assert.strictEqual(values.length, 3);
-					assert.strictEqual(values[0].labels.method,'GET');
-					assert.strictEqual(values[0].labels.endpoint,'/test');
-					assert.strictEqual(values[0].labels.quantile,0.9);
-					assert.strictEqual(values[0].value,1);
+					assert.strictEqual(values[0].labels.method, 'GET');
+					assert.strictEqual(values[0].labels.endpoint, '/test');
+					assert.strictEqual(values[0].labels.quantile, 0.9);
+					assert.strictEqual(values[0].value, 1);
 
-					assert.strictEqual(values[1].metricName,'summary_test_sum');
-					assert.strictEqual(values[1].labels.method,'GET');
-					assert.strictEqual(values[1].labels.endpoint,'/test');
-					assert.strictEqual(values[1].value,1);
+					assert.strictEqual(values[1].metricName, 'summary_test_sum');
+					assert.strictEqual(values[1].labels.method, 'GET');
+					assert.strictEqual(values[1].labels.endpoint, '/test');
+					assert.strictEqual(values[1].value, 1);
 
-					assert.strictEqual(values[2].metricName,'summary_test_count');
-					assert.strictEqual(values[2].labels.method,'GET');
-					assert.strictEqual(values[2].labels.endpoint,'/test');
-					assert.strictEqual(values[2].value,1);
+					assert.strictEqual(values[2].metricName, 'summary_test_count');
+					assert.strictEqual(values[2].labels.method, 'GET');
+					assert.strictEqual(values[2].labels.endpoint, '/test');
+					assert.strictEqual(values[2].value, 1);
 
 					timers.useRealTimers();
 				});
@@ -285,20 +299,20 @@ describeEach([
 					end({ endpoint: '/test' });
 					const { values } = await instance.get();
 					assert.strictEqual(values.length, 3);
-					assert.strictEqual(values[0].labels.method,'GET');
-					assert.strictEqual(values[0].labels.endpoint,'/test');
-					assert.strictEqual(values[0].labels.quantile,0.9);
-					assert.strictEqual(values[0].value,1);
+					assert.strictEqual(values[0].labels.method, 'GET');
+					assert.strictEqual(values[0].labels.endpoint, '/test');
+					assert.strictEqual(values[0].labels.quantile, 0.9);
+					assert.strictEqual(values[0].value, 1);
 
-					assert.strictEqual(values[1].metricName,'summary_test_sum');
-					assert.strictEqual(values[1].labels.method,'GET');
-					assert.strictEqual(values[1].labels.endpoint,'/test');
-					assert.strictEqual(values[1].value,1);
+					assert.strictEqual(values[1].metricName, 'summary_test_sum');
+					assert.strictEqual(values[1].labels.method, 'GET');
+					assert.strictEqual(values[1].labels.endpoint, '/test');
+					assert.strictEqual(values[1].value, 1);
 
-					assert.strictEqual(values[2].metricName,'summary_test_count');
-					assert.strictEqual(values[2].labels.method,'GET');
-					assert.strictEqual(values[2].labels.endpoint,'/test');
-					assert.strictEqual(values[2].value,1);
+					assert.strictEqual(values[2].metricName, 'summary_test_count');
+					assert.strictEqual(values[2].labels.method, 'GET');
+					assert.strictEqual(values[2].labels.endpoint, '/test');
+					assert.strictEqual(values[2].value, 1);
 
 					timers.useRealTimers();
 				});
@@ -338,20 +352,20 @@ describeEach([
 
 					const { values } = await instance.get();
 					assert.strictEqual(values.length, 3);
-					assert.strictEqual(values[0].labels.quantile,0.9);
-					assert.strictEqual(values[0].labels.method,'POST');
-					assert.strictEqual(values[0].labels.endpoint,'/test');
+					assert.strictEqual(values[0].labels.quantile, 0.9);
+					assert.strictEqual(values[0].labels.method, 'POST');
+					assert.strictEqual(values[0].labels.endpoint, '/test');
 					assert.strictEqual(values[0].value, 100);
 
-					assert.strictEqual(values[1].metricName,'summary_test_sum');
-					assert.strictEqual(values[1].labels.method,'POST');
-					assert.strictEqual(values[1].labels.endpoint,'/test');
-					assert.strictEqual(values[1].value,100);
+					assert.strictEqual(values[1].metricName, 'summary_test_sum');
+					assert.strictEqual(values[1].labels.method, 'POST');
+					assert.strictEqual(values[1].labels.endpoint, '/test');
+					assert.strictEqual(values[1].value, 100);
 
-					assert.strictEqual(values[2].metricName,'summary_test_count');
-					assert.strictEqual(values[2].labels.method,'POST');
-					assert.strictEqual(values[2].labels.endpoint,'/test');
-					assert.strictEqual(values[2].value,1);
+					assert.strictEqual(values[2].metricName, 'summary_test_count');
+					assert.strictEqual(values[2].labels.method, 'POST');
+					assert.strictEqual(values[2].labels.endpoint, '/test');
+					assert.strictEqual(values[2].value, 1);
 				});
 
 				it('should remove all labels', async () => {
@@ -366,7 +380,15 @@ describeEach([
 						instance.remove('GET');
 					};
 					assert.throws(fn, error => {
-						assert.strictEqual(error.message, errorMessages.INVALID_LABEL_ARGUMENTS(1, 'GET', 2, 'method, endpoint'));
+						assert.strictEqual(
+							error.message,
+							errorMessages.INVALID_LABEL_ARGUMENTS(
+								1,
+								'GET',
+								2,
+								'method, endpoint',
+							),
+						);
 						return true;
 					});
 				});
@@ -381,20 +403,20 @@ describeEach([
 
 					const { values } = await instance.get();
 					assert.strictEqual(values.length, 3);
-					assert.strictEqual(values[0].labels.quantile,0.9);
-					assert.strictEqual(values[0].labels.method,'POST');
-					assert.strictEqual(values[0].labels.endpoint,'/test');
+					assert.strictEqual(values[0].labels.quantile, 0.9);
+					assert.strictEqual(values[0].labels.method, 'POST');
+					assert.strictEqual(values[0].labels.endpoint, '/test');
 					assert.strictEqual(values[0].value, 100);
 
-					assert.strictEqual(values[1].metricName,'summary_test_sum');
-					assert.strictEqual(values[1].labels.method,'POST');
-					assert.strictEqual(values[1].labels.endpoint,'/test');
-					assert.strictEqual(values[1].value,100);
+					assert.strictEqual(values[1].metricName, 'summary_test_sum');
+					assert.strictEqual(values[1].labels.method, 'POST');
+					assert.strictEqual(values[1].labels.endpoint, '/test');
+					assert.strictEqual(values[1].value, 100);
 
-					assert.strictEqual(values[2].metricName,'summary_test_count');
-					assert.strictEqual(values[2].labels.method,'POST');
-					assert.strictEqual(values[2].labels.endpoint,'/test');
-					assert.strictEqual(values[2].value,1);
+					assert.strictEqual(values[2].metricName, 'summary_test_count');
+					assert.strictEqual(values[2].labels.method, 'POST');
+					assert.strictEqual(values[2].labels.endpoint, '/test');
+					assert.strictEqual(values[2].value, 1);
 
 					timers.useRealTimers();
 				});
@@ -409,20 +431,20 @@ describeEach([
 
 					const { values } = await instance.get();
 					assert.strictEqual(values.length, 3);
-					assert.strictEqual(values[0].labels.quantile,0.9);
-					assert.strictEqual(values[0].labels.method,'POST');
-					assert.strictEqual(values[0].labels.endpoint,'/test');
+					assert.strictEqual(values[0].labels.quantile, 0.9);
+					assert.strictEqual(values[0].labels.method, 'POST');
+					assert.strictEqual(values[0].labels.endpoint, '/test');
 					assert.strictEqual(values[0].value, 100);
 
-					assert.strictEqual(values[1].metricName,'summary_test_sum');
-					assert.strictEqual(values[1].labels.method,'POST');
-					assert.strictEqual(values[1].labels.endpoint,'/test');
-					assert.strictEqual(values[1].value,100);
+					assert.strictEqual(values[1].metricName, 'summary_test_sum');
+					assert.strictEqual(values[1].labels.method, 'POST');
+					assert.strictEqual(values[1].labels.endpoint, '/test');
+					assert.strictEqual(values[1].value, 100);
 
-					assert.strictEqual(values[2].metricName,'summary_test_count');
-					assert.strictEqual(values[2].labels.method,'POST');
-					assert.strictEqual(values[2].labels.endpoint,'/test');
-					assert.strictEqual(values[2].value,1);
+					assert.strictEqual(values[2].metricName, 'summary_test_count');
+					assert.strictEqual(values[2].labels.method, 'POST');
+					assert.strictEqual(values[2].labels.endpoint, '/test');
+					assert.strictEqual(values[2].value, 1);
 
 					timers.useRealTimers();
 				});
@@ -437,20 +459,20 @@ describeEach([
 
 					const { values } = await instance.get();
 					assert.strictEqual(values.length, 3);
-					assert.strictEqual(values[0].labels.quantile,0.9);
-					assert.strictEqual(values[0].labels.method,'POST');
-					assert.strictEqual(values[0].labels.endpoint,'/test');
+					assert.strictEqual(values[0].labels.quantile, 0.9);
+					assert.strictEqual(values[0].labels.method, 'POST');
+					assert.strictEqual(values[0].labels.endpoint, '/test');
 					assert.strictEqual(values[0].value, 100);
 
-					assert.strictEqual(values[1].metricName,'summary_test_sum');
-					assert.strictEqual(values[1].labels.method,'POST');
-					assert.strictEqual(values[1].labels.endpoint,'/test');
-					assert.strictEqual(values[1].value,100);
+					assert.strictEqual(values[1].metricName, 'summary_test_sum');
+					assert.strictEqual(values[1].labels.method, 'POST');
+					assert.strictEqual(values[1].labels.endpoint, '/test');
+					assert.strictEqual(values[1].value, 100);
 
-					assert.strictEqual(values[2].metricName,'summary_test_count');
-					assert.strictEqual(values[2].labels.method,'POST');
-					assert.strictEqual(values[2].labels.endpoint,'/test');
-					assert.strictEqual(values[2].value,1);
+					assert.strictEqual(values[2].metricName, 'summary_test_count');
+					assert.strictEqual(values[2].labels.method, 'POST');
+					assert.strictEqual(values[2].labels.endpoint, '/test');
+					assert.strictEqual(values[2].value, 1);
 
 					timers.useRealTimers();
 				});
@@ -477,12 +499,12 @@ describeEach([
 		it('should increase count', async () => {
 			instance.observe(100);
 			const { values } = await instance.get();
-			assert.strictEqual(values[0].labels.quantile,0.01);
-			assert.strictEqual(values[0].value,100);
-			assert.strictEqual(values[7].metricName,'summary_test_sum');
-			assert.strictEqual(values[7].value,100);
-			assert.strictEqual(values[8].metricName,'summary_test_count');
-			assert.strictEqual(values[8].value,1);
+			assert.strictEqual(values[0].labels.quantile, 0.01);
+			assert.strictEqual(values[0].value, 100);
+			assert.strictEqual(values[7].metricName, 'summary_test_sum');
+			assert.strictEqual(values[7].value, 100);
+			assert.strictEqual(values[8].metricName, 'summary_test_count');
+			assert.strictEqual(values[8].value, 1);
 			assert.strictEqual((await globalRegistry.getMetricsAsJSON()).length, 0);
 		});
 	});
@@ -499,12 +521,12 @@ describeEach([
 		it('should increment counter', async () => {
 			instance.observe(100);
 			const { values } = await instance.get();
-			assert.strictEqual(values[0].labels.quantile,0.01);
-			assert.strictEqual(values[0].value,100);
-			assert.strictEqual(values[7].metricName,'summary_test_sum');
-			assert.strictEqual(values[7].value,100);
-			assert.strictEqual(values[8].metricName,'summary_test_count');
-			assert.strictEqual(values[8].value,1);
+			assert.strictEqual(values[0].labels.quantile, 0.01);
+			assert.strictEqual(values[0].value, 100);
+			assert.strictEqual(values[7].metricName, 'summary_test_sum');
+			assert.strictEqual(values[7].value, 100);
+			assert.strictEqual(values[8].metricName, 'summary_test_count');
+			assert.strictEqual(values[8].value, 1);
 			assert.strictEqual((await globalRegistry.getMetricsAsJSON()).length, 0);
 			assert.strictEqual((await registryInstance.getMetricsAsJSON()).length, 1);
 		});
@@ -539,10 +561,10 @@ describeEach([
 			}
 
 			const { values } = await localInstance.get();
-			assert.strictEqual(values[0].labels.quantile,0.01);
-			assert.strictEqual(values[0].value,0);
-			assert.strictEqual(values[7].value,100);
-			assert.strictEqual(values[8].value,1);
+			assert.strictEqual(values[0].labels.quantile, 0.01);
+			assert.strictEqual(values[0].value, 0);
+			assert.strictEqual(values[7].value, 100);
+			assert.strictEqual(values[8].value, 1);
 		});
 
 		it('should prune expired buckets when pruneAgedBuckets are set with maxAgeSeconds and ageBuckets', async () => {
@@ -590,8 +612,8 @@ describeEach([
 			}
 
 			const { values } = await localInstance.get();
-			assert.strictEqual(values[0].labels.quantile,0.01);
-			assert.strictEqual(values[0].value,100);
+			assert.strictEqual(values[0].labels.quantile, 0.01);
+			assert.strictEqual(values[0].value, 100);
 		});
 	});
 });

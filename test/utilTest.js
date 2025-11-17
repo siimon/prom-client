@@ -53,7 +53,7 @@ describe('utils', () => {
 				map.set({ a: 2 }, 3);
 
 				assert.strictEqual(map.size, 1);
-				assert.deepStrictEqual(Array.from(map.values()),[
+				assert.deepStrictEqual(Array.from(map.values()), [
 					{ value: 3, labels: { a: 2 } },
 				]);
 			});
@@ -65,7 +65,7 @@ describe('utils', () => {
 				map.set({ a: 2 }, 3).set({ a: 2 }, 4);
 
 				assert.strictEqual(map.size, 1);
-				assert.deepStrictEqual(Array.from(map.values()),[
+				assert.deepStrictEqual(Array.from(map.values()), [
 					{ value: 4, labels: { a: 2 } },
 				]);
 			});
@@ -76,7 +76,7 @@ describe('utils', () => {
 				map.set({ a: 2 }, 22).set({ a: 3 }, 3);
 
 				assert.strictEqual(map.size, 2);
-				assert.deepStrictEqual(Array.from(map.values()),[
+				assert.deepStrictEqual(Array.from(map.values()), [
 					{
 						value: 22,
 						labels: { a: 2 },
@@ -96,7 +96,7 @@ describe('utils', () => {
 				map.setDelta({ a: 2 }, 3);
 
 				assert.strictEqual(map.size, 1);
-				assert.deepStrictEqual(Array.from(map.values()),[
+				assert.deepStrictEqual(Array.from(map.values()), [
 					{ value: 3, labels: { a: 2 } },
 				]);
 			});
@@ -107,7 +107,7 @@ describe('utils', () => {
 				map.setDelta({ a: 2 }, 3).setDelta({ a: 2 }, 4);
 
 				assert.strictEqual(map.size, 1);
-				assert.deepStrictEqual(Array.from(map.values()),[
+				assert.deepStrictEqual(Array.from(map.values()), [
 					{ value: 3 + 4, labels: { a: 2 } },
 				]);
 			});
@@ -119,7 +119,7 @@ describe('utils', () => {
 				map.setDelta({ a: 3 }, 3);
 
 				assert.strictEqual(map.size, 2);
-				assert.deepStrictEqual(Array.from(map.values()),[
+				assert.deepStrictEqual(Array.from(map.values()), [
 					{ value: 3, labels: { a: 2 } },
 					{ value: 3, labels: { a: 3 } },
 				]);
@@ -154,7 +154,7 @@ describe('utils', () => {
 
 				map.set({ b: 22 }, 10);
 
-				assert.deepStrictEqual(map.entry({ b: 22 }),{
+				assert.deepStrictEqual(map.entry({ b: 22 }), {
 					value: 10,
 					labels: { b: 22 },
 				});
@@ -188,13 +188,16 @@ describe('utils', () => {
 				const map = new LabelMap(['exists']);
 
 				// Should not throw
-			map.validate({ exists: null });
+				map.validate({ exists: null });
 			});
 
 			it('should throw on unknown label', () => {
 				const map = new LabelMap(['exists']);
 
-				assert.throws(() => map.validate({ somethingElse: null }), /Added label \"somethingElse\" is not included in initial labelset/);
+				assert.throws(
+					() => map.validate({ somethingElse: null }),
+					/Added label "somethingElse" is not included in initial labelset/,
+				);
 			});
 		});
 
@@ -207,7 +210,7 @@ describe('utils', () => {
 
 				const actual = map.getOrAdd({ c: 200 }, callback);
 
-				assert.deepStrictEqual(actual,[2, 3]);
+				assert.deepStrictEqual(actual, [2, 3]);
 				// Note: Mock function call tracking not available in node:test
 			});
 
@@ -220,7 +223,7 @@ describe('utils', () => {
 				const actual = map.getOrAdd({ c: 401 }, callback);
 
 				assert.strictEqual(actual, 4);
-				assert.deepStrictEqual(Array.from(map.values()),[
+				assert.deepStrictEqual(Array.from(map.values()), [
 					{ value: [2, 3], labels: { c: 200 } },
 					{ value: 4, labels: { c: 401 } },
 				]);
@@ -246,7 +249,7 @@ describe('utils', () => {
 				map.setDelta({ a: 3 }, 4);
 
 				assert.strictEqual(map.size, 1);
-				assert.deepStrictEqual(Array.from(map.values()),[
+				assert.deepStrictEqual(Array.from(map.values()), [
 					{ value: 4, labels: { a: 3 } },
 				]);
 			});
@@ -262,7 +265,7 @@ describe('utils', () => {
 				);
 				assert.strictEqual(result !== undefined, true);
 
-				assert.strictEqual(map.entry({ method: 'head' }),result);
+				assert.strictEqual(map.entry({ method: 'head' }), result);
 			});
 
 			it('merges in values', () => {
@@ -273,7 +276,7 @@ describe('utils', () => {
 					{ a: 'foo', labels: { b: 2 } },
 				);
 
-				assert.deepStrictEqual(result,{
+				assert.deepStrictEqual(result, {
 					labels: { method: 'head' },
 					a: 'foo',
 				});
@@ -304,7 +307,7 @@ describe('utils', () => {
 				grouper.add('name', 3);
 
 				assert.strictEqual(grouper.size, 1);
-				assert.deepStrictEqual(grouper.get('name'),[2, 3]);
+				assert.deepStrictEqual(grouper.get('name'), [2, 3]);
 			});
 
 			it('creates separate records for each key', () => {
@@ -313,7 +316,7 @@ describe('utils', () => {
 				grouper.add('other', 3);
 
 				assert.strictEqual(grouper.size, 2);
-				assert.deepStrictEqual(grouper.get('other'),[3]);
+				assert.deepStrictEqual(grouper.get('other'), [3]);
 			});
 		});
 
@@ -324,7 +327,7 @@ describe('utils', () => {
 
 				const actual = grouper.getOrAdd('name', callback);
 
-				assert.deepStrictEqual(actual,[2, 3]);
+				assert.deepStrictEqual(actual, [2, 3]);
 				// Note: Mock function call tracking not available in node:test
 			});
 
@@ -335,7 +338,7 @@ describe('utils', () => {
 				const actual = grouper.getOrAdd('blah', callback);
 
 				assert.strictEqual(actual, 4);
-				assert.strictEqual(grouper.get('blah'),4);
+				assert.strictEqual(grouper.get('blah'), 4);
 				// Note: Mock function call tracking not available in node:test
 			});
 
@@ -343,8 +346,8 @@ describe('utils', () => {
 				const grouper = new Grouper([['name', [2, 3]]]);
 				const actual = grouper.getOrAdd('blah');
 
-				assert.deepStrictEqual(actual,[]);
-				assert.deepStrictEqual(grouper.get('blah'),[]);
+				assert.deepStrictEqual(actual, []);
+				assert.deepStrictEqual(grouper.get('blah'), []);
 			});
 		});
 	});
