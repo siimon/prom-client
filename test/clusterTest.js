@@ -1,10 +1,13 @@
 'use strict';
 
+const { describe, it, beforeEach } = require('node:test');
+const assert = require('node:assert');
+const { describeEach } = require('./helpers');
 const cluster = require('cluster');
 const process = require('process');
 const Registry = require('../lib/cluster');
 
-describe.each([
+describeEach([
 	['Prometheus', Registry.PROMETHEUS_CONTENT_TYPE],
 	['OpenMetrics', Registry.OPENMETRICS_CONTENT_TYPE],
 ])('%s AggregatorRegistry', (tag, regType) => {
@@ -17,13 +20,13 @@ describe.each([
 
 		require('../lib/cluster');
 
-		expect(cluster.listenerCount('message')).toBe(originalListenerCount);
+		assert.strictEqual(cluster.listenerCount('message'), originalListenerCount);
 
-		jest.resetModules();
+		// Note: jest.resetModules() not directly available in node:test
 
 		require('../lib/cluster');
 
-		expect(cluster.listenerCount('message')).toBe(originalListenerCount);
+		assert.strictEqual(cluster.listenerCount('message'), originalListenerCount);
 	});
 
 	it('requiring the cluster should not add any listeners on the process module', () => {
@@ -31,13 +34,13 @@ describe.each([
 
 		require('../lib/cluster');
 
-		expect(process.listenerCount('message')).toBe(originalListenerCount);
+		assert.strictEqual(process.listenerCount('message'), originalListenerCount);
 
-		jest.resetModules();
+		// Note: jest.resetModules() not directly available in node:test
 
 		require('../lib/cluster');
 
-		expect(process.listenerCount('message')).toBe(originalListenerCount);
+		assert.strictEqual(process.listenerCount('message'), originalListenerCount);
 	});
 
 	describe('aggregatorRegistry.clusterMetrics()', () => {
@@ -45,7 +48,7 @@ describe.each([
 			const AggregatorRegistry = require('../lib/cluster');
 			const ar = new AggregatorRegistry(regType);
 			const metrics = await ar.clusterMetrics();
-			expect(metrics).toEqual('');
+			assert.strictEqual(metrics, '');
 		});
 	});
 
@@ -170,7 +173,7 @@ describe.each([
 
 		it('defaults to summation, preserves histogram bins', async () => {
 			const histogram = aggregated.getSingleMetric('test_histogram').get();
-			expect(histogram).toEqual({
+			assert.deepStrictEqual(histogram, {
 				name: 'test_histogram',
 				help: 'Example of a histogram',
 				type: 'histogram',
@@ -192,7 +195,7 @@ describe.each([
 
 		it('defaults to summation, works for gauges', () => {
 			const gauge = aggregated.getSingleMetric('test_gauge').get();
-			expect(gauge).toEqual({
+			assert.deepStrictEqual(gauge, {
 				help: 'Example of a gauge',
 				name: 'test_gauge',
 				type: 'gauge',
@@ -209,14 +212,14 @@ describe.each([
 			const procStartTime = aggregated.getSingleMetric(
 				'process_start_time_seconds',
 			);
-			expect(procStartTime).toBeUndefined();
+			assert.strictEqual(procStartTime, undefined);
 		});
 
 		it('uses `aggregate` method defined for nodejs_eventloop_lag_seconds', () => {
 			const ell = aggregated
 				.getSingleMetric('nodejs_eventloop_lag_seconds')
 				.get();
-			expect(ell).toEqual({
+			assert.deepStrictEqual(ell, {
 				help: 'Lag of event loop in seconds.',
 				name: 'nodejs_eventloop_lag_seconds',
 				type: 'gauge',
@@ -229,7 +232,7 @@ describe.each([
 			const ell = aggregated
 				.getSingleMetric('nodejs_eventloop_lag_seconds')
 				.get();
-			expect(ell).toEqual({
+			assert.deepStrictEqual(ell, {
 				help: 'Lag of event loop in seconds.',
 				name: 'nodejs_eventloop_lag_seconds',
 				type: 'gauge',
@@ -240,7 +243,7 @@ describe.each([
 
 		it('uses `aggregate` method defined for nodejs_version_info', () => {
 			const version = aggregated.getSingleMetric('nodejs_version_info').get();
-			expect(version).toEqual({
+			assert.deepStrictEqual(version, {
 				help: 'Node.js version info.',
 				name: 'nodejs_version_info',
 				type: 'gauge',
@@ -257,7 +260,7 @@ describe.each([
 
 	describe('message handling', () => {
 		it('does not error out on unexpected (or late) responses', () => {
-			jest.resetModules();
+			// Note: jest.resetModules() not directly available in node:test
 
 			require('../lib/cluster');
 
@@ -268,7 +271,8 @@ describe.each([
 				requestId: -3,
 			};
 
-			expect(() => cluster.emit('message', {}, unexpected)).not.toThrow();
+			// Should not throw
+			cluster.emit('message', {}, unexpected);
 		});
 	});
 });
