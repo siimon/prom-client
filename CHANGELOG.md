@@ -12,6 +12,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - Drop support for Node.js versions 16, 18, 21 and 23
 - Metric internal storage ('hashMap') changed to a separate object, LabelMap. If you have
   subclassed the built-in metric types you may need to adjust your code.
+- Migrated test suite from Jest to Node.js built-in test runner (node:test)
 
 ### Changed
 
@@ -27,10 +28,31 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - perf: New, more space-efficient storage engine, 20-45% faster stats recording
 - perf: Further improvement to key generation cost
 - fix: Browser compatibility for Gauge.startTimer()
+- perf: Eliminate unnecessary promise allocation in metrics and registry when collect functions are not present
+  - Split get() methods into sync and async versions to avoid promise overhead
+  - Registry methods (metrics(), getMetricsAsString(), getMetricsAsJSON()) now return synchronously when possible
+  - Significant performance improvements: up to 38% faster registry serialization, 107% faster histogram operations, 123% faster counter/gauge with labels
+- perf: Avoid array conversion in getMetricsAsJSON by directly iterating over metric values (~1.3% faster)
+- perf: Replace .map() with for loops in registry.metrics() for consistency with codebase optimization patterns
+- perf: Optimize histogram and string escaping for better metrics serialization
+  - Replace .map() with for loops in histogram operations
+  - Inline extractBucketValuesForExport() to eliminate function call overhead
+  - Refactor escapeLabelValue() and escapeString() to single-pass traversal (~4% improvement)
+- perf: Eliminate duplicate sorting in metric creation by passing pre-sorted labelNames to LabelMap (~19% improvement)
+- perf: Optimize keyFrom function for better label hashing performance
+- perf: Switch findBound function to binary search in histogram implementation
+- perf: Optimize tdigest by replacing forEach/map with for loops (~25% faster percentile queries)
+- refactor: Use async fs/promises in osMemoryHeapLinux instead of synchronous readFileSync
+- refactor: Add concurrency control and promise-based collection to osMemoryHeapLinux
+- fix: Skip Linux-only processOpenFileDescriptors test on non-Linux platforms
+- fix: Resolve linting errors in test files (regex escaping, JSDoc formatting)
+- fix: Resolve test failures after Jest to node:test migration (TypeError expectations, deepStrictEqual comparisons)
 
 ### Added
 
 - Expanded benchmarking code
+- feat: Vendor tdigest@0.1.1 and bintrees dependencies to eliminate external dependency on unmaintained packages
+- docs: Add CLAUDE.md for Claude Code guidance with comprehensive development commands and architecture overview
 
 ## [15.1.3] - 2024-06-27
 
