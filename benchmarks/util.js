@@ -1,75 +1,62 @@
 'use strict';
 
+const Path = require('path');
+
 module.exports = setupUtilSuite;
 
 function setupUtilSuite(suite) {
+	const skip = ['prom-client@latest', 'prom-client@trunk'];
+
 	suite.add(
 		'hashObject',
 		(client, Util) => {
-			if (Util === undefined) {
-				return;
-			}
-
 			Util.hashObject({
 				foo: 'longish',
 				user_agent: 'Chrome',
 				gateway: 'lb04',
 			});
 		},
-		{ setup: findUtil },
+		{ setup: findUtil, skip },
 	);
 
 	suite.add(
 		'LabelMap.validate()',
 		(client, labelMap) => {
-			if (labelMap === undefined) {
-				return;
-			}
-
 			labelMap.validate({
 				foo: 'longish:tag:goes:here',
 				user_agent: 'Chrome',
 				status_code: 503,
 			});
 		},
-		{ setup },
+		{ setup, skip },
 	);
 
 	suite.add(
 		'LabelMap.keyFrom()',
 		(client, labelMap) => {
-			if (labelMap === undefined) {
-				return;
-			}
-
 			labelMap.keyFrom({
 				foo: 'longish',
 				user_agent: 'Chrome',
 				status_code: 503,
 			});
 		},
-		{ setup },
+		{ setup, skip },
 	);
 }
 
-function setup(client) {
-	const Util = findUtil(client);
+function setup(client, location) {
+	const { LabelMap } = findUtil(client, location);
 
-	if (Util !== undefined) {
-		return new Util.LabelMap([
-			'foo',
-			'user_agent',
-			'gateway',
-			'method',
-			'status_code',
-		]);
-	}
+	return new LabelMap([
+		'foo',
+		'user_agent',
+		'gateway',
+		'method',
+		'status_code',
+	]);
 }
 
-function findUtil(client) {
-	for (const key of Object.getOwnPropertySymbols(client)) {
-		if (key.toString() === 'Symbol(util)') {
-			return client[key];
-		}
-	}
+function findUtil(client, location) {
+	const Util = require(Path.join(location, 'lib/util.js'));
+	return Util;
 }
