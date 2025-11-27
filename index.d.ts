@@ -772,6 +772,21 @@ export function exponentialBuckets(
 	count: number,
 ): number[];
 
+type AvailableDefaultMetrics =
+	| 'processCpuTotal'
+	| 'processStartTime'
+	| 'osMemoryHeap'
+	| 'processOpenFileDescriptors'
+	| 'processMaxFileDescriptors'
+	| 'eventLoopLag'
+	| 'processResources'
+	| 'processHandles'
+	| 'processRequests'
+	| 'heapSizeAndUsed'
+	| 'heapSpacesSizeAndUsed'
+	| 'version'
+	| 'gc';
+
 export interface DefaultMetricsCollectorConfiguration<
 	T extends RegistryContentType,
 > {
@@ -780,6 +795,7 @@ export interface DefaultMetricsCollectorConfiguration<
 	gcDurationBuckets?: number[];
 	eventLoopMonitoringPrecision?: number;
 	labels?: object;
+	exclude?: AvailableDefaultMetrics[];
 }
 
 export const collectDefaultMetrics: {
@@ -791,7 +807,7 @@ export const collectDefaultMetrics: {
 		config?: DefaultMetricsCollectorConfiguration<T>,
 	): void;
 	/** All available default metrics */
-	metricsList: string[];
+	metricsList: AvailableDefaultMetrics[];
 };
 
 /**
