@@ -27,6 +27,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - perf: New, more space-efficient storage engine, 20-45% faster stats recording
 - perf: Further improvement to key generation cost
 - fix: Browser compatibility for Gauge.startTimer()
+- ci: Run benchmarks for pull requests
 - ci: switch out deprecated benchmark-regression library for replacement
 
 ### Added
