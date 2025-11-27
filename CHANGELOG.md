@@ -28,6 +28,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - perf: Further improvement to key generation cost
 - fix: Browser compatibility for Gauge.startTimer()
 - ci: Run benchmarks for pull requests
+- ci: switch out deprecated benchmark-regression library for replacement
 
 ### Added
 
