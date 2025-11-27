@@ -204,8 +204,9 @@ interface MetricObject {
 	collect: CollectFunction<any>;
 }
 
-interface MetricObjectWithValues<T extends MetricValue<string>>
-	extends MetricObject {
+interface MetricObjectWithValues<
+	T extends MetricValue<string>,
+> extends MetricObject {
 	values: T[];
 }
 
@@ -235,8 +236,9 @@ interface MetricConfiguration<T extends string> {
 	enableExemplars?: boolean;
 }
 
-export interface CounterConfiguration<T extends string>
-	extends MetricConfiguration<T> {
+export interface CounterConfiguration<
+	T extends string,
+> extends MetricConfiguration<T> {
 	collect?: CollectFunction<Counter<T>>;
 }
 
@@ -327,8 +329,9 @@ export namespace Counter {
 	}
 }
 
-export interface GaugeConfiguration<T extends string>
-	extends MetricConfiguration<T> {
+export interface GaugeConfiguration<
+	T extends string,
+> extends MetricConfiguration<T> {
 	collect?: CollectFunction<Gauge<T>>;
 }
 
@@ -467,8 +470,9 @@ export namespace Gauge {
 	}
 }
 
-export interface HistogramConfiguration<T extends string>
-	extends MetricConfiguration<T> {
+export interface HistogramConfiguration<
+	T extends string,
+> extends MetricConfiguration<T> {
 	buckets?: number[];
 	collect?: CollectFunction<Histogram<T>>;
 }
@@ -589,8 +593,9 @@ export namespace Histogram {
 	}
 }
 
-export interface SummaryConfiguration<T extends string>
-	extends MetricConfiguration<T> {
+export interface SummaryConfiguration<
+	T extends string,
+> extends MetricConfiguration<T> {
 	percentiles?: number[];
 	maxAgeSeconds?: number;
 	ageBuckets?: number;
