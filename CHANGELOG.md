@@ -29,10 +29,12 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - fix: Browser compatibility for Gauge.startTimer()
 - ci: Run benchmarks for pull requests
 - ci: switch out deprecated benchmark-regression library for replacement
+- AggregatorRegistry renamed to ClusterRegistry, old name deprecated
 
 ### Added
 
 - Expanded benchmarking code
+- new WorkerRegistry to provide equivalent support to AggregatorRegistry
 
 ## [15.1.3] - 2024-06-27
 
