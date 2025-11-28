@@ -25,6 +25,10 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - Show the invalid name in the validation errors
 - perf: Improve performance of registry defaultLabels during metric processing
 - perf: New, more space-efficient storage engine, 20-45% faster stats recording
+- perf: Further improvement to key generation cost
+- fix: Browser compatibility for Gauge.startTimer()
+- ci: Run benchmarks for pull requests
+- ci: switch out deprecated benchmark-regression library for replacement
 - AggregatorRegistry renamed to ClusterRegistry, old name deprecated
 
 ### Added

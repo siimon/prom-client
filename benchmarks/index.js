@@ -1,7 +1,6 @@
 'use strict';
 
-const createRegressionBenchmark = require('@clevernature/benchmark-regression');
-const { Benchmark } = require('benchmark');
+const Benchmark = require('faceoff').default;
 const debug = require('debug')('benchmark');
 
 /**
@@ -13,40 +12,17 @@ const debug = require('debug')('benchmark');
  * 2018, that situation is unlikely to change soon.
  */
 
-Benchmark.options.defer = true;
-Benchmark.options.onStart = event => {
-	const benchmark = event.target;
-	const name = benchmark.name;
-	const original = benchmark.fn;
-
-	debug(`Starting '${name}'`);
-
-	benchmark.fn = async deferred => {
-		try {
-			await original();
-		} catch (e) {
-			console.error(e);
-		} finally {
-			deferred.resolve();
-		}
-	};
-};
-Benchmark.options.onAbort = event => {
-	console.error(event);
-};
-Benchmark.options.onError = event => {
-	console.error(event);
-};
-
 const currentClient = require('..');
-const benchmarks = createRegressionBenchmark(
-	{ name: 'prom-client@current', module: currentClient },
-	['prom-client@latest'],
-);
+const benchmarks = new Benchmark({
+	'prom-client@latest': 'prom-client@latest',
+	'prom-client@trunk': 'git@github.com:siimon/prom-client',
+	'prom-client@current': currentClient,
+});
 
 benchmarks.suite('counter', require('./counter'));
 benchmarks.suite('gauge', require('./gauge'));
 benchmarks.suite('histogram', require('./histogram'));
+benchmarks.suite('util', require('./util'));
 benchmarks.suite('summary', require('./summary'));
 benchmarks.suite('registry', require('./registry'));
 benchmarks.suite('cluster', require('./cluster'));

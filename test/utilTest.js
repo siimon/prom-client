@@ -1,6 +1,34 @@
 'use strict';
 
 describe('utils', () => {
+	describe('isObject', () => {
+		const isObject = require('../lib/util').isObject;
+
+		it('should not throw on missing argument', () => {
+			expect(isObject).not.toThrow();
+		});
+
+		it('should return true for empty object', () => {
+			expect(isObject({})).toBe(true);
+		});
+	});
+
+	describe('isEmpty', () => {
+		const isEmpty = require('../lib/util').isEmpty;
+
+		it('should not throw on missing argument', () => {
+			expect(isEmpty).not.toThrow();
+		});
+
+		it('should return true for empty object', async () => {
+			expect(isEmpty({})).toBe(true);
+		});
+
+		it('should return false for an object with keys', async () => {
+			expect(isEmpty({ foo: undefined })).toBe(false);
+		});
+	});
+
 	describe('getLabels', () => {
 		const getLabels = require('../lib/util').getLabels;
 
@@ -33,7 +61,7 @@ describe('utils', () => {
 
 				const result = map.keyFrom({ a: 1, c: 200, b: 'post' });
 
-				expect(result).toEqual('1|post|200');
+				expect(result).toEqual('1|post|200|');
 			});
 
 			it('allows sparse labels ', () => {
@@ -41,7 +69,7 @@ describe('utils', () => {
 
 				const result = map.keyFrom({ d: 'a|b' });
 
-				expect(result).toEqual('|||a|b');
+				expect(result).toEqual('|||a|b|');
 			});
 		});
 
