@@ -29,6 +29,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - fix: Browser compatibility for Gauge.startTimer()
 - ci: Run benchmarks for pull requests
 - ci: switch out deprecated benchmark-regression library for replacement
+- AggregatorRegistry renamed to ClusterRegistry, old name deprecated
+- perf: Stat aggregation uses similar strategy to collection. 60% faster aggregation
 
 ### Added
 
