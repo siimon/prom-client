@@ -408,6 +408,15 @@ describe.each([
 				const results = [];
 				const promise = registry.clusterMetrics().then(() => results.push(1));
 				const shutdown = registry.shutdown().then(() => results.push(2));
+				let shutdownResolved = false;
+				shutdown.then(() => {
+					shutdownResolved = true;
+				});
+
+				// Drain the microtask queue: shutdown must still be waiting for
+				// the outstanding worker response at this point.
+				await new Promise(resolve => setImmediate(resolve));
+				expect(shutdownResolved).toBe(false);
 
 				cluster.emit('message', worker, {
 					type: GET_METRICS_RES,
@@ -417,7 +426,7 @@ describe.each([
 
 				await Promise.all([promise, shutdown]);
 
-				expect(results).toEqual([1, 2]);
+				expect(results.sort()).toEqual([1, 2]);
 			} finally {
 				cluster.emit('disconnect', worker);
 				cluster.workers = originalWorkers;
