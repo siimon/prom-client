@@ -88,5 +88,13 @@ describe('timeWindowQuantiles', () => {
 				expect(td.centroids.size).toEqual(0);
 			});
 		});
+
+		it('should keep buckets independent during rotation', () => {
+			instance.push(0);
+			jest.advanceTimersByTime(1001);
+			instance.push(100);
+
+			expect(instance.percentile(0.5)).toEqual(50);
+		});
 	});
 });
