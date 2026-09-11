@@ -405,18 +405,29 @@ describe.each([
 			try {
 				await discovery;
 
-				const results = [];
-				const promise = registry.clusterMetrics().then(() => results.push(1));
-				const shutdown = registry.shutdown().then(() => results.push(2));
-				let shutdownResolved = false;
-				shutdown.then(() => {
-					shutdownResolved = true;
+				const BaseRegistry = require('../lib/registry');
+				let aggregateCompleted = false;
+				const origAggregate = BaseRegistry.aggregate;
+				const aggregateSpy = jest
+					.spyOn(BaseRegistry, 'aggregate')
+					.mockImplementation((...args) => {
+						const res = origAggregate.apply(BaseRegistry, args);
+						aggregateCompleted = true;
+						return res;
+					});
+
+				let shutdownCompleted = false;
+				const promise = registry.clusterMetrics();
+				const shutdown = registry.shutdown().then(() => {
+					shutdownCompleted = true;
+					expect(aggregateCompleted).toBe(true);
 				});
 
 				// Drain the microtask queue: shutdown must still be waiting for
 				// the outstanding worker response at this point.
 				await new Promise(resolve => setImmediate(resolve));
-				expect(shutdownResolved).toBe(false);
+				expect(shutdownCompleted).toBe(false);
+				expect(aggregateCompleted).toBe(false);
 
 				cluster.emit('message', worker, {
 					type: GET_METRICS_RES,
@@ -426,7 +437,9 @@ describe.each([
 
 				await Promise.all([promise, shutdown]);
 
-				expect(results.sort()).toEqual([1, 2]);
+				expect(shutdownCompleted).toBe(true);
+				expect(aggregateCompleted).toBe(true);
+				expect(aggregateSpy).toHaveBeenCalledTimes(1);
 			} finally {
 				cluster.emit('disconnect', worker);
 				cluster.workers = originalWorkers;
